@@ -68,7 +68,7 @@ class Itella_Shipping {
 	 */
 	public function __construct() {
 
-		$this->plugin_name = 'Itella_Shipping';
+		$this->plugin_name = 'itella-shipping';
 		$this->version = '1.0.0';
 
         add_action('plugins_loaded', array($this, 'run'));

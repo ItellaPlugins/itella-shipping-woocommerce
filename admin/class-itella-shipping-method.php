@@ -49,18 +49,18 @@ class Itella_Shipping_Method extends WC_Shipping_Method {
 	 * @var      string    $name       The name of this plugin.
 	 * @var      string    $version    The version of this plugin.
 	 */
-	public function __construct( $name, $version ) {
+	public function __construct() {
 
 	  parent::__construct();
 
-		$this->name = $name;
-		$this->version = $version;
+//		$this->name = $name;
+//		$this->version = $version;
 
-    $this->id                 = 'itella-shipping'; // Id for your shipping method. Should be uunique.
-    $this->method_title       = __( 'Itella Shipping' );  // Title shown in admin
-    $this->method_description = __( 'Plugin to use with Itella Shipping methods' ); // Description shown in admin
+    $this->id                 = "itella-shipping";
+    $this->method_title       = __( 'Itella Shipping' );
+    $this->method_description = __( 'Plugin to use with Itella Shipping methods' );
 
-    $this->title              = "Itella Shipping Method"; // This can be added as an setting but for this example its forced.
+    $this->title              = "Itella Shipping Method";
 
     $this->init();
 
@@ -148,194 +148,140 @@ class Itella_Shipping_Method extends WC_Shipping_Method {
   {
     $this->form_fields = array(
         'enabled' => array(
-            'title' => __('Enable', 'itella-shipping'),
+            'title' => __('Enable', 'itella_shipping'),
             'type' => 'checkbox',
-            'description' => __('Enable this shipping.', 'itella-shipping'),
+            'description' => __('Enable this shipping.', 'itella_shipping'),
             'default' => 'yes'
         ),
-        'api_url' => array(
-            'title' => __('Api URL', 'itella-shipping'),
-            'type' => 'text',
-            'default' => 'https://edixml.post.ee'
-
-        ),
-        'api_user' => array(
-            'title' => __('Api user', 'itella-shipping'),
+        'api_user_2711' => array(
+            'title' => __('API user for product code 2711', 'itella_shipping'),
             'type' => 'text',
         ),
-        'api_pass' => array(
-            'title' => __('Api user password', 'itella-shipping'),
+        'api_pass_2711' => array(
+            'title' => __('Api user password for product code 2711', 'itella_shipping'),
+            'type' => 'password',
+        ),
+        'api_user_2317' => array(
+            'title' => __('API user for product code 2317', 'itella_shipping'),
+            'type' => 'text',
+        ),
+        'api_pass_2317' => array(
+            'title' => __('Api user password for product code 2317', 'itella_shipping'),
             'type' => 'password',
         ),
         'company' => array(
-            'title' => __('Company name', 'itella-shipping'),
+            'title' => __('Company name', 'itella_shipping'),
             'type' => 'text',
         ),
         'bank_account' => array(
-            'title' => __('Bank account', 'itella-shipping'),
+            'title' => __('Bank account', 'itella_shipping'),
             'type' => 'text',
         ),
         'shop_name' => array(
-            'title' => __('Shop name', 'itella-shipping'),
+            'title' => __('Shop name', 'itella_shipping'),
             'type' => 'text',
         ),
         'shop_city' => array(
-            'title' => __('Shop city', 'itella-shipping'),
+            'title' => __('Shop city', 'itella_shipping'),
             'type' => 'text',
         ),
         'shop_address' => array(
-            'title' => __('Shop address', 'itella-shipping'),
+            'title' => __('Shop address', 'itella_shipping'),
             'type' => 'text',
         ),
         'shop_postcode' => array(
-            'title' => __('Shop postcode', 'itella-shipping'),
+            'title' => __('Shop postcode', 'itella_shipping'),
             'type' => 'text',
         ),
         'shop_countrycode' => array(
-            'title' => __('Shop country code', 'itella-shipping'),
+            'title' => __('Shop country code', 'itella_shipping'),
             'type' => 'text',
         ),
         'shop_phone' => array(
-            'title' => __('Shop phone number', 'itella-shipping'),
+            'title' => __('Shop phone number', 'itella_shipping'),
             'type' => 'text',
         ),
-        'pick_up_start' => array(
-            'title' => __('Pick up time start', 'itella-shipping'),
-            'type' => 'text',
-        ),
-        'pick_up_end' => array(
-            'title' => __('Pick up time end', 'itella-shipping'),
-            'type' => 'text',
-        ),
-        'send_off' => array(
-            'title' => __('Send off type', 'itella-shipping'),
-            'type' => 'select',
-            'description' => __('Send from store type.', 'itella-shipping'),
-            'options' => array(
-                'pt' => __('Parcel terminal', 'itella-shipping'),
-                'c' => __('Courrier', 'itella-shipping')
-            )
-        ),
-        'method_pt' => array(
-            'title' => __('Parcel terminal', 'itella-shipping'),
+        'pickup_point_method' => array(
+            'title' => __('Enable Pickup Point', 'itella_shipping'),
             'type' => 'checkbox',
-            'description' => __('Show parcel terminal method in checkout.', 'itella-shipping')
+            'description' => __('Show pickup point shipping method in checkout.', 'itella_shipping'),
+            'default' => 'no'
         ),
-        'method_c' => array(
-            'title' => __('Courrier', 'itella-shipping'),
+        'courier_method' => array(
+            'title' => __('Enable Courier', 'itella_shipping'),
             'type' => 'checkbox',
-            'description' => __('Show courrier method in checkout.', 'itella-shipping')
+            'description' => __('Show courier shipping method in checkout.', 'itella_shipping'),
+            'default' => 'no'
         ),
-        'c_price' => array(
-            'title' => 'LT ' . __('Courrier price', 'itella-shipping'),
-            'type' => 'number',
-            'default' => 2,
-            'custom_attributes' => array(
-                'step'          => 0.01,
-            ),
-        ),
-        'pt_price' => array(
-            'title' => 'LT ' . __('Parcel terminal price', 'itella-shipping'),
+        'pickup_point_price_lt' => array(
+            'title' => 'LT ' . __('Pickup Point price', 'itella_shipping'),
             'type' => 'number',
             'custom_attributes' => array(
                 'step'          => 0.01,
             ),
             'default' => 2,
         ),
-        'pt_priceFREE' => array(
-            'title' => 'LT ' . __('Free shipping then price is higher (Terminals)', 'itella-shipping'),
+        'courier_price_lt' => array(
+            'title' => 'LT ' . __('Courrier price', 'itella_shipping'),
+            'type' => 'number',
+            'default' => 2,
+            'custom_attributes' => array(
+                'step'          => 0.01,
+            ),
+        ),
+        'pickup_point_nocharge_amount_lt' => array(
+            'title' => 'LT ' . __('Disable pickup point fee if cart amount is greater or equal than this limit', 'itella_shipping'),
             'type' => 'number',
             'custom_attributes' => array(
                 'step'          => 0.01,
             ),
             'default' => 100
         ),
-        'pt_price_C_FREE' => array(
-            'title' => 'LT ' . __('Free shipping then price is higher (Courier)', 'itella-shipping'),
+        'courier_nocharge_amount_lt' => array(
+            'title' => 'LT ' . __('Disable courier fee if cart amount is greater or equal than this limit', 'itella_shipping'),
             'type' => 'number',
             'custom_attributes' => array(
                 'step'          => 0.01,
             ),
             'default' => 100
         ),
-        'c_priceLV' => array(
-            'title' => 'LV ' . __('Courrier price', 'itella-shipping'),
+        'pickup_point_price_lv' => array(
+            'title' => 'LV ' . __('Pickup Point price', 'itella_shipping'),
             'type' => 'number',
             'custom_attributes' => array(
                 'step'          => 0.01,
             ),
-            'default' => 2
+            'default' => 2,
         ),
-        'pt_priceLV' => array(
-            'title' => 'LV ' . __('Parcel terminal price', 'itella-shipping'),
+        'courier_price_lv' => array(
+            'title' => 'LV ' . __('Courrier price', 'itella_shipping'),
             'type' => 'number',
+            'default' => 2,
             'custom_attributes' => array(
                 'step'          => 0.01,
             ),
-            'default' => 2
         ),
-        'pt_priceLV_FREE' => array(
-            'title' => 'LV ' . __('Free shipping then price is higher (Terminals)', 'itella-shipping'),
-            'type' => 'number',
-            'custom_attributes' => array(
-                'step'          => 0.01,
-            ),
-            'default' => 100
-        ),
-        'pt_price_C_LV_FREE' => array(
-            'title' => 'LV ' . __('Free shipping then price is higher (Courier)', 'itella-shipping'),
+        'pickup_point_nocharge_amount_lv' => array(
+            'title' => 'LV ' . __('Disable pickup point fee if cart amount is greater or equal than this limit', 'itella_shipping'),
             'type' => 'number',
             'custom_attributes' => array(
                 'step'          => 0.01,
             ),
             'default' => 100
         ),
-        'c_priceEE' => array(
-            'title' => 'EE ' . __('Courrier price', 'itella-shipping'),
-            'type' => 'number',
-            'custom_attributes' => array(
-                'step'          => 0.01,
-            ),
-            'default' => 2
-        ),
-        'pt_priceEE' => array(
-            'title' => 'EE ' . __('Parcel terminal price', 'itella-shipping'),
-            'type' => 'number',
-            'custom_attributes' => array(
-                'step'          => 0.01,
-            ),
-            'default' => 2
-        ),
-        'pt_priceEE_FREE' => array(
-            'title' => 'EE ' . __('Free shipping then price is higher (Terminals)', 'itella-shipping'),
+        'courier_nocharge_amount_lv' => array(
+            'title' => 'LV ' . __('Disable courier fee if cart amount is greater or equal than this limit', 'itella_shipping'),
             'type' => 'number',
             'custom_attributes' => array(
                 'step'          => 0.01,
             ),
             'default' => 100
         ),
-        'pt_price_C_EE_FREE' => array(
-            'title' => 'EE ' . __('Free shipping then price is higher (Courier)', 'itella-shipping'),
-            'type' => 'number',
-            'custom_attributes' => array(
-                'step'          => 0.01,
-            ),
-            'default' => 100
-        ),
-        'weight' => array(
-            'title' => __('Weight (kg)', 'itella-shipping'),
-            'type' => 'number',
-            'custom_attributes' => array(
-                'step'          => 0.01,
-            ),
-            'description' => __('Maximum allowed weight', 'itella-shipping'),
-            'default' => 100
-        ),
-        'show_map' => array(
-            'title' => __('Map', 'itella-shipping'),
+        'fee_tax' => array(
+            'title' => __('Enable Fee Tax', 'itella_shipping'),
             'type' => 'checkbox',
-            'description' => __('Show map of terminals.', 'itella-shipping'),
-            'default' => 'yes'
+            'description' => __('Is shipping fee taxable? Use this option if you have taxes enabled in your shop and you want to include tax to COD method.', 'itella_shipping'),
+            'default' => 'no',
         ),
     );
   }
