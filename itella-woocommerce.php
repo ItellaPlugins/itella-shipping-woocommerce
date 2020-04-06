@@ -8,20 +8,20 @@
  * registers the activation and deactivation functions, and defines a function
  * this starts the plugin.
  *
- * @link              http://example.com
+ * @link
  * @since             1.0.0
- * @package           Plugin_Name
+ * @package           Itella_Woocommerce
  *
  * @wordpress-plugin
- * Plugin Name:       WordPress Plugin Boilerplate
- * Plugin URI:        http://example.com/plugin-name-uri/
- * Description:       This is a short description of what the plugin does. It's displayed in the WordPress dashboard.
+ * Plugin Name:       Itella Shipping Plugin
+ * Plugin URI:
+ * Description:       A shipping plugin for Itella
  * Version:           1.0.0
- * Author:            Your Name or Your Company
- * Author URI:        http://example.com/
+ * Author:
+ * Author URI:
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:       plugin-name
+ * Text Domain:       itella-woocommerce
  * Domain Path:       /languages
  */
 
@@ -33,24 +33,24 @@ if ( ! defined( 'WPINC' ) ) {
 /**
  * The code that runs during plugin activation.
  */
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-plugin-name-activator.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-itella-woocommerce-activator.php';
 
 /**
  * The code that runs during plugin deactivation.
  */
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-plugin-name-deactivator.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-itella-woocommerce-deactivator.php';
 
-/** This action is documented in includes/class-plugin-name-activator.php */
-register_activation_hook( __FILE__, array( 'Plugin_Name_Activator', 'activate' ) );
+/** This action is documented in includes/class-itella-woocommerce-activator.php */
+register_activation_hook( __FILE__, array( 'Itella_Woocommerce_Activator', 'activate' ) );
 
-/** This action is documented in includes/class-plugin-name-deactivator.php */
-register_activation_hook( __FILE__, array( 'Plugin_Name_Deactivator', 'deactivate' ) );
+/** This action is documented in includes/class-itella-woocommerce-deactivator.php */
+register_activation_hook( __FILE__, array( 'Itella_Woocommerce_Deactivator', 'deactivate' ) );
 
 /**
  * The core plugin class that is used to define internationalization,
  * dashboard-specific hooks, and public-facing site hooks.
  */
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-plugin-name.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-itella-woocommerce.php';
 
 /**
  * Begins execution of the plugin.
@@ -61,10 +61,10 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-plugin-name.php';
  *
  * @since    1.0.0
  */
-function run_plugin_name() {
+function run_itella_woocommerce() {
 
-	$plugin = new Plugin_Name();
+	$plugin = new Itella_Woocommerce();
 	$plugin->run();
 
 }
-run_plugin_name();
+run_itella_woocommerce();

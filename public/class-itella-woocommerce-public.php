@@ -6,8 +6,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    Plugin_Name
- * @subpackage Plugin_Name/includes
+ * @package    Itella_Woocommerce
+ * @subpackage Itella_Woocommerce/includes
  */
 
 /**
@@ -16,11 +16,11 @@
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the dashboard-specific stylesheet and JavaScript.
  *
- * @package    Plugin_Name
- * @subpackage Plugin_Name/admin
+ * @package    Itella_Woocommerce
+ * @subpackage Itella_Woocommerce/admin
  * @author     Your Name <email@example.com>
  */
-class Plugin_Name_Public {
+class Itella_Woocommerce_Public {
 
 	/**
 	 * The ID of this plugin.
@@ -65,15 +65,15 @@ class Plugin_Name_Public {
 		 * This function is provided for demonstration purposes only.
 		 *
 		 * An instance of this class should be passed to the run() function
-		 * defined in Plugin_Name_Public_Loader as all of the hooks are defined
+		 * defined in Itella_Woocommerce_Public_Loader as all of the hooks are defined
 		 * in that particular class.
 		 *
-		 * The Plugin_Name_Public_Loader will then create the relationship
+		 * The Itella_Woocommerce_Public_Loader will then create the relationship
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->name, plugin_dir_url( __FILE__ ) . 'css/plugin-name-public.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->name, plugin_dir_url( __FILE__ ) . 'css/itella-woocommerce-public.css', array(), $this->version, 'all' );
 
 	}
 
@@ -88,15 +88,15 @@ class Plugin_Name_Public {
 		 * This function is provided for demonstration purposes only.
 		 *
 		 * An instance of this class should be passed to the run() function
-		 * defined in Plugin_Name_Public_Loader as all of the hooks are defined
+		 * defined in Itella_Woocommerce_Public_Loader as all of the hooks are defined
 		 * in that particular class.
 		 *
-		 * The Plugin_Name_Public_Loader will then create the relationship
+		 * The Itella_Woocommerce_Public_Loader will then create the relationship
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->name, plugin_dir_url( __FILE__ ) . 'js/plugin-name-public.js', array( 'jquery' ), $this->version, FALSE );
+		wp_enqueue_script( $this->name, plugin_dir_url( __FILE__ ) . 'js/itella-woocommerce-public.js', array( 'jquery' ), $this->version, FALSE );
 
 	}
 
