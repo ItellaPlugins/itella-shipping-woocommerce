@@ -9,8 +9,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    Itella_Woocommerce
- * @subpackage Itella_Woocommerce/includes
+ * @package    Itella_Shipping
+ * @subpackage Itella_Shipping/includes
  */
 
 /**
@@ -20,11 +20,11 @@
  * so that its ready for translation.
  *
  * @since      1.0.0
- * @package    Itella_Woocommerce
- * @subpackage Itella_Woocommerce/includes
+ * @package    Itella_Shipping
+ * @subpackage Itella_Shipping/includes
  * @author     Your Name <email@example.com>
  */
-class Itella_Woocommerce_i18n {
+class Itella_Shipping_i18n {
 
 	/**
 	 * The domain specified for this plugin.

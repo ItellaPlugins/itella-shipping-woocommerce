@@ -6,8 +6,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    Itella_Woocommerce
- * @subpackage Itella_Woocommerce/includes
+ * @package    Itella_Shipping
+ * @subpackage Itella_Shipping/includes
  */
 
 /**
@@ -16,11 +16,11 @@
  * This class defines all code necessary to run during the plugin's deactivation.
  *
  * @since      1.0.0
- * @package    Itella_Woocommerce
- * @subpackage Itella_Woocommerce/includes
+ * @package    Itella_Shipping
+ * @subpackage Itella_Shipping/includes
  * @author     Your Name <email@example.com>
  */
-class Itella_Woocommerce_Deactivator {
+class Itella_Shipping_Deactivator {
 
 	/**
 	 * Short Description. (use period)

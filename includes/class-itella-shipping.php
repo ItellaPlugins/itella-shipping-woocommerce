@@ -27,7 +27,7 @@
  * @subpackage Itella_Woocommerce/includes
  * @author     Your Name <email@example.com>
  */
-class Itella_Woocommerce {
+class Itella_Shipping {
 
 	/**
 	 * The loader that's responsible for maintaining and registering all hooks that power
@@ -35,7 +35,7 @@ class Itella_Woocommerce {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      Itella_Woocommerce_Loader    $loader    Maintains and registers all hooks for the plugin.
+	 * @var      Itella_Shipping_Loader    $loader    Maintains and registers all hooks for the plugin.
 	 */
 	protected $loader;
 
@@ -68,13 +68,11 @@ class Itella_Woocommerce {
 	 */
 	public function __construct() {
 
-		$this->plugin_name = 'itella_woocommerce';
+		$this->plugin_name = 'Itella_Shipping';
 		$this->version = '1.0.0';
 
-		$this->load_dependencies();
-		$this->set_locale();
-		$this->define_admin_hooks();
-		$this->define_public_hooks();
+        add_action('plugins_loaded', array($this, 'run'));
+        add_action('admin_notices', array($this, 'notify_on_activation'));
 
 	}
 
@@ -83,10 +81,10 @@ class Itella_Woocommerce {
 	 *
 	 * Include the following files that make up the plugin:
 	 *
-	 * - Itella_Woocommerce_Loader. Orchestrates the hooks of the plugin.
-	 * - Itella_Woocommerce_i18n. Defines internationalization functionality.
-	 * - Itella_Woocommerce_Admin. Defines all hooks for the dashboard.
-	 * - Itella_Woocommerce_Public. Defines all hooks for the public side of the site.
+	 * - Itella_Shipping_Loader. Orchestrates the hooks of the plugin.
+	 * - Itella_Shipping_i18n. Defines internationalization functionality.
+	 * - Itella_Shipping_Admin. Defines all hooks for the dashboard.
+	 * - Itella_Shipping_Public. Defines all hooks for the public side of the site.
 	 *
 	 * Create an instance of the loader which will be used to register the hooks
 	 * with WordPress.
@@ -96,37 +94,46 @@ class Itella_Woocommerce {
 	 */
 	private function load_dependencies() {
 
+    if (!class_exists('WooCommerce')) {
+      return;
+    }
+
 		/**
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-itella_woocommerce-loader.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-itella-shipping-loader.php';
 
 		/**
 		 * The class responsible for defining internationalization functionality
 		 * of the plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-itella_woocommerce-i18n.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-itella-shipping-i18n.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the Dashboard.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-itella_woocommerce-admin.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-itella-shipping-method.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-itella_woocommerce-public.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-itella-shipping-public.php';
 
-		$this->loader = new Itella_Woocommerce_Loader();
+		$this->loader = new Itella_Shipping_Loader();
+
+        $this->set_locale();
+        $this->define_admin_hooks();
+        $this->define_public_hooks();
+        $this->loader->run();
 
 	}
 
 	/**
 	 * Define the locale for this plugin for internationalization.
 	 *
-	 * Uses the Itella_Woocommerce_i18n class in order to set the domain and to register the hook
+	 * Uses the Itella_Shipping_i18n class in order to set the domain and to register the hook
 	 * with WordPress.
 	 *
 	 * @since    1.0.0
@@ -134,7 +141,7 @@ class Itella_Woocommerce {
 	 */
 	private function set_locale() {
 
-		$plugin_i18n = new Itella_Woocommerce_i18n();
+		$plugin_i18n = new Itella_Shipping_i18n();
 		$plugin_i18n->set_domain( $this->get_plugin_name() );
 
 		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
@@ -150,11 +157,15 @@ class Itella_Woocommerce {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Itella_Woocommerce_Admin( $this->get_plugin_name(), $this->get_version() );
+		$plugin_admin = new Itella_Shipping_Method( $this->get_plugin_name(), $this->get_version() );
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
+		// Save settings in admin
+        $this->loader->add_action( 'woocommerce_update_options_shipping_' . $plugin_admin->id, $plugin_admin, 'process_admin_options' );
+
+        $this->loader->add_filter('woocommerce_shipping_methods', $this, 'add_itella_shipping_method');
 	}
 
 	/**
@@ -166,7 +177,7 @@ class Itella_Woocommerce {
 	 */
 	private function define_public_hooks() {
 
-		$plugin_public = new Itella_Woocommerce_Public( $this->get_plugin_name(), $this->get_version() );
+		$plugin_public = new Itella_Shipping_Public( $this->get_plugin_name(), $this->get_version() );
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
@@ -179,7 +190,7 @@ class Itella_Woocommerce {
 	 * @since    1.0.0
 	 */
 	public function run() {
-		$this->loader->run();
+		$this->load_dependencies();
 	}
 
 	/**
@@ -197,7 +208,7 @@ class Itella_Woocommerce {
 	 * The reference to the class that orchestrates the hooks with the plugin.
 	 *
 	 * @since     1.0.0
-	 * @return    Itella_Woocommerce_Loader    Orchestrates the hooks of the plugin.
+	 * @return    Itella_Shipping_Loader    Orchestrates the hooks of the plugin.
 	 */
 	public function get_loader() {
 		return $this->loader;
@@ -212,5 +223,26 @@ class Itella_Woocommerce {
 	public function get_version() {
 		return $this->version;
 	}
+
+  public function notify_on_activation()
+  {
+
+    if (get_transient('itella-shipping-activated')) : ?>
+      <div class="updated notice is-dismissible">
+        <p>Setup Itella Shipping
+          <a href="<?php echo admin_url('admin.php?page=wc-settings&tab=shipping&section=itella-shipping'); ?>">here</a>.
+        </p>
+      </div>
+      <?php
+      delete_transient('itella-shipping-activated');
+    endif;
+  }
+
+  public function add_itella_shipping_method( $methods ) {
+
+    $methods['itella-shipping'] = 'Itella_Shipping_Method';
+
+    return $methods;
+  }
 
 }

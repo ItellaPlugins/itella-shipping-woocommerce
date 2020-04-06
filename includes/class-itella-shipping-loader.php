@@ -6,8 +6,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    Itella_Woocommerce
- * @subpackage Itella_Woocommerce/includes
+ * @package    Itella_Shipping
+ * @subpackage Itella_Shipping/includes
  */
 
 /**
@@ -17,11 +17,11 @@
  * the plugin, and register them with the WordPress API. Call the
  * run function to execute the list of actions and filters.
  *
- * @package    Itella_Woocommerce
- * @subpackage Itella_Woocommerce/includes
+ * @package    Itella_Shipping
+ * @subpackage Itella_Shipping/includes
  * @author     Your Name <email@example.com>
  */
-class Itella_Woocommerce_Loader {
+class Itella_Shipping_Loader {
 
 	/**
 	 * The array of actions registered with WordPress.
