@@ -1,32 +1,41 @@
-(function( $ ) {
-	'use strict';
+'use strict';
 
-	/**
-	 * All of the code for your Dashboard-specific JavaScript source
-	 * should reside in this file.
-	 *
-	 * Note that this assume you're going to use jQuery, so it prepares
-	 * the $ function reference to be used within the scope of this
-	 * function.
-	 *
-	 * From here, you're able to define handlers for when the DOM is
-	 * ready:
-	 *
-	 * $(function() {
-	 *
-	 * });
-	 *
-	 * Or when the window is loaded:
-	 *
-	 * $( window ).load(function() {
-	 *
-	 * });
-	 *
-	 * ...and so on.
-	 *
-	 * Remember that ideally, we should not attach any more than a single DOM-ready or window-load handler
-	 * for any particular page. Though other scripts in WordPress core, other plugins, and other themes may
-	 * be doing this, we should try to minimize doing that in our own work.
-	 */
+(() => {
+    window.addEventListener('load', (event) => {
+        // toggle extra fee fields
+        const pickupPoint = document.querySelector('.pickup-point-method');
+        const courier = document.querySelector('.courier-method');
+        const pickupPointFields = document.querySelectorAll('.pickup-point');
+        const courierFields = document.querySelectorAll('.courier');
+        const feeTaxField = document.querySelector('.method-fee-tax').parentElement.parentElement.parentElement.parentElement;
 
-})( jQuery );
+        if (!pickupPoint.checked) {
+            pickupPointFields.forEach(field => {
+                field.parentElement.parentElement.parentElement.classList.toggle('d-none');
+            })
+        }
+        if (!courier.checked) {
+            courierFields.forEach(field => {
+                field.parentElement.parentElement.parentElement.classList.toggle('d-none');
+            })
+        }
+
+        pickupPoint.addEventListener('change', function () {
+            pickupPointFields.forEach(field => {
+                field.parentElement.parentElement.parentElement.classList.toggle('d-none');
+            });
+			if (feeTaxField.classList.contains('d-none')) {
+				feeTaxField.classList.toggle('d-none');
+			}
+        });
+
+        courier.addEventListener('change', function () {
+            courierFields.forEach(field => {
+                field.parentElement.parentElement.parentElement.classList.toggle('d-none');
+            });
+			if (feeTaxField.classList.contains('d-none')) {
+				feeTaxField.classList.toggle('d-none');
+			}
+        });
+    });
+})();
