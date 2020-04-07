@@ -3,19 +3,6 @@
 /**
  * The dashboard-specific functionality of the plugin.
  *
- * @link       http://example.com
- * @since      1.0.0
- *
- * @package    Plugin_Name
- * @subpackage Plugin_Name/includes
- */
-
-/**
- * The dashboard-specific functionality of the plugin.
- *
- * Defines the plugin name, version, and two examples hooks for how to
- * enqueue the dashboard-specific stylesheet and JavaScript.
- *
  * @package    Itella_Woocommerce
  * @subpackage Itella_Woocommerce/admin
  * @author     Your Name <email@example.com>
@@ -49,12 +36,12 @@ class Itella_Shipping_Method extends WC_Shipping_Method {
 	 * @var      string    $name       The name of this plugin.
 	 * @var      string    $version    The version of this plugin.
 	 */
-	public function __construct() {
+	public function __construct($name = 'itella-shipping', $version = '1.0.0') {
 
 	  parent::__construct();
 
-//		$this->name = $name;
-//		$this->version = $version;
+		$this->name = $name;
+		$this->version = $version;
 
     $this->id                 = "itella-shipping";
     $this->method_title       = __( 'Itella Shipping' );
@@ -108,7 +95,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method {
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->name, plugin_dir_url( __FILE__ ) . 'js/itella-shipping-admin.js', array( 'jquery' ), $this->version, FALSE );
+		wp_enqueue_script( $this->name, plugin_dir_url( __FILE__ ) . 'js/itella-shipping-admin.js', array( 'jquery' ), $this->version, TRUE );
 
 	}
 
@@ -203,6 +190,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method {
         ),
         'pickup_point_method' => array(
             'title' => __('Enable Pickup Point', 'itella_shipping'),
+            'class' => 'pickup-point-method',
             'type' => 'checkbox',
             'description' => __('Show pickup point shipping method in checkout.', 'itella_shipping'),
             'default' => 'no'
@@ -210,11 +198,13 @@ class Itella_Shipping_Method extends WC_Shipping_Method {
         'courier_method' => array(
             'title' => __('Enable Courier', 'itella_shipping'),
             'type' => 'checkbox',
+            'class' => 'courier-method',
             'description' => __('Show courier shipping method in checkout.', 'itella_shipping'),
             'default' => 'no'
         ),
         'pickup_point_price_lt' => array(
             'title' => 'LT ' . __('Pickup Point price', 'itella_shipping'),
+            'class' => 'pickup-point',
             'type' => 'number',
             'custom_attributes' => array(
                 'step'          => 0.01,
@@ -223,6 +213,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method {
         ),
         'courier_price_lt' => array(
             'title' => 'LT ' . __('Courrier price', 'itella_shipping'),
+            'class' => 'courier',
             'type' => 'number',
             'default' => 2,
             'custom_attributes' => array(
@@ -231,6 +222,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method {
         ),
         'pickup_point_nocharge_amount_lt' => array(
             'title' => 'LT ' . __('Disable pickup point fee if cart amount is greater or equal than this limit', 'itella_shipping'),
+            'class' => 'pickup-point',
             'type' => 'number',
             'custom_attributes' => array(
                 'step'          => 0.01,
@@ -239,6 +231,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method {
         ),
         'courier_nocharge_amount_lt' => array(
             'title' => 'LT ' . __('Disable courier fee if cart amount is greater or equal than this limit', 'itella_shipping'),
+            'class' => 'courier',
             'type' => 'number',
             'custom_attributes' => array(
                 'step'          => 0.01,
@@ -247,6 +240,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method {
         ),
         'pickup_point_price_lv' => array(
             'title' => 'LV ' . __('Pickup Point price', 'itella_shipping'),
+            'class' => 'pickup-point',
             'type' => 'number',
             'custom_attributes' => array(
                 'step'          => 0.01,
@@ -255,6 +249,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method {
         ),
         'courier_price_lv' => array(
             'title' => 'LV ' . __('Courrier price', 'itella_shipping'),
+            'class' => 'courier',
             'type' => 'number',
             'default' => 2,
             'custom_attributes' => array(
@@ -263,6 +258,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method {
         ),
         'pickup_point_nocharge_amount_lv' => array(
             'title' => 'LV ' . __('Disable pickup point fee if cart amount is greater or equal than this limit', 'itella_shipping'),
+            'class' => 'pickup-point',
             'type' => 'number',
             'custom_attributes' => array(
                 'step'          => 0.01,
@@ -271,6 +267,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method {
         ),
         'courier_nocharge_amount_lv' => array(
             'title' => 'LV ' . __('Disable courier fee if cart amount is greater or equal than this limit', 'itella_shipping'),
+            'class' => 'courier',
             'type' => 'number',
             'custom_attributes' => array(
                 'step'          => 0.01,
@@ -279,6 +276,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method {
         ),
         'fee_tax' => array(
             'title' => __('Enable Fee Tax', 'itella_shipping'),
+            'class' => 'method-fee-tax',
             'type' => 'checkbox',
             'description' => __('Is shipping fee taxable? Use this option if you have taxes enabled in your shop and you want to include tax to COD method.', 'itella_shipping'),
             'default' => 'no',
