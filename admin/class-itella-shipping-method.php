@@ -320,13 +320,6 @@ class Itella_Shipping_Method extends WC_Shipping_Method {
             ),
             'default' => 100
         ),
-        'fee_tax' => array(
-            'title' => __('Enable Fee Tax', 'itella_shipping'),
-            'class' => 'method-fee-tax',
-            'type' => 'checkbox',
-            'description' => __('Is shipping fee taxable? Use this option if you have taxes enabled in your shop and you want to include tax to shipping method.', 'itella_shipping'),
-            'default' => 'no',
-        ),
     );
   }
 

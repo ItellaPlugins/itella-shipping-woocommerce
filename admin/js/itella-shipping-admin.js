@@ -20,18 +20,11 @@
             })
         }
 
-        if(!pickupPoint.checked && !courier.checked) {
-			feeTaxField.classList.toggle('d-none');
-		}
-
         pickupPoint.addEventListener('change', function () {
             pickupPointFields.forEach(field => {
                 field.parentElement.parentElement.parentElement.classList.toggle('d-none');
             });
 			if (feeTaxField.classList.contains('d-none')) {
-				feeTaxField.classList.toggle('d-none');
-			}
-			if(!pickupPoint.checked && !courier.checked) {
 				feeTaxField.classList.toggle('d-none');
 			}
         });
@@ -41,9 +34,6 @@
                 field.parentElement.parentElement.parentElement.classList.toggle('d-none');
             });
 			if (feeTaxField.classList.contains('d-none')) {
-				feeTaxField.classList.toggle('d-none');
-			}
-			if(!pickupPoint.checked && !courier.checked) {
 				feeTaxField.classList.toggle('d-none');
 			}
         });
