@@ -36,6 +36,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method {
 	 * @var      string    $name       The name of this plugin.
 	 * @var      string    $version    The version of this plugin.
 	 */
+  // TODO find bug - wp throws fatal error, that 0 args are passed to constructor, but debugger shows, that args are getting through
 	public function __construct($name = 'itella-shipping', $version = '1.0.0') {
 
 	  parent::__construct();
