@@ -13,9 +13,9 @@
  * @package           Itella_Shipping
  *
  * @wordpress-plugin
- * Plugin Name:       Itella Shipping Plugin
+ * Plugin Name:       Itella Shipping
  * Plugin URI:
- * Description:       A shipping plugin for Itella
+ * Description:       Itella shipping plugin for Woocommerce
  * Version:           1.0.0
  * Author:
  * Author URI:
