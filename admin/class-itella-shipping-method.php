@@ -119,16 +119,62 @@ class Itella_Shipping_Method extends WC_Shipping_Method {
    * @param mixed $package
    * @return void
    */
-  public function calculate_shipping( $package = array() ) {
-    $rate = array(
-        'id' => $this->id,
-        'label' => $this->title,
-        'cost' => '10.99',
-        'calc_tax' => 'per_item'
-    );
+  public function calculate_shipping( $package = array() )
+  {
 
-    // Register the rate
-    $this->add_rate( $rate );
+    global $woocommerce;
+    $current_country = $woocommerce->customer->get_shipping_country();
+    $cart_amount = $woocommerce->cart->cart_contents_total + $woocommerce->cart->tax_total;
+//    var_dump($this->settings);
+//    die;
+
+    // add Pickup Point Rate
+    if ($this->settings['pickup_point_method'] === 'yes') {
+      switch ($current_country) {
+        case 'LV':
+          $amount = $this->settings['pickup_point_price_lv'];
+          if ($cart_amount > floatval($this->settings['pickup_point_nocharge_amount_lv']))
+            $amount = 0.0;
+          break;
+        default:
+          $amount = $this->settings['pickup_point_price_lt'];
+          if ($cart_amount > floatval($this->settings['pickup_point_nocharge_amount_lt']))
+            $amount = 0.0;
+          break;
+      }
+
+      $rate = array(
+          'id' => 'itella_pp',
+          'label' => __('Itella Pickup Point', 'itella-shipping'),
+          'cost' => $amount
+      );
+
+      $this->add_rate($rate);
+    }
+
+    // add Courier rate
+    if ($this->settings['courier_method'] === 'yes') {
+      switch ($current_country) {
+        case 'LV':
+          $amountC = $this->settings['courier_price_lv'];
+          if ($cart_amount > floatval($this->settings['courier_nocharge_amount_lv']))
+            $amountC = 0.0;
+          break;
+        default:
+          $amountC = $this->settings['courier_price_lt'];
+          if ($cart_amount > floatval($this->settings['courier_nocharge_amount_lt']))
+            $amountC = 0.0;
+          break;
+      }
+
+      $rate = array(
+          'id' => 'itella_c',
+          'label' => __('Itella courrier', 'itella-shipping'),
+          'cost' => $amountC
+      );
+      $this->add_rate($rate);
+    }
+
   }
 
   function init_form_fields()
@@ -278,7 +324,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method {
             'title' => __('Enable Fee Tax', 'itella_shipping'),
             'class' => 'method-fee-tax',
             'type' => 'checkbox',
-            'description' => __('Is shipping fee taxable? Use this option if you have taxes enabled in your shop and you want to include tax to COD method.', 'itella_shipping'),
+            'description' => __('Is shipping fee taxable? Use this option if you have taxes enabled in your shop and you want to include tax to shipping method.', 'itella_shipping'),
             'default' => 'no',
         ),
     );
