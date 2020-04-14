@@ -1,5 +1,7 @@
 <?php
 
+use Mijora\Itella\Locations\PickupPoints;
+
 /**
  * The dashboard-specific functionality of the plugin.
  *
@@ -114,6 +116,18 @@ class Itella_Shipping_Method extends WC_Shipping_Method {
   }
 
   /**
+   * Update locations
+   */
+  public function update_locations() {
+
+    $itella_pickup_points_obj = new PickupPoints('https://locationservice.posti.com/api/2/location');
+    $itella_loc_lt = $itella_pickup_points_obj->getLocationsByCountry('lt');
+    $itella_loc_lv = $itella_pickup_points_obj->getLocationsByCountry('lv');
+    $itella_pickup_points_obj->saveLocationsToJSONFile(plugin_dir_path(dirname(__FILE__)) . 'locations/locationsLt.json', json_encode($itella_loc_lt));
+    $itella_pickup_points_obj->saveLocationsToJSONFile(plugin_dir_path(dirname(__FILE__)) . 'locations/locationsLv.json', json_encode($itella_loc_lv));
+  }
+
+  /**
    * calculate_shipping function.
    *
    * @access public
@@ -188,19 +202,19 @@ class Itella_Shipping_Method extends WC_Shipping_Method {
             'default' => 'yes'
         ),
         'api_user_2711' => array(
-            'title' => __('API user for product code 2711', 'itella_shipping'),
+            'title' => __('API user (Product 2711)', 'itella_shipping'),
             'type' => 'text',
         ),
         'api_pass_2711' => array(
-            'title' => __('Api user password for product code 2711', 'itella_shipping'),
+            'title' => __('Api password (Product 2711)', 'itella_shipping'),
             'type' => 'password',
         ),
         'api_user_2317' => array(
-            'title' => __('API user for product code 2317', 'itella_shipping'),
+            'title' => __('API user (Product 2317)', 'itella_shipping'),
             'type' => 'text',
         ),
         'api_pass_2317' => array(
-            'title' => __('Api user password for product code 2317', 'itella_shipping'),
+            'title' => __('Api password (Product 2317)', 'itella_shipping'),
             'type' => 'password',
         ),
         'company' => array(

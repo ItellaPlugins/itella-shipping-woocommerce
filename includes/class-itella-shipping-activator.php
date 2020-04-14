@@ -30,7 +30,8 @@ class Itella_Shipping_Activator {
 	 * @since    1.0.0
 	 */
 	public static function activate() {
-    set_transient( 'itella-shipping-activated', true, 3 );
+
+    set_transient( 'itella-shipping-activated', true, 30 );
 	}
 
 }
