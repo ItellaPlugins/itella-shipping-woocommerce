@@ -1,0 +1,9 @@
+**/.DS_Store
+vendor/*
+!vendor/composer/
+!vendor/autoload.php
+temp/*
+!temp/index.php
+
+example/env.php
+**/token.json
