@@ -7,7 +7,7 @@
         const courier = document.querySelector('.courier-method');
         const pickupPointFields = document.querySelectorAll('.pickup-point');
         const courierFields = document.querySelectorAll('.courier');
-        const feeTaxField = document.querySelector('.method-fee-tax').parentElement.parentElement.parentElement.parentElement;
+        // const feeTaxField = document.querySelector('.method-fee-tax').parentElement.parentElement.parentElement.parentElement;
 
         if (!pickupPoint.checked) {
             pickupPointFields.forEach(field => {
