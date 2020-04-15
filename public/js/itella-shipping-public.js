@@ -42,7 +42,7 @@ function init() {
 		/* access itella class inside response handler */
 		oReq.itella = itella;
 		oReq.addEventListener('loadend', loadJson);
-		oReq.open('GET', `${mapScript.pluginsUrl}/../../locations/locationsLt.json`);
+		oReq.open('GET', `${mapScript.pluginsUrl}/../../locations/locationsLT.json`);
 		oReq.send();
 
 }
