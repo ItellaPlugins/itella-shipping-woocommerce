@@ -133,11 +133,9 @@ class Itella_Shipping
     /**
      * Load Itella API
      */
-
     require_once plugin_dir_path(dirname(__FILE__)) . 'libs/itella-api/vendor/autoload.php';
 
     Itella_Shipping_Cron::schedule();
-
     $this->loader = new Itella_Shipping_Loader();
 
     $this->set_locale();
@@ -180,12 +178,8 @@ class Itella_Shipping
 
     $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
     $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
-
-    // Save settings in admin
     $this->loader->add_action('woocommerce_update_options_shipping_' . $plugin_admin->id, $plugin_admin, 'process_admin_options');
-    // Update terminals daily
     $this->loader->add_action( Itella_Shipping_Cron::ITELLA_SHIPPING_EVENT_DAILY, $plugin_admin, 'update_locations' );
-
     $this->loader->add_filter('woocommerce_shipping_methods', $this, 'add_itella_shipping_method');
 
 
@@ -205,10 +199,7 @@ class Itella_Shipping
 
     $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
     $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
-//        $this->loader->add_action( 'wp_ajax_nopriv_add_terminal_to_session', $plugin_public, 'add_terminal_to_session' );
-//        $this->loader->add_action( 'wp_ajax_add_terminal_to_session', $plugin_public, 'add_terminal_to_session' );
     $this->loader->add_action('woocommerce_order_details_after_order_table', $plugin_public, 'show_pp_details', 10, 1);
-
     $this->loader->add_action('woocommerce_checkout_update_order_meta', $plugin_public, 'add_pp_id_to_order');
     $this->loader->add_action('woocommerce_order_status_completed', $plugin_public, 'show_pp');
 

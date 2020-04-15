@@ -30,18 +30,6 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-//add_filter( 'cron_schedules', 'itella_custom_cron_schedule' );
-//
-//function itella_custom_cron_schedule($schedules)
-//{
-//  $schedules['itella_daily'] = array(
-//      'interval' => 86400,
-//      'display'  => __( 'Once a day' ),
-//  );
-//
-//  return $schedules;
-//}
-
 /**
  * The code that runs during plugin activation.
  */

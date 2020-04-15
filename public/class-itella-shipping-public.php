@@ -63,19 +63,6 @@ class Itella_Shipping_Public
    */
   public function enqueue_styles()
   {
-
-    /**
-     * This function is provided for demonstration purposes only.
-     *
-     * An instance of this class should be passed to the run() function
-     * defined in Itella_Shipping_Public_Loader as all of the hooks are defined
-     * in that particular class.
-     *
-     * The Itella_Shipping_Public_Loader will then create the relationship
-     * between the defined hooks and the functions defined in this
-     * class.
-     */
-
     wp_enqueue_style($this->name . 'itella-shipping-public.css', plugin_dir_url(__FILE__) . 'css/itella-shipping-public.css', array(), $this->version, 'all');
     wp_enqueue_style($this->name . 'leaflet.css', "https://unpkg.com/leaflet@1.5.1/dist/leaflet.css", array(), $this->version, 'all');
     wp_enqueue_style($this->name . 'itella-mapping.css', plugin_dir_url(__FILE__) . 'css/itella-mapping.css', array(), $this->version, 'all');
@@ -88,19 +75,6 @@ class Itella_Shipping_Public
    */
   public function enqueue_scripts()
   {
-
-    /**
-     * This function is provided for demonstration purposes only.
-     *
-     * An instance of this class should be passed to the run() function
-     * defined in Itella_Shipping_Public_Loader as all of the hooks are defined
-     * in that particular class.
-     *
-     * The Itella_Shipping_Public_Loader will then create the relationship
-     * between the defined hooks and the functions defined in this
-     * class.
-     */
-
     wp_enqueue_script($this->name . 'leaflet.js', "https://unpkg.com/leaflet@1.5.1/dist/leaflet.js", array(), $this->version, TRUE);
     wp_enqueue_script($this->name . 'itella-mapping.js', plugin_dir_url(__FILE__) . 'js/itella-mapping.js', array(), $this->version, TRUE);
     wp_enqueue_script($this->name . 'itella-shipping-public.js', plugin_dir_url(__FILE__) . 'js/itella-shipping-public.js', array(), $this->version, TRUE);
@@ -109,31 +83,17 @@ class Itella_Shipping_Public
 
   }
 
-  public function show_pp($method)
-  {
-
-
-  }
-
   public function show_pp_details($order)
   {
-
-//    var_dump(get_post_meta($order->get_id(), '_pp_id', true));
-//    var_dump(get_post_meta($order->get_id(), '_itella_method', true));
-
     $chosen_itella_method = get_post_meta($order->get_id(), '_itella_method', true);
     if ($chosen_itella_method === 'itella_pp') {
-      echo "<p>" . __('Itella pickup point', 'itella_shipping') . ": " . getOmnivaTerminalAddress($order) . "</p>";
+      echo "<p>" . __('Itella Pickup Point', 'itella_shipping') . ": " . $this->get_pickup_point_public_name($order) . "</p>";
     }
 
-//    if ($chosen_itella_method) {
-//      printTrackingLink($order, false, true);
-//    }
   }
 
   public function add_pp_id_to_order($order_id)
   {
-//    var_dump($order_id);
     if (isset($_POST['itella-chosen-point-id']) && $order_id) {
       update_post_meta($order_id, '_pp_id', $_POST['itella-chosen-point-id']);
     }
@@ -142,10 +102,27 @@ class Itella_Shipping_Public
     }
   }
 
-//  public function add_terminal_to_session()
-//  {
-//    if (isset($_POST['terminal_id']) && is_numeric($_POST['terminal_id'])) WC()->session->set('omnivalt_terminal_id', $_POST['terminal_id']);
-//    wp_die();
-//  }
+  public function get_pickup_point_public_name($order)
+  {
+    global $woocommerce;
+    $chosen_pickup_point = null;
+    $pickup_point_public_name = null;
+
+    $shipping_country = $woocommerce->customer->get_shipping_country();
+    $chosen_pickup_point_id = get_post_meta($order->get_id(), '_pp_id', true);
+    $pickup_points = file_get_contents(plugin_dir_url(__FILE__) . '../locations/locations' . $shipping_country .'.json');
+    $pickup_points = json_decode($pickup_points);
+
+    foreach ($pickup_points as $pickup_point) {
+      $chosen_pickup_point = $pickup_point->id === $chosen_pickup_point_id ? $pickup_point : null;
+      if ($chosen_pickup_point) {
+        $pickup_point_public_name = $chosen_pickup_point->publicName;
+
+        break;
+      }
+    }
+
+    return $pickup_point_public_name ?? __('Itella Pickup Point not found!', 'itella_shipping');
+  }
 
 }
