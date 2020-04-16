@@ -350,20 +350,20 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $itella_method = get_post_meta($order->get_id(), '_itella_method', true);
 
     if ($itella_method) {
+
+      // vars
       $is_itella_pp = $itella_method === 'itella_pp';
       $is_itella_c = $itella_method === 'itella_c';
 
+      $chosen_pickup_point_id = get_post_meta($order->get_id(), '_pp_id', true);
+      $chosen_pickup_point = $this->get_chosen_pickup_point($order->get_shipping_country(), $chosen_pickup_point_id);
+//      var_dump($chosen_pickup_point);
+
       $is_cod = true;
       $cod_amount = $order->get_total();
-
       $weight_unit = get_option('woocommerce_weight_unit');
-      $currency = $order->get_currency();
 
-      ?>
-        <br class="clear"/>
-        <h4>Itella Shipping Options <a href="#" class="edit_address">Edit</a></h4>
-      <?php
-
+      // packet select element options
       $packets = [];
       for ($i = 1; $i < 11; $i++) {
         $packets[$i] = strval($i);
@@ -372,13 +372,13 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       // defaults
       $default_packets_count = '1';
       $default_weight = '1.00';
-
-      // extra services
       $is_oversized = false;
       $call_before_delivery = false;
       $fragile = false;
 
       ?>
+        <br class="clear"/>
+        <h4>Itella Shipping Options <a href="#" class="edit_address">Edit</a></h4>
         <div class="address">
             <p><strong><?= __('Packets(total):', 'itella_shipping') ?></strong> <?= $default_packets_count ?></p>
             <p><strong><?= __('Weight(' . $weight_unit . ')', 'itella_shipping') ?></strong> <?= $default_weight ?></p>
@@ -388,7 +388,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
               ?>
             </p>
           <?php if ($is_cod): ?>
-              <p><strong><?= __('COD amount:', 'itella_shipping') ?></strong> <?= $cod_amount . '(' . $currency . ')' ?>
+              <p>
+                  <strong><?= __('COD amount(' . $order->get_currency() . '):', 'itella_shipping') ?></strong> <?= $cod_amount ?>
               </p>
           <?php endif; ?>
             <p><strong><?= __('Carrier:', 'itella_shipping') ?></strong>
@@ -398,6 +399,16 @@ class Itella_Shipping_Method extends WC_Shipping_Method
                       __('No Itella Shipping method selected', 'itella_shipping'))
               ?>
             </p>
+          <?php if ($is_itella_pp): ?>
+              <p><strong><?= __('Chosen Pickup Point', 'itella_shipping') ?></strong>
+                <?=
+                $chosen_pickup_point->address->municipality . ' - ' .
+                $chosen_pickup_point->address->address . ', ' .
+                $chosen_pickup_point->address->postalCode . ' (' .
+                $chosen_pickup_point->publicName . ')'
+                ?>
+              </p>
+          <?php endif; ?>
             <p><strong><?= __('Extra Services', 'itella_shipping') ?></strong>
               <?php
               if (!$is_oversized && !$call_before_delivery && !$fragile) {
@@ -442,29 +453,27 @@ class Itella_Shipping_Method extends WC_Shipping_Method
           woocommerce_wp_select(array(
               'id' => 'itella_cod_enabled',
               'label' => __('COD:', 'itella_shipping'),
-              'value' => $is_cod ? __('Yes', 'woocommerce') : __('No', 'woocommerce'),
+              'value' => $is_cod ? 'yes' : 'no',
               'options' => array(
-                  'false' => __('No', 'woocommerce'),
-                  'true' => __('Yes', 'woocommerce')
+                  'no' => __('No', 'woocommerce'),
+                  'yes' => __('Yes', 'woocommerce')
               ),
               'wrapper_class' => 'form-field-wide'
           ));
 
-          if ($is_cod) {
-            woocommerce_wp_text_input(array(
-                'id' => 'itella_cod_amount',
-                'label' => __('COD amount:', 'itella_shipping'),
-                'value' => $cod_amount,
-                'wrapper_class' => 'form-field-wide'
-            ));
-          }
+          //          if ($is_cod) {
+          woocommerce_wp_text_input(array(
+              'id' => 'itella_cod_amount',
+              'label' => __('COD amount(' . $order->get_currency() . '):', 'itella_shipping'),
+              'value' => $cod_amount,
+              'wrapper_class' => 'form-field-wide'
+          ));
+          //          }
 
           woocommerce_wp_select(array(
               'id' => 'itella_shipping_method',
               'label' => __('Carrier:', 'itella_shipping'),
-              'value' => $is_itella_pp ? __('Pickup Point', 'itella_shipping') :
-                  ($is_itella_c ? __('Courier', 'itella_shipping') :
-                      __('No Itella Shipping method selected', 'itella_shipping')),
+              'value' => $is_itella_pp ? 'itella_pp' : 'itella_c',
               'options' => array(
                   'itella_pp' => __('Pickup Point', 'itella_shipping'),
                   'itella_c' => __('Courier', 'itella_shipping')
@@ -472,75 +481,115 @@ class Itella_Shipping_Method extends WC_Shipping_Method
               'wrapper_class' => 'form-field-wide'
           ));
 
-          if ($is_itella_pp) {
-            // TODO select pps
-          }
+          //          if ($is_itella_pp) {
+          woocommerce_wp_select(array(
+              'id' => 'itella_pickup_points',
+              'label' => __('Select Pickup Point:', 'itella_shipping'),
+              'value' => $chosen_pickup_point_id,
+              'options' => $this->build_pickup_points_list($order->get_shipping_country()),
+              'wrapper_class' => 'form-field-wide'
+          ));
+          //          }
 
-          $this->woocommerce_wp_multi_checkbox( array(
-              'id'    => 'itella_extra_services',
-              'name'  => 'itella_extra_services[]',
+          $this->woocommerce_wp_multi_checkbox(array(
+              'id' => 'itella_extra_services',
+              'name' => 'itella_extra_services[]',
               'style' => 'width: 1rem',
               'label' => __('Extra Services', 'itella_shipping'),
               'options' => array(
-                  'oversized'   => __('Oversized', 'itella_shipping'),
-                  'call_berore_delivery'   => __('Call before delivery', 'itella_shipping'),
-                  'fragile'    => __('Fragile', 'itella_shipping')
+                  'oversized' => __('Oversized', 'itella_shipping'),
+                  'call_berore_delivery' => __('Call before delivery', 'itella_shipping'),
+                  'fragile' => __('Fragile', 'itella_shipping')
               ),
               'wrapper_class' => 'form-field-wide'
-          ) );
+          ));
 
           ?></div>
-
-
     <?php }
   }
 
-  public function build_itella_shipping_options_overview()
-  {
-
-  }
-
   // New Multi Checkbox field for woocommerce backend
-  function woocommerce_wp_multi_checkbox( $field ) {
+  function woocommerce_wp_multi_checkbox($field)
+  {
     global $thepostid, $post;
 
-    $field['value'] = get_post_meta( $thepostid, $field['id'], true );
+    $field['value'] = get_post_meta($thepostid, $field['id'], true);
 
-    $thepostid              = empty( $thepostid ) ? $post->ID : $thepostid;
-    $field['class']         = isset( $field['class'] ) ? $field['class'] : 'select short';
-    $field['style']         = isset( $field['style'] ) ? $field['style'] : '';
-    $field['wrapper_class'] = isset( $field['wrapper_class'] ) ? $field['wrapper_class'] : '';
-    $field['value']         = isset( $field['value'] ) ? $field['value'] : array();
-    $field['name']          = isset( $field['name'] ) ? $field['name'] : $field['id'];
-    $field['desc_tip']      = isset( $field['desc_tip'] ) ? $field['desc_tip'] : false;
+    $thepostid = empty($thepostid) ? $post->ID : $thepostid;
+    $field['class'] = isset($field['class']) ? $field['class'] : 'select short';
+    $field['style'] = isset($field['style']) ? $field['style'] : '';
+    $field['wrapper_class'] = isset($field['wrapper_class']) ? $field['wrapper_class'] : '';
+    $field['value'] = isset($field['value']) ? $field['value'] : array();
+    $field['name'] = isset($field['name']) ? $field['name'] : $field['id'];
+    $field['desc_tip'] = isset($field['desc_tip']) ? $field['desc_tip'] : false;
 
-    echo '<fieldset class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '">
-    <legend>' . wp_kses_post( $field['label'] ) . '</legend>';
+    echo '<fieldset class="form-field ' . esc_attr($field['id']) . '_field ' . esc_attr($field['wrapper_class']) . '">
+    <legend>' . wp_kses_post($field['label']) . '</legend>';
 
-    if ( ! empty( $field['description'] ) && false !== $field['desc_tip'] ) {
-      echo wc_help_tip( $field['description'] );
+    if (!empty($field['description']) && false !== $field['desc_tip']) {
+      echo wc_help_tip($field['description']);
     }
 
     echo '<ul class="wc-radios">';
 
-    foreach ( $field['options'] as $key => $value ) {
+    foreach ($field['options'] as $key => $value) {
 
       echo '<li><label><input
-                name="' . esc_attr( $field['name'] ) . '"
-                value="' . esc_attr( $key ) . '"
+                name="' . esc_attr($field['name']) . '"
+                value="' . esc_attr($key) . '"
                 type="checkbox"
-                class="' . esc_attr( $field['class'] ) . '"
-                style="' . esc_attr( $field['style'] ) . '"
-                ' . ( in_array( $key, $field['value'] = array() ) ? 'checked="checked"' : '' ) . ' /> ' . esc_html( $value ) . '</label>
+                class="' . esc_attr($field['class']) . '"
+                style="' . esc_attr($field['style']) . '"
+                ' . (in_array($key, $field['value'] = array()) ? 'checked="checked"' : '') . ' /> ' . esc_html($value) . '</label>
         </li>';
     }
     echo '</ul>';
 
-    if ( ! empty( $field['description'] ) && false === $field['desc_tip'] ) {
-      echo '<span class="description">' . wp_kses_post( $field['description'] ) . '</span>';
+    if (!empty($field['description']) && false === $field['desc_tip']) {
+      echo '<span class="description">' . wp_kses_post($field['description']) . '</span>';
     }
 
     echo '</fieldset>';
+  }
+
+  public function get_pickup_points($shipping_country_id)
+  {
+    $pickup_points = file_get_contents(plugin_dir_url(__FILE__) . '../locations/locations' . $shipping_country_id . '.json');
+
+    return json_decode($pickup_points);
+  }
+
+  public function get_chosen_pickup_point($shipping_country_id, $pickup_point_id)
+  {
+    $pickup_points = $this->get_pickup_points($shipping_country_id);
+    $chosen_pickup_point = null;
+
+    foreach ($pickup_points as $pickup_point) {
+      $chosen_pickup_point = $pickup_point->id === $pickup_point_id ? $pickup_point : null;
+      if ($chosen_pickup_point) {
+        break;
+      }
+    }
+
+    return $chosen_pickup_point;
+  }
+
+  public function build_pickup_points_list($shipping_country_id)
+  {
+    $pickup_points_list = [];
+
+    $pickup_points = $this->get_pickup_points($shipping_country_id);
+
+    foreach ($pickup_points as $pickup_point) {
+      $pickup_points_list[$pickup_point->id] =
+          $pickup_point->address->municipality . ' - ' .
+          $pickup_point->address->address . ', ' .
+          $pickup_point->address->postalCode . ' (' .
+          $pickup_point->publicName . ')';
+    }
+    asort($pickup_points_list);
+
+    return $pickup_points_list;
   }
 
 }
