@@ -24,18 +24,18 @@
             pickupPointFields.forEach(field => {
                 field.parentElement.parentElement.parentElement.classList.toggle('d-none');
             });
-			if (feeTaxField.classList.contains('d-none')) {
-				feeTaxField.classList.toggle('d-none');
-			}
+			// if (feeTaxField.classList.contains('d-none')) {
+			// 	feeTaxField.classList.toggle('d-none');
+			// }
         });
 
         courier.addEventListener('change', function () {
             courierFields.forEach(field => {
                 field.parentElement.parentElement.parentElement.classList.toggle('d-none');
             });
-			if (feeTaxField.classList.contains('d-none')) {
-				feeTaxField.classList.toggle('d-none');
-			}
+			// if (feeTaxField.classList.contains('d-none')) {
+			// 	feeTaxField.classList.toggle('d-none');
+			// }
         });
     });
 })();

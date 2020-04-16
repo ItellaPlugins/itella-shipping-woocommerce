@@ -102,8 +102,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
      * class.
      */
 
-    wp_enqueue_script($this->name, plugin_dir_url(__FILE__) . 'js/itella-shipping-admin.js', array('jquery'), $this->version, TRUE);
-    wp_enqueue_script($this->name, plugin_dir_url(__FILE__) . 'js/itella-shipping-edit-orders.js', array('jquery'), $this->version, TRUE);
+    wp_enqueue_script($this->name . 'itella-shipping-admin.js', plugin_dir_url(__FILE__) . 'js/itella-shipping-admin.js', array('jquery'), $this->version, TRUE);
+    wp_enqueue_script($this->name . 'itella-shipping-edit-orders.js', plugin_dir_url(__FILE__) . 'js/itella-shipping-edit-orders.js', array('jquery'), $this->version, TRUE);
 
   }
 
@@ -378,7 +378,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
       ?>
         <br class="clear"/>
-        <h4>Itella Shipping Options <a href="#" class="edit_address">Edit</a></h4>
+        <h4><?= __('Itella Shipping Options', 'itella_shipping') ?><a href="#" class="edit_address"
+                                                                      id="itella-shipping-options">Edit</a></h4>
         <div class="address">
             <p><strong><?= __('Packets(total):', 'itella_shipping') ?></strong> <?= $default_packets_count ?></p>
             <p><strong><?= __('Weight(' . $weight_unit . ')', 'itella_shipping') ?></strong> <?= $default_weight ?></p>
@@ -495,12 +496,22 @@ class Itella_Shipping_Method extends WC_Shipping_Method
               'id' => 'itella_extra_services',
               'name' => 'itella_extra_services[]',
               'style' => 'width: 1rem',
+              'class' => 'itella_extra_services_cb',
               'label' => __('Extra Services', 'itella_shipping'),
               'options' => array(
                   'oversized' => __('Oversized', 'itella_shipping'),
                   'call_berore_delivery' => __('Call before delivery', 'itella_shipping'),
-                  'fragile' => __('Fragile', 'itella_shipping')
+                  'fragile' => __('Fragile', 'itella_shipping'),
               ),
+              'wrapper_class' => 'form-field-wide'
+          ));
+
+          woocommerce_wp_checkbox(array(
+              'id' => 'itella_multi_parcel',
+              'label' => __('Multi Parcel', 'itella_shipping'),
+              'style' => 'width: 1rem',
+              'value' => 'yes',
+              'cbvalue' => 'yes',
               'wrapper_class' => 'form-field-wide'
           ));
 
@@ -577,7 +588,6 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   public function build_pickup_points_list($shipping_country_id)
   {
     $pickup_points_list = [];
-
     $pickup_points = $this->get_pickup_points($shipping_country_id);
 
     foreach ($pickup_points as $pickup_point) {
@@ -587,6 +597,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
           $pickup_point->address->postalCode . ' (' .
           $pickup_point->publicName . ')';
     }
+
+    //sort by municipality
     asort($pickup_points_list);
 
     return $pickup_points_list;
