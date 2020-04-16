@@ -180,6 +180,7 @@ class Itella_Shipping
     $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
     $this->loader->add_action('woocommerce_update_options_shipping_' . $plugin_admin->id, $plugin_admin, 'process_admin_options');
     $this->loader->add_action( Itella_Shipping_Cron::ITELLA_SHIPPING_EVENT_DAILY, $plugin_admin, 'update_locations' );
+    $this->loader->add_action('woocommerce_admin_order_data_after_shipping_address', $plugin_admin, 'add_shipping_details_to_order');
     $this->loader->add_filter('woocommerce_shipping_methods', $this, 'add_itella_shipping_method');
 
 
