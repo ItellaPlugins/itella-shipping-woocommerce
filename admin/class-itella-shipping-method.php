@@ -352,6 +352,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
     if ($itella_method) {
 
+//        var_dump(get_post_meta($order->get_id()));
+        
       // vars
       $is_itella_pp = $itella_method === 'itella_pp';
       $is_itella_c = $itella_method === 'itella_c';
@@ -448,7 +450,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
               'id' => 'itella_multi_parcel',
               'label' => __('Multi Parcel', 'itella_shipping'),
               'style' => 'width: 1rem',
-              'description' => __('If more thank one packet is slected, a multi parcel service is mandatory', 'itella_shipping'),
+              'description' => __('If more than one packet is selected, then a multi parcel service is mandatory', 'itella_shipping'),
               'value' => 'no',
               'cbvalue' => 'no',
               'wrapper_class' => 'form-field-wide'
@@ -578,6 +580,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     foreach ($pickup_points as $pickup_point) {
       $chosen_pickup_point = $pickup_point->id === $pickup_point_id ? $pickup_point : null;
       if ($chosen_pickup_point) {
+
         break;
       }
     }
@@ -587,7 +590,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
   public function build_pickup_points_list($shipping_country_id)
   {
-    $pickup_points_list = [];
+    $pickup_points_list['-'] = '-';
     $pickup_points = $this->get_pickup_points($shipping_country_id);
 
     foreach ($pickup_points as $pickup_point) {
@@ -598,10 +601,22 @@ class Itella_Shipping_Method extends WC_Shipping_Method
           $pickup_point->publicName . ')';
     }
 
-    //sort by municipality
+    //sort by municipality name
     asort($pickup_points_list);
 
     return $pickup_points_list;
+  }
+
+  public function save_shipping_settings($order_id)
+  {
+    update_post_meta( $order_id, 'packet_count', wc_clean( $_POST[ 'packet_count' ] ) );
+    update_post_meta( $order_id, 'itella_multi_parcel', wc_clean( $_POST[ 'itella_multi_parcel' ] ) );
+    update_post_meta( $order_id, 'weight_total', wc_clean( $_POST[ 'weight_total' ] ) );
+    update_post_meta( $order_id, 'itella_cod_enabled', wc_clean( $_POST[ 'itella_cod_enabled' ] ) );
+    update_post_meta( $order_id, 'itella_cod_amount', wc_clean( $_POST[ 'itella_cod_amount' ] ) );
+    update_post_meta( $order_id, 'itella_shipping_method', wc_clean( $_POST[ 'itella_shipping_method' ] ) );
+    update_post_meta( $order_id, 'itella_pickup_points', wc_clean( $_POST[ 'itella_pickup_points' ] ) );
+    update_post_meta( $order_id, 'itella_extra_services', wc_clean( $_POST[ 'itella_extra_services' ] ) );
   }
 
 }
