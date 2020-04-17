@@ -349,6 +349,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   {
     $itella_method = get_post_meta($order->get_id(), '_itella_method', true);
 
+
     if ($itella_method) {
 
       // vars
@@ -357,9 +358,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
       $chosen_pickup_point_id = get_post_meta($order->get_id(), '_pp_id', true);
       $chosen_pickup_point = $this->get_chosen_pickup_point($order->get_shipping_country(), $chosen_pickup_point_id);
-//      var_dump($chosen_pickup_point);
 
-      $is_cod = true;
+      $is_cod = $order->get_payment_method() === 'itella_cod';
       $cod_amount = $order->get_total();
       $weight_unit = get_option('woocommerce_weight_unit');
 
@@ -444,6 +444,15 @@ class Itella_Shipping_Method extends WC_Shipping_Method
               'wrapper_class' => 'form-field-wide'
           ));
 
+          woocommerce_wp_checkbox(array(
+              'id' => 'itella_multi_parcel',
+              'label' => __('Multi Parcel', 'itella_shipping'),
+              'style' => 'width: 1rem',
+              'value' => 'no',
+              'cbvalue' => 'no',
+              'wrapper_class' => 'form-field-wide'
+          ));
+
           woocommerce_wp_text_input(array(
               'id' => 'weight_total',
               'label' => __('Weight(' . $weight_unit . ')'),
@@ -505,16 +514,6 @@ class Itella_Shipping_Method extends WC_Shipping_Method
               ),
               'wrapper_class' => 'form-field-wide'
           ));
-
-          woocommerce_wp_checkbox(array(
-              'id' => 'itella_multi_parcel',
-              'label' => __('Multi Parcel', 'itella_shipping'),
-              'style' => 'width: 1rem',
-              'value' => 'yes',
-              'cbvalue' => 'yes',
-              'wrapper_class' => 'form-field-wide'
-          ));
-
           ?></div>
     <?php }
   }
