@@ -34,6 +34,7 @@
             disableElements(itellaPickupPoints);
         }
 
+        // force enable multi parcel
         itellaPacketCount.addEventListener('change', () => {
             if (itellaPacketCount.value > 1) {
                 itellaMultiParcelCb.checked = true;
@@ -47,6 +48,7 @@
             }
         })
 
+        // listen for shipping method change
         itellaShippingMethod.addEventListener('change', () => {
             if (itellaShippingMethod.value === 'itella_pp') {
                 itellaPacketCount.value = '1';
