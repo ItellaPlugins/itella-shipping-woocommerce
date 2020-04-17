@@ -448,6 +448,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
               'id' => 'itella_multi_parcel',
               'label' => __('Multi Parcel', 'itella_shipping'),
               'style' => 'width: 1rem',
+              'description' => __('If more thank one packet is slected, a multi parcel service is mandatory', 'itella_shipping'),
               'value' => 'no',
               'cbvalue' => 'no',
               'wrapper_class' => 'form-field-wide'
