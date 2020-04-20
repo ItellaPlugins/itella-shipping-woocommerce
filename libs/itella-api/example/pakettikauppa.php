@@ -1,16 +1,15 @@
 <?php
+if (!file_exists('env.php')) {
+  copy('sample.env.php', 'env.php');
+}
+require('env.php');
+
 error_reporting(E_ALL|E_STRICT);
 ini_set('display_errors', 1);
 
 require '../vendor/autoload.php';
 
 use Pakettikauppa\Client;
-
-// env.php contains $user, $pass, $contract variables needed in these examples
-if (!file_exists('env.php')) {
-  copy('sample.env.php', 'env.php');
-}
-require('env.php');
 
 $client = new Client(array(
   'foo' => array(

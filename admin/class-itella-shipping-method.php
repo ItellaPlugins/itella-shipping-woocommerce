@@ -5,8 +5,8 @@ use Mijora\Itella\Locations\PickupPoints;
 /**
  * The dashboard-specific functionality of the plugin.
  *
- * @package    Itella_Woocommerce
- * @subpackage Itella_Woocommerce/admin
+ * @package    Itella_Shipping
+ * @subpackage Itella_Shipping/admin
  * @author     Your Name <email@example.com>
  */
 class Itella_Shipping_Method extends WC_Shipping_Method
@@ -375,20 +375,16 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       // vars
       if ($is_shipping_updated) {
         $packet_count = get_post_meta($order_id, 'packet_count', true);
-        $packet_count = $packet_count ?? $default_packet_count;
-
         $weight = get_post_meta($order_id, 'weight_total', true);
-        $weight = $weight ?? $default_weight;
-
         $is_cod = get_post_meta($order_id, 'itella_cod_enabled', true);
-        $is_cod = $is_cod ?? $default_is_cod;
-
         $cod_amount = get_post_meta($order_id, 'itella_cod_amount', true);
-        $cod_amount = $cod_amount ?? $default_cod_amount;
-
         $extra_services = get_post_meta($order_id, 'itella_extra_services', true);
       }
 
+      $packet_count = $packet_count ?? $default_packet_count;
+      $weight = $weight ?? $default_weight;
+      $is_cod = $is_cod ?? $default_is_cod;
+      $cod_amount = $cod_amount ?? $default_cod_amount;
 
       $is_itella_pp = $itella_method === 'itella_pp';
       $is_itella_c = $itella_method === 'itella_c';

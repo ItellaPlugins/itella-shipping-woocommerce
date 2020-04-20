@@ -135,12 +135,18 @@ class Itella_Shipping
      */
     require_once plugin_dir_path(dirname(__FILE__)) . 'libs/itella-api/vendor/autoload.php';
 
+    /**
+     * Load manifest script
+     */
+    require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-itella-shipping-manifest-page.php';
+
     Itella_Shipping_Cron::schedule();
     $this->loader = new Itella_Shipping_Loader();
 
     $this->set_locale();
     $this->define_admin_hooks();
     $this->define_public_hooks();
+    $this->define_manifest_hooks();
     $this->loader->run();
 
   }
@@ -182,6 +188,7 @@ class Itella_Shipping
     $this->loader->add_action( Itella_Shipping_Cron::ITELLA_SHIPPING_EVENT_DAILY, $plugin_admin, 'update_locations' );
     $this->loader->add_action('woocommerce_admin_order_data_after_shipping_address', $plugin_admin, 'add_shipping_details_to_order');
     $this->loader->add_action('woocommerce_process_shop_order_meta', $plugin_admin, 'save_shipping_settings');
+
     $this->loader->add_filter('woocommerce_shipping_methods', $this, 'add_itella_shipping_method');
 
 
@@ -205,6 +212,17 @@ class Itella_Shipping
     $this->loader->add_action('woocommerce_checkout_update_order_meta', $plugin_public, 'add_pp_id_to_order');
     $this->loader->add_action('woocommerce_order_status_completed', $plugin_public, 'show_pp');
 
+  }
+
+  private function define_manifest_hooks()
+  {
+    $plugin_manifest = new Itella_Manifest($this->get_plugin_name(), $this->get_version());
+
+    $this->loader->add_action('admin_enqueue_scripts', $plugin_manifest, 'enqueue_styles');
+    $this->loader->add_action('admin_enqueue_scripts', $plugin_manifest, 'enqueue_scripts');
+    $this->loader->add_action('admin_menu', $plugin_manifest, 'register_itella_manifest_menu_page');
+
+    $this->loader->add_filter('woocommerce_order_data_store_cpt_get_orders_query', $plugin_manifest, 'handle_custom_itella_query_var', 10, 2);
   }
 
   /**

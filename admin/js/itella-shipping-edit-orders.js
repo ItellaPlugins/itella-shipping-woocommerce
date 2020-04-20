@@ -1,5 +1,5 @@
 'use strict';
-
+// TODO disable and re-enable previously selected extra services accordinf to selected method
 (() => {
     const itellaShippingOptionsLink = document.getElementById('itella-shipping-options');
 
@@ -10,20 +10,25 @@
         const itellaPacketCount = document.getElementById('packet_count');
         const itellaCodEnable = document.getElementById('itella_cod_enabled');
         const itellaCodAmount = document.getElementById('itella_cod_amount');
-        const itellaPickupPoints = document.getElementById('itella_pickup_points');
+        const itellaPickupPoints = document.getElementById('_pp_id');
         const itellaExtraServices = document.querySelectorAll('.itella_extra_services_cb');
         const itellaMultiParcelCb = document.getElementById('itella_multi_parcel');
         // const itellaMultiParcelField = document.querySelector('.itella_multi_parcel_field');
 
         // elements to show validation error
         const saveOrderButton = document.querySelector('.save_order');
-        const wpNoticeList = document.getElementById('woocommerce-layout__primary');
+        const wcNotices = document.getElementById('woocommerce-layout__primary');
 
         // multi parcel is always disabled
         disableElements(itellaMultiParcelCb);
         // itellaMultiParcelField.classList.toggle('d-none'); // initially hidden
 
         // initial values
+        let itellaExtraServicesArray = Array.apply(null, itellaExtraServices); // convert to array
+        let itellaExtraServicesTempValues = itellaExtraServicesArray.map(service => {
+            return service.checked;
+        });
+
         let itellaCodEnableTempValue = itellaCodEnable.value;
         let itellaCodAmountTempValue = itellaCodAmount.value;
         let itellaPickupPointsTempValue = itellaPickupPoints.value;
@@ -39,6 +44,7 @@
 
             // pp method doesnt allow more than one packet
             itellaPacketCount.value = '1';
+            itellaMultiParcelCb.checked = false;
         }
         if (itellaShippingMethod.value === 'itella_c') {
 
@@ -68,7 +74,6 @@
                 itellaPacketCount.value = '1';
                 itellaMultiParcelCb.checked = false;
                 // itellaMultiParcelField.classList.toggle('d-none');
-
 
                 itellaCodEnable.value = 'no';
                 itellaCodAmount.value = '-';
@@ -118,7 +123,7 @@
                 errorBox.classList.add('error');
                 errorMessage.textContent = 'Select Pickup Point field is required';
                 errorBox.appendChild(errorMessage);
-                wpNoticeList.appendChild(errorBox);
+                wcNotices.appendChild(errorBox);
             }
         })
 

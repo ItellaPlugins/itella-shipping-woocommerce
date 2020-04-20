@@ -150,6 +150,10 @@ class Manifest
           </tr>';
       $count++;
     }
+    // add itella logo
+    $image = dirname(__FILE__) . DIRECTORY_SEPARATOR . '/logo.png';
+    $this->pdf->Image($image, 10, 20, 50);
+    
     $this->pdf->SetFont('freeserif', '', 14);
     $shop_addr = '<table cellspacing="0" cellpadding="1" border="0"><tr><td>' . date('Y-m-d H:i:s', $this->timestamp)
       . '</td><td>' . $this->strings['sender_address'] . '<br/>' . $this->senderName . '<br/>'

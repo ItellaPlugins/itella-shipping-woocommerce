@@ -2,6 +2,8 @@
 // TODO: write docs
 namespace Mijora\Itella;
 
+use Mijora\Itella\Shipment\Shipment as _Shipment;
+
 class Helper
 {
   public static function keyExists($key, &$arr)
@@ -10,6 +12,19 @@ class Helper
       return false;
     }
     return (isset($arr[$key]) || array_key_exists($key, $arr));
+  }
+
+  /**
+   * Returns product code by supplied tracking number. If it starts with JJFI its courier (2317) otherwise assume pickup point (2711)
+   * @param string $tracking_number Tracking number to check
+   */
+  public static function getProductIdFromTrackNum($tracking_number)
+  {
+    if (strpos($tracking_number, 'JJFI') === 0) {
+      return _Shipment::PRODUCT_COURIER;
+    }
+
+    return _Shipment::PRODUCT_PICKUP;
   }
 
   /**

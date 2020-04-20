@@ -1,18 +1,16 @@
 <?php
 // TODO: write docs
-require '../vendor/autoload.php';
-
-use \Mijora\Itella\Shipment\Party;
-use \Mijora\Itella\Shipment\GoodsItem;
-use \Mijora\Itella\Shipment\AdditionalService;
-use \Mijora\Itella\Shipment\Shipment;
-use \Mijora\Itella\Helper;
-
-
 if (!file_exists('env.php')) {
   copy('sample.env.php', 'env.php');
 }
 require('env.php');
+
+require '../vendor/autoload.php';
+
+use \Mijora\Itella\Shipment\Party;
+use \Mijora\Itella\Shipment\GoodsItem;
+use \Mijora\Itella\Shipment\Shipment;
+
 try {
 
   // Create and configure sender

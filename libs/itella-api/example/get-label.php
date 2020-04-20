@@ -1,14 +1,14 @@
 <?php
 // TODO: write docs
-require '../vendor/autoload.php';
-
-use Mijora\Itella\ItellaException;
-use \Mijora\Itella\Shipment\Shipment;
-
 if (!file_exists('env.php')) {
   copy('sample.env.php', 'env.php');
 }
 require('env.php');
+
+require '../vendor/autoload.php';
+
+use Mijora\Itella\ItellaException;
+use \Mijora\Itella\Shipment\Shipment;
 
 $track = $sample_track_nr;
 // or if need multiple in one pdf
@@ -22,7 +22,7 @@ try {
     if (is_array($track)) {
       $track = 'labels';
     }
-    $path = dirname(__FILE__) . '/../temp' . $track . '.pdf';
+    $path = dirname(__FILE__) . '/../temp/' . $track . '.pdf';
     $is_saved = file_put_contents($path, $pdf);
     $filename = 'labels.pdf';
     if (!$is_saved) { // make sure it was saved

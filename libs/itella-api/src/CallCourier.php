@@ -3,10 +3,12 @@
 namespace Mijora\Itella;
 
 use Mijora\Itella\ItellaException;
+
 class CallCourier
 {
   private $itella_email;
   private $sender_email;
+  private $attachment = false; // attachement
   private $isTest = false;
   private $pickupAddress = array(
     'sender' => '',
@@ -32,19 +34,36 @@ class CallCourier
     // Force PHP to use the UTF-8 charset
     header('Content-Type: text/html; charset=utf-8');
 
+    $uid = md5(uniqid(time()));
     // Define and Base64 encode the subject line
     $subject_text = ($this->isTest ? 'TEST CALL - ' : '') . $this->subject;
     $subject = '=?UTF-8?B?' . base64_encode($subject_text) . '?=';
 
-    // Add custom headers
-    $headers = 'Content-Type: text/plain; charset=utf-8' . "\r\n";
-    $headers .= 'Content-Transfer-Encoding: base64' . "\r\n";
-    $headers .= 'From: ' . $this->sender_email . "\r\n";
+    $eol = PHP_EOL;
 
-    // Base64 the email body text
-    $headers .= rtrim(chunk_split(base64_encode($this->buildMailBody())));
+    $headers = '';
+    $message = '';
+    // Add custom headers
+    $headers .= "From: " . $this->sender_email . "$eol";
+    $headers .= "MIME-Version: 1.0$eol";
+    $headers .= "Content-Type: multipart/mixed; boundary=\"$uid\"$eol";
+    $message .= "--" . $uid . "$eol";
+    $message .= "Content-Type: text/html; charset=utf-8$eol";
+    $message .= "Content-Transfer-Encoding: base64" . $eol . $eol;
+    // Base64 the email message
+    $message .= rtrim(chunk_split(base64_encode($this->buildMailBody()))) . "$eol";
+    if ($this->attachment) {
+      $message .= "--" . $uid . "$eol";
+      $message .= "Content-Type: application/octet-stream; name=\"manifest.pdf\"$eol";
+      $message .= "Content-Transfer-Encoding: base64$eol";
+      $message .= "Content-Disposition: attachment; filename=\"manifest.pdf\"" . $eol . $eol;
+      $message .= rtrim(chunk_split($this->attachment)) . "$eol";
+    } else {
+      throw new ItellaException('No manifest attached to call courier');
+    }
+    $message .= "--" . $uid . "--";
     // Send mail with custom headers
-    if (!mail($this->itella_email, $subject, '', $headers)) {
+    if (!mail($this->itella_email, $subject, $message, $headers)) {
       throw new ItellaException('Oops, something gone wrong!');
     }
 
@@ -53,12 +72,24 @@ class CallCourier
 
   public function buildMailBody()
   {
-    $body =
-      ($this->isTest ? "TEST CALL\r\n\r\n" : "") .
-      "Sender: " . $this->pickupAddress['sender'] . "\r\n" .
-      "Adress: " . $this->pickupAddress['address'] . "\r\n" .
-      "Contact Phone: " . $this->pickupAddress['contact_phone'] . "\r\n" .
-      "Pickup time: " . $this->pickupAddress['pickup_time'] . "\r\n";
+    $body = '<h2>Pickup information</h2><br/>' . PHP_EOL;
+    $body .= '<table>' . PHP_EOL;
+    if (!empty($this->pickupAddress['sender'])) {
+      $body .= "<tr><td>Sender:</td><td>" . $this->pickupAddress['sender'] . "</td></tr>" . PHP_EOL;
+    }
+    if (!empty($this->pickupAddress['address'])) {
+      $body .= "<tr><td>Adress (pickup from):</td><td>" . $this->pickupAddress['address'] . "</td></tr>" . PHP_EOL;
+    }
+    if (!empty($this->pickupAddress['contact_phone'])) {
+      $body .= "<tr><td>Contact Phone:</td><td>" . $this->pickupAddress['contact_phone'] . "</td></tr>" . PHP_EOL;
+    }
+    if (!empty($this->pickupAddress['pickup_time'])) {
+      $body .= "<tr><td>Pickup time:</td><td>" . $this->pickupAddress['pickup_time'] . "</td></tr>" . PHP_EOL;
+    }
+    $body .= '</table>' . PHP_EOL;
+    if ($this->attachment) {
+      $body .= "<br/>See attachment for manifest PDF." . PHP_EOL;
+    }
     return $body;
   }
 
@@ -85,6 +116,12 @@ class CallCourier
   public function setSubject($subject)
   {
     $this->subject = $subject;
+    return $this;
+  }
+
+  public function setAttachment($attachment, $isBase64 = false)
+  {
+    $this->attachment = ($isBase64 ? $attachment : base64_encode($attachment));
     return $this;
   }
 }

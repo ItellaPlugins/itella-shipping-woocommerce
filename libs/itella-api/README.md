@@ -1,4 +1,4 @@
-# Itella-API v2.0.0
+# Itella-API v2.0.1
 
 Its a wrapper library for Pakettikauppa API library.
 
@@ -217,7 +217,7 @@ try {
     ->setSenderParty($sender)                   // Register Sender
     ->setReceiverParty($receiver)               // Register Receiver
     ->setPickupPoint('071503201')               // Register pickup point pupCode
-    ->addGoodsItem($item)                       // Register GoodsItem
+    ->addGoodsItem($item)                       // Register GoodsItem (this adds just one)
   ;
 } catch (ItellaException $e) {
   // Handle validation exceptions here
@@ -229,7 +229,7 @@ If registration is successfull, tracking number will be returned.
 In this example returned tracking number is displayed, normaly it would be saved to order for later use to request shipment label PDF.
 ```php
 try {
-  $tracking_number = $shipment->sendShipment();
+  $tracking_number = $shipment->registerShipment();
   echo "Shipment registered:\n <code>" . $tracking_number . "</code>\n";
 } catch (ItellaException $e) {
   // Handle validation exceptions here
@@ -249,7 +249,9 @@ try {
 ## Printing Label
 ---
 It is advised to always download label when it is needed. For that Shipment class is used.
-result will be base64 encoded pdf file. If multiple tracking numbers (in array) is passed pdf will contain all those labels.
+result will be base64 encoded pdf file. If multiple tracking numbers (in array) is passed pdf will contain all those labels. For getting and merging labels pdf from two different users please refer to `get-merge-labels.php` example
+
+**Important**: If tracking number is from different user it will be ignored.
 ```php
 use Mijora\Itella\Shipment\Shipment;
 use Mijora\Itella\ItellaException;
@@ -307,4 +309,93 @@ $pickup = new PickupPoints('https://locationservice.posti.com/api/2/location');
 $itella_loc = $pickup->getLocationsByCountry('LT');
 // now points can be stored into file or database for future use
 $pickup->saveLocationsToJSONFile('itella_locations_lt.json', json_encode($itella_oc));
+```
+
+## Manifest generating
+---
+When generating manifest by default it uses english strings - it is possible to pass translation.
+
+**Requires** array of arrays with this information:
+  - `track_num`         => tracking number (string),
+  - `weight`            => weight (if any) (float),
+  - `delivery_address`  => Delivery address (string).
+
+for other options see example below:
+```php
+use Mijora\Itella\Pdf\Manifest;
+
+$items = array(
+  array(
+    'track_num' => 'JJFItestnr00000000015',
+    'weight' => 1,
+    'delivery_address' => 'Testas Testutis, Pramones pr. 6, 51267 Kaunas, LT',
+  ),
+);
+
+// If need to translate default english
+$translation = array(
+  'sender_address' => 'Siuntėjo adresas:',
+  'nr' => 'Nr.',
+  'track_num' => 'Siuntos numeris',
+  'date' => 'Data',
+  'amount' => 'Kiekis',
+  'weight' => 'Svoris (kg)',
+  'delivery_address' => 'Pristatymo adresas',
+  'courier' => 'Kurjerio',
+  'sender' => 'Siuntėjo',
+  'name_lastname_signature' => 'vardas, pavardė, parašas',
+);
+
+$manifest = new Manifest();
+$manifest
+  ->setStrings($translation) // set translation
+  ->setSenderName('TEST Web Shop') // sender name
+  ->setSenderAddress('Raudondvario pl. 150') // sender address
+  ->setSenderPostCode('47174') // sender postcode
+  ->setSenderCity('Kaunas') // sender city
+  ->setSenderCountry('LT') // sender country code
+  ->addItem($items) // register item list
+  ->setToString(true) // if requires pdf to be returned as string set to true (default false)
+  ->setBase64(true) // when setToString is true, this one can set if string should be base64 encoded (default false)
+  ->printManifest('manifest.pdf', 'PATH_TO_SAVE'); // set filename as first argument and path where to save it if setToStringis false
+```
+
+## Call Courier
+---
+To call courrier manifest must be generated (works well with base64 encoded pdf). CallCourier is using mail() php function. That means - even if mail reports success on sending email, it is not guaranteed to be sent.
+```php
+use Mijora\Itella\CallCourier;
+use Mijora\Itella\ItellaException;
+use Mijora\Itella\Pdf\Manifest;
+
+$manifest = new Manifest();
+$manifest_string = $manifest
+  /*
+  See previous examples on how to create manifest, here only show last couple settings to get base64 string
+  */
+  ->setToString(true)
+  ->setBase64(true)
+  ->printManifest('manifest.pdf')
+;
+
+$sendTo = 'test@test.com'; // email to send courier call to
+try {
+  $caller = new CallCourier($sendTo);
+  $result = $caller
+    ->setSenderEmail('shop@shop.lt') // sender email
+    ->setSubject('E-com order booking') // currently it must be 'E-com order booking'
+    ->setPickUpAddress(array( // strings to show in email message
+      'sender' => 'Name / Company name',
+      'address' => 'Street, Postcode City, Country',
+      'contact_phone' => '865465412',
+    ))
+    ->setAttachment($manifest_string, true) // attachment is previously generated manifest, true - means we are passing base64 encoded string
+    ->callCourier() // send email
+  ;
+  if ($result) {
+    echo 'Email sent to: <br>' . $sendTo;
+  }
+} catch (ItellaException $e) { // catch if something goes wrong
+  echo 'Failed to send email, reason: ' . $e->getMessage();
+}
 ```
