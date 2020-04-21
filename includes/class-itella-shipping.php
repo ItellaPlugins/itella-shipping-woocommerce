@@ -145,6 +145,7 @@ class Itella_Shipping
 
     $this->set_locale();
     $this->define_admin_hooks();
+    $this->loader->add_filter('woocommerce_shipping_methods', $this, 'add_itella_shipping_method');
     $this->define_public_hooks();
     $this->define_manifest_hooks();
     $this->loader->run();
@@ -189,8 +190,7 @@ class Itella_Shipping
     $this->loader->add_action('woocommerce_admin_order_data_after_shipping_address', $plugin_admin, 'add_shipping_details_to_order');
     $this->loader->add_action('woocommerce_process_shop_order_meta', $plugin_admin, 'save_shipping_settings');
 
-    $this->loader->add_filter('woocommerce_shipping_methods', $this, 'add_itella_shipping_method');
-
+    $this->loader->add_filter('admin_post_itella_labels', $plugin_admin, 'itella_post_label_actions', 20);
 
   }
 

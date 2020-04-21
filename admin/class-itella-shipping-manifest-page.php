@@ -417,7 +417,7 @@ class Itella_Manifest
                           <td class="manage-column">
                               <div class="data-grid-cell-content">
                                 <?php
-                                $shipping_parameters = Itella_Manifest::get_shipping_parameters($order);
+                                $shipping_parameters = Itella_Manifest::get_shipping_parameters($order->get_id());
                                 if ($shipping_parameters) {
                                   if ($shipping_parameters['itella_shipping_method'] === 'itella_pp') {
                                     $chosen_pickup_point = $itella_shipping->get_chosen_pickup_point(
@@ -486,7 +486,7 @@ class Itella_Manifest
                           <td class="manage-column">
                               <a href="admin-post.php?action=itella_labels&post=<?php echo $order->get_id(); ?>"
                                  class="button action">
-                                <?php echo __('Print labels', 'itella_shipping'); ?>
+                                <?php echo __('Print label', 'itella_shipping'); ?>
                               </a>
                           </td>
                       </tr>
@@ -554,19 +554,15 @@ class Itella_Manifest
     return add_query_arg($query_args, admin_url('/admin.php'));
   }
 
-  public static function get_shipping_parameters($order)
+  public static function get_shipping_parameters($order_id)
   {
 
     $shipping_parameters = array();
-    $order_id = $order->get_id();
+    $order = wc_get_order($order_id);
     $is_shipping_updated = !empty(get_post_meta($order_id, 'itella_shipping_method', true));
 
     // defaults
-    $default_extra_services = array(
-        'oversized' => false,
-        'call_before_delivery' => false,
-        'fragile' => false
-    );
+    $default_extra_services = array();
     $default_packet_count = '1';
     $default_multi_parcel = false;
     $default_weight = '1.00';

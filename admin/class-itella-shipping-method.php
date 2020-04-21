@@ -1,6 +1,11 @@
 <?php
 
+use Mijora\Itella\Helper;
 use Mijora\Itella\Locations\PickupPoints;
+use Mijora\Itella\Shipment\AdditionalService;
+use Mijora\Itella\Shipment\GoodsItem;
+use Mijora\Itella\Shipment\Party;
+use Mijora\Itella\Shipment\Shipment;
 
 /**
  * The dashboard-specific functionality of the plugin.
@@ -230,6 +235,10 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             'title' => __('Bank account', 'itella_shipping'),
             'type' => 'text',
         ),
+        'cod_bic' => array(
+            'title' => __('BIC', 'itella_shipping'),
+            'type' => 'text',
+        ),
         'shop_name' => array(
             'title' => __('Shop name', 'itella_shipping'),
             'type' => 'text',
@@ -253,6 +262,10 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         'shop_phone' => array(
             'title' => __('Shop phone number', 'itella_shipping'),
             'type' => 'text',
+        ),
+        'shop_email' => array(
+            'title' => __('Shop email', 'itella_shipping'),
+            'type' => 'email',
         ),
         'pickup_point_method' => array(
             'title' => __('Enable Pickup Point', 'itella_shipping'),
@@ -380,7 +393,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         $cod_amount = get_post_meta($order_id, 'itella_cod_amount', true);
         $extra_services = get_post_meta($order_id, 'itella_extra_services', true);
         if (!is_array($extra_services)) {
-            $extra_services = array($extra_services);
+          $extra_services = array($extra_services);
         }
       }
 
@@ -622,7 +635,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
           $pickup_point->publicName . ')';
     }
 
-    //sort by municipality name
+    //sort by municipality name(city)
     asort($pickup_points_list);
 
     return $pickup_points_list;
@@ -632,7 +645,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   {
     update_post_meta($order_id, 'packet_count', wc_clean($_POST['packet_count']));
     if (intval(wc_clean($_POST['packet_count']) > 1)) {
-    update_post_meta( $order_id, 'itella_multi_parcel', 'true' );
+      update_post_meta($order_id, 'itella_multi_parcel', 'true');
     }
     update_post_meta($order_id, 'weight_total', wc_clean($_POST['weight_total']));
     update_post_meta($order_id, 'itella_cod_enabled', wc_clean($_POST['itella_cod_enabled']));
@@ -640,6 +653,116 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     update_post_meta($order_id, 'itella_shipping_method', wc_clean($_POST['itella_shipping_method']));
     update_post_meta($order_id, '_pp_id', wc_clean($_POST['_pp_id']));
     update_post_meta($order_id, 'itella_extra_services', wc_clean($_POST['itella_extra_services']));
+  }
+
+  public function itella_post_label_actions()
+  {
+    $order_id = $_REQUEST['post'];
+    $order = wc_get_order($order_id);
+    $shipping_parameters = Itella_Manifest::get_shipping_parameters($order_id);
+//    var_dump($shipping_parameters);
+//    var_dump($this->settings);
+//    var_dump(wc_get_order($order_id));
+    $p_user = 'ma_LT100011522813_1';
+    $p_secret = 'ste!hejiBIq2S&y-Dlri';
+    $is_test = true;
+
+    try {
+      // Create and configure sender
+      $sender = new Party(Party::ROLE_SENDER);
+      $sender
+          //->setContract($contract) // important comes from supplied tracking code interval
+          ->setName1($this->settings['shop_name'])
+          ->setStreet1($this->settings['shop_address'])
+          ->setPostCode($this->settings['shop_postcode'])
+          ->setCity($this->settings['shop_city'])
+          ->setCountryCode($this->settings['shop_countrycode'])
+          ->setContactMobile($this->settings['shop_phone'])
+          ->setContactEmail($this->settings['shop_email']);
+
+      // Create and configure receiver
+      $receiver = new Party(Party::ROLE_RECEIVER);
+      $receiver
+          ->setName1($order->get_shipping_first_name() . ' ' . $order->get_billing_last_name())
+          ->setStreet1($order->get_shipping_address_1())
+          ->setPostCode($order->get_shipping_postcode())
+          ->setCity($order->get_shipping_city())
+          ->setCountryCode($order->get_shipping_country())
+          ->setContactMobile($order->get_billing_phone())
+          ->setContactEmail($order->get_billing_email());
+
+      // Create GoodsItem (parcel)
+      $item = null;
+      $items = null;
+      if ($shipping_parameters['packet_count'] === '1') {
+        $item = new GoodsItem();
+      } else {
+        for ($i = 0; $i < intval($shipping_parameters['packet_count']); $i++) {
+          $items[] = new GoodsItem();
+        }
+      }
+      // Create additional services
+      $additional_services = array();
+
+      // get order services
+      $extra_services = $shipping_parameters['extra_services'];
+      $extra_services = is_array($extra_services) ? $extra_services : array($extra_services);
+
+      if ($shipping_parameters['is_cod'] === 'yes') {
+        $service_cod = new AdditionalService(3101, array(
+            'amount' => $shipping_parameters['cod_amount'],
+            'account' => $this->settings['bank_account'],
+            'reference' => Helper::generateCODReference($order_id),
+            'codbic' => $this->settings['cod_bic']
+        ));
+        $additional_services[] = $service_cod;
+      }
+
+      $oversized = in_array('oversized', $extra_services) ? new AdditionalService(3174) : false;
+      if ($oversized) {
+        $additional_services[] = $oversized;
+      }
+      $fragile = in_array('fragile', $extra_services) ? new AdditionalService(3104) : false;
+      if ($fragile) {
+        $additional_services[] = $fragile;
+      }
+      $call_before_delivery = in_array('call_before_delivery', $extra_services) ? new AdditionalService(3166) : false;
+      if ($call_before_delivery) {
+        $additional_services[] = $call_before_delivery;
+      }
+
+
+      // Create shipment object
+      $shipment = new Shipment($p_user, $p_secret, $is_test);
+      $shipment
+          ->setProductCode(Shipment::PRODUCT_COURIER) // should always be set first
+          ->setShipmentNumber('Test_ORDER_courier') // shipment number
+          //->setShipmentDateTime(date('c')) // when package will be ready (just use current time)
+          ->setSenderParty($sender) // Sender class object
+          ->setReceiverParty($receiver) // Receiver class object
+          ->addAdditionalServices($additional_services) // set additional services
+          ->addGoodsItems($item ?? $items)
+      ;
+
+      var_dump($shipment);
+
+      $xml = false;
+
+      if ($xml) {
+        $result = $shipment->asXML();
+        echo "<br>XML REQUEST<br>\n";
+        echo "<br>Shipment sent:<br>\n<code>" . $result . "</code>\n";
+      } else {
+//        $result = $shipment->registerShipment();
+//        echo "<br>Shipment registered:<br>\n<code>" . $result . "</code>\n";
+//        file_put_contents(dirname(__FILE__) . '/../temp/registered_tracks.log', "\n" . $result, FILE_APPEND);
+      }
+    } catch (\Exception $th) {
+      echo "\n<br>Exception:<br>\n"
+          . str_replace("\n", "<br>\n", $th->getMessage()) . "<br>\n"
+          . str_replace("\n", "<br>\n", $th->getTraceAsString());
+    }
+    echo '<br>Done';
   }
 
 }
