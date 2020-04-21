@@ -1,5 +1,5 @@
 'use strict';
-// TODO disable and re-enable previously selected extra services accordinf to selected method
+// TODO disable and re-enable previously selected extra services according to selected method
 (() => {
     const itellaShippingOptionsLink = document.getElementById('itella-shipping-options');
 
@@ -24,10 +24,10 @@
         // itellaMultiParcelField.classList.toggle('d-none'); // initially hidden
 
         // initial values
-        let itellaExtraServicesArray = Array.apply(null, itellaExtraServices); // convert to array
-        let itellaExtraServicesTempValues = itellaExtraServicesArray.map(service => {
-            return service.checked;
-        });
+        // let itellaExtraServicesArray = Array.apply(null, itellaExtraServices); // convert to array
+        // let itellaExtraServicesTempValues = itellaExtraServicesArray.map(service => {
+        //     return service.checked;
+        // });
 
         let itellaCodEnableTempValue = itellaCodEnable.value;
         let itellaCodAmountTempValue = itellaCodAmount.value;
@@ -50,6 +50,12 @@
 
             // set multi parcel
             itellaMultiParcelCb.checked = itellaPacketCount.value > 1;
+
+            // check cod
+            if (itellaCodEnable.value === 'no') {
+                itellaCodAmount.value = '-';
+                disableElements(itellaCodAmount);
+            }
 
             // deselect pp and disable pp field
             itellaPickupPoints.value = '-';

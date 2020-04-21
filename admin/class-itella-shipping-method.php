@@ -376,15 +376,18 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       if ($is_shipping_updated) {
         $packet_count = get_post_meta($order_id, 'packet_count', true);
         $weight = get_post_meta($order_id, 'weight_total', true);
-        $is_cod = get_post_meta($order_id, 'itella_cod_enabled', true);
+        $is_cod = get_post_meta($order_id, 'itella_cod_enabled', true) === 'yes';
         $cod_amount = get_post_meta($order_id, 'itella_cod_amount', true);
         $extra_services = get_post_meta($order_id, 'itella_extra_services', true);
+        if (!is_array($extra_services)) {
+            $extra_services = array($extra_services);
+        }
       }
 
       $packet_count = $packet_count ?? $default_packet_count;
       $weight = $weight ?? $default_weight;
       $is_cod = $is_cod ?? $default_is_cod;
-      $cod_amount = $cod_amount ?? $default_cod_amount;
+      $cod_amount = !empty($cod_amount) ? $cod_amount : $default_cod_amount;
 
       $is_itella_pp = $itella_method === 'itella_pp';
       $is_itella_c = $itella_method === 'itella_c';
@@ -517,7 +520,6 @@ class Itella_Shipping_Method extends WC_Shipping_Method
               'wrapper_class' => 'form-field-wide'
           ));
 
-          //          if ($is_itella_pp) {
           woocommerce_wp_select(array(
               'id' => '_pp_id',
               'label' => __('Select Pickup Point:', 'itella_shipping'),
@@ -525,7 +527,6 @@ class Itella_Shipping_Method extends WC_Shipping_Method
               'options' => $this->build_pickup_points_list($order->get_shipping_country()),
               'wrapper_class' => 'form-field-wide'
           ));
-          //          }
 
           $this->woocommerce_wp_multi_checkbox(array(
               'id' => 'itella_extra_services',
