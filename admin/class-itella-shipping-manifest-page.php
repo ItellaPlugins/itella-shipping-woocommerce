@@ -97,8 +97,8 @@ class Itella_Manifest
   {
     add_submenu_page(
         'woocommerce',
-        __('Itella manifest', 'itella_shipping'),
-        __('Itella manifest', 'itella_shipping'),
+        __('Itella shipments', 'itella_shipping'),
+        __('Itella shipments', 'itella_shipping'),
         'manage_options',
         'itella-manifest',
         'itella_manifest_page',
@@ -126,7 +126,7 @@ class Itella_Manifest
     $filter_keys = array(
         'customer',
         'status',
-        'barcode',
+        'tracking_code',
         'id',
         'start_date',
         'end_date'
@@ -136,12 +136,12 @@ class Itella_Manifest
     $max_per_page = 25;
 
 // prep access to Itella shipping class
-    $wc_shipping = new WC_Shipping();
+//    $wc_shipping = new WC_Shipping();
     $itella_shipping = new Itella_Shipping_Method();
     ?>
 
       <div class="wrap">
-      <h1><?php _e('Itella manifest', 'itella_shipping'); ?></h1>
+      <h1><?php _e('Itella shipments', 'itella_shipping'); ?></h1>
 
     <?php
 
@@ -198,10 +198,10 @@ class Itella_Manifest
                 array('status' => $filter)
             );
             break;
-          case 'barcode':
+          case 'tracking_code':
             $args = array_merge(
                 $args,
-                array('itella_barcode' => $filter)
+                array('itella_tracking_code' => $filter)
             );
             break;
           case 'customer':
@@ -313,7 +313,11 @@ class Itella_Manifest
       <div class="table-container">
           <form id="filter-form" class="" action="<?php echo Itella_Manifest::make_link(array('action' => $action)); ?>"
                 method="POST">
-            <?php wp_nonce_field('itella_labels', 'itella_labels_nonce'); ?>
+            <?php
+            wp_nonce_field('itella_labels', 'itella_labels_nonce');
+            wp_nonce_field('itella_shipments', 'itella_shipments_nonce');
+            wp_nonce_field('itella_manifests', 'itella_manifests_nonce');
+            ?>
               <table class="wp-list-table widefat fixed striped posts">
                   <thead>
 
@@ -342,10 +346,10 @@ class Itella_Manifest
                       <th class="manage-column">
                       </th>
                       <th class="manage-column">
-                          <input type="text" class="d-inline" name="filter_barcode" id="filter_barcode"
-                                 value="<?php echo $filters['barcode']; ?>"
-                                 placeholder="<?php echo __('Barcode', 'itella_shipping'); ?>"
-                                 aria-label="Order barcode filter">
+                          <input type="text" class="d-inline" name="filter_tracking_code" id="filter_tracking_code"
+                                 value="<?php echo $filters['tracking_code']; ?>"
+                                 placeholder="<?php echo __('Tracking code', 'itella_shipping'); ?>"
+                                 aria-label="Order tracking_code filter">
                       </th>
                       <th class="manage-column">
                           <div class='datetimepicker'>
@@ -377,9 +381,9 @@ class Itella_Manifest
                       <th scope="col" class="manage-column"><?php echo __('Customer', 'itella_shipping'); ?></th>
                       <th scope="col" class="manage-column"><?php echo __('Order Status', 'itella_shipping'); ?></th>
                       <th scope="col" class="manage-column"><?php echo __('Service', 'itella_shipping'); ?></th>
-                      <th scope="col" class="manage-column"><?php echo __('Barcode', 'itella_shipping'); ?></th>
+                      <th scope="col" class="manage-column"><?php echo __('Tracking code', 'itella_shipping'); ?></th>
                       <th scope="col" class="manage-column"><?php echo __('Manifest date', 'itella_shipping'); ?></th>
-                      <th scope="col"></th>
+                      <th scope="col"><?php echo __('Actions', 'itella_shipping'); ?></th>
                   </tr>
 
                   </thead>
@@ -427,10 +431,14 @@ class Itella_Manifest
                                     ?>
                                       <strong> <?= __('Itella Pickup Point:', 'itella_shipping'); ?> </strong>
                                       <br>
-                                    <?= __('City: ', 'itella_shipping') ?><em> <?= $chosen_pickup_point->address->municipality ?></em><br>
-                                <?= __('Public Name: ', 'itella_shipping') ?><em> <?= $chosen_pickup_point->publicName ?></em><br>
-                                <?= __('Address: ', 'itella_shipping') ?><em> <?= $chosen_pickup_point->address->address ?></em><br>
-                                    <?= __('Postal Code: ', 'itella_shipping') ?><em> <?= $chosen_pickup_point->address->postalCode ?></em>
+                                    <?= __('City: ', 'itella_shipping') ?>
+                                      <em> <?= $chosen_pickup_point->address->municipality ?></em><br>
+                                    <?= __('Public Name: ', 'itella_shipping') ?>
+                                      <em> <?= $chosen_pickup_point->publicName ?></em><br>
+                                    <?= __('Address: ', 'itella_shipping') ?>
+                                      <em> <?= $chosen_pickup_point->address->address ?></em><br>
+                                    <?= __('Postal Code: ', 'itella_shipping') ?>
+                                      <em> <?= $chosen_pickup_point->address->postalCode ?></em>
                                     <?php
                                   }
                                 }
@@ -439,27 +447,31 @@ class Itella_Manifest
                                     <strong> <?= __('Itella Courier:', 'itella_shipping'); ?> </strong>
                                     <br>
                                   <?php
-                                  echo __('Packet Count: ', 'itella_shipping') ?><em> <?= $shipping_parameters['packet_count'];?></em><?php
+                                  echo __('Packet Count: ', 'itella_shipping') ?>
+                                    <em> <?= $shipping_parameters['packet_count']; ?></em><?php
                                   ?> <br> <?php
-                                  echo __('Weight: ', 'itella_shipping') ?><em> <?= $shipping_parameters['weight'];?></em><?php
+                                  echo __('Weight: ', 'itella_shipping') ?>
+                                    <em> <?= $shipping_parameters['weight']; ?></em><?php
                                   ?> <br> <?php
                                   echo __('COD: ', 'itella_shipping');
-                                    ?><em> <?= $shipping_parameters['is_cod'] ? __('Yes', 'woocommerce') : __('No', 'woocommerce');?></em>
+                                  ?>
+                                    <em> <?= $shipping_parameters['is_cod'] ? __('Yes', 'woocommerce') : __('No', 'woocommerce'); ?></em>
                                     <br> <?php
                                   if ($shipping_parameters['is_cod']) {
-                                    echo __('COD amount: ', 'itella_shipping') ?><em> <?= $shipping_parameters['cod_amount'];?></em><?php
+                                    echo __('COD amount: ', 'itella_shipping') ?>
+                                      <em> <?= $shipping_parameters['cod_amount']; ?></em><?php
                                     ?> <br> <?php
                                   }
                                   if ($shipping_parameters['extra_services']) {
                                     echo __('Extra services:', 'itella_shipping');
                                     ?> <br> <?php
                                     if ($shipping_parameters['multi_parcel']) {
-                                      ?><em> <?= $shipping_parameters['multi_parcel'];?></em>
+                                      ?><em> <?= $shipping_parameters['multi_parcel']; ?></em>
                                         <br> <?php
                                     }
                                     foreach ($shipping_parameters['extra_services'] as $extra_service) {
-                                ?><em> <?= __(ucfirst($extra_service), 'itella_shipping');?></em>
-                                       <br> <?php
+                                      ?><em> <?= __(ucfirst($extra_service), 'itella_shipping'); ?></em>
+                                        <br> <?php
                                     }
                                   }
                                 }
@@ -468,10 +480,15 @@ class Itella_Manifest
                           </td>
                           <td class="manage-column">
                               <div class="data-grid-cell-content">
-                                <?php $barcode = $order->get_meta('_itella_barcode'); ?>
-                                <?php if ($barcode) : ?>
-                                  <?php do_action('print_itella_tracking_url', $itella_shipping->settings['shop_countrycode'], $barcode); ?>
-                                  <?php $error = $order->get_meta('_itella_error'); ?>
+                                <?php
+                                $tracking_code = $order->get_meta('_itella_tracking_code');
+                                $tracking_url = $order->get_meta('_itella_tracking_url');
+                                ?>
+                                <?php if ($tracking_code) : ?>
+                                    <a href="<?= $tracking_url ?? '#' ?>" target="_blank">
+                                      <?= $tracking_code; ?>
+                                    </a>
+                                  <?php $error = $order->get_meta('_itella_tracking_code_error'); ?>
                                   <?php if ($error) : ?>
                                         <br/>Error: <?php echo $error; ?>
                                   <?php endif; ?>
@@ -484,10 +501,31 @@ class Itella_Manifest
                               </div>
                           </td>
                           <td class="manage-column">
-                              <a href="admin-post.php?action=itella_labels&post=<?php echo $order->get_id(); ?>"
-                                 class="button action">
-                                <?php echo __('Print label', 'itella_shipping'); ?>
-                              </a>
+                            <?php if ($tracking_code): ?>
+                                <a href="admin-post.php?action=itella_labels&post=<?php echo $order->get_id(); ?>"
+                                   class="button action button-itella">
+                                  <?php echo __('Print label', 'itella_shipping'); ?>
+                                </a>
+                                <a href="admin-post.php?action=itella_manifests&post=<?php echo $order->get_id(); ?>"
+                                   class="button action button-itella">
+                                  <?php echo __('Generate manifest', 'itella_shipping'); ?>
+                                </a>
+                                <span class="button action button-itella button-itella-disabled">
+                                  <?php echo __('Register shipment', 'itella_shipping'); ?>
+                                </span>
+                            <?php endif; ?>
+                            <?php if (!$tracking_code): ?>
+                                <span class="button action button-itella button-itella-disabled">
+                                  <?php echo __('Print label', 'itella_shipping'); ?>
+                                </span>
+                                <span class="button action button-itella button-itella-disabled">
+                                  <?php echo __('Generate manifest', 'itella_shipping'); ?>
+                                </span>
+                                <a href="admin-post.php?action=itella_shipments&post=<?php echo $order->get_id(); ?>"
+                                   class="button action button-itella">
+                                  <?php echo __('Register shipment', 'itella_shipping'); ?>
+                                </a>
+                            <?php endif; ?>
                           </td>
                       </tr>
                   <?php endforeach; ?>
@@ -612,10 +650,10 @@ class Itella_Manifest
       );
     }
 
-    if (isset($query_vars['itella_barcode'])) {
+    if (isset($query_vars['itella_tracking_code'])) {
       $query['meta_query'][] = array(
-          'key' => '_itella_barcode',
-          'value' => $query_vars['itella_barcode'],
+          'key' => '_itella_tracking_code',
+          'value' => $query_vars['itella_tracking_code'],
           'compare' => 'LIKE'
       );
     }

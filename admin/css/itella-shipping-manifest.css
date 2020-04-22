@@ -3,12 +3,12 @@
   margin: 1em 0;
 }
 
-.notice {
-  color: green;
-  border: 1px green solid;
-  border-left: 4px green solid;
-  border-radius: 3px;
-}
+/*.notice {*/
+/*  color: green;*/
+/*  border: 1px green solid;*/
+/*  border-left: 4px green solid;*/
+/*  border-radius: 3px;*/
+/*}*/
 
 .itella-action-buttons-container {
   display: flex;
@@ -301,4 +301,21 @@
   display: none;
   background-color: #fff;
   border: 1px solid grey;
+}
+
+/* a bit more intuitive manifest page's actions ui*/
+.button-itella {
+    text-align: center;
+    margin: 5px 0!important;
+    width: 130px;
+}
+
+.button-itella-disabled {
+    color: #888!important;
+    border-color: #ccc!important;
+    cursor: not-allowed!important;
+}
+
+.button-itella-disabled:hover {
+    background-color: #f3f5f6!important;
 }

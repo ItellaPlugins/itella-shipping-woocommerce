@@ -217,7 +217,11 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         ),
         'api_pass_2711' => array(
             'title' => __('Api password (Product 2711)', 'itella_shipping'),
-            'type' => 'password',
+            'type' => 'text',
+        ),
+        'api_contract_2711' => array(
+            'title' => __('Api contract number (Product 2711)', 'itella_shipping'),
+            'type' => 'text',
         ),
         'api_user_2317' => array(
             'title' => __('API user (Product 2317)', 'itella_shipping'),
@@ -225,7 +229,11 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         ),
         'api_pass_2317' => array(
             'title' => __('Api password (Product 2317)', 'itella_shipping'),
-            'type' => 'password',
+            'type' => 'text',
+        ),
+        'api_contract_2317' => array(
+            'title' => __('Api contract number (Product 2317)', 'itella_shipping'),
+            'type' => 'text',
         ),
         'company' => array(
             'title' => __('Company name', 'itella_shipping'),
@@ -599,13 +607,26 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     echo '</fieldset>';
   }
 
+  /**
+   * Get locations from file
+   *
+   * @param $shipping_country_id
+   * @return array|null
+   */
   public function get_pickup_points($shipping_country_id)
   {
     $pickup_points = file_get_contents(plugin_dir_url(__FILE__) . '../locations/locations' . $shipping_country_id . '.json');
 
-    return json_decode($pickup_points);
+    return json_decode($pickup_points) ?? null;
   }
 
+  /**
+   * Chosen pickup point object
+   *
+   * @param $shipping_country_id
+   * @param $pickup_point_id
+   * @return object|null
+   */
   public function get_chosen_pickup_point($shipping_country_id, $pickup_point_id)
   {
     $pickup_points = $this->get_pickup_points($shipping_country_id);
@@ -622,6 +643,12 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     return $chosen_pickup_point;
   }
 
+  /**
+   * Build alphabetically sorted pickup point array to use with dropdown
+   *
+   * @param $shipping_country_id
+   * @return mixed
+   */
   public function build_pickup_points_list($shipping_country_id)
   {
     $pickup_points_list['-'] = '-';
@@ -641,6 +668,11 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     return $pickup_points_list;
   }
 
+  /**
+   * Save in Woocommerce->Orders->Edit Order updated shipping options
+   *
+   * @param $order_id
+   */
   public function save_shipping_settings($order_id)
   {
     update_post_meta($order_id, 'packet_count', wc_clean($_POST['packet_count']));
@@ -657,112 +689,238 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
   public function itella_post_label_actions()
   {
-    $order_id = $_REQUEST['post'];
-    $order = wc_get_order($order_id);
-    $shipping_parameters = Itella_Manifest::get_shipping_parameters($order_id);
-//    var_dump($shipping_parameters);
-//    var_dump($this->settings);
-//    var_dump(wc_get_order($order_id));
-    $p_user = 'ma_LT100011522813_1';
-    $p_secret = 'ste!hejiBIq2S&y-Dlri';
+    var_dump('here');
+  }
+
+  public function itella_post_manifest_actions()
+  {
+    var_dump('here');
+  }
+
+  public function itella_post_shipment_actions()
+  {
+
+    $order_ids = $_REQUEST['post'];
+    $order_ids = is_array($order_ids) ? $order_ids : array($order_ids);
+
+    foreach ($order_ids as $order_id) {
+      $order = wc_get_order($order_id);
+      $shipping_parameters = Itella_Manifest::get_shipping_parameters($order_id);
+      $shipping_method = $shipping_parameters['itella_shipping_method'];
+      $shipment = null;
+
+      // check if itella shipping method
+      if ($shipping_method !== 'itella_pp' && $shipping_method !== 'itella_c') {
+        $this->add_msg($order_id . ' - ' . __('Shipment is not registered.', 'itella_shipping')
+            . "<br>"
+            . __('Error: ', 'itella_shipping')
+            . __('Not Itella Shipping Method', 'itella_shipping'), 'error');
+
+        wp_safe_redirect(wp_get_referer());
+      }
+
+      $contract_number = $shipping_method === 'itella_pp'
+          ? $this->settings['api_contract_2317']
+          : $this->settings['api_contract_2711'];
+
+      // register shipment
+      try {
+        $sender = $this->create_sender($contract_number);
+        $receiver = $this->create_receiver($order);
+
+        $shipment = $shipping_method === 'itella_pp'
+            ? $this->register_pickup_point_shipment($sender, $receiver, $shipping_parameters, $order_id)
+            : $this->register_courier_shipment($sender, $receiver, $shipping_parameters, $order_id);
+
+        $result = $shipment->registerShipment();
+
+        // set tracking number
+        update_post_meta($order_id, '_itella_tracking_code', $result->__toString());
+        update_post_meta($order_id, '_itella_tracking_url', $result->attributes()->__toString());
+
+        // add notices
+        $this->add_msg(
+            'Order ' . $order_id . ' - '
+            . __('Shipment registered successfully.', 'itella_shipping'), 'success'
+        );
+        $this->add_msg(
+            'Order ' . $order_id . ' - '
+            . __('Tracking number: ', 'itella_shipping') . $result, 'info'
+        );
+
+        // log order id and tracking number
+        file_put_contents(plugin_dir_path(dirname(__FILE__)) . 'var/log/registered_tracks.log',
+            "\nOrder ID : " . $order->get_id() . "\n" . 'Tracking number: ' . $result, FILE_APPEND);
+      } catch (\Exception $th) {
+
+        // add message
+        $this->add_msg($order_id . ' - ' . __('Shipment is not registered.', 'itella_shipping')
+            . "<br>"
+            . __('An error occurred. ', 'itella_shipping')
+            . $th->getMessage()
+            , 'error');
+
+        // log error
+        file_put_contents(plugin_dir_path(dirname(__FILE__)) . 'var/log/errors.log',
+            "\nException:\n" . $th->getMessage() . "\n"
+            . $th->getTraceAsString(), FILE_APPEND);
+      }
+    }
+
+    // return to shipments
+    wp_safe_redirect(wp_get_referer());
+  }
+
+  private function register_courier_shipment($sender, $receiver, $shipping_parameters, $order_id)
+  {
+    $p_user = $this->settings['api_user_2711']; //'ma_LT100011522813_1';
+    $p_secret = $this->settings['api_pass_2711']; //'ste!hejiBIq2S&y-Dlri';
     $is_test = true;
 
-    try {
-      // Create and configure sender
-      $sender = new Party(Party::ROLE_SENDER);
-      $sender
-          //->setContract($contract) // important comes from supplied tracking code interval
-          ->setName1($this->settings['shop_name'])
-          ->setStreet1($this->settings['shop_address'])
-          ->setPostCode($this->settings['shop_postcode'])
-          ->setCity($this->settings['shop_city'])
-          ->setCountryCode($this->settings['shop_countrycode'])
-          ->setContactMobile($this->settings['shop_phone'])
-          ->setContactEmail($this->settings['shop_email']);
-
-      // Create and configure receiver
-      $receiver = new Party(Party::ROLE_RECEIVER);
-      $receiver
-          ->setName1($order->get_shipping_first_name() . ' ' . $order->get_billing_last_name())
-          ->setStreet1($order->get_shipping_address_1())
-          ->setPostCode($order->get_shipping_postcode())
-          ->setCity($order->get_shipping_city())
-          ->setCountryCode($order->get_shipping_country())
-          ->setContactMobile($order->get_billing_phone())
-          ->setContactEmail($order->get_billing_email());
-
-      // Create GoodsItem (parcel)
-      $item = null;
-      $items = null;
-      if ($shipping_parameters['packet_count'] === '1') {
-        $item = new GoodsItem();
-      } else {
-        for ($i = 0; $i < intval($shipping_parameters['packet_count']); $i++) {
-          $items[] = new GoodsItem();
-        }
+    // Create GoodsItem (parcel)
+    $item = null;
+    $items = null;
+    if ($shipping_parameters['packet_count'] === '1') {
+      $item[] = new GoodsItem();
+    } else {
+      for ($i = 0; $i < intval($shipping_parameters['packet_count']); $i++) {
+        $items[] = new GoodsItem();
       }
-      // Create additional services
-      $additional_services = array();
-
-      // get order services
-      $extra_services = $shipping_parameters['extra_services'];
-      $extra_services = is_array($extra_services) ? $extra_services : array($extra_services);
-
-      if ($shipping_parameters['is_cod'] === 'yes') {
-        $service_cod = new AdditionalService(3101, array(
-            'amount' => $shipping_parameters['cod_amount'],
-            'account' => $this->settings['bank_account'],
-            'reference' => Helper::generateCODReference($order_id),
-            'codbic' => $this->settings['cod_bic']
-        ));
-        $additional_services[] = $service_cod;
-      }
-
-      $oversized = in_array('oversized', $extra_services) ? new AdditionalService(3174) : false;
-      if ($oversized) {
-        $additional_services[] = $oversized;
-      }
-      $fragile = in_array('fragile', $extra_services) ? new AdditionalService(3104) : false;
-      if ($fragile) {
-        $additional_services[] = $fragile;
-      }
-      $call_before_delivery = in_array('call_before_delivery', $extra_services) ? new AdditionalService(3166) : false;
-      if ($call_before_delivery) {
-        $additional_services[] = $call_before_delivery;
-      }
-
-
-      // Create shipment object
-      $shipment = new Shipment($p_user, $p_secret, $is_test);
-      $shipment
-          ->setProductCode(Shipment::PRODUCT_COURIER) // should always be set first
-          ->setShipmentNumber('Test_ORDER_courier') // shipment number
-          //->setShipmentDateTime(date('c')) // when package will be ready (just use current time)
-          ->setSenderParty($sender) // Sender class object
-          ->setReceiverParty($receiver) // Receiver class object
-          ->addAdditionalServices($additional_services) // set additional services
-          ->addGoodsItems($item ?? $items)
-      ;
-
-      var_dump($shipment);
-
-      $xml = false;
-
-      if ($xml) {
-        $result = $shipment->asXML();
-        echo "<br>XML REQUEST<br>\n";
-        echo "<br>Shipment sent:<br>\n<code>" . $result . "</code>\n";
-      } else {
-//        $result = $shipment->registerShipment();
-//        echo "<br>Shipment registered:<br>\n<code>" . $result . "</code>\n";
-//        file_put_contents(dirname(__FILE__) . '/../temp/registered_tracks.log', "\n" . $result, FILE_APPEND);
-      }
-    } catch (\Exception $th) {
-      echo "\n<br>Exception:<br>\n"
-          . str_replace("\n", "<br>\n", $th->getMessage()) . "<br>\n"
-          . str_replace("\n", "<br>\n", $th->getTraceAsString());
     }
-    echo '<br>Done';
+    // Create additional services
+    $additional_services = array();
+
+    // get services from order
+    $extra_services = $shipping_parameters['extra_services'];
+    $extra_services = is_array($extra_services) ? $extra_services : array($extra_services);
+
+    // cod
+    if ($shipping_parameters['is_cod'] === 'yes') {
+      $service_cod = new AdditionalService(3101, array(
+          'amount' => $shipping_parameters['cod_amount'],
+          'account' => $this->settings['bank_account'],
+          'reference' => Helper::generateCODReference($order_id),
+          'codbic' => $this->settings['cod_bic']
+      ));
+      $additional_services[] = $service_cod;
+    }
+
+    // other services
+    $oversized = in_array('oversized', $extra_services) ? new AdditionalService(3174) : false;
+    if ($oversized) {
+      $additional_services[] = $oversized;
+    }
+    $fragile = in_array('fragile', $extra_services) ? new AdditionalService(3104) : false;
+    if ($fragile) {
+      $additional_services[] = $fragile;
+    }
+    $call_before_delivery = in_array('call_before_delivery', $extra_services) ? new AdditionalService(3166) : false;
+    if ($call_before_delivery) {
+      $additional_services[] = $call_before_delivery;
+    }
+
+    // Create shipment object
+    $shipment = new Shipment($p_user, $p_secret, $is_test);
+    $shipment
+        ->setProductCode(Shipment::PRODUCT_COURIER)
+        ->setShipmentNumber($order_id)
+        ->setShipmentDateTime(date('c'))
+        ->setSenderParty($sender)
+        ->setReceiverParty($receiver)
+        ->addAdditionalServices($additional_services)
+        ->addGoodsItems($item ?? $items);
+
+    return $shipment;
+  }
+
+  private function register_pickup_point_shipment($sender, $receiver, $shipping_parameters, $order_id)
+  {
+    $p_user = $this->settings['api_user_2317']; //'ma_LT100011522813_1';
+    $p_secret = $this->settings['api_pass_2317']; //'ste!hejiBIq2S&y-Dlri';
+    $is_test = true;
+    $shipping_country = wc_get_order($order_id)->get_shipping_country();
+    $chosen_pickup_point = $this->get_chosen_pickup_point($shipping_country, $shipping_parameters['pickup_point_id']);
+
+    // Create GoodsItem (parcel)
+    $item = new GoodsItem();
+    $item->setGrossWeight(intval($shipping_parameters['weight'])); // kg
+
+    // Create shipment object
+    $shipment = new Shipment($p_user, $p_secret, $is_test);
+    $shipment
+        ->setProductCode(Shipment::PRODUCT_PICKUP)
+        ->setShipmentNumber($order_id)
+        ->setShipmentDateTime(date('c'))
+        ->setSenderParty($sender)
+        ->setReceiverParty($receiver)
+        ->setPickupPoint($chosen_pickup_point->pupCode) // pupCode
+        ->addGoodsItem($item);
+
+    return $shipment;
+
+  }
+
+  private function create_sender($contract_number)
+  {
+    $sender = new Party(Party::ROLE_SENDER);
+    $sender
+        //->setContract($contract_number) // important comes from supplied tracking code interval
+        ->setName1($this->settings['shop_name'])
+        ->setStreet1($this->settings['shop_address'])
+        ->setPostCode($this->settings['shop_postcode'])
+        ->setCity($this->settings['shop_city'])
+        ->setCountryCode($this->settings['shop_countrycode'])
+        ->setContactMobile($this->settings['shop_phone'])
+        ->setContactEmail($this->settings['shop_email']);
+
+    return $sender;
+  }
+
+  private function create_receiver($order)
+  {
+    $receiver = new Party(Party::ROLE_RECEIVER);
+    $receiver
+        ->setName1($order->get_shipping_first_name() . ' ' . $order->get_shipping_last_name())
+        ->setStreet1($order->get_shipping_address_1())
+        ->setPostCode($order->get_shipping_postcode())
+        ->setCity($order->get_shipping_city())
+        ->setCountryCode($order->get_shipping_country())
+        ->setContactMobile($order->get_billing_phone())
+        ->setContactEmail($order->get_billing_email());
+
+    return $receiver;
+  }
+
+  private function add_msg($msg, $type)
+  {
+    if (!session_id()) {
+      session_start();
+    }
+    if (!isset($_SESSION['itella_shipping_notices']))
+      $_SESSION['itella_shipping_notices'] = array();
+    $_SESSION['itella_shipping_notices'][] = array('msg' => $msg, 'type' => 'notice notice-' . $type);
+  }
+
+  public function itella_shipping_notices()
+  {
+    if (!session_id()) {
+      session_start();
+    }
+    if (array_key_exists('itella_shipping_notices', $_SESSION)) {
+      foreach ($_SESSION['itella_shipping_notices'] as $notice):
+        ?>
+      <div class="<?php echo $notice['type']; ?>">
+          <p><?php echo $notice['msg']; ?></p>
+          </div><?php
+      endforeach;
+      unset($_SESSION['itella_shipping_notices']);
+    }
+  }
+
+  public function itella_shipping_shop_order_bulk_actions($actions)
+  {
+//    var_dump($actions);
+//    die;
   }
 
 }

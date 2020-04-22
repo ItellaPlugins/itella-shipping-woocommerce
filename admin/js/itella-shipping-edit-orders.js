@@ -21,13 +21,6 @@
 
         // multi parcel is always disabled
         disableElements(itellaMultiParcelCb);
-        // itellaMultiParcelField.classList.toggle('d-none'); // initially hidden
-
-        // initial values
-        // let itellaExtraServicesArray = Array.apply(null, itellaExtraServices); // convert to array
-        // let itellaExtraServicesTempValues = itellaExtraServicesArray.map(service => {
-        //     return service.checked;
-        // });
 
         let itellaCodEnableTempValue = itellaCodEnable.value;
         let itellaCodAmountTempValue = itellaCodAmount.value;
@@ -65,13 +58,6 @@
         // force enable multi parcel
         itellaPacketCount.addEventListener('change', () => {
             itellaMultiParcelCb.checked = itellaPacketCount.value > 1;
-
-            // if (itellaPacketCount.value > 1 && itellaMultiParcelField.classList.contains('d-none')) {
-                // itellaMultiParcelField.classList.toggle('d-none');
-            // }
-            // if (itellaPacketCount.value <= 1) {
-                // itellaMultiParcelField.classList.toggle('d-none');
-            // }
         })
 
         // listen for shipping method change
