@@ -216,6 +216,7 @@ class Itella_Shipping
     $this->loader->add_action('woocommerce_checkout_update_order_meta', $plugin_public, 'add_pp_id_to_order');
     $this->loader->add_action('woocommerce_order_status_completed', $plugin_public, 'show_pp');
 
+    $this->loader->add_filter('woocommerce_package_rates', $plugin_public, 'show_itella_shipping_methods', 10, 1);
   }
 
   private function define_manifest_hooks()

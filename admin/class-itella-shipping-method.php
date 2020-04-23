@@ -35,6 +35,9 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   private $version;
 
+  /**
+   * @var string
+   */
   public $id;
 
   /**
@@ -689,7 +692,12 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
   public function itella_post_label_actions()
   {
-    var_dump('here');
+    $order_ids = $_REQUEST['post'];
+    $order_ids = is_array($order_ids) ? $order_ids : array($order_ids);
+
+    foreach ($order_ids as $order_id) {
+
+    }
   }
 
   public function itella_post_manifest_actions()

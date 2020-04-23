@@ -42,17 +42,27 @@ class Itella_Shipping_Public
   private $version;
 
   /**
+   * Itella shipping available country list
+   *
+   * @var array $available_countries
+   */
+  private $available_countries;
+
+  /**
    * Initialize the class and set its properties.
    *
+   * @param $name
+   * @param $version
+   * @param string[] $available_countries
    * @since    1.0.0
-   * @var      string $name The name of the plugin.
-   * @var      string $version The version of this plugin.
+   *
    */
-  public function __construct($name, $version)
+  public function __construct($name, $version, $available_countries = array('LT', 'LV'))
   {
 
     $this->name = $name;
     $this->version = $version;
+    $this->available_countries = $available_countries;
 
   }
 
@@ -123,6 +133,19 @@ class Itella_Shipping_Public
     }
 
     return $pickup_point_public_name ?? __('Itella Pickup Point not found!', 'itella_shipping');
+  }
+
+  public function show_itella_shipping_methods($methods)
+  {
+
+    $current_country = WC()->customer->get_shipping_country();
+
+    if (!in_array($current_country, $this->available_countries)) {
+      unset($methods['itella_pp']);
+      unset($methods['itella_c']);
+    }
+
+    return $methods;
   }
 
 }

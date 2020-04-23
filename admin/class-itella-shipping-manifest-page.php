@@ -502,6 +502,9 @@ class Itella_Manifest
                           </td>
                           <td class="manage-column">
                             <?php if ($tracking_code): ?>
+                                <span class="button action button-itella button-itella-disabled">
+                                  <?php echo __('Register shipment', 'itella_shipping'); ?>
+                                </span>
                                 <a href="admin-post.php?action=itella_labels&post=<?php echo $order->get_id(); ?>"
                                    class="button action button-itella">
                                   <?php echo __('Print label', 'itella_shipping'); ?>
@@ -510,21 +513,18 @@ class Itella_Manifest
                                    class="button action button-itella">
                                   <?php echo __('Generate manifest', 'itella_shipping'); ?>
                                 </a>
-                                <span class="button action button-itella button-itella-disabled">
-                                  <?php echo __('Register shipment', 'itella_shipping'); ?>
-                                </span>
                             <?php endif; ?>
                             <?php if (!$tracking_code): ?>
+                                <a href="admin-post.php?action=itella_shipments&post=<?php echo $order->get_id(); ?>"
+                                   class="button action button-itella">
+                                  <?php echo __('Register shipment', 'itella_shipping'); ?>
+                                </a>
                                 <span class="button action button-itella button-itella-disabled">
                                   <?php echo __('Print label', 'itella_shipping'); ?>
                                 </span>
                                 <span class="button action button-itella button-itella-disabled">
                                   <?php echo __('Generate manifest', 'itella_shipping'); ?>
                                 </span>
-                                <a href="admin-post.php?action=itella_shipments&post=<?php echo $order->get_id(); ?>"
-                                   class="button action button-itella">
-                                  <?php echo __('Register shipment', 'itella_shipping'); ?>
-                                </a>
                             <?php endif; ?>
                           </td>
                       </tr>

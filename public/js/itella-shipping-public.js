@@ -6,6 +6,7 @@ if (document.getElementById('shipping_method_0_itella_pp').checked) {
 
 function init() {
 
+		// let country = document.
 		// adding to global for easier debugging, pass in root element where to build all HTML
 		window.itella = new itellaMapping(document.getElementById('shipping_method_0_itella_pp').nextSibling);
 
