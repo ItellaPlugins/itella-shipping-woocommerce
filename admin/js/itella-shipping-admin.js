@@ -2,6 +2,7 @@
 
 (() => {
     window.addEventListener('load', (event) => {
+        console.log('here')
         // toggle extra fee fields
         const pickupPoint = document.querySelector('.pickup-point-method');
         const courier = document.querySelector('.courier-method');

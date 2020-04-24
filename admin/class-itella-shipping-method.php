@@ -125,14 +125,14 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   public function init()
   {
     // Load the settings API
-    $this->init_form_fields(); // This is part of the settings API. Override the method to add your own settings
-    $this->init_settings(); // This is part of the settings API. Loads settings you previously init.
+    $this->init_form_fields();
+    $this->init_settings();
 
   }
 
   /**
    * Update locations
-   * 
+   *
    * @param string[] $country_codes
    */
   public function update_locations($country_codes = array('lt', 'lv', 'ee'))
@@ -144,7 +144,6 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       $locations = $itella_pickup_points_obj->getLocationsByCountry($country_code);
       $itella_pickup_points_obj->saveLocationsToJSONFile(plugin_dir_path(dirname(__FILE__)) . 'locations/locations' . wc_strtoupper($country_code) . '.json', json_encode($locations));
     }
-
   }
 
   /**
@@ -156,10 +155,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   public function calculate_shipping($package = array())
   {
-
-    global $woocommerce;
-    $current_country = $woocommerce->customer->get_shipping_country();
-    $cart_amount = $woocommerce->cart->cart_contents_total + $woocommerce->cart->tax_total;
+    $current_country = WC()->customer->get_shipping_country();
+    $cart_amount = floatval(WC()->cart->get_cart_contents_total()) + floatval(WC()->cart->get_tax_totals());
 
     // add Pickup Point Rate
     if ($this->settings['pickup_point_method'] === 'yes') {
@@ -167,6 +164,11 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         case 'LV':
           $amount = $this->settings['pickup_point_price_lv'];
           if ($cart_amount > floatval($this->settings['pickup_point_nocharge_amount_lv']))
+            $amount = 0.0;
+          break;
+        case 'EE':
+          $amount = $this->settings['pickup_point_price_ee'];
+          if ($cart_amount > floatval($this->settings['pickup_point_nocharge_amount_ee']))
             $amount = 0.0;
           break;
         default:
@@ -193,6 +195,11 @@ class Itella_Shipping_Method extends WC_Shipping_Method
           if ($cart_amount > floatval($this->settings['courier_nocharge_amount_lv']))
             $amountC = 0.0;
           break;
+        case 'EE':
+          $amountC = $this->settings['courier_price_ee'];
+          if ($cart_amount > floatval($this->settings['courier_nocharge_amount_ee']))
+            $amountC = 0.0;
+          break;
         default:
           $amountC = $this->settings['courier_price_lt'];
           if ($cart_amount > floatval($this->settings['courier_nocharge_amount_lt']))
@@ -207,7 +214,6 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       );
       $this->add_rate($rate);
     }
-
   }
 
   function init_form_fields()
@@ -369,6 +375,42 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             ),
             'default' => 100
         ),
+        'pickup_point_price_ee' => array(
+            'title' => 'EE ' . __('Pickup Point price', 'itella_shipping'),
+            'class' => 'pickup-point',
+            'type' => 'number',
+            'custom_attributes' => array(
+                'step' => 0.01,
+            ),
+            'default' => 2,
+        ),
+        'courier_price_ee' => array(
+            'title' => 'EE ' . __('Courrier price', 'itella_shipping'),
+            'class' => 'courier',
+            'type' => 'number',
+            'default' => 2,
+            'custom_attributes' => array(
+                'step' => 0.01,
+            ),
+        ),
+        'pickup_point_nocharge_amount_ee' => array(
+            'title' => 'EE ' . __('Disable pickup point fee if cart amount is greater or equal than this limit', 'itella_shipping'),
+            'class' => 'pickup-point',
+            'type' => 'number',
+            'custom_attributes' => array(
+                'step' => 0.01,
+            ),
+            'default' => 100
+        ),
+        'courier_nocharge_amount_ee' => array(
+            'title' => 'EE ' . __('Disable courier fee if cart amount is greater or equal than this limit', 'itella_shipping'),
+            'class' => 'courier',
+            'type' => 'number',
+            'custom_attributes' => array(
+                'step' => 0.01,
+            ),
+            'default' => 100
+        )
     );
   }
 
