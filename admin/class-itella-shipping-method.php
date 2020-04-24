@@ -2,6 +2,7 @@
 
 use Mijora\Itella\Helper;
 use Mijora\Itella\Locations\PickupPoints;
+use Mijora\Itella\Pdf\Manifest;
 use Mijora\Itella\Shipment\AdditionalService;
 use Mijora\Itella\Shipment\GoodsItem;
 use Mijora\Itella\Shipment\Party;
@@ -131,15 +132,19 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
   /**
    * Update locations
+   * 
+   * @param string[] $country_codes
    */
-  public function update_locations()
+  public function update_locations($country_codes = array('lt', 'lv', 'ee'))
   {
 
     $itella_pickup_points_obj = new PickupPoints('https://locationservice.posti.com/api/2/location');
-    $itella_loc_lt = $itella_pickup_points_obj->getLocationsByCountry('lt');
-    $itella_loc_lv = $itella_pickup_points_obj->getLocationsByCountry('lv');
-    $itella_pickup_points_obj->saveLocationsToJSONFile(plugin_dir_path(dirname(__FILE__)) . 'locations/locationsLT.json', json_encode($itella_loc_lt));
-    $itella_pickup_points_obj->saveLocationsToJSONFile(plugin_dir_path(dirname(__FILE__)) . 'locations/locationsLV.json', json_encode($itella_loc_lv));
+
+    foreach ($country_codes as $country_code) {
+      $locations = $itella_pickup_points_obj->getLocationsByCountry($country_code);
+      $itella_pickup_points_obj->saveLocationsToJSONFile(plugin_dir_path(dirname(__FILE__)) . 'locations/locations' . wc_strtoupper($country_code) . '.json', json_encode($locations));
+    }
+
   }
 
   /**
@@ -695,19 +700,67 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $order_ids = $_REQUEST['post'];
     $order_ids = is_array($order_ids) ? $order_ids : array($order_ids);
 
-    foreach ($order_ids as $order_id) {
-
-    }
+//    foreach ($order_ids as $order_id) {
+//
+//    }
   }
 
   public function itella_post_manifest_actions()
   {
-    var_dump('here');
+    $order_ids = $_REQUEST['post'];
+    $order_ids = is_array($order_ids) ? $order_ids : array($order_ids);
+
+    $translation = array(
+        'sender_address' => __('Sender address:', 'itella_shipping'), //'Siuntėjo adresas:',
+        'nr' => __('No.:', 'itella_shipping'), //'Nr.',
+        'track_num' => __('Tracking number:', 'itella_shipping'), //'Siuntos numeris',
+        'date' => __('Date:', 'itella_shipping'),  //'Data',
+        'amount' => __('Amount:', 'itella_shipping'), //'Kiekis',
+        'weight' => __('Weight:', 'itella_shipping'), //'Svoris (kg)',
+        'delivery_address' => __('Delivery address:', 'itella_shipping'), //'Pristatymo adresas',
+        'courier' => __('Courier', 'itella_shipping'), //'Kurjerio',
+        'sender' => __('Sender', 'itella_shipping'), //'Siuntėjo',
+        'name_lastname_signature' => __('name, lastname, signature', 'itella_shipping'), //'vardas, pavardė, parašas',
+    );
+
+    $items = array();
+
+    foreach ($order_ids as $order_id) {
+      $order = wc_get_order($order_id);
+      $shipping_parameters = Itella_Manifest::get_shipping_parameters($order_id);
+
+      if (!$order->get_meta('_itella_tracking_code')) {
+
+          continue;
+      }
+
+      $items[] = array(
+        'track_num' => $order->get_meta('_itella_tracking_code'),
+        'weight' => $shipping_parameters['weight'] ?? 0,
+        'delivery_address' => $order->get_shipping_first_name() . ' '
+            . $order->get_shipping_last_name() . ', '
+            . $order->get_shipping_address_1() . ', '
+            . $order->get_shipping_postcode() . ' '
+            . $order->get_shipping_city() . ', '
+            . $order->get_shipping_country()
+      );
+    }
+
+    $manifest = new Manifest();
+    $manifest
+        ->setStrings($translation)
+        ->setSenderName($this->settings['shop_name'])
+        ->setSenderAddress($this->settings['shop_address'])
+        ->setSenderPostCode($this->settings['shop_postcode'])
+        ->setSenderCity($this->settings['shop_city'])
+        ->setSenderCountry($this->settings['shop_countrycode'])
+        ->addItem($items)
+        ->printManifest('itella_manifest.pdf');
+
   }
 
   public function itella_post_shipment_actions()
   {
-
     $order_ids = $_REQUEST['post'];
     $order_ids = is_array($order_ids) ? $order_ids : array($order_ids);
 
@@ -759,9 +812,10 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         // log order id and tracking number
         file_put_contents(plugin_dir_path(dirname(__FILE__)) . 'var/log/registered_tracks.log',
             "\nOrder ID : " . $order->get_id() . "\n" . 'Tracking number: ' . $result, FILE_APPEND);
+
       } catch (\Exception $th) {
 
-        // add message
+        // add error message
         $this->add_msg($order_id . ' - ' . __('Shipment is not registered.', 'itella_shipping')
             . "<br>"
             . __('An error occurred. ', 'itella_shipping')
@@ -786,15 +840,12 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $is_test = true;
 
     // Create GoodsItem (parcel)
-    $item = null;
-    $items = null;
-    if ($shipping_parameters['packet_count'] === '1') {
-      $item[] = new GoodsItem();
-    } else {
-      for ($i = 0; $i < intval($shipping_parameters['packet_count']); $i++) {
-        $items[] = new GoodsItem();
-      }
+    $items = array();
+
+    for ($i = 0; $i < intval($shipping_parameters['packet_count']); $i++) {
+      $items[] = new GoodsItem();
     }
+
     // Create additional services
     $additional_services = array();
 
@@ -836,7 +887,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         ->setSenderParty($sender)
         ->setReceiverParty($receiver)
         ->addAdditionalServices($additional_services)
-        ->addGoodsItems($item ?? $items);
+        ->addGoodsItems($items);
 
     return $shipment;
   }

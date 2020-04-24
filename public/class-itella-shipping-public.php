@@ -57,7 +57,7 @@ class Itella_Shipping_Public
    * @since    1.0.0
    *
    */
-  public function __construct($name, $version, $available_countries = array('LT', 'LV'))
+  public function __construct($name, $version, $available_countries = array('LT', 'LV', 'EE'))
   {
 
     $this->name = $name;
@@ -88,8 +88,30 @@ class Itella_Shipping_Public
     wp_enqueue_script($this->name . 'leaflet.js', "https://unpkg.com/leaflet@1.5.1/dist/leaflet.js", array(), $this->version, TRUE);
     wp_enqueue_script($this->name . 'itella-mapping.js', plugin_dir_url(__FILE__) . 'js/itella-mapping.js', array(), $this->version, TRUE);
     wp_enqueue_script($this->name . 'itella-shipping-public.js', plugin_dir_url(__FILE__) . 'js/itella-shipping-public.js', array(), $this->version, TRUE);
-    wp_localize_script($this->name . 'itella-shipping-public.js', 'mapScript', array('pluginsUrl' => plugin_dir_url(__FILE__)));
-    wp_enqueue_script($this->name . 'itella-init-map.js', plugin_dir_url( __FILE__ ) . 'js/itella-init-map.js', array( 'jquery' ), $this->version, TRUE );
+    wp_localize_script($this->name . 'itella-shipping-public.js',
+        'variables', array(
+            'imagesUrl' => plugin_dir_url(__FILE__) . 'assets/images/',
+            'locationsUrl' => plugin_dir_url(__FILE__) . '/../../locations/',
+            'translations' => array(
+                'nothing_found' => __('Nothing found', 'itella_shipping'),
+                'modal_header' => __('Pickup points', 'itella_shipping'),
+                'selector_header' => __('Pickup point', 'itella_shipping'),
+                'workhours_header' => __('Workhours', 'itella_shipping'),
+                'contacts_header' => __('Contacts', 'itella_shipping'),
+                'search_placeholder' => __('Enter postcode/address', 'itella_shipping'),
+                'select_pickup_point' => __('Select a pickup point', 'itella_shipping'),
+                'no_pickup_points' => __('No points to select', 'itella_shipping'),
+                'select_btn' => __('select', 'itella_shipping'),
+                'back_to_list_btn' => __('reset search', 'itella_shipping'),
+                'select_pickup_point_btn' => __('Select pickup point', 'itella_shipping'),
+                'no_information' => __('No information', 'itella_shipping'),
+                'error_leaflet' => __('Leaflet is required for Itella-Mapping', 'itella_shipping'),
+                'error_missing_mount_el' => __('No mount supplied to itellaShipping', 'itella_shipping')
+            )
+        )
+    );
+
+    wp_enqueue_script($this->name . 'itella-init-map.js', plugin_dir_url(__FILE__) . 'js/itella-init-map.js', array('jquery'), $this->version, TRUE);
 
   }
 
@@ -120,7 +142,7 @@ class Itella_Shipping_Public
 
     $shipping_country = $woocommerce->customer->get_shipping_country();
     $chosen_pickup_point_id = get_post_meta($order->get_id(), '_pp_id', true);
-    $pickup_points = file_get_contents(plugin_dir_url(__FILE__) . '../locations/locations' . $shipping_country .'.json');
+    $pickup_points = file_get_contents(plugin_dir_url(__FILE__) . '../locations/locations' . $shipping_country . '.json');
     $pickup_points = json_decode($pickup_points);
 
     foreach ($pickup_points as $pickup_point) {

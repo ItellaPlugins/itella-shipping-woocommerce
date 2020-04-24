@@ -292,7 +292,7 @@ class Itella_Manifest
     <?php if ($thereIsOrders) : ?>
         <div class="mass-print-container">
             <form id="manifest-print-form" action="admin-post.php" method="GET">
-                <input type="hidden" name="action" value="itella_manifest"/>
+                <input type="hidden" name="action" value="itella_manifests"/>
               <?php wp_nonce_field('itella_manifest', 'itella_manifest_nonce'); ?>
             </form>
             <form id="labels-print-form" action="admin-post.php" method="GET">
