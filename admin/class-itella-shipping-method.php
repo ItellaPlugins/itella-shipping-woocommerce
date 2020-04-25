@@ -435,7 +435,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       $call_before_delivery = 'call_before_delivery';
       $fragile = 'fragile';
       $default_packet_count = '1';
-      $default_weight = '1.00';
+      $default_weight = '0.00';
       $extra_services = array();
       $default_is_cod = $order->get_payment_method() === 'itella_cod';
       $default_cod_amount = $order->get_total();
