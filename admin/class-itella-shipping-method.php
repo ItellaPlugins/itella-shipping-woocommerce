@@ -930,8 +930,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
   private function register_courier_shipment($sender, $receiver, $shipping_parameters, $order_id)
   {
-    $p_user = htmlspecialchars_decode($this->settings['api_user_2317']); //'ma_LT100011522813_1';
-    $p_secret = htmlspecialchars_decode($this->settings['api_pass_2317']); //'ste!hejiBIq2S&y-Dlri';
+    $p_user = htmlspecialchars_decode($this->settings['api_user_2317']);
+    $p_secret = htmlspecialchars_decode($this->settings['api_pass_2317']);
     $is_test = true;
 
     // Create GoodsItem (parcel)
@@ -989,8 +989,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
   private function register_pickup_point_shipment($sender, $receiver, $shipping_parameters, $order_id)
   {
-    $p_user = $this->settings['api_user_2711']; //'ma_LT100011522813_1';
-    $p_secret = $this->settings['api_pass_2711']; //'ste!hejiBIq2S&y-Dlri';
+    $p_user = htmlspecialchars_decode($this->settings['api_user_2317']);
+    $p_secret = htmlspecialchars_decode($this->settings['api_pass_2317']);
     $is_test = true;
     $shipping_country = wc_get_order($order_id)->get_shipping_country();
     $chosen_pickup_point = $this->get_chosen_pickup_point($shipping_country, $shipping_parameters['pickup_point_id']);
