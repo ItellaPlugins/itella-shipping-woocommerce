@@ -44,6 +44,9 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   public $id;
 
+
+  public $itella_cod_settings;
+
   /**
    * Initialize the class and set its properties.
    *
@@ -59,12 +62,11 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
     $this->name = $name;
     $this->version = $version;
-
     $this->id = "itella-shipping";
     $this->method_title = __('Itella Shipping');
     $this->method_description = __('Plugin to use with Itella Shipping methods');
-
     $this->title = "Itella Shipping Method";
+    $this->itella_cod_settings = $itella_cod_settings = get_option('woocommerce_itella_cod_settings');
 
     $this->init();
 
@@ -145,7 +147,10 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
     foreach ($country_codes as $country_code) {
       $locations = $itella_pickup_points_obj->getLocationsByCountry($country_code);
-      $itella_pickup_points_obj->saveLocationsToJSONFile(plugin_dir_path(dirname(__FILE__)) . 'locations/locations' . wc_strtoupper($country_code) . '.json', json_encode($locations));
+      $itella_pickup_points_obj
+          ->saveLocationsToJSONFile(plugin_dir_path(dirname(__FILE__))
+              . 'locations/locations' . wc_strtoupper($country_code) . '.json',
+              json_encode($locations));
     }
   }
 
@@ -462,6 +467,12 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       $weight = !empty($weight) ? $weight : $default_weight;
       $is_cod = !empty($is_cod) && $is_cod ? $is_cod : $default_is_cod;
       $cod_amount = !empty($cod_amount) ? $cod_amount : $default_cod_amount;
+
+      if ($is_cod) {
+        $itella_cod_settings = get_option('woocommerce_itella_cod_settings');
+
+        // TODO
+      }
 
       $is_itella_pp = $itella_method === 'itella_pp';
       $is_itella_c = $itella_method === 'itella_c';
@@ -1023,8 +1034,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
   public function itella_shipping_shop_order_bulk_actions($actions)
   {
-//    var_dump($actions);
-//    die;
+    // TODO
   }
 
   private function get_tracking_codes($order_ids)
@@ -1208,4 +1218,5 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
     return $prepared_tracking_items;
   }
+
 }
