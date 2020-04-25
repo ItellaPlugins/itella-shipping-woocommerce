@@ -1,4 +1,4 @@
-# Itella-API v2.0.1
+# Itella-API v2.2.0
 
 Its a wrapper library for Pakettikauppa API library.
 
@@ -29,6 +29,7 @@ Uses supplied `user` and `secret`. It is called during Shipment creation.
 `Party::ROLE_SENDER` is used to identify sender.
 
 Minimum required setup:
+- Contract must be set for sender!
 - Phone number must be in international format, library will try to fix given number or throw ItellaException.
 ```php
 use Mijora\Itella\Shipment\Party;
@@ -37,7 +38,7 @@ use Mijora\Itella\ItellaException;
 try {
   $sender = new Party(Party::ROLE_SENDER);
   $sender
-    // ->setContract('000000')            // currently not used
+    ->setContract('000000')               // API contract number given by Itella
     ->setName1('TEST Web Shop')           // sender name
     ->setStreet1('Test str. 150')         // sender address
     ->setPostCode('47174')                // sender post code

@@ -299,7 +299,7 @@ class Itella_Manifest
                 <input type="hidden" name="action" value="itella_labels"/>
               <?php wp_nonce_field('itella_labels', 'itella_labels_nonce'); ?>
             </form>
-            <button id="submit_manifest_items" title="<?php echo __('Generate manifest', 'itella_shipping'); ?>"
+            <button id="submit_manifest_items" title="<?php echo __('Generate manifests', 'itella_shipping'); ?>"
                     type="button" class="button action">
               <?php echo __('Generate manifest', 'itella_shipping'); ?>
             </button>
@@ -383,7 +383,7 @@ class Itella_Manifest
                       <th scope="col" class="manage-column"><?php echo __('Service', 'itella_shipping'); ?></th>
                       <th scope="col" class="manage-column"><?php echo __('Tracking code', 'itella_shipping'); ?></th>
                       <th scope="col" class="manage-column"><?php echo __('Manifest date', 'itella_shipping'); ?></th>
-                      <th scope="col"><?php echo __('Actions', 'itella_shipping'); ?></th>
+                      <th scope="col" class="manage-column"><?php echo __('Actions', 'itella_shipping'); ?></th>
                   </tr>
 
                   </thead>
@@ -485,7 +485,7 @@ class Itella_Manifest
                                 $tracking_url = $order->get_meta('_itella_tracking_url');
                                 ?>
                                 <?php if ($tracking_code) : ?>
-                                    <a href="<?= $tracking_url ?? '#' ?>" target="_blank">
+                                    <a href="<?= $tracking_url ? $tracking_url : '#' ?>" target="_blank">
                                       <?= $tracking_code; ?>
                                     </a>
                                   <?php $error = $order->get_meta('_itella_tracking_code_error'); ?>
@@ -611,12 +611,30 @@ class Itella_Manifest
         get_post_meta($order_id, 'itella_shipping_method', true) :
         get_post_meta($order_id, '_itella_method', true);
 
-    $packet_count = get_post_meta($order_id, 'packet_count', true) ?? $default_packet_count;
-    $multi_parcel = get_post_meta($order_id, 'itella_multi_parcel', true) ?? $default_multi_parcel;
-    $weight = get_post_meta($order_id, 'weight_total', true) ?? $default_weight;
-    $is_cod = get_post_meta($order_id, 'itella_cod_enabled', true) === 'yes' ?? $default_is_cod;
-    $cod_amount = get_post_meta($order_id, 'itella_cod_amount', true) ?? $default_cod_amount;
-    $extra_services = get_post_meta($order_id, 'itella_extra_services', true) ?? $default_extra_services;
+    $packet_count = get_post_meta($order_id, 'packet_count', true);
+    if (empty($packet_count)) {
+      $packet_count = $default_packet_count;
+    }
+    $multi_parcel = get_post_meta($order_id, 'itella_multi_parcel', true);
+    if (empty($multi_parcel)) {
+      $multi_parcel = $default_multi_parcel;
+    }
+    $weight = get_post_meta($order_id, 'weight_total', true);
+    if (empty($weight)) {
+      $weight = $default_weight;
+    }
+    $is_cod = get_post_meta($order_id, 'itella_cod_enabled', true) === 'yes';
+    if (!$is_cod) {
+      $is_cod = $default_is_cod;
+    }
+    $cod_amount = get_post_meta($order_id, 'itella_cod_amount', true);
+    if (empty($cod_amount)) {
+      $cod_amount = $default_cod_amount;
+    }
+    $extra_services = get_post_meta($order_id, 'itella_extra_services', true);
+    if (empty($extra_services)) {
+      $extra_services = $default_extra_services;
+    }
     $pickup_point_id = get_post_meta($order_id, '_pp_id', true);
 
     if ($itella_method) {

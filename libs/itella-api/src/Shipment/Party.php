@@ -23,7 +23,7 @@ class Party
   private $party;
 
   // depending on role
-  //public $contract;
+  public $contract;
 
   // Name lines
   public $name1;
@@ -92,54 +92,6 @@ class Party
     return true;
   }
 
-  /**
-   * Main functions
-   */
-  // public function getXML($root = false)
-  // {
-  //   if (is_subclass_of($root, 'SimpleXMLElement')) {
-  //     $xml = $root->addChild('Party');
-  //   } else {
-  //     $xml = new SimpleXMLElement('<Party/>');
-  //   }
-
-  //   $xml->addAttribute('role', $this->role);
-  //   if ($this->role == self::ROLE_SENDER) {
-  //     $xml->addChild('Account', $this->contract)->addAttribute('type', 'CONTRACT');
-  //   }
-
-  //   $xml->addChild('Name1', $this->name1);
-  //   if ($this->name2 !== null)
-  //     $xml->addChild('Name2', $this->name2);
-  //   if ($this->name3 !== null)
-  //     $xml->addChild('Name3', $this->name3);
-
-  //   $loc = $xml->addChild('Location');
-
-  //   $loc->addChild('Street1', $this->street1);
-  //   if ($this->street2 !== null)
-  //     $loc->addChild('Street2', $this->street2);
-  //   if ($this->street3 !== null)
-  //     $loc->addChild('Street3', $this->street3);
-
-  //   $loc->addChild('Postcode', $this->postCode);
-
-  //   $loc->addChild('City', $this->city);
-
-  //   $loc->addChild('Country', $this->countryCode);
-  //   // Optional Contact information
-  //   if ($this->contactName !== null)
-  //     $xml->addChild('ContactName', $this->contactName);
-  //   if ($this->contactMobile !== null)
-  //     $xml->addChild('ContactChannel', $this->contactMobile)->addAttribute('channel', 'MOBILE');
-  //   if ($this->contactPhone !== null)
-  //     $xml->addChild('ContactChannel', $this->contactPhone)->addAttribute('channel', 'PHONE');
-  //   if ($this->contactEmail !== null)
-  //     $xml->addChild('ContactChannel', $this->contactEmail)->addAttribute('channel', 'EMAIL');
-
-  //   return $xml;
-  // }
-
   public function getPakettikauppaParty()
   {
     return $this->party;
@@ -148,14 +100,15 @@ class Party
   /**
    * Setters (returns this object for chainability)
    */
-  // public function setContract($contract)
-  // {
-  //   if ($this->role != self::ROLE_SENDER) {
-  //     throw new ItellaException("Contract is only for ROLE_SENDER role");
-  //   }
-  //   $this->contract = $contract;
-  //   return $this;
-  // }
+  public function setContract($contract)
+  {
+    if ($this->role != self::ROLE_SENDER) {
+      throw new ItellaException("Contract is only for ROLE_SENDER role");
+    }
+    $this->contract = $contract;
+    $this->party->setContractId($contract);
+    return $this;
+  }
 
   public function setName1($name1)
   {

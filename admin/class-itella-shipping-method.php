@@ -1,8 +1,10 @@
 <?php
 
-use Mijora\Itella\Helper;
+use Mijora\Itella\Helper as ItellaHelper;
+use Mijora\Itella\ItellaException;
 use Mijora\Itella\Locations\PickupPoints;
 use Mijora\Itella\Pdf\Manifest;
+use Mijora\Itella\Pdf\PDFMerge;
 use Mijora\Itella\Shipment\AdditionalService;
 use Mijora\Itella\Shipment\GoodsItem;
 use Mijora\Itella\Shipment\Party;
@@ -455,9 +457,9 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         }
       }
 
-      $packet_count = $packet_count ?? $default_packet_count;
-      $weight = $weight ?? $default_weight;
-      $is_cod = $is_cod ?? $default_is_cod;
+      $packet_count = !empty($packet_count) ? $packet_count : $default_packet_count;
+      $weight = !empty($weight) ? $weight : $default_weight;
+      $is_cod = !empty($is_cod) && $is_cod ? $is_cod : $default_is_cod;
       $cod_amount = !empty($cod_amount) ? $cod_amount : $default_cod_amount;
 
       $is_itella_pp = $itella_method === 'itella_pp';
@@ -481,10 +483,10 @@ class Itella_Shipping_Method extends WC_Shipping_Method
                                                                       id="itella-shipping-options">Edit</a></h4>
         <div class="address">
             <p>
-                <strong><?= __('Packets(total):', 'itella_shipping') ?></strong> <?= $packet_count ?? $default_packet_count ?>
+                <strong><?= __('Packets(total):', 'itella_shipping') ?></strong> <?= $packet_count ?>
             </p>
             <p>
-                <strong><?= __('Weight(' . $weight_unit . '):', 'itella_shipping') ?></strong> <?= $weight ?? $default_weight ?>
+                <strong><?= __('Weight(' . $weight_unit . '):', 'itella_shipping') ?></strong> <?= $weight ?>
             </p>
             <p><strong><?= __('COD:', 'itella_shipping') ?></strong>
               <?=
@@ -493,7 +495,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             </p>
           <?php if ($is_cod): ?>
               <p>
-                  <strong><?= __('COD amount(' . $order->get_currency() . '):', 'itella_shipping') ?></strong> <?= $cod_amount ?? $default_cod_amount ?>
+                  <strong><?= __('COD amount(' . $order->get_currency() . '):', 'itella_shipping') ?></strong> <?= $cod_amount ?>
               </p>
           <?php endif; ?>
             <p><strong><?= __('Carrier:', 'itella_shipping') ?></strong>
@@ -538,7 +540,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
           woocommerce_wp_select(array(
               'id' => 'packet_count',
               'label' => __('Packets(total):', 'itella_shipping'),
-              'value' => $packet_count ?? $default_packet_count,
+              'value' => $packet_count,
               'options' => $packets,
               'wrapper_class' => 'form-field-wide'
           ));
@@ -556,7 +558,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
           woocommerce_wp_text_input(array(
               'id' => 'weight_total',
               'label' => __('Weight(' . $weight_unit . ')'),
-              'value' => $weight ?? $default_weight,
+              'value' => $weight,
               'wrapper_class' => 'form-field-wide'
           ));
 
@@ -575,7 +577,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
           woocommerce_wp_text_input(array(
               'id' => 'itella_cod_amount',
               'label' => __('COD amount(' . $order->get_currency() . '):', 'itella_shipping'),
-              'value' => $cod_amount ?? $default_cod_amount,
+              'value' => $cod_amount,
               'wrapper_class' => 'form-field-wide'
           ));
           //          }
@@ -667,7 +669,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   {
     $pickup_points = file_get_contents(plugin_dir_url(__FILE__) . '../locations/locations' . $shipping_country_id . '.json');
 
-    return json_decode($pickup_points) ?? null;
+    return json_decode($pickup_points);
   }
 
   /**
@@ -742,9 +744,58 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $order_ids = $_REQUEST['post'];
     $order_ids = is_array($order_ids) ? $order_ids : array($order_ids);
 
-//    foreach ($order_ids as $order_id) {
-//
-//    }
+    $tracking_codes = array();
+
+    // get tracking codes
+    $tracking_codes = $this->get_tracking_codes($order_ids);
+
+    // sort by product code
+    $this->sort_tracking_codes_by_product_code($tracking_codes);
+
+    try {
+      // download labels
+      $temp_name = 'itella_label_' . time();
+      $temp_files = array();
+      foreach ($tracking_codes as $product_key => $tr_codes) {
+        $shipment = new Shipment(
+            htmlspecialchars_decode($this->settings['api_user_' . $product_key]),
+            htmlspecialchars_decode($this->settings['api_pass_' . $product_key])
+        );
+
+        $result = base64_decode($shipment->downloadLabels($tr_codes));
+
+        if ($result) { // check if its not empty and save temporary for merging
+          $pdf_path = plugin_dir_path(dirname(__FILE__)) . 'var/downloaded-labels/' . $temp_name . '-' . $product_key . '.pdf';
+          $is_saved = file_put_contents($pdf_path, $result);
+          if (!$is_saved) { // make sure it was saved
+            throw new ItellaException(__("Failed to save label pdf to: ", 'itella_shipping') . $pdf_path);
+          }
+          $temp_files[] = $pdf_path;
+        }
+      }
+
+      // merge downloaded labels
+      $this->merge_labels($temp_files);
+    } catch (ItellaException $e) {
+      // add error message
+      $this->add_msg(__('An error occurred.', 'itella_shipping')
+          . ' ' . $e->getMessage()
+          , 'error');
+
+      // log error
+      file_put_contents(plugin_dir_path(dirname(__FILE__)) . 'var/log/errors.log',
+          "\nItellaException:\n" . $e->getMessage() . "\n"
+          . $e->getTraceAsString(), FILE_APPEND);
+    } catch (\Exception $e) {
+      $this->add_msg(__('An error occurred.', 'itella_shipping')
+          . ' ' . $e->getMessage()
+          , 'error');
+
+      // log error
+      file_put_contents(plugin_dir_path(dirname(__FILE__)) . 'var/log/errors.log',
+          "\nException:\n" . $e->getMessage() . "\n"
+          . $e->getTraceAsString(), FILE_APPEND);
+    }
   }
 
   public function itella_post_manifest_actions()
@@ -773,18 +824,20 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
       if (!$order->get_meta('_itella_tracking_code')) {
 
-          continue;
+        continue;
       }
 
+      update_post_meta($order_id, '_itella_manifest_generation_date', date('Y-m-d H:i:s'));
+
       $items[] = array(
-        'track_num' => $order->get_meta('_itella_tracking_code'),
-        'weight' => $shipping_parameters['weight'] ?? 0,
-        'delivery_address' => $order->get_shipping_first_name() . ' '
-            . $order->get_shipping_last_name() . ', '
-            . $order->get_shipping_address_1() . ', '
-            . $order->get_shipping_postcode() . ' '
-            . $order->get_shipping_city() . ', '
-            . $order->get_shipping_country()
+          'track_num' => $order->get_meta('_itella_tracking_code'),
+          'weight' => $shipping_parameters['weight'] ? $shipping_parameters['weight'] : 0,
+          'delivery_address' => $order->get_shipping_first_name() . ' '
+              . $order->get_shipping_last_name() . ', '
+              . $order->get_shipping_address_1() . ', '
+              . $order->get_shipping_postcode() . ' '
+              . $order->get_shipping_city() . ', '
+              . $order->get_shipping_country()
       );
     }
 
@@ -823,8 +876,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       }
 
       $contract_number = $shipping_method === 'itella_pp'
-          ? $this->settings['api_contract_2317']
-          : $this->settings['api_contract_2711'];
+          ? $this->settings['api_contract_2711']
+          : $this->settings['api_contract_2317'];
 
       // register shipment
       try {
@@ -855,7 +908,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         file_put_contents(plugin_dir_path(dirname(__FILE__)) . 'var/log/registered_tracks.log',
             "\nOrder ID : " . $order->get_id() . "\n" . 'Tracking number: ' . $result, FILE_APPEND);
 
-      } catch (\Exception $th) {
+      } catch (ItellaException $th) {
 
         // add error message
         $this->add_msg($order_id . ' - ' . __('Shipment is not registered.', 'itella_shipping')
@@ -877,8 +930,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
   private function register_courier_shipment($sender, $receiver, $shipping_parameters, $order_id)
   {
-    $p_user = $this->settings['api_user_2711']; //'ma_LT100011522813_1';
-    $p_secret = $this->settings['api_pass_2711']; //'ste!hejiBIq2S&y-Dlri';
+    $p_user = htmlspecialchars_decode($this->settings['api_user_2317']); //'ma_LT100011522813_1';
+    $p_secret = htmlspecialchars_decode($this->settings['api_pass_2317']); //'ste!hejiBIq2S&y-Dlri';
     $is_test = true;
 
     // Create GoodsItem (parcel)
@@ -900,7 +953,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       $service_cod = new AdditionalService(3101, array(
           'amount' => $shipping_parameters['cod_amount'],
           'account' => $this->settings['bank_account'],
-          'reference' => Helper::generateCODReference($order_id),
+          'reference' => ItellaHelper::generateCODReference($order_id),
           'codbic' => $this->settings['cod_bic']
       ));
       $additional_services[] = $service_cod;
@@ -936,8 +989,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
   private function register_pickup_point_shipment($sender, $receiver, $shipping_parameters, $order_id)
   {
-    $p_user = $this->settings['api_user_2317']; //'ma_LT100011522813_1';
-    $p_secret = $this->settings['api_pass_2317']; //'ste!hejiBIq2S&y-Dlri';
+    $p_user = $this->settings['api_user_2711']; //'ma_LT100011522813_1';
+    $p_secret = $this->settings['api_pass_2711']; //'ste!hejiBIq2S&y-Dlri';
     $is_test = true;
     $shipping_country = wc_get_order($order_id)->get_shipping_country();
     $chosen_pickup_point = $this->get_chosen_pickup_point($shipping_country, $shipping_parameters['pickup_point_id']);
@@ -965,7 +1018,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   {
     $sender = new Party(Party::ROLE_SENDER);
     $sender
-        //->setContract($contract_number) // important comes from supplied tracking code interval
+        ->setContract($contract_number) // important comes from supplied tracking code interval
         ->setName1($this->settings['shop_name'])
         ->setStreet1($this->settings['shop_address'])
         ->setPostCode($this->settings['shop_postcode'])
@@ -1024,4 +1077,63 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 //    die;
   }
 
+  private function get_tracking_codes($order_ids)
+  {
+    $tracking_codes = array();
+    foreach ($order_ids as $order_id) {
+      $order = wc_get_order($order_id);
+      $tracking_code = $order->get_meta('_itella_tracking_code');
+
+      if (!$tracking_code) {
+        continue;
+      }
+      $tracking_codes[] = $tracking_code;
+    }
+
+    return $tracking_codes;
+  }
+
+  private function sort_tracking_codes_by_product_code(&$tracking_codes)
+  {
+    foreach ($tracking_codes as $key => $tracking_code) {
+      $product_code = ItellaHelper::getProductIdFromTrackNum($tracking_code);
+      if (!ItellaHelper::keyExists($product_code, $tracking_codes)) {
+        $tracking_codes[$product_code] = array();
+      }
+      $tracking_codes[$product_code][] = $tracking_code;
+      unset($tracking_codes[$key]);
+    }
+
+//    return $tracking_codes;
+  }
+
+  private function merge_labels($files)
+  {
+    $merger = new PDFMerge();
+    $merger->setFiles($files); // pass array of paths to pdf files
+    $merger->merge();
+
+    // remove downloaded labels ()
+    foreach ($files as $file) {
+      if (is_file($file)) {
+        unlink($file);
+      }
+    }
+
+    /**
+     * Second param:
+     * I: send the file inline to the browser (default).
+     * D: send to the browser and force a file download with the name given by name.
+     * F: save to a local server file with the name given by name.
+     * S: return the document as a string (name is ignored).
+     * FI: equivalent to F + I option
+     * FD: equivalent to F + D option
+     * E: return the document as base64 mime multi-part email attachment (RFC 2045)
+     */
+    return base64_encode($merger->Output(plugin_dir_path(dirname(__FILE__))
+        . 'var/downloaded-labels/itella_labels_'
+        . date('Y-m-d H:i:s')
+        . '.pdf',
+        'FD'));
+  }
 }

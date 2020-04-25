@@ -1,17 +1,17 @@
 [
     {
         "name": "pakettikauppa/api-library",
-        "version": "2.0",
-        "version_normalized": "2.0.0.0",
+        "version": "2.0.2",
+        "version_normalized": "2.0.2.0",
         "source": {
             "type": "git",
             "url": "https://github.com/Pakettikauppa/api-library.git",
-            "reference": "9369035ef448e8e59da03df5f8e116eb30cba894"
+            "reference": "b0a197cc0dfda33c2e1dafba23de9617016b0300"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/Pakettikauppa/api-library/zipball/9369035ef448e8e59da03df5f8e116eb30cba894",
-            "reference": "9369035ef448e8e59da03df5f8e116eb30cba894",
+            "url": "https://api.github.com/repos/Pakettikauppa/api-library/zipball/b0a197cc0dfda33c2e1dafba23de9617016b0300",
+            "reference": "b0a197cc0dfda33c2e1dafba23de9617016b0300",
             "shasum": ""
         },
         "require": {
@@ -19,7 +19,7 @@
             "ext-json": "*",
             "ext-simplexml": "*"
         },
-        "time": "2020-03-03T13:34:40+00:00",
+        "time": "2020-04-22T07:08:03+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -51,17 +51,17 @@
     },
     {
         "name": "setasign/fpdi",
-        "version": "v2.3.1",
-        "version_normalized": "2.3.1.0",
+        "version": "v2.3.2",
+        "version_normalized": "2.3.2.0",
         "source": {
             "type": "git",
             "url": "https://github.com/Setasign/FPDI.git",
-            "reference": "f58e64e51f61922d4c3ba4c6c91366ac520cb442"
+            "reference": "527761458f504882ab844f15754523825647f291"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/Setasign/FPDI/zipball/f58e64e51f61922d4c3ba4c6c91366ac520cb442",
-            "reference": "f58e64e51f61922d4c3ba4c6c91366ac520cb442",
+            "url": "https://api.github.com/repos/Setasign/FPDI/zipball/527761458f504882ab844f15754523825647f291",
+            "reference": "527761458f504882ab844f15754523825647f291",
             "shasum": ""
         },
         "require": {
@@ -78,12 +78,9 @@
             "tecnickcom/tcpdf": "~6.2"
         },
         "suggest": {
-            "setasign/fpdf": "FPDI will extend this class but as it is also possible to use TCPDF or tFPDF as an alternative. There's no fixed dependency configured.",
-            "setasign/fpdi-fpdf": "Use this package to automatically evaluate dependencies to FPDF.",
-            "setasign/fpdi-tcpdf": "Use this package to automatically evaluate dependencies to TCPDF.",
-            "setasign/fpdi-tfpdf": "Use this package to automatically evaluate dependencies to tFPDF."
+            "setasign/fpdf": "FPDI will extend this class but as it is also possible to use TCPDF or tFPDF as an alternative. There's no fixed dependency configured."
         },
-        "time": "2020-03-10T15:28:15+00:00",
+        "time": "2020-03-23T15:53:59+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {

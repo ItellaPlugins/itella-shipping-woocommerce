@@ -6,16 +6,13 @@ if (!ITELLA_DEV) {
   die;
 }
 
-$is_test = false;
-
-$user = ''; // Itella API username
-$pass = ''; // Itella API password
-$contract = ''; // contract number extracted from tracking number. NO LONGER USED
 $email = ''; // email to test CallCourier
 
 // Pakettikauppa testing user and secret
-$p_user = '';
-$p_secret = '';
+$p_user = ''; // Itella API username
+$p_secret = ''; // Itella API password
+$contract_2711 = ''; // Itella API contract for 2711 product
+$contract_2317 = ''; // Itella API contract for 2317 product
 
 $sample_track_nr = '';
 $sample_track_nr_array = [];

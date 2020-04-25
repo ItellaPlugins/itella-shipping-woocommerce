@@ -19,7 +19,7 @@ try {
   // Create and configure sender
   $sender = new Party(Party::ROLE_SENDER);
   $sender
-    //->setContract($contract) // important comes from supplied tracking code interval
+    ->setContract(${'contract_' . Shipment::PRODUCT_COURIER}) // important comes from supplied tracking code interval
     ->setName1('TEST Web Shop')
     ->setStreet1('Raudondvario pl. 150')
     ->setPostCode('47174')
@@ -39,7 +39,7 @@ try {
     ->setCountryCode('lv')
     //->setContactName('Mike')
     ->setContactMobile('25841345')
-    //->setContactEmail('receiver@test.lv')
+    ->setContactEmail('receiver@test.lv')
     ;
 
   // Create GoodsItem (parcel)
@@ -63,7 +63,7 @@ try {
   $service_fragile = new AdditionalService(3104);
 
   // Create shipment object
-  $shipment = new Shipment($p_user, $p_secret, $is_test);
+  $shipment = new Shipment($p_user, $p_secret);
   $shipment
     ->setProductCode(Shipment::PRODUCT_COURIER) // should always be set first
     ->setShipmentNumber('Test_ORDER_fragile') // shipment number 
