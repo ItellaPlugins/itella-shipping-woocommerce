@@ -1,5 +1,6 @@
 <?php
 
+use Mijora\Itella\CallCourier;
 use Mijora\Itella\Helper as ItellaHelper;
 use Mijora\Itella\ItellaException;
 use Mijora\Itella\Locations\PickupPoints;
@@ -742,14 +743,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   public function itella_post_label_actions()
   {
     $order_ids = $_REQUEST['post'];
-    $order_ids = is_array($order_ids) ? $order_ids : array($order_ids);
 
-    $tracking_codes = array();
-
-    // get tracking codes
     $tracking_codes = $this->get_tracking_codes($order_ids);
-
-    // sort by product code
     $this->sort_tracking_codes_by_product_code($tracking_codes);
 
     try {
@@ -801,57 +796,12 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   public function itella_post_manifest_actions()
   {
     $order_ids = $_REQUEST['post'];
-    $order_ids = is_array($order_ids) ? $order_ids : array($order_ids);
 
-    $translation = array(
-        'sender_address' => __('Sender address:', 'itella_shipping'), //'Siuntėjo adresas:',
-        'nr' => __('No.:', 'itella_shipping'), //'Nr.',
-        'track_num' => __('Tracking number:', 'itella_shipping'), //'Siuntos numeris',
-        'date' => __('Date:', 'itella_shipping'),  //'Data',
-        'amount' => __('Amount:', 'itella_shipping'), //'Kiekis',
-        'weight' => __('Weight:', 'itella_shipping'), //'Svoris (kg)',
-        'delivery_address' => __('Delivery address:', 'itella_shipping'), //'Pristatymo adresas',
-        'courier' => __('Courier', 'itella_shipping'), //'Kurjerio',
-        'sender' => __('Sender', 'itella_shipping'), //'Siuntėjo',
-        'name_lastname_signature' => __('name, lastname, signature', 'itella_shipping'), //'vardas, pavardė, parašas',
-    );
+    $translation = $this->get_manifest_translation();
+    $items = $this->get_tracking_codes($order_ids);
 
-    $items = array();
-
-    foreach ($order_ids as $order_id) {
-      $order = wc_get_order($order_id);
-      $shipping_parameters = Itella_Manifest::get_shipping_parameters($order_id);
-
-      if (!$order->get_meta('_itella_tracking_code')) {
-
-        continue;
-      }
-
-      update_post_meta($order_id, '_itella_manifest_generation_date', date('Y-m-d H:i:s'));
-
-      $items[] = array(
-          'track_num' => $order->get_meta('_itella_tracking_code'),
-          'weight' => $shipping_parameters['weight'] ? $shipping_parameters['weight'] : 0,
-          'delivery_address' => $order->get_shipping_first_name() . ' '
-              . $order->get_shipping_last_name() . ', '
-              . $order->get_shipping_address_1() . ', '
-              . $order->get_shipping_postcode() . ' '
-              . $order->get_shipping_city() . ', '
-              . $order->get_shipping_country()
-      );
-    }
-
-    $manifest = new Manifest();
-    $manifest
-        ->setStrings($translation)
-        ->setSenderName($this->settings['shop_name'])
-        ->setSenderAddress($this->settings['shop_address'])
-        ->setSenderPostCode($this->settings['shop_postcode'])
-        ->setSenderCity($this->settings['shop_city'])
-        ->setSenderCountry($this->settings['shop_countrycode'])
-        ->addItem($items)
-        ->printManifest('itella_manifest.pdf');
-
+    $manifest = $this->create_manifest($translation, $items);
+    $manifest->printManifest('itella_manifest.pdf');
   }
 
   public function itella_post_shipment_actions()
@@ -1079,7 +1029,9 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
   private function get_tracking_codes($order_ids)
   {
+    $order_ids = is_array($order_ids) ? $order_ids : array($order_ids);
     $tracking_codes = array();
+
     foreach ($order_ids as $order_id) {
       $order = wc_get_order($order_id);
       $tracking_code = $order->get_meta('_itella_tracking_code');
@@ -1135,5 +1087,99 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         . date('Y-m-d H:i:s')
         . '.pdf',
         'FD'));
+  }
+
+  public function itella_post_call_courier_actions()
+  {
+    $order_ids = $_REQUEST['post']; // no post
+
+    $translation = $this->get_manifest_translation();
+    $items = $this->get_tracking_codes($order_ids);
+
+    $manifest = $this->create_manifest($translation, $items);
+    $manifest
+        ->setToString(true)
+        ->setBase64(true)
+        ->printManifest('call_courier_manifest.pdf');
+
+    switch ($this->settings['shop_countrycode']) {
+      case 'LV':
+          $email = 'smartship.routing.lv@itella.com';
+          break;
+      case 'EE':
+          $email = 'smartship.routing.ee@itella.com';
+          break;
+      default:
+          $email = 'smartship.routing.lt@itella.com';
+    }
+
+    try {
+      $caller = new CallCourier($email);
+      $result = $caller
+          ->setSenderEmail($this->settings['shop_email'])
+          ->setSubject(__('E-com order booking', 'itella_shipping'))
+          ->setPickUpAddress(array(
+              'sender' => $this->settings['shop_email'],
+              'address' => $this->settings['shop_address']
+                  . $this->settings['shop_postcode']
+                  . $this->settings['shop_city']
+                  .  $this->settings['shop_countrycode'],
+              'pickup_time' => '8:00 - 17:00',
+              'contact_phone' => $this->settings['shop_phone'],
+          ))
+          ->setAttachment($manifest, true)
+          //->buildMailBody()
+          ->callCourier()
+      ;
+
+      if ($result) {
+        // add notices
+        $this->add_msg(__('Email sent to courier', 'itella_shipping')
+            . '('. $email .')', 'success');
+      }
+    } catch (ItellaException $e) {
+      // add error message
+      $this->add_msg(__('Failed to send email.', 'itella_shipping')
+          . "<br>"
+          . __('Error:', 'itella_shipping')
+          . ' '
+          . $e->getMessage()
+          , 'error');
+
+      // log error
+      file_put_contents(plugin_dir_path(dirname(__FILE__)) . 'var/log/errors.log',
+          "\n". date('Y-m-d H:i:s') .": ItellaException:\n" . $e->getMessage() . "\n"
+          . $e->getTraceAsString(), FILE_APPEND);
+    }
+  }
+
+  private function get_manifest_translation() {
+
+    return array(
+        'sender_address' => __('Sender address:', 'itella_shipping'), //'Siuntėjo adresas:',
+        'nr' => __('No.:', 'itella_shipping'), //'Nr.',
+        'track_num' => __('Tracking number:', 'itella_shipping'), //'Siuntos numeris',
+        'date' => __('Date:', 'itella_shipping'),  //'Data',
+        'amount' => __('Amount:', 'itella_shipping'), //'Kiekis',
+        'weight' => __('Weight:', 'itella_shipping'), //'Svoris (kg)',
+        'delivery_address' => __('Delivery address:', 'itella_shipping'), //'Pristatymo adresas',
+        'courier' => __('Courier', 'itella_shipping'), //'Kurjerio',
+        'sender' => __('Sender', 'itella_shipping'), //'Siuntėjo',
+        'name_lastname_signature' => __('name, lastname, signature', 'itella_shipping'), //'vardas, pavardė, parašas',
+    );
+  }
+
+  private function create_manifest($translation, $items) {
+    $manifest = new Manifest();
+    $manifest
+        ->setStrings($translation)
+        ->setSenderName($this->settings['shop_name'])
+        ->setSenderAddress($this->settings['shop_address'])
+        ->setSenderPostCode($this->settings['shop_postcode'])
+        ->setSenderCity($this->settings['shop_city'])
+        ->setSenderCountry($this->settings['shop_countrycode'])
+        ->addItem($items);
+
+    return $manifest;
   }
 }
