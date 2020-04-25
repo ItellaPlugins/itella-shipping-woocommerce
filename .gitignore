@@ -38,3 +38,4 @@ intermediate
 .idea
 cache
 /.sass-cache/
+var/

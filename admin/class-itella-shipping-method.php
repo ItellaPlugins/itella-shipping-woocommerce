@@ -784,7 +784,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
       // log error
       file_put_contents(plugin_dir_path(dirname(__FILE__)) . 'var/log/errors.log',
-          "\nItellaException:\n" . $e->getMessage() . "\n"
+          "\n". date('Y-m-d H:i:s') .": ItellaException:\n" . $e->getMessage() . "\n"
           . $e->getTraceAsString(), FILE_APPEND);
     } catch (\Exception $e) {
       $this->add_msg(__('An error occurred.', 'itella_shipping')
@@ -793,7 +793,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
       // log error
       file_put_contents(plugin_dir_path(dirname(__FILE__)) . 'var/log/errors.log',
-          "\nException:\n" . $e->getMessage() . "\n"
+          "\n". date('Y-m-d H:i:s') .": Exception:\n" . $e->getMessage() . "\n"
           . $e->getTraceAsString(), FILE_APPEND);
     }
   }
@@ -919,7 +919,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
         // log error
         file_put_contents(plugin_dir_path(dirname(__FILE__)) . 'var/log/errors.log',
-            "\nException:\n" . $th->getMessage() . "\n"
+            "\n". date('Y-m-d H:i:s') .": Exception:\n" . $th->getMessage() . "\n"
             . $th->getTraceAsString(), FILE_APPEND);
       }
     }
