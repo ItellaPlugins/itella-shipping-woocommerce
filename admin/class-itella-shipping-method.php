@@ -1104,15 +1104,15 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
     switch ($this->settings['shop_countrycode']) {
       case 'LV':
-        $email = 'mantas.tarutis@gmail.com';//'smartship.routing.lv@itella.com';
+        $email = 'smartship.routing.lv@itella.com';
         break;
       case 'EE':
-        $email = 'mantas.tarutis@gmail.com';//'smartship.routing.ee@itella.com';
+        $email = 'smartship.routing.ee@itella.com';
         break;
       default:
-        $email = 'mantas.tarutis@gmail.com';//'smartship.routing.lt@itella.com';
+        $email = 'smartship.routing.lt@itella.com';
     }
-//    var_dump($manifest->pdf_string);
+
     try {
       $caller = new CallCourier($email);
       $result = $caller
@@ -1158,16 +1158,16 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   {
 
     return array(
-        'sender_address' => __('Sender address:', 'itella_shipping'), //'Siuntėjo adresas:',
-        'nr' => __('No.:', 'itella_shipping'), //'Nr.',
-        'track_num' => __('Tracking number:', 'itella_shipping'), //'Siuntos numeris',
-        'date' => __('Date:', 'itella_shipping'),  //'Data',
-        'amount' => __('Amount:', 'itella_shipping'), //'Kiekis',
-        'weight' => __('Weight:', 'itella_shipping'), //'Svoris (kg)',
-        'delivery_address' => __('Delivery address:', 'itella_shipping'), //'Pristatymo adresas',
-        'courier' => __('Courier', 'itella_shipping'), //'Kurjerio',
-        'sender' => __('Sender', 'itella_shipping'), //'Siuntėjo',
-        'name_lastname_signature' => __('name, lastname, signature', 'itella_shipping'), //'vardas, pavardė, parašas',
+        'sender_address' => __('Sender address:', 'itella_shipping'),
+        'nr' => __('No.:', 'itella_shipping'),
+        'track_num' => __('Tracking number:', 'itella_shipping'),
+        'date' => __('Date:', 'itella_shipping'),
+        'amount' => __('Amount:', 'itella_shipping'),
+        'weight' => __('Weight:', 'itella_shipping'),
+        'delivery_address' => __('Delivery address:', 'itella_shipping'),
+        'courier' => __('Courier', 'itella_shipping'),
+        'sender' => __('Sender', 'itella_shipping'),
+        'name_lastname_signature' => __('name, lastname, signature', 'itella_shipping'),
     );
   }
 
@@ -1205,7 +1205,6 @@ class Itella_Shipping_Method extends WC_Shipping_Method
               . $order->get_shipping_country()
       );
     }
-
 
     return $prepared_tracking_items;
   }
