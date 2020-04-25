@@ -45,6 +45,23 @@ jQuery('document').ready(function($) {
         $('#itella-courier-modal').addClass('open');
     });
 
+    $('.modal-footer>#itella-call-btn').on('click', function(e) {
+        e.preventDefault();
+        let ids = "";
+        $('#call-courier-form .post_id').remove();
+        $('.manifest-item:checked').each(function () {
+            ids += $(this).val() + ";";
+            let id = $(this).val();
+            $('#call-courier-form').append('<input type="hidden" class = "post_id" name="post[]" value = "' + id + '" />');
+        });
+        $('#item_ids').val(ids);
+        if (ids == "") {
+            alert(translations.select_orders);
+        } else {
+            $('#call-courier-form').submit();
+        }
+    });
+
     $('#itella-call-cancel-btn').on('click', function(e) {
         e.preventDefault();
         $('#itella-courier-modal').removeClass('open');
@@ -60,7 +77,7 @@ jQuery('document').ready(function($) {
         });
         $('#item_ids').val(ids);
         if (ids == "") {
-            alert('Select orders'); //'<?php echo __('Select orders', 'itella_shipping'); ?>'
+            alert(translations.select_orders);
         } else {
             $('#manifest-print-form').submit();
         }
@@ -76,7 +93,7 @@ jQuery('document').ready(function($) {
             $('#labels-print-form').append('<input type="hidden" class = "post_id" name="post[]" value = "' + id + '" />');
         });
         if (ids == "") {
-            alert('Select orders'); //'<?php echo __('Select orders', 'itella_shipping'); ?>'
+            alert(translations.select_orders);
         } else {
             $('#labels-print-form').submit();
         }

@@ -51,7 +51,7 @@ $manifest_string = $manifest
 ;
 
 
-$sendTo = $email;
+$sendTo = 'mantas.tarutis@gmail.com';
 try {
   $caller = new CallCourier($sendTo);
   $result = $caller
@@ -61,12 +61,13 @@ try {
       'sender' => 'Name / Company name',
       'address' => 'Street, Postcode City, Country',
       'pickup_time' => '8:00 - 17:00',
-      'contact_phone' => '865465412',
+      'contact_phone' => '867517063',
     ))
     ->setAttachment($manifest_string, true)
-    //->buildMailBody()
+//    ->buildMailBody()
     ->callCourier()
   ;
+
   if ($result) {
     echo 'Email sent to: <br>' . $email;
   }

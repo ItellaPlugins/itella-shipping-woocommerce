@@ -88,6 +88,9 @@ class Itella_Manifest
      */
 
     wp_enqueue_script($this->name . 'itella-shipping-manifest.js', plugin_dir_url(__FILE__) . 'js/itella-shipping-manifest.js', array('jquery'), $this->version, TRUE);
+    wp_localize_script($this->name . 'itella-shipping-manifest.js', 'translations', array(
+            'select_orders' => __('Select at least one order to perform this action.', 'itella_shipping')
+    ));
     wp_enqueue_script($this->name . 'moment', plugin_dir_url(__FILE__) . 'js/datetimepicker/moment.min.js', array(), null, true);
     wp_enqueue_script($this->name . 'bootstrap-datetimepicker', plugin_dir_url(__FILE__) . 'js/datetimepicker/bootstrap-datetimepicker.min.js', array('jquery', 'moment'), null, true);
 
@@ -269,8 +272,13 @@ class Itella_Manifest
     ?>
 
       <div class="call-courier-container">
-          <button id="itella-call-btn"
-                  class="button action"><?php _e('Call Itella courier', 'itella_shipping') ?></button>
+          <form id="call-courier-form" action="admin-post.php" method="GET">
+              <input type="hidden" name="action" value="itella-call-courier" />
+            <?php wp_nonce_field('itella-call-courier', 'itella-call-courier_nonce'); ?>
+          </form>
+          <button id="itella-call-btn" class="button action">
+            <?php _e('Call Itella courier', 'itella_shipping') ?>
+          </button>
       </div>
 
       <ul class="nav nav-tabs">
@@ -301,7 +309,7 @@ class Itella_Manifest
             </form>
             <button id="submit_manifest_items" title="<?php echo __('Generate manifests', 'itella_shipping'); ?>"
                     type="button" class="button action">
-              <?php echo __('Generate manifest', 'itella_shipping'); ?>
+              <?php echo __('Generate manifests', 'itella_shipping'); ?>
             </button>
             <button id="submit_manifest_labels" title="<?php echo __('Print labels', 'itella_shipping'); ?>"
                     type="button" class="button action">
@@ -548,7 +556,7 @@ class Itella_Manifest
           <div class="modal-content">
               <div class="alert-info">
                   <p>
-                      <span><?php _e('Important!', 'itella_shipping') ?></span> <?php _e('Latest call for same day pickup is until 3 pm.', 'itella_shipping') ?>
+                      <span><?php _e('Important!', 'itella_shipping') ?></span> <?php _e('Check your credentials.', 'itella_shipping') ?>
                   </p>
                   <p><?php _e('Address and contact information can be changed in Itella settings.', 'itella_shipping') ?></p>
               </div>
