@@ -1,24 +1,14 @@
 <?php
 
 /**
- * The public-facing functionality of the plugin.
- *
- * @link       http://example.com
- * @since      1.0.0
- *
  * @package    Itella_Shipping
  * @subpackage Itella_Shipping/includes
  */
 
 /**
- * The public-facing functionality of the plugin.
- *
- * Defines the plugin name, version, and two examples hooks for how to
- * enqueue the dashboard-specific stylesheet and JavaScript.
  *
  * @package    Itella_Shipping
- * @subpackage Itella_Shipping/admin
- * @author     Your Name <email@example.com>
+ * @subpackage Itella_Shipping/public
  */
 class Itella_Shipping_Public
 {
@@ -115,28 +105,44 @@ class Itella_Shipping_Public
 
   }
 
+  /**
+   * Show chosen pickup point after placing order
+   *
+   * @param $order
+   */
   public function show_pp_details($order)
   {
     $chosen_itella_method = get_post_meta($order->get_id(), '_itella_method', true);
     if ($chosen_itella_method === 'itella_pp') {
       echo "<p>" . __('Itella Pickup Point', 'itella-shipping') . ": " . $this->get_pickup_point_public_name($order) . "</p>";
     }
-
   }
 
+  /**
+   * Add pickup point id to order
+   *
+   * @param $order_id
+   */
   public function add_pp_id_to_order($order_id)
   {
     if (isset($_POST['itella-chosen-point-id']) && $order_id) {
       update_post_meta($order_id, '_pp_id', $_POST['itella-chosen-point-id']);
     }
+
+    // set itella method todo refactor
     if (isset($_POST['shipping_method'][0]) && ($_POST['shipping_method'][0] === "itella_pp" || $_POST['shipping_method'][0] === "itella_c")) {
       update_post_meta($order_id, '_itella_method', $_POST['shipping_method'][0]);
     }
   }
 
+  /**
+   * Get chosen pickup point's public name from file
+   *
+   * @param $order
+   * @return string|void
+   */
   public function get_pickup_point_public_name($order)
   {
-
     global $woocommerce;
     $chosen_pickup_point = null;
     $pickup_point_public_name = null;
@@ -158,9 +164,14 @@ class Itella_Shipping_Public
     return $pickup_point_public_name ?? __('Itella Pickup Point not found!', 'itella-shipping');
   }
 
+  /**
+   * Show itella shipping methods for allowed countries
+   *
+   * @param $methods
+   * @return mixed
+   */
   public function show_itella_shipping_methods($methods)
   {
-
     global $woocommerce;
     $current_country = $woocommerce->customer->get_shipping_country();
 

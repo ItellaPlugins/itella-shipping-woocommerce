@@ -4,8 +4,7 @@
  * The dashboard-specific functionality of the plugin.
  *
  * @package    Itella_Shipping
- * @subpackage Itella_Shipping/admin
- * @author     Your Name <email@example.com>
+ * @subpackage Itella_Shipping/admin>
  */
 class Itella_Manifest
 {
@@ -50,18 +49,6 @@ class Itella_Manifest
   public function enqueue_styles()
   {
 
-    /**
-     * This function is provided for demonstration purposes only.
-     *
-     * An instance of this class should be passed to the run() function
-     * defined in Itella_Shipping_Method_Loader as all of the hooks are defined
-     * in that particular class.
-     *
-     * The Itella_Shipping_Method_Loader will then create the relationship
-     * between the defined hooks and the functions defined in this
-     * class.
-     */
-
     wp_enqueue_style($this->name . 'css/itella-shipping-manifest.css', plugin_dir_url(__FILE__) . 'css/itella-shipping-manifest.css', array(), $this->version, 'all');
     wp_enqueue_style($this->name . 'bootstrap-datetimepicker', plugins_url('/js/datetimepicker/bootstrap-datetimepicker.min.css', __FILE__));
 
@@ -75,18 +62,6 @@ class Itella_Manifest
   public function enqueue_scripts()
   {
 
-    /**
-     * This function is provided for demonstration purposes only.
-     *
-     * An instance of this class should be passed to the run() function
-     * defined in Itella_Shipping_Method_Loader as all of the hooks are defined
-     * in that particular class.
-     *
-     * The Itella_Shipping_Method_Loader will then create the relationship
-     * between the defined hooks and the functions defined in this
-     * class.
-     */
-
     wp_enqueue_script($this->name . 'itella-shipping-manifest.js', plugin_dir_url(__FILE__) . 'js/itella-shipping-manifest.js', array('jquery'), $this->version, TRUE);
     wp_localize_script($this->name . 'itella-shipping-manifest.js', 'translations', array(
         'select_orders' => __('Select at least one order to perform this action.', 'itella-shipping')
@@ -96,6 +71,9 @@ class Itella_Manifest
 
   }
 
+  /**
+   * Show Itella shipments as Woocommerce submenu
+   */
   public function register_itella_manifest_menu_page()
   {
     add_submenu_page(
@@ -114,12 +92,13 @@ class Itella_Manifest
     }
   }
 
+  /**
+   * Load Itella shipments page
+   */
   public static function load_manifest_page()
   {
 
-    /**
-     * Manifest page defaults
-     */
+    // Manifest page defaults
     $tab_strings = array(
         'all_orders' => __('All orders', 'itella-shipping'),
         'new_orders' => __('New orders', 'itella-shipping'),
@@ -135,17 +114,14 @@ class Itella_Manifest
         'end_date'
     );
 
-// amount of orders to show per page
+    // amount of orders to show per page
     $max_per_page = 25;
 
-// prep access to Itella shipping class
-//    $wc_shipping = new WC_Shipping();
+    // prep access to Itella shipping class
     $itella_shipping = new Itella_Shipping_Method();
     ?>
-
       <div class="wrap">
       <h1><?php _e('Itella shipments', 'itella-shipping'); ?></h1>
-
     <?php
 
     $paged = 1;
@@ -611,9 +587,14 @@ class Itella_Manifest
     return add_query_arg($query_args, admin_url('/admin.php'));
   }
 
+  /**
+   * Get order's shipping parameters
+   *
+   * @param $order_id
+   * @return array
+   */
   public static function get_shipping_parameters($order_id)
   {
-
     $shipping_parameters = array();
     $order = wc_get_order($order_id);
     $is_shipping_updated = !empty(get_post_meta($order_id, 'itella_shipping_method', true));
