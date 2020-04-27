@@ -474,10 +474,11 @@ class Itella_Manifest
                                     echo __('Extra services:', 'itella-shipping');
                                     ?> <br> <?php
                                     if ($shipping_parameters['multi_parcel']) {
-                                      ?><em> <?= $shipping_parameters['multi_parcel']; ?></em>
+                                      ?><em> <?= '- ' . $shipping_parameters['multi_parcel']; ?></em>
                                         <br> <?php
                                     }
                                     foreach ($shipping_parameters['extra_services'] as $extra_service) {
+                                        echo '-';
                                       if ($extra_service === 'oversized') {
                                         ?><em> <?= __('Oversized', 'itella-shipping'); ?></em>
                                           <br> <?php

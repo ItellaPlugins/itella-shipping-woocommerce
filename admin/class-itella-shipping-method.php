@@ -63,8 +63,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $this->name = $name;
     $this->version = $version;
     $this->id = "itella-shipping";
-    $this->method_title = __('Itella Shipping');
-    $this->method_description = __('Plugin to use with Itella Shipping methods');
+    $this->method_title = __('Itella Shipping', 'itella-shipping');
+    $this->method_description = __('Plugin to use with Itella Shipping methods', 'itella-shipping');
     $this->title = "Itella Shipping Method";
     $this->itella_cod_settings = $itella_cod_settings = get_option('woocommerce_itella_cod_settings');
 
