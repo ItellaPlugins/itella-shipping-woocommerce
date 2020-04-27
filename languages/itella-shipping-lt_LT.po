@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: itella_shipping\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-25 15:48+0300\n"
-"PO-Revision-Date: 2020-04-27 15:31+0300\n"
+"PO-Revision-Date: 2020-04-27 16:34+0300\n"
 "Last-Translator: mantas tarutis\n"
 "Language-Team: Lithuanian (Lithuania)\n"
 "Language: lt-LT\n"
@@ -580,3 +580,7 @@ msgstr "Itella paėmimo taškas"
 #: public/class-itella-shipping-public.php:158 loco:5ea6bf28ed0cfa104d28e2a8
 msgid "Itella Pickup Point not found!"
 msgstr "Itella paėmimo taškas nerastas!"
+
+#: #: admin/class-itella-shipping-method.php:222 loco:5ea6df38ed0cfa1b2439b712
+msgid "Itella Courier"
+msgstr "Itella Kurjeris"

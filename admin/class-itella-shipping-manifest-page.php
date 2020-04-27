@@ -89,7 +89,7 @@ class Itella_Manifest
 
     wp_enqueue_script($this->name . 'itella-shipping-manifest.js', plugin_dir_url(__FILE__) . 'js/itella-shipping-manifest.js', array('jquery'), $this->version, TRUE);
     wp_localize_script($this->name . 'itella-shipping-manifest.js', 'translations', array(
-            'select_orders' => __('Select at least one order to perform this action.', 'itella-shipping')
+        'select_orders' => __('Select at least one order to perform this action.', 'itella-shipping')
     ));
     wp_enqueue_script($this->name . 'moment', plugin_dir_url(__FILE__) . 'js/datetimepicker/moment.min.js', array(), null, true);
     wp_enqueue_script($this->name . 'bootstrap-datetimepicker', plugin_dir_url(__FILE__) . 'js/datetimepicker/bootstrap-datetimepicker.min.js', array('jquery', 'moment'), null, true);
@@ -273,7 +273,7 @@ class Itella_Manifest
 
       <div class="call-courier-container">
           <form id="call-courier-form" action="admin-post.php" method="GET">
-              <input type="hidden" name="action" value="itella-call-courier" />
+              <input type="hidden" name="action" value="itella-call-courier"/>
             <?php wp_nonce_field('itella-call-courier', 'itella-call-courier_nonce'); ?>
           </form>
           <button id="itella-call-btn" class="button action">
@@ -478,8 +478,18 @@ class Itella_Manifest
                                         <br> <?php
                                     }
                                     foreach ($shipping_parameters['extra_services'] as $extra_service) {
-                                      ?><em> <?= __(ucfirst($extra_service), 'itella_shipping'); ?></em>
-                                        <br> <?php
+                                      if ($extra_service === 'oversized') {
+                                        ?><em> <?= __('Oversized', 'itella-shipping'); ?></em>
+                                          <br> <?php
+                                      }
+                                      if ($extra_service === 'call_before_delivery') {
+                                        ?><em> <?= __('Call before delivery', 'itella-shipping'); ?></em>
+                                          <br> <?php
+                                      }
+                                      if ($extra_service === 'fragile') {
+                                        ?><em> <?= __('Fragile', 'itella-shipping'); ?></em>
+                                          <br> <?php
+                                      }
                                     }
                                   }
                                 }
