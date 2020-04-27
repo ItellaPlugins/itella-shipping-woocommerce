@@ -788,10 +788,47 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $order_ids = $_REQUEST['post'];
 
     $translation = $this->get_manifest_translation();
+
     $items = $this->prepare_items_for_manifest($order_ids);
 
     $manifest = $this->create_manifest($translation, $items);
+
+    $this->update_manifest_generation_date($order_ids, $manifest->timestamp);
+
+
     $manifest->printManifest('itella_manifest.pdf');
+  }
+
+  /**
+   * Update manifest generation date for orders
+   *
+   * @param $order_ids
+   * @param $timestamp
+   */
+  private function update_manifest_generation_date($order_ids, $timestamp)
+  {
+    $order_ids = is_array($order_ids) ? $order_ids : array($order_ids);;
+    foreach ($order_ids as $order_id) {
+      if ($this->get_tracking_code($order_id)) {
+        update_post_meta($order_id,
+            '_itella_manifest_generation_date',
+            date('Y-m-d H:i:s', $timestamp)
+        );
+      }
+    }
+  }
+
+  /**
+   * Get order tracking code
+   *
+   * @param $order_id
+   * @return array|mixed|string
+   */
+  private function get_tracking_code($order_id)
+  {
+    $order = wc_get_order($order_id);
+
+    return $order->get_meta('_itella_tracking_code');
   }
 
   /**
@@ -1270,16 +1307,22 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     foreach ($order_ids as $order_id) {
       $order = wc_get_order($order_id);
       $shipping_parameters = Itella_Manifest::get_shipping_parameters($order_id);
-      $prepared_tracking_items[] = array(
-          'track_num' => $order->get_meta('_itella_tracking_code'),
-          'weight' => !empty($shipping_parameters['weight']) ? $shipping_parameters['weight'] : 0,
-          'delivery_address' => $order->get_shipping_first_name() . ' '
-              . $order->get_shipping_last_name() . ', '
-              . $order->get_shipping_address_1() . ', '
-              . $order->get_shipping_postcode() . ' '
-              . $order->get_shipping_city() . ', '
-              . $order->get_shipping_country()
-      );
+
+      $tracking_code = $this->get_tracking_code($order_id);
+
+      // manifest is only for registered shipments (that have tracking code)
+      if ($tracking_code) {
+        $prepared_tracking_items[] = array(
+            'track_num' => $tracking_code,
+            'weight' => !empty($shipping_parameters['weight']) ? $shipping_parameters['weight'] : 0,
+            'delivery_address' => $order->get_shipping_first_name() . ' '
+                . $order->get_shipping_last_name() . ', '
+                . $order->get_shipping_address_1() . ', '
+                . $order->get_shipping_postcode() . ' '
+                . $order->get_shipping_city() . ', '
+                . $order->get_shipping_country()
+        );
+      }
     }
 
     return $prepared_tracking_items;
