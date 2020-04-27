@@ -167,7 +167,7 @@ class Itella_Shipping
     $plugin_i18n = new Itella_Shipping_i18n();
     $plugin_i18n->set_domain($this->get_plugin_name());
 
-    $this->loader->add_action('plugins_loaded', $plugin_i18n, 'load_plugin_textdomain');
+    $this->loader->add_action('init', $plugin_i18n, 'load_plugin_textdomain');
 
   }
 
@@ -195,7 +195,7 @@ class Itella_Shipping
     $this->loader->add_filter('admin_post_itella_shipments', $plugin_admin, 'itella_post_shipment_actions', 20);
     $this->loader->add_filter('admin_post_itella_manifests', $plugin_admin, 'itella_post_manifest_actions', 20);
     $this->loader->add_filter('admin_post_itella-call-courier', $plugin_admin, 'itella_post_call_courier_actions', 20);
-    $this->loader->add_filter('bulk_actions-edit-shop_order', $plugin_admin, 'itella_shipping_shop_order_bulk_actions', 20);
+//    $this->loader->add_filter('bulk_actions-edit-shop_order', $plugin_admin, 'itella_shipping_shop_order_bulk_actions', 20);
 
   }
 

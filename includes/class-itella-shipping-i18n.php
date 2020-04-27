@@ -58,6 +58,7 @@ class Itella_Shipping_i18n {
 	 */
 	public function set_domain( $domain ) {
 		$this->domain = $domain;
+
 	}
 
 }

@@ -93,20 +93,20 @@ class Itella_Shipping_Public
             'imagesUrl' => plugin_dir_url(__FILE__) . 'assets/images/',
             'locationsUrl' => plugin_dir_url(__FILE__) . '/../../locations/',
             'translations' => array(
-                'nothing_found' => __('Nothing found', 'itella_shipping'),
-                'modal_header' => __('Pickup points', 'itella_shipping'),
-                'selector_header' => __('Pickup point', 'itella_shipping'),
-                'workhours_header' => __('Workhours', 'itella_shipping'),
-                'contacts_header' => __('Contacts', 'itella_shipping'),
-                'search_placeholder' => __('Enter postcode/address', 'itella_shipping'),
-                'select_pickup_point' => __('Select a pickup point', 'itella_shipping'),
-                'no_pickup_points' => __('No points to select', 'itella_shipping'),
-                'select_btn' => __('select', 'itella_shipping'),
-                'back_to_list_btn' => __('reset search', 'itella_shipping'),
-                'select_pickup_point_btn' => __('Select pickup point', 'itella_shipping'),
-                'no_information' => __('No information', 'itella_shipping'),
-                'error_leaflet' => __('Leaflet is required for Itella-Mapping', 'itella_shipping'),
-                'error_missing_mount_el' => __('No mount supplied to itellaShipping', 'itella_shipping')
+                'nothing_found' => __('Nothing found', 'itella-shipping'),
+                'modal_header' => __('Pickup points', 'itella-shipping'),
+                'selector_header' => __('Pickup point', 'itella-shipping'),
+                'workhours_header' => __('Workhours', 'itella-shipping'),
+                'contacts_header' => __('Contacts', 'itella-shipping'),
+                'search_placeholder' => __('Enter postcode/address', 'itella-shipping'),
+                'select_pickup_point' => __('Select a pickup point', 'itella-shipping'),
+                'no_pickup_points' => __('No points to select', 'itella-shipping'),
+                'select_btn' => __('select', 'itella-shipping'),
+                'back_to_list_btn' => __('reset search', 'itella-shipping'),
+                'select_pickup_point_btn' => __('Select pickup point', 'itella-shipping'),
+                'no_information' => __('No information', 'itella-shipping'),
+                'error_leaflet' => __('Leaflet is required for Itella-Mapping', 'itella-shipping'),
+                'error_missing_mount_el' => __('No mount supplied to itellaShipping', 'itella-shipping')
             )
         )
     );
@@ -119,7 +119,7 @@ class Itella_Shipping_Public
   {
     $chosen_itella_method = get_post_meta($order->get_id(), '_itella_method', true);
     if ($chosen_itella_method === 'itella_pp') {
-      echo "<p>" . __('Itella Pickup Point', 'itella_shipping') . ": " . $this->get_pickup_point_public_name($order) . "</p>";
+      echo "<p>" . __('Itella Pickup Point', 'itella-shipping') . ": " . $this->get_pickup_point_public_name($order) . "</p>";
     }
 
   }
@@ -155,7 +155,7 @@ class Itella_Shipping_Public
       }
     }
 
-    return $pickup_point_public_name ?? __('Itella Pickup Point not found!', 'itella_shipping');
+    return $pickup_point_public_name ?? __('Itella Pickup Point not found!', 'itella-shipping');
   }
 
   public function show_itella_shipping_methods($methods)

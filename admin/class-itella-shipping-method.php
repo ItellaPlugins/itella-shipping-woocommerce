@@ -219,7 +219,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
       $rate = array(
           'id' => 'itella_c',
-          'label' => __('Itella courrier', 'itella-shipping'),
+          'label' => __('Itella Courier', 'itella-shipping'),
           'cost' => $amountC
       );
       $this->add_rate($rate);
@@ -230,91 +230,91 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   {
     $this->form_fields = array(
         'enabled' => array(
-            'title' => __('Enable', 'itella_shipping'),
+            'title' => __('Enable', 'itella-shipping'),
             'type' => 'checkbox',
-            'description' => __('Enable this shipping.', 'itella_shipping'),
+            'description' => __('Enable this shipping.', 'itella-shipping'),
             'default' => 'yes'
         ),
         'api_user_2711' => array(
-            'title' => __('API user (Product 2711)', 'itella_shipping'),
+            'title' => __('API user (Product 2711)', 'itella-shipping'),
             'type' => 'text',
         ),
         'api_pass_2711' => array(
-            'title' => __('Api password (Product 2711)', 'itella_shipping'),
+            'title' => __('Api password (Product 2711)', 'itella-shipping'),
             'type' => 'text',
         ),
         'api_contract_2711' => array(
-            'title' => __('Api contract number (Product 2711)', 'itella_shipping'),
+            'title' => __('Api contract number (Product 2711)', 'itella-shipping'),
             'type' => 'text',
         ),
         'api_user_2317' => array(
-            'title' => __('API user (Product 2317)', 'itella_shipping'),
+            'title' => __('API user (Product 2317)', 'itella-shipping'),
             'type' => 'text',
         ),
         'api_pass_2317' => array(
-            'title' => __('Api password (Product 2317)', 'itella_shipping'),
+            'title' => __('Api password (Product 2317)', 'itella-shipping'),
             'type' => 'text',
         ),
         'api_contract_2317' => array(
-            'title' => __('Api contract number (Product 2317)', 'itella_shipping'),
+            'title' => __('Api contract number (Product 2317)', 'itella-shipping'),
             'type' => 'text',
         ),
         'company' => array(
-            'title' => __('Company name', 'itella_shipping'),
+            'title' => __('Company name', 'itella-shipping'),
             'type' => 'text',
         ),
         'bank_account' => array(
-            'title' => __('Bank account', 'itella_shipping'),
+            'title' => __('Bank account', 'itella-shipping'),
             'type' => 'text',
         ),
         'cod_bic' => array(
-            'title' => __('BIC', 'itella_shipping'),
+            'title' => __('BIC', 'itella-shipping'),
             'type' => 'text',
         ),
         'shop_name' => array(
-            'title' => __('Shop name', 'itella_shipping'),
+            'title' => __('Shop name', 'itella-shipping'),
             'type' => 'text',
         ),
         'shop_city' => array(
-            'title' => __('Shop city', 'itella_shipping'),
+            'title' => __('Shop city', 'itella-shipping'),
             'type' => 'text',
         ),
         'shop_address' => array(
-            'title' => __('Shop address', 'itella_shipping'),
+            'title' => __('Shop address', 'itella-shipping'),
             'type' => 'text',
         ),
         'shop_postcode' => array(
-            'title' => __('Shop postcode', 'itella_shipping'),
+            'title' => __('Shop postcode', 'itella-shipping'),
             'type' => 'text',
         ),
         'shop_countrycode' => array(
-            'title' => __('Shop country code', 'itella_shipping'),
+            'title' => __('Shop country code', 'itella-shipping'),
             'type' => 'text',
         ),
         'shop_phone' => array(
-            'title' => __('Shop phone number', 'itella_shipping'),
+            'title' => __('Shop phone number', 'itella-shipping'),
             'type' => 'text',
         ),
         'shop_email' => array(
-            'title' => __('Shop email', 'itella_shipping'),
+            'title' => __('Shop email', 'itella-shipping'),
             'type' => 'email',
         ),
         'pickup_point_method' => array(
-            'title' => __('Enable Pickup Point', 'itella_shipping'),
+            'title' => __('Enable Pickup Point', 'itella-shipping'),
             'class' => 'pickup-point-method',
             'type' => 'checkbox',
-            'description' => __('Show pickup point shipping method in checkout.', 'itella_shipping'),
+            'description' => __('Show pickup point shipping method in checkout.', 'itella-shipping'),
             'default' => 'no'
         ),
         'courier_method' => array(
-            'title' => __('Enable Courier', 'itella_shipping'),
+            'title' => __('Enable Courier', 'itella-shipping'),
             'type' => 'checkbox',
             'class' => 'courier-method',
-            'description' => __('Show courier shipping method in checkout.', 'itella_shipping'),
+            'description' => __('Show courier shipping method in checkout.', 'itella-shipping'),
             'default' => 'no'
         ),
         'pickup_point_price_lt' => array(
-            'title' => 'LT ' . __('Pickup Point price', 'itella_shipping'),
+            'title' => 'LT ' . __('Pickup Point price', 'itella-shipping'),
             'class' => 'pickup-point',
             'type' => 'number',
             'custom_attributes' => array(
@@ -323,7 +323,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             'default' => 2,
         ),
         'courier_price_lt' => array(
-            'title' => 'LT ' . __('Courrier price', 'itella_shipping'),
+            'title' => 'LT ' . __('Courier price', 'itella-shipping'),
             'class' => 'courier',
             'type' => 'number',
             'default' => 2,
@@ -332,7 +332,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             ),
         ),
         'pickup_point_nocharge_amount_lt' => array(
-            'title' => 'LT ' . __('Disable pickup point fee if cart amount is greater or equal than this limit', 'itella_shipping'),
+            'title' => 'LT ' . __('Disable pickup point fee if cart amount is greater or equal than this limit', 'itella-shipping'),
             'class' => 'pickup-point',
             'type' => 'number',
             'custom_attributes' => array(
@@ -341,7 +341,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             'default' => 100
         ),
         'courier_nocharge_amount_lt' => array(
-            'title' => 'LT ' . __('Disable courier fee if cart amount is greater or equal than this limit', 'itella_shipping'),
+            'title' => 'LT ' . __('Disable courier fee if cart amount is greater or equal than this limit', 'itella-shipping'),
             'class' => 'courier',
             'type' => 'number',
             'custom_attributes' => array(
@@ -350,7 +350,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             'default' => 100
         ),
         'pickup_point_price_lv' => array(
-            'title' => 'LV ' . __('Pickup Point price', 'itella_shipping'),
+            'title' => 'LV ' . __('Pickup Point price', 'itella-shipping'),
             'class' => 'pickup-point',
             'type' => 'number',
             'custom_attributes' => array(
@@ -359,7 +359,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             'default' => 2,
         ),
         'courier_price_lv' => array(
-            'title' => 'LV ' . __('Courrier price', 'itella_shipping'),
+            'title' => 'LV ' . __('Courier price', 'itella-shipping'),
             'class' => 'courier',
             'type' => 'number',
             'default' => 2,
@@ -368,7 +368,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             ),
         ),
         'pickup_point_nocharge_amount_lv' => array(
-            'title' => 'LV ' . __('Disable pickup point fee if cart amount is greater or equal than this limit', 'itella_shipping'),
+            'title' => 'LV ' . __('Disable pickup point fee if cart amount is greater or equal than this limit', 'itella-shipping'),
             'class' => 'pickup-point',
             'type' => 'number',
             'custom_attributes' => array(
@@ -377,7 +377,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             'default' => 100
         ),
         'courier_nocharge_amount_lv' => array(
-            'title' => 'LV ' . __('Disable courier fee if cart amount is greater or equal than this limit', 'itella_shipping'),
+            'title' => 'LV ' . __('Disable courier fee if cart amount is greater or equal than this limit', 'itella-shipping'),
             'class' => 'courier',
             'type' => 'number',
             'custom_attributes' => array(
@@ -386,7 +386,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             'default' => 100
         ),
         'pickup_point_price_ee' => array(
-            'title' => 'EE ' . __('Pickup Point price', 'itella_shipping'),
+            'title' => 'EE ' . __('Pickup Point price', 'itella-shipping'),
             'class' => 'pickup-point',
             'type' => 'number',
             'custom_attributes' => array(
@@ -395,7 +395,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             'default' => 2,
         ),
         'courier_price_ee' => array(
-            'title' => 'EE ' . __('Courrier price', 'itella_shipping'),
+            'title' => 'EE ' . __('Courier price', 'itella-shipping'),
             'class' => 'courier',
             'type' => 'number',
             'default' => 2,
@@ -404,7 +404,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             ),
         ),
         'pickup_point_nocharge_amount_ee' => array(
-            'title' => 'EE ' . __('Disable pickup point fee if cart amount is greater or equal than this limit', 'itella_shipping'),
+            'title' => 'EE ' . __('Disable pickup point fee if cart amount is greater or equal than this limit', 'itella-shipping'),
             'class' => 'pickup-point',
             'type' => 'number',
             'custom_attributes' => array(
@@ -413,7 +413,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             'default' => 100
         ),
         'courier_nocharge_amount_ee' => array(
-            'title' => 'EE ' . __('Disable courier fee if cart amount is greater or equal than this limit', 'itella_shipping'),
+            'title' => 'EE ' . __('Disable courier fee if cart amount is greater or equal than this limit', 'itella-shipping'),
             'class' => 'courier',
             'type' => 'number',
             'custom_attributes' => array(
@@ -448,9 +448,9 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       $default_cod_amount = $order->get_total();
 
       $extra_services_options = array(
-          $oversized => __('Oversized', 'itella_shipping'),
-          $call_before_delivery => __('Call before delivery', 'itella_shipping'),
-          $fragile => __('Fragile', 'itella_shipping')
+          $oversized => __('Oversized', 'itella-shipping'),
+          $call_before_delivery => __('Call before delivery', 'itella-shipping'),
+          $fragile => __('Fragile', 'itella-shipping')
       );
 
       // vars
@@ -493,34 +493,34 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
       ?>
         <br class="clear"/>
-        <h4><?= __('Itella Shipping Options', 'itella_shipping') ?><a href="#" class="edit_address"
+        <h4><?= __('Itella Shipping Options', 'itella-shipping') ?><a href="#" class="edit_address"
                                                                       id="itella-shipping-options">Edit</a></h4>
         <div class="address">
             <p>
-                <strong><?= __('Packets(total):', 'itella_shipping') ?></strong> <?= $packet_count ?>
+                <strong><?= __('Packets(total):', 'itella-shipping') ?></strong> <?= $packet_count ?>
             </p>
             <p>
-                <strong><?= __('Weight(' . $weight_unit . '):', 'itella_shipping') ?></strong> <?= $weight ?>
+                <strong><?= __('Weight(' . $weight_unit . '):', 'itella-shipping') ?></strong> <?= $weight ?>
             </p>
-            <p><strong><?= __('COD:', 'itella_shipping') ?></strong>
+            <p><strong><?= __('COD:', 'itella-shipping') ?></strong>
               <?=
               $is_cod ? __('Yes', 'woocommerce') : __('No', 'woocommerce')
               ?>
             </p>
           <?php if ($is_cod): ?>
               <p>
-                  <strong><?= __('COD amount(' . $order->get_currency() . '):', 'itella_shipping') ?></strong> <?= $cod_amount ?>
+                  <strong><?= __('COD amount(' . $order->get_currency() . '):', 'itella-shipping') ?></strong> <?= $cod_amount ?>
               </p>
           <?php endif; ?>
-            <p><strong><?= __('Carrier:', 'itella_shipping') ?></strong>
+            <p><strong><?= __('Carrier:', 'itella-shipping') ?></strong>
               <?=
-              $is_itella_pp ? __('Pickup Point', 'itella_shipping') :
-                  ($is_itella_c ? __('Courier', 'itella_shipping') :
-                      __('No Itella Shipping method selected', 'itella_shipping'))
+              $is_itella_pp ? __('Pickup Point', 'itella-shipping') :
+                  ($is_itella_c ? __('Courier', 'itella-shipping') :
+                      __('No Itella Shipping method selected', 'itella-shipping'))
               ?>
             </p>
           <?php if ($is_itella_pp): ?>
-              <p><strong><?= __('Chosen Pickup Point', 'itella_shipping') ?></strong>
+              <p><strong><?= __('Chosen Pickup Point', 'itella-shipping') ?></strong>
                 <?=
                 $chosen_pickup_point->address->municipality . ' - ' .
                 $chosen_pickup_point->address->address . ', ' .
@@ -529,20 +529,20 @@ class Itella_Shipping_Method extends WC_Shipping_Method
                 ?>
               </p>
           <?php endif; ?>
-            <p><strong><?= __('Extra Services:', 'itella_shipping') ?></strong>
+            <p><strong><?= __('Extra Services:', 'itella-shipping') ?></strong>
               <?php
               if (empty($extra_services)) {
-                echo __('No extra services selected', 'itella_shipping');
+                echo __('No extra services selected', 'itella-shipping');
               } else {
                 if (in_array($oversized, $extra_services)) {
-                  echo __('Oversized', 'itella_shipping');
+                  echo __('Oversized', 'itella-shipping');
                 }
                 if (in_array($call_before_delivery, $extra_services)) {
-                  echo __('Call before delivery', 'itella_shipping');
+                  echo __('Call before delivery', 'itella-shipping');
                   echo '<br>';
                 }
                 if (in_array($fragile, $extra_services)) {
-                  echo __('Fragile', 'itella_shipping');
+                  echo __('Fragile', 'itella-shipping');
                   echo '<br>';
                 }
               }
@@ -553,7 +553,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
           <?php
           woocommerce_wp_select(array(
               'id' => 'packet_count',
-              'label' => __('Packets(total):', 'itella_shipping'),
+              'label' => __('Packets(total):', 'itella-shipping'),
               'value' => $packet_count,
               'options' => $packets,
               'wrapper_class' => 'form-field-wide'
@@ -561,9 +561,9 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
           woocommerce_wp_checkbox(array(
               'id' => 'itella_multi_parcel',
-              'label' => __('Multi Parcel', 'itella_shipping'),
+              'label' => __('Multi Parcel', 'itella-shipping'),
               'style' => 'width: 1rem',
-              'description' => __('If more than one packet is selected, then a multi parcel service is mandatory', 'itella_shipping'),
+              'description' => __('If more than one packet is selected, then a multi parcel service is mandatory', 'itella-shipping'),
               'value' => 'no',
               'cbvalue' => 'no',
               'wrapper_class' => 'form-field-wide'
@@ -578,7 +578,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
           woocommerce_wp_select(array(
               'id' => 'itella_cod_enabled',
-              'label' => __('COD:', 'itella_shipping'),
+              'label' => __('COD:', 'itella-shipping'),
               'value' => $is_cod ? 'yes' : 'no',
               'options' => array(
                   'no' => __('No', 'woocommerce'),
@@ -590,7 +590,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
           //          if ($is_cod) {
           woocommerce_wp_text_input(array(
               'id' => 'itella_cod_amount',
-              'label' => __('COD amount(' . $order->get_currency() . '):', 'itella_shipping'),
+              'label' => __('COD amount(' . $order->get_currency() . '):', 'itella-shipping'),
               'value' => $cod_amount,
               'wrapper_class' => 'form-field-wide'
           ));
@@ -598,18 +598,18 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
           woocommerce_wp_select(array(
               'id' => 'itella_shipping_method',
-              'label' => __('Carrier:', 'itella_shipping'),
+              'label' => __('Carrier:', 'itella-shipping'),
               'value' => $is_itella_pp ? 'itella_pp' : 'itella_c',
               'options' => array(
-                  'itella_pp' => __('Pickup Point', 'itella_shipping'),
-                  'itella_c' => __('Courier', 'itella_shipping')
+                  'itella_pp' => __('Pickup Point', 'itella-shipping'),
+                  'itella_c' => __('Courier', 'itella-shipping')
               ),
               'wrapper_class' => 'form-field-wide'
           ));
 
           woocommerce_wp_select(array(
               'id' => '_pp_id',
-              'label' => __('Select Pickup Point:', 'itella_shipping'),
+              'label' => __('Select Pickup Point:', 'itella-shipping'),
               'value' => $chosen_pickup_point_id,
               'options' => $this->build_pickup_points_list($order->get_shipping_country()),
               'wrapper_class' => 'form-field-wide'
@@ -621,7 +621,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
               'style' => 'width: 1rem',
               'value' => $extra_services,
               'class' => 'itella_extra_services_cb',
-              'label' => __('Extra Services', 'itella_shipping'),
+              'label' => __('Extra Services', 'itella-shipping'),
               'options' => $extra_services_options,
               'wrapper_class' => 'form-field-wide'
           ));
@@ -786,7 +786,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       $this->merge_labels($temp_files);
     } catch (ItellaException $e) {
       // add error message
-      $this->add_msg(__('An error occurred.', 'itella_shipping')
+      $this->add_msg(__('An error occurred.', 'itella-shipping')
           . ' ' . $e->getMessage()
           , 'error');
 
@@ -795,7 +795,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
           "\n" . date('Y-m-d H:i:s') . ": ItellaException:\n" . $e->getMessage() . "\n"
           . $e->getTraceAsString(), FILE_APPEND);
     } catch (\Exception $e) {
-      $this->add_msg(__('An error occurred.', 'itella_shipping')
+      $this->add_msg(__('An error occurred.', 'itella-shipping')
           . ' ' . $e->getMessage()
           , 'error');
 
@@ -830,10 +830,10 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
       // check if itella shipping method
       if ($shipping_method !== 'itella_pp' && $shipping_method !== 'itella_c') {
-        $this->add_msg($order_id . ' - ' . __('Shipment is not registered.', 'itella_shipping')
+        $this->add_msg($order_id . ' - ' . __('Shipment is not registered.', 'itella-shipping')
             . "<br>"
-            . __('Error: ', 'itella_shipping')
-            . __('Not Itella Shipping Method', 'itella_shipping'), 'error');
+            . __('Error: ', 'itella-shipping')
+            . __('Not Itella Shipping Method', 'itella-shipping'), 'error');
 
         wp_safe_redirect(wp_get_referer());
       }
@@ -860,11 +860,11 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         // add notices
         $this->add_msg(
             'Order ' . $order_id . ' - '
-            . __('Shipment registered successfully.', 'itella_shipping'), 'success'
+            . __('Shipment registered successfully.', 'itella-shipping'), 'success'
         );
         $this->add_msg(
             'Order ' . $order_id . ' - '
-            . __('Tracking number: ', 'itella_shipping') . $result, 'info'
+            . __('Tracking number: ', 'itella-shipping') . $result, 'info'
         );
 
         // log order id and tracking number
@@ -874,9 +874,9 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       } catch (ItellaException $th) {
 
         // add error message
-        $this->add_msg($order_id . ' - ' . __('Shipment is not registered.', 'itella_shipping')
+        $this->add_msg($order_id . ' - ' . __('Shipment is not registered.', 'itella-shipping')
             . "<br>"
-            . __('An error occurred. ', 'itella_shipping')
+            . __('An error occurred. ', 'itella-shipping')
             . $th->getMessage()
             , 'error');
 
@@ -1129,7 +1129,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       $caller = new CallCourier($email);
       $result = $caller
           ->setSenderEmail($this->settings['shop_email'])
-          ->setSubject(__('E-com order booking', 'itella_shipping'))
+          ->setSubject(__('E-com order booking', 'itella-shipping'))
           ->setPickUpAddress(array(
               'sender' => $this->settings['shop_email'],
               'address' => $this->settings['shop_address'] . ', '
@@ -1144,14 +1144,14 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
       if ($result) {
         // add notices
-        $this->add_msg(__('Email sent to courier', 'itella_shipping')
+        $this->add_msg(__('Email sent to courier', 'itella-shipping')
             . '(' . $email . ')', 'success');
       }
     } catch (ItellaException $e) {
       // add error message
-      $this->add_msg(__('Failed to send email.', 'itella_shipping')
+      $this->add_msg(__('Failed to send email.', 'itella-shipping')
           . "<br>"
-          . __('Error:', 'itella_shipping')
+          . __('Error:', 'itella-shipping')
           . ' '
           . $e->getMessage()
           , 'error');
@@ -1170,16 +1170,16 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   {
 
     return array(
-        'sender_address' => __('Sender address:', 'itella_shipping'),
-        'nr' => __('No.:', 'itella_shipping'),
-        'track_num' => __('Tracking number:', 'itella_shipping'),
-        'date' => __('Date:', 'itella_shipping'),
-        'amount' => __('Amount:', 'itella_shipping'),
-        'weight' => __('Weight:', 'itella_shipping'),
-        'delivery_address' => __('Delivery address:', 'itella_shipping'),
-        'courier' => __('Courier', 'itella_shipping'),
-        'sender' => __('Sender', 'itella_shipping'),
-        'name_lastname_signature' => __('name, lastname, signature', 'itella_shipping'),
+        'sender_address' => __('Sender address:', 'itella-shipping'),
+        'nr' => __('No.:', 'itella-shipping'),
+        'track_num' => __('Tracking number:', 'itella-shipping'),
+        'date' => __('Date:', 'itella-shipping'),
+        'amount' => __('Amount:', 'itella-shipping'),
+        'weight' => __('Weight:', 'itella-shipping'),
+        'delivery_address' => __('Delivery address:', 'itella-shipping'),
+        'courier' => __('Courier', 'itella-shipping'),
+        'sender' => __('Sender', 'itella-shipping'),
+        'name_lastname_signature' => __('name, lastname, signature', 'itella-shipping'),
     );
   }
 

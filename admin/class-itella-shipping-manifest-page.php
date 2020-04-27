@@ -89,7 +89,7 @@ class Itella_Manifest
 
     wp_enqueue_script($this->name . 'itella-shipping-manifest.js', plugin_dir_url(__FILE__) . 'js/itella-shipping-manifest.js', array('jquery'), $this->version, TRUE);
     wp_localize_script($this->name . 'itella-shipping-manifest.js', 'translations', array(
-            'select_orders' => __('Select at least one order to perform this action.', 'itella_shipping')
+            'select_orders' => __('Select at least one order to perform this action.', 'itella-shipping')
     ));
     wp_enqueue_script($this->name . 'moment', plugin_dir_url(__FILE__) . 'js/datetimepicker/moment.min.js', array(), null, true);
     wp_enqueue_script($this->name . 'bootstrap-datetimepicker', plugin_dir_url(__FILE__) . 'js/datetimepicker/bootstrap-datetimepicker.min.js', array('jquery', 'moment'), null, true);
@@ -100,8 +100,8 @@ class Itella_Manifest
   {
     add_submenu_page(
         'woocommerce',
-        __('Itella shipments', 'itella_shipping'),
-        __('Itella shipments', 'itella_shipping'),
+        __('Itella shipments', 'itella-shipping'),
+        __('Itella shipments', 'itella-shipping'),
         'manage_options',
         'itella-manifest',
         'itella_manifest_page',
@@ -121,9 +121,9 @@ class Itella_Manifest
      * Manifest page defaults
      */
     $tab_strings = array(
-        'all_orders' => __('All orders', 'itella_shipping'),
-        'new_orders' => __('New orders', 'itella_shipping'),
-        'completed_orders' => __('Completed orders', 'itella_shipping')
+        'all_orders' => __('All orders', 'itella-shipping'),
+        'new_orders' => __('New orders', 'itella-shipping'),
+        'completed_orders' => __('Completed orders', 'itella-shipping')
     );
 
     $filter_keys = array(
@@ -144,7 +144,7 @@ class Itella_Manifest
     ?>
 
       <div class="wrap">
-      <h1><?php _e('Itella shipments', 'itella_shipping'); ?></h1>
+      <h1><?php _e('Itella shipments', 'itella-shipping'); ?></h1>
 
     <?php
 
@@ -277,7 +277,7 @@ class Itella_Manifest
             <?php wp_nonce_field('itella-call-courier', 'itella-call-courier_nonce'); ?>
           </form>
           <button id="itella-call-btn" class="button action">
-            <?php _e('Call Itella courier', 'itella_shipping') ?>
+            <?php _e('Call Itella courier', 'itella-shipping') ?>
           </button>
       </div>
 
@@ -307,13 +307,13 @@ class Itella_Manifest
                 <input type="hidden" name="action" value="itella_labels"/>
               <?php wp_nonce_field('itella_labels', 'itella_labels_nonce'); ?>
             </form>
-            <button id="submit_manifest_items" title="<?php echo __('Generate manifests', 'itella_shipping'); ?>"
+            <button id="submit_manifest_items" title="<?php echo __('Generate manifests', 'itella-shipping'); ?>"
                     type="button" class="button action">
-              <?php echo __('Generate manifests', 'itella_shipping'); ?>
+              <?php echo __('Generate manifests', 'itella-shipping'); ?>
             </button>
-            <button id="submit_manifest_labels" title="<?php echo __('Print labels', 'itella_shipping'); ?>"
+            <button id="submit_manifest_labels" title="<?php echo __('Print labels', 'itella-shipping'); ?>"
                     type="button" class="button action">
-              <?php echo __('Print labels', 'itella_shipping'); ?>
+              <?php echo __('Print labels', 'itella-shipping'); ?>
             </button>
         </div>
     <?php endif; ?>
@@ -334,12 +334,12 @@ class Itella_Manifest
                       <th class="manage-column">
                           <input type="text" class="d-inline" name="filter_id" id="filter_id"
                                  value="<?php echo $filters['id']; ?>"
-                                 placeholder="<?php echo __('ID', 'itella_shipping'); ?>" aria-label="Order ID filter">
+                                 placeholder="<?php echo __('ID', 'itella-shipping'); ?>" aria-label="Order ID filter">
                       </th>
                       <th class="manage-column">
                           <input type="text" class="d-inline" name="filter_customer" id="filter_customer"
                                  value="<?php echo $filters['customer']; ?>"
-                                 placeholder="<?php echo __('Customer', 'itella_shipping'); ?>"
+                                 placeholder="<?php echo __('Customer', 'itella-shipping'); ?>"
                                  aria-label="Order ID filter">
                       </th>
                       <th class="manage-column">
@@ -356,7 +356,7 @@ class Itella_Manifest
                       <th class="manage-column">
                           <input type="text" class="d-inline" name="filter_tracking_code" id="filter_tracking_code"
                                  value="<?php echo $filters['tracking_code']; ?>"
-                                 placeholder="<?php echo __('Tracking code', 'itella_shipping'); ?>"
+                                 placeholder="<?php echo __('Tracking code', 'itella-shipping'); ?>"
                                  aria-label="Order tracking_code filter">
                       </th>
                       <th class="manage-column">
@@ -364,34 +364,34 @@ class Itella_Manifest
                               <div>
                                   <input name="filter_start_date" type='text' class="" id='datetimepicker1'
                                          data-date-format="YYYY-MM-DD" value="<?php echo $filters['start_date']; ?>"
-                                         placeholder="<?php echo __('From', 'itella_shipping'); ?>" autocomplete="off"/>
+                                         placeholder="<?php echo __('From', 'itella-shipping'); ?>" autocomplete="off"/>
                               </div>
                               <div>
                                   <input name="filter_end_date" type='text' class="" id='datetimepicker2'
                                          data-date-format="YYYY-MM-DD" value="<?php echo $filters['end_date']; ?>"
-                                         placeholder="<?php echo __('To', 'itella_shipping'); ?>" autocomplete="off"/>
+                                         placeholder="<?php echo __('To', 'itella-shipping'); ?>" autocomplete="off"/>
                               </div>
                           </div>
                       </th>
                       <th class="manage-column">
                           <div class="itella-action-buttons-container">
                               <button class="button action"
-                                      type="submit"><?php echo __('Filter', 'itella_shipping'); ?></button>
+                                      type="submit"><?php echo __('Filter', 'itella-shipping'); ?></button>
                               <button id="clear_filter_btn" class="button action"
-                                      type="submit"><?php echo __('Reset', 'itella_shipping'); ?></button>
+                                      type="submit"><?php echo __('Reset', 'itella-shipping'); ?></button>
                           </div>
                       </th>
                   </tr>
 
                   <tr class="table-header">
                       <td class="manage-column column-cb check-column"></td>
-                      <th scope="col" class="manage-column"><?php echo __('ID', 'itella_shipping'); ?></th>
-                      <th scope="col" class="manage-column"><?php echo __('Customer', 'itella_shipping'); ?></th>
-                      <th scope="col" class="manage-column"><?php echo __('Order Status', 'itella_shipping'); ?></th>
-                      <th scope="col" class="manage-column"><?php echo __('Service', 'itella_shipping'); ?></th>
-                      <th scope="col" class="manage-column"><?php echo __('Tracking code', 'itella_shipping'); ?></th>
-                      <th scope="col" class="manage-column"><?php echo __('Manifest date', 'itella_shipping'); ?></th>
-                      <th scope="col" class="manage-column"><?php echo __('Actions', 'itella_shipping'); ?></th>
+                      <th scope="col" class="manage-column"><?php echo __('ID', 'itella-shipping'); ?></th>
+                      <th scope="col" class="manage-column"><?php echo __('Customer', 'itella-shipping'); ?></th>
+                      <th scope="col" class="manage-column"><?php echo __('Order Status', 'itella-shipping'); ?></th>
+                      <th scope="col" class="manage-column"><?php echo __('Service', 'itella-shipping'); ?></th>
+                      <th scope="col" class="manage-column"><?php echo __('Tracking code', 'itella-shipping'); ?></th>
+                      <th scope="col" class="manage-column"><?php echo __('Manifest date', 'itella-shipping'); ?></th>
+                      <th scope="col" class="manage-column"><?php echo __('Actions', 'itella-shipping'); ?></th>
                   </tr>
 
                   </thead>
@@ -437,41 +437,41 @@ class Itella_Manifest
                                         $shipping_parameters['pickup_point_id']
                                     );
                                     ?>
-                                      <strong> <?= __('Itella Pickup Point:', 'itella_shipping'); ?> </strong>
+                                      <strong> <?= __('Itella Pickup Point:', 'itella-shipping'); ?> </strong>
                                       <br>
-                                    <?= __('City: ', 'itella_shipping') ?>
+                                    <?= __('City: ', 'itella-shipping') ?>
                                       <em> <?= $chosen_pickup_point->address->municipality ?></em><br>
-                                    <?= __('Public Name: ', 'itella_shipping') ?>
+                                    <?= __('Public Name: ', 'itella-shipping') ?>
                                       <em> <?= $chosen_pickup_point->publicName ?></em><br>
-                                    <?= __('Address: ', 'itella_shipping') ?>
+                                    <?= __('Address: ', 'itella-shipping') ?>
                                       <em> <?= $chosen_pickup_point->address->address ?></em><br>
-                                    <?= __('Postal Code: ', 'itella_shipping') ?>
+                                    <?= __('Postal Code: ', 'itella-shipping') ?>
                                       <em> <?= $chosen_pickup_point->address->postalCode ?></em>
                                     <?php
                                   }
                                 }
                                 if ($shipping_parameters['itella_shipping_method'] === 'itella_c') {
                                   ?>
-                                    <strong> <?= __('Itella Courier:', 'itella_shipping'); ?> </strong>
+                                    <strong> <?= __('Itella Courier:', 'itella-shipping'); ?> </strong>
                                     <br>
                                   <?php
-                                  echo __('Packet Count: ', 'itella_shipping') ?>
+                                  echo __('Packet Count: ', 'itella-shipping') ?>
                                     <em> <?= $shipping_parameters['packet_count']; ?></em><?php
                                   ?> <br> <?php
-                                  echo __('Weight: ', 'itella_shipping') ?>
+                                  echo __('Weight: ', 'itella-shipping') ?>
                                     <em> <?= $shipping_parameters['weight']; ?></em><?php
                                   ?> <br> <?php
-                                  echo __('COD: ', 'itella_shipping');
+                                  echo __('COD: ', 'itella-shipping');
                                   ?>
                                     <em> <?= $shipping_parameters['is_cod'] ? __('Yes', 'woocommerce') : __('No', 'woocommerce'); ?></em>
                                     <br> <?php
                                   if ($shipping_parameters['is_cod']) {
-                                    echo __('COD amount: ', 'itella_shipping') ?>
+                                    echo __('COD amount: ', 'itella-shipping') ?>
                                       <em> <?= $shipping_parameters['cod_amount']; ?></em><?php
                                     ?> <br> <?php
                                   }
                                   if ($shipping_parameters['extra_services']) {
-                                    echo __('Extra services:', 'itella_shipping');
+                                    echo __('Extra services:', 'itella-shipping');
                                     ?> <br> <?php
                                     if ($shipping_parameters['multi_parcel']) {
                                       ?><em> <?= $shipping_parameters['multi_parcel']; ?></em>
@@ -511,27 +511,27 @@ class Itella_Manifest
                           <td class="manage-column">
                             <?php if ($tracking_code): ?>
                                 <span class="button action button-itella button-itella-disabled">
-                                  <?php echo __('Register shipment', 'itella_shipping'); ?>
+                                  <?php echo __('Register shipment', 'itella-shipping'); ?>
                                 </span>
                                 <a href="admin-post.php?action=itella_labels&post=<?php echo $order->get_id(); ?>"
                                    class="button action button-itella">
-                                  <?php echo __('Print label', 'itella_shipping'); ?>
+                                  <?php echo __('Print label', 'itella-shipping'); ?>
                                 </a>
                                 <a href="admin-post.php?action=itella_manifests&post=<?php echo $order->get_id(); ?>"
                                    class="button action button-itella">
-                                  <?php echo __('Generate manifest', 'itella_shipping'); ?>
+                                  <?php echo __('Generate manifest', 'itella-shipping'); ?>
                                 </a>
                             <?php endif; ?>
                             <?php if (!$tracking_code): ?>
                                 <a href="admin-post.php?action=itella_shipments&post=<?php echo $order->get_id(); ?>"
                                    class="button action button-itella">
-                                  <?php echo __('Register shipment', 'itella_shipping'); ?>
+                                  <?php echo __('Register shipment', 'itella-shipping'); ?>
                                 </a>
                                 <span class="button action button-itella button-itella-disabled">
-                                  <?php echo __('Print label', 'itella_shipping'); ?>
+                                  <?php echo __('Print label', 'itella-shipping'); ?>
                                 </span>
                                 <span class="button action button-itella button-itella-disabled">
-                                  <?php echo __('Generate manifest', 'itella_shipping'); ?>
+                                  <?php echo __('Generate manifest', 'itella-shipping'); ?>
                                 </span>
                             <?php endif; ?>
                           </td>
@@ -556,9 +556,9 @@ class Itella_Manifest
           <div class="modal-content">
               <div class="alert-info">
                   <p>
-                      <span><?php _e('Important!', 'itella_shipping') ?></span> <?php _e('Check your credentials.', 'itella_shipping') ?>
+                      <span><?php _e('Important!', 'itella-shipping') ?></span> <?php _e('Check your credentials.', 'itella-shipping') ?>
                   </p>
-                  <p><?php _e('Address and contact information can be changed in Itella settings.', 'itella_shipping') ?></p>
+                  <p><?php _e('Address and contact information can be changed in Itella settings.', 'itella-shipping') ?></p>
               </div>
               <form id="itella-call" action="admin-post.php" method="GET">
                   <input type="hidden" name="action" value="itella_call_courier"/>
@@ -577,7 +577,7 @@ class Itella_Manifest
                   </div>
                   <div class="modal-footer">
                       <button type="submit" id="itella-call-btn"
-                              class="button action"><?php _e('Call Itella courier', 'itella_shipping') ?></button>
+                              class="button action"><?php _e('Call Itella courier', 'itella-shipping') ?></button>
                       <button type="button" id="itella-call-cancel-btn"
                               class="button action"><?php _e('Cancel') ?></button>
                   </div>
@@ -649,7 +649,7 @@ class Itella_Manifest
       $shipping_parameters = array(
           'itella_shipping_method' => $itella_method,
           'packet_count' => $packet_count,
-          'multi_parcel' => $multi_parcel ? __('Multi Parcel', 'itella_shipping') : false,
+          'multi_parcel' => $multi_parcel ? __('Multi Parcel', 'itella-shipping') : false,
           'weight' => $weight,
           'is_cod' => $is_cod,
           'cod_amount' => $cod_amount,
