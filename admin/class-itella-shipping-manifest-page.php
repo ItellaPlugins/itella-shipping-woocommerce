@@ -275,7 +275,7 @@ class Itella_Manifest
     <?php endif; ?>
     <?php if ($thereIsOrders) : ?>
         <div class="mass-print-container">
-            <form id="manifest-print-form" action="admin-post.php" method="GET">
+            <form id="manifest-print-form" action="admin-post.php" method="GET" target="_blank">
                 <input type="hidden" name="action" value="itella_manifests"/>
               <?php wp_nonce_field('itella_manifest', 'itella_manifest_nonce'); ?>
             </form>
@@ -505,7 +505,7 @@ class Itella_Manifest
                                   <?php echo __('Print label', 'itella-shipping'); ?>
                                 </a>
                                 <a href="admin-post.php?action=itella_manifests&post=<?php echo $order->get_id(); ?>"
-                                   class="button action button-itella">
+                                   class="button action button-itella" target="_blank">
                                   <?php echo __('Generate manifest', 'itella-shipping'); ?>
                                 </a>
                             <?php endif; ?>
