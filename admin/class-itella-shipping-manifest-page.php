@@ -100,8 +100,8 @@ class Itella_Manifest
 
     // Manifest page defaults
     $tab_strings = array(
-        'all_orders' => __('All orders', 'itella-shipping'),
         'new_orders' => __('New orders', 'itella-shipping'),
+        'all_orders' => __('All orders', 'itella-shipping'),
         'completed_orders' => __('Completed orders', 'itella-shipping')
     );
 
@@ -128,7 +128,7 @@ class Itella_Manifest
     if (isset($_GET['paged']))
       $paged = filter_input(INPUT_GET, 'paged');
 
-    $action = 'all_orders';
+    $action = 'new_orders';
     if (isset($_GET['action'])) {
       $action = filter_input(INPUT_GET, 'action');
     }
