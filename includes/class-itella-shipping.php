@@ -190,6 +190,7 @@ class Itella_Shipping
     $this->loader->add_action('woocommerce_admin_order_data_after_shipping_address', $plugin_admin, 'add_shipping_details_to_order');
     $this->loader->add_action('woocommerce_process_shop_order_meta', $plugin_admin, 'save_shipping_settings');
     $this->loader->add_action('admin_notices', $plugin_admin, 'itella_shipping_notices');
+    $this->loader->add_action('woocommerce_after_checkout_validation', $plugin_admin, 'validate_pickup_point');
 
     $this->loader->add_filter('admin_post_itella_labels', $plugin_admin, 'itella_post_label_actions', 20);
     $this->loader->add_filter('admin_post_itella_shipments', $plugin_admin, 'itella_post_shipment_actions', 20);

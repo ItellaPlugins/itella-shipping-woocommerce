@@ -701,6 +701,16 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   }
 
   /**
+   * Validate if pp is chosen
+   */
+  public function validate_pickup_point()
+  {
+    if (empty($_POST['itella-chosen-point-id'])) {
+      wc_add_notice( __( "You must choose Itella Pickup Point", 'itella-shipping' ), 'error');
+    }
+  }
+
+  /**
    * Save in Woocommerce->Orders->Edit Order updated shipping options
    *
    * @param $order_id
