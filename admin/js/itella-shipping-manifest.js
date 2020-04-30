@@ -84,6 +84,22 @@ jQuery('document').ready(function($) {
 
     });
 
+    $('.submit_manifest_items').on('click', function() {
+        var ids = "";
+        $('.manifest-print-form .post_id').remove();
+        $('.manifest-item:checked').each(function() {
+            ids += $(this).val() + ";";
+            var id = $(this).val();
+            $('.manifest-print-form').append('<input type="hidden" class = "post_id" name="post[]" value = "' + id + '" />');
+        });
+        $('#item_ids').val(ids);
+        if (ids == "") {
+            alert(translations.select_orders);
+        } else {
+            $('.manifest-print-form').submit();
+        }
+    });
+
     $('#submit_manifest_labels').on('click', function() {
         var ids = "";
         $('#labels-print-form .post_id').remove();

@@ -15,10 +15,10 @@
   justify-content: space-between;
 }
 
-.manifest-date-title {
+.itella-manifest-date-title {
   font-size: 1.5em;
   font-weight: 900;
-  text-align: center;
+  align-self: center;
 }
 
 .order_actions .itella_view_label, .order_actions .itella_generate_label {
@@ -307,6 +307,7 @@
 .button-itella {
     text-align: center;
     margin: 5px 0!important;
+    padding: 0 2px!important;
     width: 135px;
 }
 
@@ -318,4 +319,18 @@
 
 .button-itella-disabled:hover {
     background-color: #f3f5f6!important;
+}
+
+.itella-grid-row {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.itella-grid-row-element-4 {
+    grid-column-start: 4;
+}
+
+.itella-grid-row-element-7 {
+    margin-left: 1.2rem;
+    grid-column-start: 7;
 }

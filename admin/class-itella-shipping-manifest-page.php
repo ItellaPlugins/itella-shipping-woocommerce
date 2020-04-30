@@ -275,18 +275,20 @@ class Itella_Manifest
     <?php endif; ?>
     <?php if ($thereIsOrders) : ?>
         <div class="mass-print-container">
-            <form id="manifest-print-form" action="admin-post.php" method="GET" target="_blank">
-                <input type="hidden" name="action" value="itella_manifests"/>
-              <?php wp_nonce_field('itella_manifest', 'itella_manifest_nonce'); ?>
-            </form>
             <form id="labels-print-form" action="admin-post.php" method="GET">
                 <input type="hidden" name="action" value="itella_labels"/>
               <?php wp_nonce_field('itella_labels', 'itella_labels_nonce'); ?>
             </form>
-            <button id="submit_manifest_items" title="<?php echo __('Generate manifests', 'itella-shipping'); ?>"
-                    type="button" class="button action">
-              <?php echo __('Generate manifests', 'itella-shipping'); ?>
-            </button>
+          <?php if ($action !== 'completed_orders') : ?>
+              <form id="manifest-print-form" action="admin-post.php" method="GET" target="_blank">
+                  <input type="hidden" name="action" value="itella_manifests"/>
+                <?php wp_nonce_field('itella_manifest', 'itella_manifest_nonce'); ?>
+              </form>
+              <button id="submit_manifest_items" title="<?php echo __('Generate manifests', 'itella-shipping'); ?>"
+                      type="button" class="button action">
+                <?php echo __('Generate manifests', 'itella-shipping'); ?>
+              </button>
+          <?php endif; ?>
             <button id="submit_manifest_labels" title="<?php echo __('Print labels', 'itella-shipping'); ?>"
                     type="button" class="button action">
               <?php echo __('Print labels', 'itella-shipping'); ?>
@@ -380,8 +382,24 @@ class Itella_Manifest
                     ?>
                     <?php if ($action == 'completed_orders' && $date_tracker !== $date) : ?>
                           <tr>
-                              <td colspan="8" class="manifest-date-title">
-                                <?php echo $date_tracker = $date; ?>
+                              <td colspan="8">
+                                  <div class="itella-grid-row">
+                                      <div class="itella-grid-row-element-4 itella-manifest-date-title">
+                                        <?php echo $date_tracker = $date; ?>
+                                      </div>
+                                      <div class="itella-grid-row-element-7">
+                                          <form class="manifest-print-form" action="admin-post.php" method="GET"
+                                                target="_blank">
+                                              <input type="hidden" name="action" value="itella_manifests"/>
+                                            <?php wp_nonce_field('itella_manifest', 'itella_manifest_nonce'); ?>
+                                          </form>
+                                          <button
+                                                  title="<?php echo __('Generate manifest', 'itella-shipping'); ?>"
+                                                  type="button" class="submit_manifest_items button action button-itella">
+                                            <?php echo __('Generate manifest', 'itella-shipping'); ?>
+                                          </button>
+                                      </div>
+                                  </div>
                               </td>
                           </tr>
                     <?php endif; ?>
@@ -454,7 +472,7 @@ class Itella_Manifest
                                         <br> <?php
                                     }
                                     foreach ($shipping_parameters['extra_services'] as $extra_service) {
-                                        echo '-';
+                                      echo '-';
                                       if ($extra_service === 'oversized') {
                                         ?><em> <?= __('Oversized', 'itella-shipping'); ?></em>
                                           <br> <?php
@@ -504,10 +522,12 @@ class Itella_Manifest
                                    class="button action button-itella">
                                   <?php echo __('Print label', 'itella-shipping'); ?>
                                 </a>
-                                <a href="admin-post.php?action=itella_manifests&post=<?php echo $order->get_id(); ?>"
-                                   class="button action button-itella" target="_blank">
-                                  <?php echo __('Generate manifest', 'itella-shipping'); ?>
-                                </a>
+                              <?php if ($action !== 'completed_orders') : ?>
+                                    <a href="admin-post.php?action=itella_manifests&post=<?php echo $order->get_id(); ?>"
+                                       class="button action button-itella" target="_blank">
+                                      <?php echo __('Generate manifest', 'itella-shipping'); ?>
+                                    </a>
+                              <?php endif; ?>
                             <?php endif; ?>
                             <?php if (!$tracking_code): ?>
                                 <a href="admin-post.php?action=itella_shipments&post=<?php echo $order->get_id(); ?>"
@@ -517,9 +537,11 @@ class Itella_Manifest
                                 <span class="button action button-itella button-itella-disabled">
                                   <?php echo __('Print label', 'itella-shipping'); ?>
                                 </span>
-                                <span class="button action button-itella button-itella-disabled">
+                              <?php if ($action !== 'completed_orders') : ?>
+                                    <span class="button action button-itella button-itella-disabled">
                                   <?php echo __('Generate manifest', 'itella-shipping'); ?>
                                 </span>
+                              <?php endif; ?>
                             <?php endif; ?>
                           </td>
                       </tr>
