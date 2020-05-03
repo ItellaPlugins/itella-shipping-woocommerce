@@ -16,7 +16,7 @@
 }
 
 .itella-manifest-date-title {
-  font-size: 1.5em;
+  /*font-size: .85rem;*/
   font-weight: 900;
   align-self: center;
 }
@@ -333,4 +333,8 @@
 .itella-grid-row-element-7 {
     margin-left: 1.2rem;
     grid-column-start: 7;
+}
+
+#call-courier-form {
+    display: inline-block;
 }

@@ -245,18 +245,18 @@ class Itella_Manifest
     }
 
     $order_statuses = wc_get_order_statuses();
-    ?>
 
-      <div class="call-courier-container">
-          <form id="call-courier-form" action="admin-post.php" method="GET">
-              <input type="hidden" name="action" value="itella-call-courier"/>
-            <?php wp_nonce_field('itella-call-courier', 'itella-call-courier_nonce'); ?>
-          </form>
-          <button id="itella-call-btn" class="button action">
-            <?php _e('Call Itella courier', 'itella-shipping') ?>
-          </button>
-      </div>
-
+    if ($action !== 'completed_orders') : ?>
+        <div class="call-courier-container">
+            <form id="call-courier-form" action="admin-post.php" method="GET">
+                <input type="hidden" name="action" value="itella-call-courier"/>
+              <?php wp_nonce_field('itella-call-courier', 'itella-call-courier_nonce'); ?>
+            </form>
+            <button id="itella-call-btn" class="button action">
+              <?php _e('Call Itella courier', 'itella-shipping') ?>
+            </button>
+        </div>
+    <?php endif; ?>
       <ul class="nav nav-tabs">
         <?php foreach ($tab_strings as $tab => $tab_title) : ?>
             <li class="nav-item">
@@ -395,8 +395,16 @@ class Itella_Manifest
                                           </form>
                                           <button
                                                   title="<?php echo __('Generate manifest', 'itella-shipping'); ?>"
-                                                  type="button" class="submit_manifest_items button action button-itella">
+                                                  type="button"
+                                                  class="submit_manifest_items button action button-itella">
                                             <?php echo __('Generate manifest', 'itella-shipping'); ?>
+                                          </button>
+                                          <form id="call-courier-form" action="admin-post.php" method="GET">
+                                              <input type="hidden" name="action" value="itella-call-courier"/>
+                                            <?php wp_nonce_field('itella-call-courier', 'itella-call-courier_nonce'); ?>
+                                          </form>
+                                          <button id="itella-call-btn" class="button action button-itella">
+                                            <?php _e('Call Itella courier', 'itella-shipping') ?>
                                           </button>
                                       </div>
                                   </div>
