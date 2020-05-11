@@ -19,6 +19,7 @@ use Mijora\Itella\Shipment\Shipment;
  */
 class Itella_Shipping_Method extends WC_Shipping_Method
 {
+    const ITELLA_TRACKING_URL = 'https://itella.lt/verslui/siuntos-sekimas/?trackingCode=';
 
   /**
    * The ID of this plugin.
@@ -885,7 +886,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
         // set tracking number
         update_post_meta($order_id, '_itella_tracking_code', $result->__toString());
-        update_post_meta($order_id, '_itella_tracking_url', $result->attributes()->__toString());
+        update_post_meta($order_id, '_itella_tracking_url', self::ITELLA_TRACKING_URL . $result->__toString());
 
         // add notices
         $this->add_msg(
