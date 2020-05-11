@@ -705,7 +705,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   public function validate_pickup_point()
   {
-    if (empty($_POST['itella-chosen-point-id'])) {
+    $isItellaPp = in_array('itella_pp',wc_clean($_POST['shipping_method']));
+    if ($isItellaPp && empty($_POST['itella-chosen-point-id'])) {
       wc_add_notice( __( "You must choose Itella Pickup Point", 'itella-shipping' ), 'error');
     }
   }
