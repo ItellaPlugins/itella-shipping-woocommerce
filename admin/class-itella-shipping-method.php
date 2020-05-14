@@ -953,7 +953,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $extra_services = is_array($extra_services) ? $extra_services : array($extra_services);
 
     // cod
-    if ($shipping_parameters['is_cod'] === 'yes') {
+    if ($shipping_parameters['is_cod'] === 'yes' || $shipping_parameters['is_cod'] === true) {
       $service_cod = new AdditionalService(3101, array(
           'amount' => $shipping_parameters['cod_amount'],
           'account' => $this->settings['bank_account'],
