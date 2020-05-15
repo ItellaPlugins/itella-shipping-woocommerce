@@ -112,17 +112,24 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    *
    * @param string[] $country_codes
    */
-  public function update_locations($country_codes = array('lt', 'lv', 'ee'))
+  public function update_locations()
   {
+    $country_codes = array('lt', 'lv', 'ee');
 
     $itella_pickup_points_obj = new PickupPoints('https://locationservice.posti.com/api/2/location');
 
     foreach ($country_codes as $country_code) {
-      $locations = $itella_pickup_points_obj->getLocationsByCountry($country_code);
-      $itella_pickup_points_obj
-          ->saveLocationsToJSONFile(plugin_dir_path(dirname(__FILE__))
-              . 'locations/locations' . wc_strtoupper($country_code) . '.json',
-              json_encode($locations));
+      $filename = plugin_dir_path(dirname(__FILE__))
+          . 'locations/locations' . wc_strtoupper($country_code) . '.json';
+      if (file_exists($filename)) {
+        if ((time() - filemtime($filename)) > 86400) {
+          $locations = $itella_pickup_points_obj->getLocationsByCountry($country_code);
+          $itella_pickup_points_obj
+              ->saveLocationsToJSONFile(plugin_dir_path(dirname(__FILE__))
+                  . 'locations/locations' . wc_strtoupper($country_code) . '.json',
+                  json_encode($locations));
+        }
+      }
     }
   }
 
