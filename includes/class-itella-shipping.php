@@ -126,11 +126,6 @@ class Itella_Shipping
     require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-itella-shipping-public.php';
 
     /**
-     * The class responsible for scheduling and un-scheduling events (cron jobs).
-     */
-    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-itella-shipping-cron.php';
-
-    /**
      * Load Itella API
      */
     require_once plugin_dir_path(dirname(__FILE__)) . 'libs/itella-api/vendor/autoload.php';
