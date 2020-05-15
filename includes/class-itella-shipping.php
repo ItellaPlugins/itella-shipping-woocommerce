@@ -135,7 +135,6 @@ class Itella_Shipping
      */
     require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-itella-shipping-manifest-page.php';
 
-    Itella_Shipping_Cron::schedule();
     $this->loader = new Itella_Shipping_Loader();
 
     $this->set_locale();
