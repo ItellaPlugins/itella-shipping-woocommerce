@@ -5,7 +5,7 @@
     $(document.body).on('updated_shipping_method', () => {
         if ($('#shipping_method_0_itella_pp').is(':checked')) {
             if(!$('.itella-shipping-container').length) {
-                init();
+                itella_init();
             }
          }
     });
@@ -14,7 +14,7 @@
     $(document.body).on('updated_checkout', () => {
         if ($('#shipping_method_0_itella_pp').is(':checked')) {
             if(!$('.itella-shipping-container').length) {
-                init();
+                itella_init();
             }
         }
     });

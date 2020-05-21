@@ -114,7 +114,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   public function update_locations()
   {
-    $country_codes = array('lt', 'lv', 'ee');
+    $country_codes = array('lt', 'lv', 'ee', 'fi');
 
     $itella_pickup_points_obj = new PickupPoints('https://locationservice.posti.com/api/2/location');
 
@@ -160,6 +160,11 @@ class Itella_Shipping_Method extends WC_Shipping_Method
           if ($cart_amount > floatval($this->settings['pickup_point_nocharge_amount_ee']))
             $amount = 0.0;
           break;
+        case 'FI':
+          $amount = $this->settings['pickup_point_price_fi'];
+          if ($cart_amount > floatval($this->settings['pickup_point_nocharge_amount_fi']))
+            $amount = 0.0;
+          break;
         default:
           $amount = $this->settings['pickup_point_price_lt'];
           if ($cart_amount > floatval($this->settings['pickup_point_nocharge_amount_lt']))
@@ -187,6 +192,11 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         case 'EE':
           $amountC = $this->settings['courier_price_ee'];
           if ($cart_amount > floatval($this->settings['courier_nocharge_amount_ee']))
+            $amountC = 0.0;
+          break;
+        case 'FI':
+          $amountC = $this->settings['courier_price_fi'];
+          if ($cart_amount > floatval($this->settings['courier_nocharge_amount_fi']))
             $amountC = 0.0;
           break;
         default:
@@ -397,6 +407,42 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         ),
         'courier_nocharge_amount_ee' => array(
             'title' => 'EE. ' . __('Disable courier fee if cart amount is greater or equal than this limit', 'itella-shipping'),
+            'class' => 'courier',
+            'type' => 'number',
+            'custom_attributes' => array(
+                'step' => 0.01,
+            ),
+            'default' => 100
+        ),
+        'pickup_point_price_fi' => array(
+            'title' => 'FI. ' . __('Pickup Point price', 'itella-shipping'),
+            'class' => 'pickup-point',
+            'type' => 'number',
+            'custom_attributes' => array(
+                'step' => 0.01,
+            ),
+            'default' => 2,
+        ),
+        'courier_price_fi' => array(
+            'title' => 'FI. ' . __('Courier price', 'itella-shipping'),
+            'class' => 'courier',
+            'type' => 'number',
+            'default' => 2,
+            'custom_attributes' => array(
+                'step' => 0.01,
+            ),
+        ),
+        'pickup_point_nocharge_amount_fi' => array(
+            'title' => 'FI. ' . __('Disable pickup point fee if cart amount is greater or equal than this limit', 'itella-shipping'),
+            'class' => 'pickup-point',
+            'type' => 'number',
+            'custom_attributes' => array(
+                'step' => 0.01,
+            ),
+            'default' => 100
+        ),
+        'courier_nocharge_amount_fi' => array(
+            'title' => 'FI. ' . __('Disable courier fee if cart amount is greater or equal than this limit', 'itella-shipping'),
             'class' => 'courier',
             'type' => 'number',
             'custom_attributes' => array(
@@ -1222,6 +1268,9 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         break;
       case 'EE':
         $email = 'smartship.routing.ee@itella.com';
+        break;
+      case 'FI':
+        $email = 'smartship.routing.fi@itella.com';
         break;
       default:
         $email = 'smartship.routing.lt@itella.com';

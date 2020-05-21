@@ -77,9 +77,12 @@ class Party
       case 'EE':
         $regex = '/^\+372[5,8][0-9]{6,7}$/';
         break;
+      case 'FI':
+        $regex = '/^\+358(?:4.|50)[0-9]{4,8}$/';
+        break;
       // default, should be able to handle any phone number
       default:
-      $regex = '/^\+[0-9]{1,3}[0-9]{13}$/';
+      $regex = '/^\+[0-9]{1,3}[0-9]{4,13}$/';
         break;
     }
 

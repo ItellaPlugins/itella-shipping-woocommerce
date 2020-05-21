@@ -59,6 +59,11 @@ class Itella_Shipping
   protected $version;
 
   /**
+   * @var array $available_countries
+   */
+  private $available_countries;
+
+  /**
    * Define the core functionality of the plugin.
    *
    * Set the plugin name and the plugin version that can be used throughout the plugin.
@@ -72,6 +77,7 @@ class Itella_Shipping
 
     $this->plugin_name = 'itella-shipping';
     $this->version = '1.0.0';
+    $this->available_countries = array('LT', 'EE', 'LV', 'FI');
 
     add_action('plugins_loaded', array($this, 'run'));
     add_action('admin_notices', array($this, 'notify_on_activation'));
@@ -204,7 +210,7 @@ class Itella_Shipping
   private function define_public_hooks()
   {
 
-    $plugin_public = new Itella_Shipping_Public($this->get_plugin_name(), $this->get_version());
+    $plugin_public = new Itella_Shipping_Public($this->get_plugin_name(), $this->get_version(), $this->available_countries);
 
     $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
     $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');

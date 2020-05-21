@@ -1,10 +1,10 @@
 'use strict';
 
 if (document.getElementById('shipping_method_0_itella_pp').checked) {
-    init();
+    itella_init();
 }
 
-function init() {
+function itella_init() {
     window.itella = new itellaMapping(document.getElementById('shipping_method_0_itella_pp').nextSibling);
 
     let terminals = [];
@@ -55,6 +55,7 @@ function init() {
 
 function loadJson() {
     let json = JSON.parse(this.responseText);
+    // console.log(this)
     this.itella.setLocations(json, true);
 
     // select from list by pickup point ID

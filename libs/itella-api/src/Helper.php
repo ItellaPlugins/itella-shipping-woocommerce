@@ -77,6 +77,12 @@ class Helper
           $phone = '372' . $phone;
         }
         break;
+      case 'FI':
+        $length = strlen($phone);
+        if (($phone[0] == 4 || $phone[0] == 5) && ($length >= 4 && $length <= 12)) {
+          $phone = '358' . $phone;
+        }
+        break;
 
       default:
         // do nothing

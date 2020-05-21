@@ -47,7 +47,7 @@ class Itella_Shipping_Public
    * @since    1.0.0
    *
    */
-  public function __construct($name, $version, $available_countries = array('LT', 'LV', 'EE'))
+  public function __construct($name, $version, $available_countries)
   {
 
     $this->name = $name;
@@ -65,6 +65,8 @@ class Itella_Shipping_Public
   {
     wp_enqueue_style($this->name . 'itella-shipping-public.css', plugin_dir_url(__FILE__) . 'css/itella-shipping-public.css', array(), $this->version, 'all');
     wp_enqueue_style($this->name . 'leaflet.css', "https://unpkg.com/leaflet@1.5.1/dist/leaflet.css", array(), $this->version, 'all');
+    wp_enqueue_style($this->name . 'MarkerCluster.css', "https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css", array(), $this->version, 'all');
+    wp_enqueue_style($this->name . 'MarkerCluster.Default.css', "https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css", array(), $this->version, 'all');
     wp_enqueue_style($this->name . 'itella-mapping.css', plugin_dir_url(__FILE__) . 'css/itella-mapping.css', array(), $this->version, 'all');
   }
 
@@ -75,8 +77,9 @@ class Itella_Shipping_Public
    */
   public function enqueue_scripts()
   {
-    wp_enqueue_script($this->name . 'leaflet.js', "https://unpkg.com/leaflet@1.5.1/dist/leaflet.js", array(), $this->version, TRUE);
-    wp_enqueue_script($this->name . 'itella-mapping.js', plugin_dir_url(__FILE__) . 'js/itella-mapping.js', array(), $this->version, TRUE);
+    wp_enqueue_script($this->name . 'leaflet.js', plugin_dir_url(__FILE__) . 'js/leaflet.min.js', array(), $this->version, TRUE);
+//    wp_enqueue_script($this->name . 'leaflet.markercluster.js', "https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js", array($this->name . 'leaflet.js'), $this->version, TRUE);
+    wp_enqueue_script($this->name . 'itella-mapping.js', plugin_dir_url(__FILE__) . 'js/itella-mapping.js', array($this->name . 'leaflet.js'), $this->version, TRUE);
     wp_enqueue_script($this->name . 'itella-shipping-public.js', plugin_dir_url(__FILE__) . 'js/itella-shipping-public.js', array(), $this->version, TRUE);
     wp_localize_script($this->name . 'itella-shipping-public.js',
         'variables', array(
