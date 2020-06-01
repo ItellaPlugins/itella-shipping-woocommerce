@@ -31,8 +31,7 @@ class Itella_Shipping_Deactivator {
 	 */
 	public static function deactivate() {
 
-    require_once plugin_dir_path( __FILE__ ) . 'class-itella-shipping-cron.php';
-    Itella_Shipping_Cron::unschedule();
+
 	}
 
 }
