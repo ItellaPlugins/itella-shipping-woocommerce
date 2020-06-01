@@ -104,7 +104,7 @@ class Itella_Shipping_Public
         )
     );
 
-    wp_enqueue_script($this->name . 'itella-init-map.js', plugin_dir_url(__FILE__) . 'js/itella-init-map.js', array('jquery'), $this->version, TRUE);
+    wp_enqueue_script($this->name . 'itella-init-map.js', plugin_dir_url(__FILE__) . 'js/itella-init-map.js?20200601', array('jquery'), $this->version, TRUE);
 
   }
 
@@ -164,7 +164,7 @@ class Itella_Shipping_Public
       }
     }
 
-    return $pickup_point_public_name ?? __('Itella Pickup Point not found!', 'itella-shipping');
+    return $pickup_point_public_name ? $pickup_point_public_name : __('Itella Pickup Point not found!', 'itella-shipping');
   }
 
   /**

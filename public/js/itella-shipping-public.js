@@ -1,11 +1,13 @@
 'use strict';
 
-if (document.getElementById('shipping_method_0_itella_pp').checked) {
+if (jQuery('input[name^="shipping_method"]:checked').val() === 'itella_pp') {
     itella_init();
 }
 
 function itella_init() {
-    window.itella = new itellaMapping(document.getElementById('shipping_method_0_itella_pp').nextSibling);
+    let itellaPpShippingMethod = jQuery('input[value="itella_pp"]');
+
+    window.itella = new itellaMapping(itellaPpShippingMethod[0].nextSibling);
 
     let terminals = [];
     itella
@@ -66,12 +68,17 @@ function loadJson() {
 }
 
 function setHiddenPpIdInput() {
-    const radio = document.getElementById('shipping_method_0_itella_pp');
+    const chosenPpIdElement = document.querySelector('#itella-chosen-point-id');
+    if (chosenPpIdElement) {
+        chosenPpIdElement.remove();
+    }
+
+    const radio = jQuery('input[value="itella_pp"]');
     const ppIdElement = document.createElement('input');
     ppIdElement.setAttribute('type', 'hidden');
     ppIdElement.setAttribute('name', 'itella-chosen-point-id');
     ppIdElement.setAttribute('id', 'itella-chosen-point-id');
-    radio.parentElement.appendChild(ppIdElement);
+    radio[0].parentElement.appendChild(ppIdElement);
     if (localStorage.getItem('pickupPoint')) {
         const pickupPoint = JSON.parse(localStorage.getItem('pickupPoint'));
         ppIdElement.value = pickupPoint.id;
