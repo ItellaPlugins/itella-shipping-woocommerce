@@ -12,13 +12,9 @@
 }
 
 .itella-shipping-container {
-  display: -webkit-box;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-          flex-direction: column;
-  -webkit-box-align: center;
-          align-items: center;
+  flex-direction: column;
+  align-items: center;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   font-size: 12px;
 }
@@ -50,13 +46,12 @@
   left: 0;
   right: 0;
   background-color: rgba(0,0,0,0.5);
-  display: -webkit-box;
   display: flex;
-  -webkit-box-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-          align-items: center;
+  justify-content: center;
+  align-items: center;
   z-index: 9999;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 12px;
 }
 .itella-mapping-modal h2,
 .itella-mapping-modal h3,
@@ -71,7 +66,6 @@
   border-radius: 4px;
   overflow: hidden;
   position: relative;
-  display: -webkit-box;
   display: flex;
 }
 
@@ -99,8 +93,7 @@
 
 .itella-map {
   background-color: #fff;
-  -webkit-box-flex: 1;
-          flex: 1;
+  flex: 1;
   height: 100%;
   border-radius: 4px;
 }
@@ -115,24 +108,17 @@
   position: absolute;
   z-index: 400;
   
-  display: -webkit-box;
-  
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-          flex-direction: column;
+  flex-direction: column;
 }
 
 .itella-card-header {
   padding: 12px 24px;
   background-color: #0000CC;
   color: #fff;
-  display: -webkit-box;
   display: flex;
-  -webkit-box-pack: justify;
-          justify-content: space-between;
-  -webkit-box-align: center;
-          align-items: center;
+  justify-content: space-between;
+  align-items: center;
   border-radius: 4px 4px 0 0;
 }
 
@@ -146,8 +132,7 @@
 }
 
 .itella-card-content {
-  -webkit-box-flex: 1;
-          flex: 1;
+  flex: 1;
   padding: 12px;
 }
 
@@ -165,12 +150,10 @@
 
 .itella-card-content .point-info {
   padding-top: 15px;
-  display: -webkit-box;
   display: flex;
 }
 .itella-card-content .point-info > div {
-  -webkit-box-flex: 1;
-          flex: 1;
+  flex: 1;
 }
 .itella-card-content .point-info .workhours-info,
 .itella-card-content .point-info .contacts-info {
@@ -302,8 +285,7 @@
   position: absolute;
   right: 10px;
   top: 50%;
-  -webkit-transform: translateY(-50%);
-          transform: translateY(-50%);
+  transform: translateY(-50%);
   cursor: pointer;
   width: auto!important;
 }
@@ -332,10 +314,8 @@
   margin: 0;
   line-height: 17px;
   padding-left: 10px;
-  display: -webkit-box;
   display: flex;
-  -webkit-box-pack: justify;
-          justify-content: space-between;
+  justify-content: space-between;
 }
 
 .itella-select ul li.active {
@@ -385,9 +365,7 @@
   .itella-container {
     width: 100%;
     height: 100%;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-            flex-direction: column;
+    flex-direction: column;
   }
 
   .itella-map, .itella-card {
@@ -407,8 +385,7 @@
   .itella-card {
     max-width: 400px;
     top: 50%;
-    -webkit-transform: translateY(-50%);
-            transform: translateY(-50%);
+    transform: translateY(-50%);
     left: 10px;
   }
  }
