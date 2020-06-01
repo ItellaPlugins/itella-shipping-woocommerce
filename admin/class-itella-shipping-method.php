@@ -969,6 +969,21 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             "\n" . date('Y-m-d H:i:s') . ": Exception:\n" . $th->getMessage() . "\n"
             . $th->getTraceAsString(), FILE_APPEND);
       }
+
+      catch (\Exception $e) {
+
+          // add error message
+          $this->add_msg($order_id . ' - ' . __('Shipment is not registered.', 'itella-shipping')
+              . "<br>"
+              . __('An error occurred. ', 'itella-shipping')
+              . $e->getMessage()
+              , 'error');
+
+          // log error
+          file_put_contents(plugin_dir_path(dirname(__FILE__)) . 'var/log/errors.log',
+              "\n" . date('Y-m-d H:i:s') . ": Exception:\n" . $e->getMessage() . "\n"
+              . $e->getTraceAsString(), FILE_APPEND);
+      }
     }
 
     // return to shipments
