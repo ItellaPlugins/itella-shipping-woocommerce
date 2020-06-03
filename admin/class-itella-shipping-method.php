@@ -1387,24 +1387,44 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $order_ids = is_array($order_ids) ? $order_ids : array($order_ids);
     $prepared_tracking_items = array();
 
+
     foreach ($order_ids as $order_id) {
       $order = wc_get_order($order_id);
       $shipping_parameters = Itella_Manifest::get_shipping_parameters($order_id);
+      $shipping_method = $shipping_parameters['itella_shipping_method'];
+      $shipping_country = wc_get_order($order_id)->get_shipping_country();
+      $chosen_pickup_point = $this->get_chosen_pickup_point($shipping_country, $shipping_parameters['pickup_point_id']);
 
       $tracking_code = $this->get_tracking_code($order_id);
 
       // manifest is only for registered shipments (that have tracking code)
       if ($tracking_code) {
-        $prepared_tracking_items[] = array(
-            'track_num' => $tracking_code,
-            'weight' => !empty($shipping_parameters['weight']) ? $shipping_parameters['weight'] : 0,
-            'delivery_address' => $order->get_shipping_first_name() . ' '
-                . $order->get_shipping_last_name() . ', '
-                . $order->get_shipping_address_1() . ', '
-                . $order->get_shipping_postcode() . ' '
-                . $order->get_shipping_city() . ', '
-                . $order->get_shipping_country()
-        );
+          if ($shipping_method === 'itella_c') {
+              $prepared_tracking_items[] = array(
+                  'track_num' => $tracking_code,
+                  'weight' => !empty($shipping_parameters['weight']) ? $shipping_parameters['weight'] : 0,
+                  'delivery_address' => $order->get_shipping_first_name() . ' '
+                      . $order->get_shipping_last_name() . ', '
+                      . $order->get_shipping_address_1() . ', '
+                      . $order->get_shipping_postcode() . ' '
+                      . $order->get_shipping_city() . ', '
+                      . $order->get_shipping_country()
+              );
+          }
+
+          if ($shipping_method === 'itella_pp') {
+              $prepared_tracking_items[] = array(
+                  'track_num' => $tracking_code,
+                  'weight' => !empty($shipping_parameters['weight']) ? $shipping_parameters['weight'] : 0,
+                  'delivery_address' => $order->get_shipping_first_name() . ' '
+                      . $order->get_shipping_last_name() . '. '
+                      . $chosen_pickup_point->publicName . ', '
+                      . $chosen_pickup_point->address->address . ', '
+                      . $chosen_pickup_point->address->postalCode . ', '
+                      . $chosen_pickup_point->address->municipality . ', '
+                      . $chosen_pickup_point->countryCode
+              );
+          }
       }
     }
 
