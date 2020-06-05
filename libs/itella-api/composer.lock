@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "254fde0fd8e1f50cab7d79c255de836f",
+    "content-hash": "4b300d8921bbabe9cf16770d11b0be32",
     "packages": [
         {
             "name": "pakettikauppa/api-library",
@@ -56,16 +56,16 @@
         },
         {
             "name": "setasign/fpdi",
-            "version": "v2.3.2",
+            "version": "v2.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Setasign/FPDI.git",
-                "reference": "527761458f504882ab844f15754523825647f291"
+                "reference": "50c388860a73191e010810ed57dbed795578e867"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Setasign/FPDI/zipball/527761458f504882ab844f15754523825647f291",
-                "reference": "527761458f504882ab844f15754523825647f291",
+                "url": "https://api.github.com/repos/Setasign/FPDI/zipball/50c388860a73191e010810ed57dbed795578e867",
+                "reference": "50c388860a73191e010810ed57dbed795578e867",
                 "shasum": ""
             },
             "require": {
@@ -113,7 +113,7 @@
                 "fpdi",
                 "pdf"
             ],
-            "time": "2020-03-23T15:53:59+00:00"
+            "time": "2020-04-28T12:40:35+00:00"
         },
         {
             "name": "tecnickcom/tcpdf",
@@ -180,7 +180,7 @@
     ],
     "packages-dev": [],
     "aliases": [],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,

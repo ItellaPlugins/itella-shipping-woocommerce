@@ -12,6 +12,7 @@ class Manifest
   public $senderCountry;
 
   public $timestamp;
+  public $dateFormat = 'Y-m-d';
 
   private $items = array();
 
@@ -33,12 +34,20 @@ class Manifest
 
   private $pdf;
 
-  public function __construct($timestamp = false)
+  /**
+   * @param int $timestamp unix timestamp, if left false will be assigned current system time
+   * @param string $dateFormat Date format string can be anything that php date() supports. Default: Y-m-d
+   * 
+   * @return void
+   */
+  public function __construct($timestamp = false, $dateFormat = 'Y-m-d')
   {
     $this->timestamp = $timestamp;
-    if (!$timestamp) {
+    if (!$timestamp || !is_int($timestamp)) {
       $this->timestamp = time();
     }
+
+    $this->dateFormat = $dateFormat;
 
     $this->pdf = new \setasign\Fpdi\Tcpdf\Fpdi(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
     $this->pdf->setPrintHeader(false);
@@ -155,7 +164,7 @@ class Manifest
     $this->pdf->Image($image, 10, 20, 50);
     
     $this->pdf->SetFont('freeserif', '', 14);
-    $shop_addr = '<table cellspacing="0" cellpadding="1" border="0"><tr><td>' . date('Y-m-d H:i:s', $this->timestamp)
+    $shop_addr = '<table cellspacing="0" cellpadding="1" border="0"><tr><td>' . date($this->dateFormat, $this->timestamp)
       . '</td><td>' . $this->strings['sender_address'] . '<br/>' . $this->senderName . '<br/>'
       . $this->senderAddress . ',<br/>'
       . $this->senderPostCode . ' '

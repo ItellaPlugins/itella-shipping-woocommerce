@@ -1,24 +1,19 @@
 <?php
-// TODO: cleanup
 // TODO: write docs
 namespace Mijora\Itella\Shipment;
 
 use Mijora\Itella\ItellaException;
-// use Mijora\Itella\SimpleXMLElement;
 use Mijora\Itella\Shipment\AdditionalService;
 use Mijora\Itella\Helper;
 
 use Pakettikauppa\Client as _Client;
 use Pakettikauppa\Shipment as _Shipment;
-// use Pakettikauppa\Shipment\Sender as _Sender;
-// use Pakettikauppa\Shipment\Receiver as _Receiver;
 use Pakettikauppa\Shipment\AdditionalService as _AdditionalService;
 use Pakettikauppa\Shipment\Info as _Info;
 use Pakettikauppa\Shipment\Parcel as _Parcel;
 
 class Shipment
 {
-  //  * 3101 = Cash on delivery, specifiers: [amount, account, reference, codbic]
   const MULTIPARCEL_LIMIT = 10;
 
   // Service code (product)
@@ -67,13 +62,6 @@ class Shipment
   /** @var int */
   public $totalItems; // counter for goods with MultiParcel service
 
-  // // COD info (should be set if any of the goods item has extra service for COD)
-  // private $isCod = false; // for simpler check if COD xml is needed to generate
-  // public $codBIC;
-  // public $codIBAN;
-  // public $codValue; // EUR
-  // public $codReference;
-
   /** @var \Pakettikauppa\Client */
   private $_client;
 
@@ -101,7 +89,7 @@ class Shipment
           'secret' => $this->pass,
           'base_uri' => 'https://nextshipping.posti.fi',
           'use_posti_auth' => true,
-          'posti_auth_url' => 'https://oauth.posti.com',
+          'posti_auth_url' => 'https://oauth2.posti.com',
         ),
       ),
       'pakettikauppa_config'
@@ -430,34 +418,4 @@ class Shipment
     }
     return $this;
   }
-
-  // public function setAuth($auth)
-  // {
-  //   $this->auth = $auth;
-  //   return $this;
-  // }
-
-  // public function setBIC($BIC)
-  // {
-  //   $this->codBIC = $BIC;
-  //   return $this;
-  // }
-
-  // public function setIBAN($IBAN)
-  // {
-  //   $this->codIBAN = $IBAN;
-  //   return $this;
-  // }
-
-  // public function setValue($value)
-  // {
-  //   $this->codValue = $value;
-  //   return $this;
-  // }
-
-  // public function setReference($reference)
-  // {
-  //   $this->codReference = $reference;
-  //   return $this;
-  // }
 }

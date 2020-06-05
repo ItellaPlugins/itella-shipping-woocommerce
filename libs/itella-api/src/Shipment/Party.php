@@ -1,5 +1,4 @@
 <?php
-// TODO: Cleanup
 // TODO: write docs
 namespace Mijora\Itella\Shipment;
 
@@ -42,7 +41,7 @@ class Party
   public $contactName; // optional
   public $contactMobile; // optional
   public $contactPhone; // optional
-  public $contactEmail; // optional
+  public $contactEmail; // should always set in case pakettikaupa requires it
 
   public function __construct($role)
   {

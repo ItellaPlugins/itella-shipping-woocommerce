@@ -1,4 +1,4 @@
-# Itella-API v2.2.1
+# Itella-API
 
 Its a wrapper library for Pakettikauppa API library.
 
@@ -315,6 +315,10 @@ $pickup->saveLocationsToJSONFile('itella_locations_lt.json', json_encode($itella
 ## Manifest generating
 ---
 When generating manifest by default it uses english strings - it is possible to pass translation.
+
+Manifest constructor accepts additional arguments
+  - `$timestamp`  => default `false` and will assign current system time. Unixtimestamp can be passed here to show particular date in manifest above logo.
+  - `$dateFormat` => default `'Y-m-d'`. Date format as string, can be used anything that is supported by PHP date() https://www.php.net/manual/en/function.date
 
 **Requires** array of arrays with this information:
   - `track_num`         => tracking number (string),

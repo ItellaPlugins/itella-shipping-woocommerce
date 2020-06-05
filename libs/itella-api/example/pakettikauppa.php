@@ -17,7 +17,7 @@ $client = new Client(array(
     'secret' => $p_secret,
     'base_uri' => 'https://nextshipping.posti.fi',
     'use_posti_auth' => true,
-    'posti_auth_url' => 'https://oauth.posti.com',
+    'posti_auth_url' => 'https://oauth2.posti.com',
    ),
   ), 'foo'
  );
@@ -26,8 +26,6 @@ $client = new Client(array(
  $token = $client->getToken();
  // save token to cache
  $client->setAccessToken($token->access_token);
-
-
 
 use Pakettikauppa\Shipment;
 use Pakettikauppa\Shipment\Sender;
