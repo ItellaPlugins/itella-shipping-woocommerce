@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: itella_shipping\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-25 15:48+0300\n"
-"PO-Revision-Date: 2020-04-30 14:57+0300\n"
+"PO-Revision-Date: 2020-06-05 10:53+0300\n"
 "Last-Translator: mantas tarutis\n"
 "Language-Team: Lithuanian (Lithuania)\n"
 "Language: lt-LT\n"
@@ -15,7 +15,7 @@ msgstr ""
 "X-Generator: Loco https://localise.biz\n"
 "X-Loco-Source-Locale: en\n"
 "X-Loco-Project-Id: 89232\n"
-"X-Loco-Api-Version: 1.0.24 20200414-1"
+"X-Loco-Api-Version: 1.0.24 20200529-1"
 
 #. Plugin Name of the plugin
 #: loco:5ea6bf28ed0cfa104d28e231
@@ -133,7 +133,7 @@ msgstr "Veiksmai"
 #: admin/class-itella-shipping-manifest-page.php:440
 #: loco:5ea6bf28ed0cfa104d28e246
 msgid "Itella Pickup Point:"
-msgstr "Itella paėmimo taškas:"
+msgstr "Itella atsiėmimo taškas:"
 
 #: admin/class-itella-shipping-manifest-page.php:442
 #: loco:5ea6bf28ed0cfa104d28e247
@@ -303,11 +303,11 @@ msgstr "Parduotuvės el. paštas"
 
 #: admin/class-itella-shipping-method.php:303 loco:5ea6bf28ed0cfa104d28e26a
 msgid "Enable Pickup Point"
-msgstr "Įjungti siuntimą per paėmimo taškus"
+msgstr "Įjungti siuntimą per atsiėmimo taškus"
 
 #: admin/class-itella-shipping-method.php:306 loco:5ea6bf28ed0cfa104d28e26b
 msgid "Show pickup point shipping method in checkout."
-msgstr "Pirkimo metu rodyti paėmimo taškų siuntimo būdą."
+msgstr "Pirkimo metu rodyti atsiėmimo taškų siuntimo būdą."
 
 #: admin/class-itella-shipping-method.php:310 loco:5ea6bf28ed0cfa104d28e26c
 msgid "Enable Courier"
@@ -321,7 +321,7 @@ msgstr "Pirkimo metu rodyti siuntimo kurjeriu būdą."
 #: admin/class-itella-shipping-method.php:353
 #: admin/class-itella-shipping-method.php:389 loco:5ea6bf28ed0cfa104d28e26e
 msgid "Pickup Point price"
-msgstr "Kaina, paėmimo taškai."
+msgstr "Kaina, atsiėmimo taškai."
 
 #: admin/class-itella-shipping-method.php:326
 #: admin/class-itella-shipping-method.php:362
@@ -335,7 +335,7 @@ msgstr "Kaina, kurjeris"
 msgid ""
 "Disable pickup point fee if cart amount is greater or equal than this limit"
 msgstr ""
-"Anuliuoti siuntimo paėmimo taškais mokestį, jeigu krepšelio suma yra lygi "
+"Anuliuoti siuntimo atsiėmimo taškais mokestį, jeigu krepšelio suma yra lygi "
 "arba didesnė nei šis limitas"
 
 #: admin/class-itella-shipping-method.php:344
@@ -392,7 +392,7 @@ msgstr "Vežėjas:"
 #: admin/class-itella-shipping-method.php:517
 #: admin/class-itella-shipping-method.php:604 loco:5ea6bf28ed0cfa104d28e27b
 msgid "Pickup Point"
-msgstr "Paėmimo taškas"
+msgstr "Atsiėmimo taškas"
 
 #: admin/class-itella-shipping-method.php:518
 #: admin/class-itella-shipping-method.php:605
@@ -406,7 +406,7 @@ msgstr "Nepasirinktas Itella siuntimo būdas"
 
 #: admin/class-itella-shipping-method.php:523 loco:5ea6bf28ed0cfa104d28e27e
 msgid "Chosen Pickup Point"
-msgstr "Pasirinktas paėmimo taškas"
+msgstr "Pasirinktas atsiėmimo taškas"
 
 #: admin/class-itella-shipping-method.php:532 loco:5ea6bf28ed0cfa104d28e27f
 msgid "Extra Services:"
@@ -425,7 +425,7 @@ msgstr ""
 
 #: admin/class-itella-shipping-method.php:612 loco:5ea6bf28ed0cfa104d28e282
 msgid "Select Pickup Point:"
-msgstr "Pasirinkite paėmimo tašką:"
+msgstr "Pasirinkite atsiėmimo tašką:"
 
 #: admin/class-itella-shipping-method.php:624 loco:5ea6bf28ed0cfa104d28e283
 msgid "Extra Services"
@@ -523,11 +523,11 @@ msgstr "Nieko nerasta"
 
 #: public/class-itella-shipping-public.php:97 loco:5ea6bf28ed0cfa104d28e29a
 msgid "Pickup points"
-msgstr "Paėmimo taškai"
+msgstr "Atsiėmimo taškai"
 
 #: public/class-itella-shipping-public.php:98 loco:5ea6bf28ed0cfa104d28e29b
 msgid "Pickup point"
-msgstr "Paėmimo taškas"
+msgstr "Atsiėmimo taškas"
 
 #: public/class-itella-shipping-public.php:99 loco:5ea6bf28ed0cfa104d28e29c
 msgid "Workhours"
@@ -543,11 +543,11 @@ msgstr "Įveskite pašto kodą/adresą"
 
 #: public/class-itella-shipping-public.php:102 loco:5ea6bf28ed0cfa104d28e29f
 msgid "Select a pickup point"
-msgstr "Pasirinkite paėmimo tašką"
+msgstr "Pasirinkite atsiėmimo tašką"
 
 #: public/class-itella-shipping-public.php:103 loco:5ea6bf28ed0cfa104d28e2a0
 msgid "No points to select"
-msgstr "Nėra paėmimo taškų"
+msgstr "Nėra atsiėmimo taškų"
 
 #: public/class-itella-shipping-public.php:104 loco:5ea6bf28ed0cfa104d28e2a1
 msgid "select"
@@ -559,7 +559,7 @@ msgstr "atstatyti paiešką"
 
 #: public/class-itella-shipping-public.php:106 loco:5ea6bf28ed0cfa104d28e2a3
 msgid "Select pickup point"
-msgstr "Pasirinkite paėmimo tašką"
+msgstr "Pasirinkite atsiėmimo tašką"
 
 #: public/class-itella-shipping-public.php:107 loco:5ea6bf28ed0cfa104d28e2a4
 msgid "No information"
@@ -575,15 +575,15 @@ msgstr ""
 
 #: public/class-itella-shipping-public.php:122 loco:5ea6bf28ed0cfa104d28e2a7
 msgid "Itella Pickup Point"
-msgstr "Itella paėmimo taškas"
+msgstr "Itella pristatymas į atsiėmimo tašką"
 
 #: public/class-itella-shipping-public.php:158 loco:5ea6bf28ed0cfa104d28e2a8
 msgid "Itella Pickup Point not found!"
-msgstr "Itella paėmimo taškas nerastas!"
+msgstr "Itella atsiėmimo taškas nerastas!"
 
 #: #: admin/class-itella-shipping-method.php:222 loco:5ea6df38ed0cfa1b2439b712
 msgid "Itella Courier"
-msgstr "Itella Kurjeris"
+msgstr "Itella pristatymas į nurodytą adresą"
 
 #: #: admin/class-itella-shipping-method.php:67 loco:5ea6e591c38e0f50993f0853
 msgid "Plugin to use with Itella Shipping methods"
@@ -591,4 +591,4 @@ msgstr "Įskiepis skirtas naudoti su Itella siuntimo būdais"
 
 #: #: admin/class-itella-shipping-method.php:709 loco:5ea99ca7c38e0f6dbf54aa82
 msgid "You must choose Itella Pickup Point"
-msgstr "Privalote pasirinkti paėmimo tašką"
+msgstr "Privalote pasirinkti atsiėmimo tašką"
