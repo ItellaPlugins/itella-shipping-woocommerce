@@ -15,10 +15,23 @@
         mountItella();
     });
 
+    $( document ).ready(function() {
+        mountItella();
+    });
+
     function mountItella() {
         if ($('input[name^="shipping_method"]:checked').val() === 'itella_pp') {
             $('.itella-shipping-container').remove();
             itella_init();
+        }
+
+        // if itella pp is the only one available shipping method
+        let wooShippingMethods = document.querySelector('.woocommerce-shipping-methods');
+        if (wooShippingMethods != null && wooShippingMethods.children.length === 1) {
+            if (jQuery('input[name^="shipping_method"]').val() === 'itella_pp') {
+                $('.itella-shipping-container').remove();
+                itella_init();
+            }
         }
     }
 
