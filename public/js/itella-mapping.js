@@ -17,7 +17,7 @@ var itellaMapping = /*#__PURE__*/function () {
     _classCallCheck(this, itellaMapping);
 
     /* Itella Mapping version */
-    this.version = '1.2.2';
+    this.version = '1.2.3';
     this._isDebug = false;
     /* default map center Lithuania Kaunas */
 
@@ -667,6 +667,16 @@ var itellaMapping = /*#__PURE__*/function () {
     key: "sortByCity",
     value: function sortByCity(a, b) {
       var result = a.address.municipality.toLowerCase().localeCompare(b.address.municipality.toLowerCase());
+
+      if (result == 0) {
+        if (a.type.toUpperCase() == 'SMARTPOST' && b.type.toUpperCase() != 'SMARTPOST') {
+          result = -1;
+        }
+
+        if (b.type.toUpperCase() == 'SMARTPOST' && a.type.toUpperCase() != 'SMARTPOST') {
+          result = 1;
+        }
+      }
 
       if (result == 0) {
         result = a.publicName.toLowerCase().localeCompare(b.publicName.toLowerCase());
