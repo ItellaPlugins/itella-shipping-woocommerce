@@ -381,7 +381,7 @@ msgstr ""
 
 #: admin/class-itella-shipping-method.php:515
 #: admin/class-itella-shipping-method.php:601 loco:5ea6bf28ed0cfa104d28e27a
-msgid "Carrier:"
+msgid "Shipping method:"
 msgstr ""
 
 #: admin/class-itella-shipping-method.php:517

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: itella_shipping\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-25 15:48+0300\n"
-"PO-Revision-Date: 2020-06-05 10:53+0300\n"
+"PO-Revision-Date: 2020-09-09 15:16+0300\n"
 "Last-Translator: mantas tarutis\n"
 "Language-Team: Lithuanian (Lithuania)\n"
 "Language: lt-LT\n"
@@ -15,7 +15,7 @@ msgstr ""
 "X-Generator: Loco https://localise.biz\n"
 "X-Loco-Source-Locale: en\n"
 "X-Loco-Project-Id: 89232\n"
-"X-Loco-Api-Version: 1.0.24 20200529-1"
+"X-Loco-Api-Version: 1.0.25 20200901-1"
 
 #. Plugin Name of the plugin
 #: loco:5ea6bf28ed0cfa104d28e231
@@ -386,8 +386,8 @@ msgstr "COD suma("
 
 #: admin/class-itella-shipping-method.php:515
 #: admin/class-itella-shipping-method.php:601 loco:5ea6bf28ed0cfa104d28e27a
-msgid "Carrier:"
-msgstr "Vežėjas:"
+msgid "Shipping method:"
+msgstr "Siuntimo būdas:"
 
 #: admin/class-itella-shipping-method.php:517
 #: admin/class-itella-shipping-method.php:604 loco:5ea6bf28ed0cfa104d28e27b
