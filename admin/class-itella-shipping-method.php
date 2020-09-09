@@ -534,7 +534,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
                   <strong><?= __('COD amount(' . $order->get_currency() . '):', 'itella-shipping') ?></strong> <?= $cod_amount ?>
               </p>
           <?php endif; ?>
-            <p><strong><?= __('Carrier:', 'itella-shipping') ?></strong>
+            <p><strong><?= __('Shipping method:', 'itella-shipping') ?></strong>
               <?=
               $is_itella_pp ? __('Pickup Point', 'itella-shipping') :
                   ($is_itella_c ? __('Courier', 'itella-shipping') :
