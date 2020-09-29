@@ -193,7 +193,7 @@ class Itella_Shipping_Public
   {
     // fix for Paypal Checkout page
     $ship_country = WC()->customer->get_shipping_country();
-    if ( function_exists('wc_gateway_ppec') ) {
+    if ( function_exists('wc_gateway_ppec') && isset($_GET['token']) ) {
       $token = $_GET['token'];
       $client   = wc_gateway_ppec()->client;
       $response = $client->get_express_checkout_details( $token );
