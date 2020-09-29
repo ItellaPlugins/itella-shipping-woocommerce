@@ -186,4 +186,22 @@ class Itella_Shipping_Public
     return $methods;
   }
 
+  /**
+   * Add hidden fields
+  */
+  public function itella_checkout_hidden_fields()
+  {
+    // fix for Paypal Checkout page
+    $ship_country = WC()->customer->get_shipping_country();
+    if ( function_exists('wc_gateway_ppec') ) {
+      $token = $_GET['token'];
+      $client   = wc_gateway_ppec()->client;
+      $response = $client->get_express_checkout_details( $token );
+      if ( isset($response['SHIPTOCOUNTRYCODE']) ) {
+        $ship_country = $response['SHIPTOCOUNTRYCODE'];
+      }
+    }
+    echo '<input type="hidden" id="itella_shipping_country" value="' . $ship_country . '">';
+  }
+
 }
