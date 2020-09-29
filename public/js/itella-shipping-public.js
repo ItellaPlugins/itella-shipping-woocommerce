@@ -32,7 +32,9 @@ function itella_init() {
         .setCountry(
             document.querySelector('#billing_country') ?
             document.querySelector('#billing_country').value :
-            document.querySelector('#calc_shipping_country').value
+            ( document.querySelector('#calc_shipping_country') ?
+              document.querySelector('#calc_shipping_country').value :
+              document.querySelector('#itella_shipping_country').value )
         )
         .setLocations(terminals, true)
         .registerCallback(function (manual) {
