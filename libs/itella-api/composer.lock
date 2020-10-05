@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4b300d8921bbabe9cf16770d11b0be32",
+    "content-hash": "c1c1ad0ec6c2bd72501cf226bb574e25",
     "packages": [
         {
             "name": "pakettikauppa/api-library",
@@ -56,16 +56,16 @@
         },
         {
             "name": "setasign/fpdi",
-            "version": "v2.3.3",
+            "version": "v2.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Setasign/FPDI.git",
-                "reference": "50c388860a73191e010810ed57dbed795578e867"
+                "reference": "2b5fb811c04f937ef257ef3f798cebeded33c136"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Setasign/FPDI/zipball/50c388860a73191e010810ed57dbed795578e867",
-                "reference": "50c388860a73191e010810ed57dbed795578e867",
+                "url": "https://api.github.com/repos/Setasign/FPDI/zipball/2b5fb811c04f937ef257ef3f798cebeded33c136",
+                "reference": "2b5fb811c04f937ef257ef3f798cebeded33c136",
                 "shasum": ""
             },
             "require": {
@@ -79,6 +79,7 @@
                 "phpunit/phpunit": "~5.7",
                 "setasign/fpdf": "~1.8",
                 "setasign/tfpdf": "1.31",
+                "squizlabs/php_codesniffer": "^3.5",
                 "tecnickcom/tcpdf": "~6.2"
             },
             "suggest": {
@@ -113,7 +114,13 @@
                 "fpdi",
                 "pdf"
             ],
-            "time": "2020-04-28T12:40:35+00:00"
+            "funding": [
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/setasign/fpdi",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-08-27T06:55:47+00:00"
         },
         {
             "name": "tecnickcom/tcpdf",
@@ -185,5 +192,6 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "1.1.0"
 }
