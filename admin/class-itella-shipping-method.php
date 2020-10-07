@@ -108,6 +108,20 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   }
 
   /**
+   * Load settings form
+   */
+  function admin_options()
+  {
+    ?>
+    <h2><?php echo $this->method_title; ?></h2>
+    <p><?php echo $this->method_description; ?></p>
+    <table class="form-table itella-settings">
+    <?php $this->generate_settings_html(); ?>
+    </table>
+    <?php
+  }
+
+  /**
    * Update locations
    *
    * @param string[] $country_codes
@@ -149,93 +163,86 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
     // add Pickup Point Rate
     if ($this->settings['pickup_point_method'] === 'yes') {
-      $show = true;
-      switch ($current_country) {
-        case 'LV':
-          $amount = $this->settings['pickup_point_price_lv'];
-          if ($amount === '') 
-            $show = false;
-          if ($cart_amount > floatval($this->settings['pickup_point_nocharge_amount_lv']))
-            $amount = 0.0;
-          break;
-        case 'EE':
-          $amount = $this->settings['pickup_point_price_ee'];
-          if ($amount === '') 
-            $show = false;
-          if ($cart_amount > floatval($this->settings['pickup_point_nocharge_amount_ee']))
-            $amount = 0.0;
-          break;
-        case 'FI':
-          $amount = $this->settings['pickup_point_price_fi'];
-          if ($amount === '') 
-            $show = false;
-          if ($cart_amount > floatval($this->settings['pickup_point_nocharge_amount_fi']))
-            $amount = 0.0;
-          break;
-        default:
-          $amount = $this->settings['pickup_point_price_lt'];
-          if ($amount === '') 
-            $show = false;
-          if ($cart_amount > floatval($this->settings['pickup_point_nocharge_amount_lt']))
-            $amount = 0.0;
-          break;
-      }
+      $pickup_params = $this->get_pickup_params(array(
+        'country_code' => $current_country,
+        'cart_amount' => $cart_amount,
+      ));
 
       $rate = array(
           'id' => 'itella_pp',
           'label' => __('Itella Pickup Point', 'itella-shipping'),
-          'cost' => $amount
+          'cost' => $pickup_params['amount']
       );
 
-      if ($show == true && $this->settings['enabled'] == 'yes')
+      if ($pickup_params['show'] == true && $this->settings['enabled'] == 'yes')
         $this->add_rate($rate);
     }
 
     // add Courier rate
     if ($this->settings['courier_method'] === 'yes') {
-      $show = true;
-      switch ($current_country) {
-        case 'LV':
-          $amountC = $this->settings['courier_price_lv'];
-          if ($amountC === '') 
-            $show = false;
-          if ($cart_amount > floatval($this->settings['courier_nocharge_amount_lv']))
-            $amountC = 0.0;
-          break;
-        case 'EE':
-          $amountC = $this->settings['courier_price_ee'];
-          if ($amountC === '') 
-            $show = false;
-          if ($cart_amount > floatval($this->settings['courier_nocharge_amount_ee']))
-            $amountC = 0.0;
-          break;
-        case 'FI':
-          $amountC = $this->settings['courier_price_fi'];
-          if ($amountC === '') 
-            $show = false;
-          if ($cart_amount > floatval($this->settings['courier_nocharge_amount_fi']))
-            $amountC = 0.0;
-          break;
-        default:
-          $amountC = $this->settings['courier_price_lt'];
-          if ($amountC === '') 
-            $show = false;
-          if ($cart_amount > floatval($this->settings['courier_nocharge_amount_lt']))
-            $amountC = 0.0;
-          break;
-      }
+      $courier_params = $this->get_courier_params(array(
+        'country_code' => $current_country,
+        'cart_amount' => $cart_amount,
+      ));
 
       $rate = array(
           'id' => 'itella_c',
           'label' => __('Itella Courier', 'itella-shipping'),
-          'cost' => $amountC
+          'cost' => $courier_params['amount']
       );
 
-      if ($show == true && $this->settings['enabled'] == 'yes')
+      if ($courier_params['show'] == true && $this->settings['enabled'] == 'yes')
         $this->add_rate($rate);
     }
   }
 
+  /**
+   * Get pickup point output parameters
+   * 
+   * @param array $args
+   * @return array
+   */
+  private function get_pickup_params($args = array())
+  {
+    $country_code = isset($args['country_code']) ? strtolower($args['country_code']) : 'lt';
+    $cart_amount = isset($args['cart_amount']) ? $args['cart_amount'] : 0;
+
+    $allowed_countries = array('lt', 'lv', 'ee', 'fi');
+    if ( ! in_array($country_code, $allowed_countries) ) {
+      $country_code = 'lt';
+    }
+
+    $amount = $this->settings['pickup_point_price_' . $country_code];
+    $free_from = floatval($this->settings['pickup_point_nocharge_amount_' . $country_code]);
+    return array(
+      'show' => $amount !== '',
+      'amount' => ($cart_amount > $free_from && $free_from > 0) ? 0.0 : $amount,
+    );
+  }
+
+  /**
+   * Get courier output parameters
+   * 
+   * @param array $args
+   * @return array
+   */
+  private function get_courier_params($args = array())
+  {
+    $country_code = isset($args['country_code']) ? strtolower($args['country_code']) : 'lt';
+    $cart_amount = isset($args['cart_amount']) ? $args['cart_amount'] : 0;
+
+    $allowed_countries = array('lt', 'lv', 'ee', 'fi');
+    if ( ! in_array($country_code, $allowed_countries) ) {
+      $country_code = 'lt';
+    }
+
+    $amount = $this->settings['courier_price_' . $country_code];
+    $free_from = floatval($this->settings['courier_nocharge_amount_' . $country_code]);
+    return array(
+      'show' => $amount !== '',
+      'amount' => ($cart_amount > $free_from && $free_from > 0) ? 0.0 : $amount,
+    );
+  }
 
   /**
    * Initialise Itella shipping settings form
@@ -355,7 +362,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             'type' => 'number',
             'custom_attributes' => array(
                 'step' => 0.01,
-                'min' => 0,
+                'min' => 0.01,
             ),
             'default' => 100
         ),
@@ -365,7 +372,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             'type' => 'number',
             'custom_attributes' => array(
                 'step' => 0.01,
-                'min' => 0,
+                'min' => 0.01,
             ),
             'default' => 100
         ),
@@ -397,7 +404,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             'type' => 'number',
             'custom_attributes' => array(
                 'step' => 0.01,
-                'min' => 0,
+                'min' => 0.01,
             ),
             'default' => 100
         ),
@@ -407,7 +414,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             'type' => 'number',
             'custom_attributes' => array(
                 'step' => 0.01,
-                'min' => 0,
+                'min' => 0.01,
             ),
             'default' => 100
         ),
@@ -439,7 +446,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             'type' => 'number',
             'custom_attributes' => array(
                 'step' => 0.01,
-                'min' => 0,
+                'min' => 0.01,
             ),
             'default' => 100
         ),
@@ -449,7 +456,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             'type' => 'number',
             'custom_attributes' => array(
                 'step' => 0.01,
-                'min' => 0,
+                'min' => 0.01,
             ),
             'default' => 100
         ),
@@ -481,7 +488,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             'type' => 'number',
             'custom_attributes' => array(
                 'step' => 0.01,
-                'min' => 0,
+                'min' => 0.01,
             ),
             'default' => 100
         ),
@@ -491,7 +498,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             'type' => 'number',
             'custom_attributes' => array(
                 'step' => 0.01,
-                'min' => 0,
+                'min' => 0.01,
             ),
             'default' => 100
         )
