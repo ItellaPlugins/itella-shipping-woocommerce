@@ -6,3 +6,7 @@
 .d-none {
     display: none;
 }
+
+.itella-settings .invalid-value label {
+    color: red;
+}
