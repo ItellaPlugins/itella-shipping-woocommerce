@@ -187,7 +187,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
           'cost' => $amount
       );
 
-      if ($show == true)
+      if ($show == true && $this->settings['enabled'] == 'yes')
         $this->add_rate($rate);
     }
 
@@ -231,7 +231,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
           'cost' => $amountC
       );
 
-      if ($show == true)
+      if ($show == true && $this->settings['enabled'] == 'yes')
         $this->add_rate($rate);
     }
   }
