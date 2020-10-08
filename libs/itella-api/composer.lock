@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c1c1ad0ec6c2bd72501cf226bb574e25",
+    "content-hash": "cb2134745b2031278f960aa6ab944bc8",
     "packages": [
         {
             "name": "pakettikauppa/api-library",
@@ -114,12 +114,6 @@
                 "fpdi",
                 "pdf"
             ],
-            "funding": [
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/setasign/fpdi",
-                    "type": "tidelift"
-                }
-            ],
             "time": "2020-08-27T06:55:47+00:00"
         },
         {
@@ -192,6 +186,5 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
-    "platform-dev": [],
-    "plugin-api-version": "1.1.0"
+    "platform-dev": []
 }

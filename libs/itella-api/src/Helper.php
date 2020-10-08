@@ -82,6 +82,17 @@ class Helper
         if (($phone[0] == 4 || $phone[0] == 5) && ($length >= 4 && $length <= 12)) {
           $phone = '358' . $phone;
         }
+
+        // validate Fi local phone format (starting with 0)
+        $pos = strpos($phone, '04');
+        if ($pos === 0) {
+          $phone = substr_replace($phone, '3584', $pos, strlen('04'));
+        }
+        $pos = strpos($phone, '05');
+        if ($pos === 0) {
+          $phone = substr_replace($phone, '3585', $pos, strlen('05'));
+        }
+
         break;
 
       default:

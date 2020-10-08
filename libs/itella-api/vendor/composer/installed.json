@@ -111,12 +111,6 @@
             "fpdf",
             "fpdi",
             "pdf"
-        ],
-        "funding": [
-            {
-                "url": "https://tidelift.com/funding/github/packagist/setasign/fpdi",
-                "type": "tidelift"
-            }
         ]
     },
     {

@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.2.4] - Finland mobile numbers
+### Improved
+- Improved Finland mobile number parsing
+
 ## [2.2.3] - Manifest date format
 ### Added
 - Optional dateFormat argument to Manifest constructor for setting custom manifest generation date format. Default format `'Y-m-d'` (2020-12-30)
