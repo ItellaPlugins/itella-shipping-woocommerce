@@ -191,12 +191,16 @@ class Itella_Shipping
     $this->loader->add_action('admin_notices', $plugin_admin, 'itella_shipping_notices');
     $this->loader->add_action('woocommerce_after_checkout_validation', $plugin_admin, 'validate_pickup_point');
     $this->loader->add_action('wp_after_admin_bar_render', $plugin_admin, 'update_locations');
+    $this->loader->add_action('woocommerce_email_order_meta', $plugin_admin, 'add_itella_shipping_info_to_email');
+    $this->loader->add_action('woocommerce_email_styles', $plugin_admin, 'itella_shipping_info_css_in_email');
+    $this->loader->add_action('woocommerce_admin_order_preview_end', $plugin_admin, 'display_custom_data_in_admin_order_preview');
 
     $this->loader->add_filter('admin_post_itella_labels', $plugin_admin, 'itella_post_label_actions', 20);
     $this->loader->add_filter('admin_post_itella_shipments', $plugin_admin, 'itella_post_shipment_actions', 20);
     $this->loader->add_filter('admin_post_itella_manifests', $plugin_admin, 'itella_post_manifest_actions', 20);
     $this->loader->add_filter('admin_post_itella-call-courier', $plugin_admin, 'itella_post_call_courier_actions', 20);
 //    $this->loader->add_filter('bulk_actions-edit-shop_order', $plugin_admin, 'itella_shipping_shop_order_bulk_actions', 20);
+    $this->loader->add_filter('woocommerce_admin_order_preview_get_order_details', $plugin_admin, 'add_custom_admin_order_preview_meta', 10, 2);
 
   }
 
