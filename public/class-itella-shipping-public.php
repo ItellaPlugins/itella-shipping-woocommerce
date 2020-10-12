@@ -115,10 +115,38 @@ class Itella_Shipping_Public
    */
   public function show_pp_details($order)
   {
-    $chosen_itella_method = get_post_meta($order->get_id(), '_itella_method', true);
-    if ($chosen_itella_method === 'itella_pp') {
-      echo "<p>" . __('Itella Pickup Point', 'itella-shipping') . ": " . $this->get_pickup_point_public_name($order) . "</p>";
+    $chosen_itella_method = $order->get_meta('_itella_method');
+    $tracking_code = $order->get_meta('_itella_tracking_code');
+    $tracking_url = $order->get_meta('_itella_tracking_url');
+    $shipping_method = $order->get_shipping_method();
+    $pickup_point_name = $this->get_pickup_point_public_name($order);
+
+    if ( empty($pickup_point_name) && empty($tracking_code) ) {
+      return;
     }
+
+    echo '<div class="itella-ship-info">';
+    echo '<h2>' . __('Shipping information', 'itella-shipping') . '</h2>';
+    echo '<table>';
+    echo '<tr><th>' . __('Shipping method', 'itella-shipping') . '</th><td>' . $shipping_method . '</td></tr>';
+
+    if ( ! empty($pickup_point_name) ) {
+      echo '<tr><th>' . __('Deliver to', 'itella-shipping') . '</th><td>' . $pickup_point_name . '</td></tr>';
+    }
+    
+    if ( ! empty($tracking_code) ) {
+      echo '<tr><th>' . __('Tracking code', 'itella-shipping') . '</th><td>';
+      if ( ! empty($tracking_url) ) {
+        echo '<a href="' . $tracking_url . '" target="_blank">' . $tracking_code . '</a>';
+      } else {
+        echo '<span>' . $tracking_code . '</span>';
+      }
+      echo '</td></tr>';
+    } else {
+      echo '<tr><th>' . __('Status', 'itella-shipping') . '</th><td>' . __('Not shipped', 'itella-shipping') . '</td></tr>';
+    }
+
+    echo '</table></div>';
   }
 
   /**
@@ -158,13 +186,15 @@ class Itella_Shipping_Public
     foreach ($pickup_points as $pickup_point) {
       $chosen_pickup_point = $pickup_point->id === $chosen_pickup_point_id ? $pickup_point : null;
       if ($chosen_pickup_point) {
-        $pickup_point_public_name = $chosen_pickup_point->publicName;
-
+        $pickup_point_public_name = $chosen_pickup_point->address->municipality . ' - ' .
+                    $chosen_pickup_point->address->address . ', ' .
+                    $chosen_pickup_point->address->postalCode . ' (' .
+                    $chosen_pickup_point->publicName . ')';
         break;
       }
     }
 
-    return $pickup_point_public_name ? $pickup_point_public_name : __('Itella Pickup Point not found!', 'itella-shipping');
+    return $pickup_point_public_name ? $pickup_point_public_name : '';
   }
 
   /**

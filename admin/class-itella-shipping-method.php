@@ -449,7 +449,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
                 <strong><?= __('Packets(total):', 'itella-shipping') ?></strong> <?= $packet_count ?>
             </p>
             <p>
-                <strong><?= __('Weight(' . $weight_unit . '):', 'itella-shipping') ?></strong> <?= $weight ?>
+                <strong><?= sprintf(__('Weight (%s):', 'itella-shipping'), $weight_unit) ?></strong> <?= $weight ?>
             </p>
             <p><strong><?= __('COD:', 'itella-shipping') ?></strong>
               <?=
@@ -458,7 +458,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             </p>
           <?php if ($is_cod): ?>
               <p>
-                  <strong><?= __('COD amount(' . $order->get_currency() . '):', 'itella-shipping') ?></strong> <?= $cod_amount ?>
+                  <strong><?= sprintf(__('COD amount (%s):', 'itella-shipping'), $order->get_currency()) ?></strong> <?= $cod_amount ?>
               </p>
           <?php endif; ?>
             <p><strong><?= __('Shipping method:', 'itella-shipping') ?></strong>
@@ -503,7 +503,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
           woocommerce_wp_select(array(
               'id' => 'packet_count',
-              'label' => __('Packets(total):', 'itella-shipping'),
+              'label' => __('Packets (total):', 'itella-shipping'),
               'value' => $packet_count,
               'options' => $packets,
               'wrapper_class' => 'form-field-wide'
@@ -521,7 +521,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
           woocommerce_wp_text_input(array(
               'id' => 'weight_total',
-              'label' => __('Weight(' . $weight_unit . ')'),
+              'label' => sprintf(__('Weight (%s)', 'itella-shipping'), $weight_unit),
               'value' => $weight,
               'wrapper_class' => 'form-field-wide'
           ));
@@ -539,7 +539,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
           woocommerce_wp_text_input(array(
               'id' => 'itella_cod_amount',
-              'label' => __('COD amount(' . $order->get_currency() . '):', 'itella-shipping'),
+              'label' => sprintf(__('COD amount (%s):', 'itella-shipping'), $order->get_currency()),
               'value' => $cod_amount,
               'wrapper_class' => 'form-field-wide'
           ));
@@ -739,7 +739,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
           $pdf_path = plugin_dir_path(dirname(__FILE__)) . 'var/downloaded-labels/' . $temp_name . '-' . $product_key . '.pdf';
           $is_saved = file_put_contents($pdf_path, $result);
           if (!$is_saved) { // make sure it was saved
-            throw new ItellaException(__("Failed to save label pdf to: ", 'itella_shipping') . $pdf_path);
+            throw new ItellaException(__("Failed to save label pdf to: ", 'itella-shipping') . $pdf_path);
           }
           $temp_files[] = $pdf_path;
         }
@@ -791,6 +791,139 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $manifest->printManifest('itella_manifest.pdf');
   }
 
+  /**
+   * Shipping information in emails
+   */
+  public function itella_shipping_info_css_in_email( $css, $email = '' )
+  {
+    $css .= '
+      .itella-ship-info { border:1px solid #e5e5e5; margin-bottom:30px; }
+      .itella-ship-info table { margin:0; }
+      .itella-ship-info th { width:40%; }
+    ';
+    return $css;
+  }
+  public function add_itella_shipping_info_to_email( $order, $sent_to_admin = '', $plain_text = '', $email = '' )
+  {
+    $order_id = $order->get_id();
+    $chosen_pickup_point_id = get_post_meta($order_id, '_pp_id', true);
+		$tracking_number = $this->get_tracking_code($order_id);
+    $tracking_url = $order->get_meta('_itella_tracking_url');
+    
+    if ( empty( $tracking_number ) && empty($chosen_pickup_point_id) ) {
+      return;
+    }
+
+    $tracking_provider = $order->get_shipping_method();
+
+    if ( ! $plain_text ) {
+      echo '<h2 class="itella-ship-info-title">' . __('Shipping information', 'itella-shipping') . '</h2>';
+      echo '<div class="itella-ship-info"><table>';
+      echo '<tr><th>' . __('Shipping method', 'itella-shipping') . '</th><td>' . $tracking_provider . '</td></tr>';
+    } else {
+      printf( __('Your order has been shipped with %s.', 'itella-shipping') . "\n", $tracking_provider );
+    }
+
+    if ( ! empty($chosen_pickup_point_id) && $chosen_pickup_point_id != '-' ) {
+      $pp_address = $this->build_pickup_address_for_display( $order, $chosen_pickup_point_id );
+
+      if ( $plain_text ) {
+        printf( __('The order will be delivered to %s.', 'itella-shipping') . "\n", $pp_address );
+		  } else {
+        echo '<tr><th>' . __('Deliver to', 'itella-shipping') . '</th><td>' . $pp_address . '</td></tr>';
+		  }
+    }
+
+		if ( ! empty( $tracking_number ) && ! empty( $tracking_url ) ) {
+		  if ( $plain_text ) {
+        if ( ! empty( $tracking_url ) ) {
+          printf(
+            __('The tracking number is %s and you can track it at %s.', 'itella-shipping') . "\n",
+            esc_html( $tracking_number ), esc_url( $tracking_url, array('http', 'https') )
+          );
+        } else {
+          printf(
+            __('The tracking number is %s.', 'itella-shipping') . "\n",
+            esc_html( $tracking_number )
+          );
+        }
+		  } else {
+        echo '<tr><th>' . __('Tracking number', 'itella-shipping') . '</th><td>';
+        if ( ! empty($tracking_url) ) {
+          echo '<a href="' . esc_url( $tracking_url, array('http', 'https') ) . '" target="_blank">' . esc_html( $tracking_number ) . '</a>';
+        } else {
+          echo esc_html( $tracking_number );
+        }
+        echo '</td></tr>';
+      }
+    }
+
+    if ( ! $plain_text ) {
+      echo '</table></div>';
+		}
+  }
+
+  /**
+   * Shipping information in order quickview (Add fields)
+   */
+  public function add_custom_admin_order_preview_meta( $data, $order )
+  {
+    $order_id = $order->get_id();
+    $tracking_number = $this->get_tracking_code($order_id);
+    $tracking_url = $order->get_meta('_itella_tracking_url');
+    $chosen_pickup_point_id = get_post_meta($order_id, '_pp_id', true);
+
+    if( ! empty($tracking_number) ) {
+      $data['tracking_code'] = $tracking_number;
+    }
+    if( ! empty($tracking_url) ) {
+      $data['tracking_url'] = $tracking_url;
+    }
+    if ( ! empty($chosen_pickup_point_id) && $chosen_pickup_point_id != '-' ) {
+      $pp_address = $this->build_pickup_address_for_display( $order, $chosen_pickup_point_id );
+      $data['pp_address'] = $pp_address;
+    }
+
+    return $data;
+  }
+
+  /**
+   * Shipping information in order quickview (Display fields)
+   */
+  public function display_custom_data_in_admin_order_preview()
+  {
+    echo '<div class="itella-order-quickview">
+      <# if ( data.tracking_code ) { #>
+        <div class="quickview-row">
+          <strong>' . __('Tracking number', 'itella-shipping') . '</strong><br/>
+          <# if ( data.tracking_url ) { #>
+            <a href="{{data.tracking_url}}" target="_blank">{{data.tracking_code}}</a>
+          <# } else { #>
+            <span>{{data.tracking_code}}</span>
+            <# } #>
+        </div>
+      <# } #>
+      <# if ( data.pp_address ) { #>
+        <div class="quickview-row">
+          <strong>' . __('Pickup point', 'itella-shipping') . '</strong><br/>
+          <span>{{data.pp_address}}</span>
+        </div>
+      <# } #>
+    </div>';
+  }
+
+  /**
+   * Build formated pickup address string
+   */
+  private function build_pickup_address_for_display( $order, $chosen_pickup_point_id )
+  {
+    $order_id = $order->get_id();
+    $chosen_pickup_point = $this->get_chosen_pickup_point($order->get_shipping_country(), $chosen_pickup_point_id);
+    return $chosen_pickup_point->address->municipality . ' - ' .
+           $chosen_pickup_point->address->address . ', ' .
+           $chosen_pickup_point->address->postalCode . ' (' .
+           $chosen_pickup_point->publicName . ')';
+  }
   /**
    * Update manifest generation date for orders
    *
@@ -867,6 +1000,13 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         // set tracking number
         update_post_meta($order_id, '_itella_tracking_code', $result->__toString());
         update_post_meta($order_id, '_itella_tracking_url', self::ITELLA_TRACKING_URL . $result->__toString());
+
+        // add order note
+        $note = sprintf(
+          __('Itella shipment registered successfully. Tracking number: %s', 'itella-shipping'),
+          '<a href="' . self::ITELLA_TRACKING_URL . $result . '" target="_blank">' . $result . '</a>'
+        );
+        $order->add_order_note( $note );
 
         // add notices
         $this->add_msg(

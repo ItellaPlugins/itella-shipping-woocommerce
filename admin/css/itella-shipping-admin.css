@@ -10,3 +10,10 @@
 .itella-settings .invalid-value label {
     color: red;
 }
+
+.itella-order-quickview {
+    padding: 0 1.5em;
+}
+.itella-order-quickview .quickview-row {
+    margin-bottom: 1.5em;
+}
