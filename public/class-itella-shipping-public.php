@@ -53,6 +53,7 @@ class Itella_Shipping_Public
     $this->name = $name;
     $this->version = $version;
     $this->available_countries = $available_countries;
+    $this->itella_shipping = new Itella_Shipping_Method();
 
   }
 
@@ -83,6 +84,7 @@ class Itella_Shipping_Public
     wp_enqueue_script($this->name . 'itella-shipping-public.js', plugin_dir_url(__FILE__) . 'js/itella-shipping-public.js', array(), $this->version, TRUE);
     wp_localize_script($this->name . 'itella-shipping-public.js',
         'variables', array(
+            'show_style' => $this->itella_shipping->settings['checkout_show_style'],
             'imagesUrl' => plugin_dir_url(__FILE__) . 'assets/images/',
             'locationsUrl' => plugin_dir_url(__FILE__) . '/../../locations/',
             'translations' => array(

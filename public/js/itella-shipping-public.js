@@ -9,6 +9,7 @@ function itella_init() {
 
     window.itella = new itellaMapping(itellaPpShippingMethod[0].nextSibling);
 
+    var show_map = (variables.show_style == 'map') ? true : false;
     let terminals = [];
     itella
         .setImagesUrl(variables.imagesUrl)
@@ -28,7 +29,7 @@ function itella_init() {
             error_leaflet: variables.translations.error_leaflet,
             error_missing_mount_el: variables.translations.error_missing_mount_el
         })
-        .init()
+        .init(show_map)
         .setCountry(
             document.querySelector('#billing_country') ?
             document.querySelector('#billing_country').value :
@@ -55,11 +56,12 @@ function itella_init() {
     oReq.addEventListener('loadend', loadJson);
     oReq.open('GET', `${variables.locationsUrl}locations${itella.country}.json`);
     oReq.send();
+
+    updateDropdown();
 }
 
 function loadJson() {
     let json = JSON.parse(this.responseText);
-    // console.log(this)
     this.itella.setLocations(json, true);
 
     // select from list by pickup point ID
@@ -90,4 +92,13 @@ function setHiddenPpIdInput() {
 function updateHiddenPpIdInput(ppId) {
     const ppIdElement = document.getElementById('itella-chosen-point-id');
     ppIdElement.value = ppId;
+}
+
+function updateDropdown() {
+    var post_value = document.querySelector('#shipping_postcode') ?
+                     document.querySelector('#shipping_postcode').value :
+                     (document.querySelector('#billing_postcode') ?
+                     document.querySelector('#billing_postcode').value : '');
+    itella.UI.container.getElementsByClassName("search-input")[0].value = post_value;
+    itella.searchNearest(""+post_value);
 }
