@@ -1,4 +1,5 @@
-.itella-mapping-modal * {
+.itella-mapping-modal *,
+.itella-shipping-container * {
   box-sizing: border-box;
 }
 
@@ -200,6 +201,10 @@
 .itella-select {
   background-color: #fff;
   position: relative;
+}
+
+.itella-shipping-container > .itella-select {
+  width: 100%;
 }
 
 .itella-select .dropdown {

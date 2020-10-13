@@ -332,6 +332,17 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             'description' => __('Show courier shipping method in checkout.', 'itella-shipping'),
             'default' => 'no'
         ),
+        'checkout_show_style' => array(
+            'title' => __('Pickup point selection style', 'itella-shipping'),
+            'type'    => 'select',
+            'class' => 'checkout-style',
+            'options' => array(
+                'map'  => __('Map', 'itella-shipping'),
+                'dropdown' => __('Dropdown', 'itella-shipping'),
+            ),
+            'default' => 'map',
+            'description' => __('Choose what the pickup point selection in the checkout will look like.', 'itella-shipping'),
+        ),
     );
     foreach ($this->available_countries as $country_code) {
       $fields['pickup_point_price_' . $country_code] = array(
