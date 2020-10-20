@@ -67,6 +67,20 @@ jQuery('document').ready(function($) {
         $('#itella-courier-modal').removeClass('open');
     });
 
+    $('#itella-manifest-cb').on('change', function() {
+        var checked = $(this).is(':checked');
+        $('#manifest-print-form .print_all').remove();
+        if(checked) {
+            var confirm_txt = $(this).data("txt");
+            if(!confirm(confirm_txt)) {         
+                $(this).removeAttr('checked');
+            } else {
+                var tab_name = $(this).data("tab");
+                $('#manifest-print-form').append('<input type="hidden" class="print_all" name="for_all" value="' + tab_name + '" />');
+            }
+        }
+    });
+
     $('#submit_manifest_items').on('click', function() {
         var ids = "";
         $('#manifest-print-form .post_id').remove();
@@ -76,7 +90,7 @@ jQuery('document').ready(function($) {
             $('#manifest-print-form').append('<input type="hidden" class = "post_id" name="post[]" value = "' + id + '" />');
         });
         $('#item_ids').val(ids);
-        if (ids == "") {
+        if (ids == "" && !$('#itella-manifest-cb').is(':checked')) {
             alert(translations.select_orders);
         } else {
             $('#manifest-print-form').submit();
@@ -93,7 +107,7 @@ jQuery('document').ready(function($) {
             $('.manifest-print-form').append('<input type="hidden" class = "post_id" name="post[]" value = "' + id + '" />');
         });
         $('#item_ids').val(ids);
-        if (ids == "") {
+        if (ids == "" && !$('#itella-manifest-cb').is(':checked')) {
             alert(translations.select_orders);
         } else {
             $('.manifest-print-form').submit();
@@ -121,4 +135,25 @@ jQuery('document').ready(function($) {
             $(this).prop('checked', checked);
         });
     });
+
+    $('#itella-show-pp').on('change', function() {
+        window.location = add_param_to_url('show_pp', $(this).val(), ["paged"]);
+    });
 });
+
+function add_param_to_url( paramName, paramValue, removeParams = [] ) {
+    var url = window.location.href;
+    console.log(removeParams);
+    if (removeParams.length > 0) {
+        for (var i = 0; i < removeParams.length; ++i) {
+            var pattern = new RegExp('\\b(&'+removeParams[i]+'=).*?(&|#|$)');
+            url = url.replace(pattern, "");
+        }
+    }
+    if (url.indexOf("?") < 0) {
+        url += "?" + paramName + "=" + paramValue;
+    } else {
+        url += "&" + paramName + "=" + paramValue;
+    }
+    return url;
+}
