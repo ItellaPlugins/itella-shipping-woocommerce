@@ -1,5 +1,19 @@
 # Changelog
 
+## [unreleased]
+### Fixed
+- fixed scripts loading only in their designated locations
+
+### Added
+- created tracking number display in order and emails
+- created option to select the appearance of pickup select field in checkout page
+- created the ability to choose how many posts will be displayed per page in manifest generation page
+- created the ability to generate a manifest for all orders in the current tab
+- added Finnish translation
+
+### Updated
+- itella-mapping.js to v1.3.1
+
 ## [1.1.9] - 2020-10-08
 ### Fixed
 - fixed "Enable" checkmark to be more consistent
