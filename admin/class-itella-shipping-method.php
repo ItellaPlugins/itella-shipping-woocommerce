@@ -788,7 +788,39 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   public function itella_post_manifest_actions()
   {
-    $order_ids = $_REQUEST['post'];
+    $for_all = (isset($_REQUEST['for_all'])) ? $_REQUEST['for_all'] : false;
+    if ($for_all) {
+      switch ($for_all) {
+        case 'new_orders':
+          $args = array(
+            'itella_manifest' => false,
+          );
+          break;
+        case 'completed_orders':
+          $args = array(
+            'itella_manifest' => true,
+            'meta_key' => '_itella_manifest_generation_date',
+            'orderby' => 'meta_value',
+            'order' => 'DESC'
+          );
+          break;
+        case 'all_orders':
+        default:
+          $args = array();
+          break;
+      }
+      $args = array_merge(
+        $args,
+        array(
+          'limit' => -1,
+          'return' => 'ids'
+        )
+      );
+      set_time_limit(0);
+      $order_ids = wc_get_orders($args);
+    } else {
+      $order_ids = $_REQUEST['post'];
+    }
 
     $translation = $this->get_manifest_translation();
 

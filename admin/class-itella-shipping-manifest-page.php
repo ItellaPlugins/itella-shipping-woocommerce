@@ -115,7 +115,8 @@ class Itella_Manifest
     );
 
     // amount of orders to show per page
-    $max_per_page = 25;
+    $pp_values = array( 10, 25, 50, 100 );
+    $max_per_page = (isset($_GET['show_pp'])) ? intval($_GET['show_pp']) : 25;
 
     // prep access to Itella shipping class
     $itella_shipping = new Itella_Shipping_Method();
@@ -275,6 +276,16 @@ class Itella_Manifest
     <?php endif; ?>
     <?php if ($thereIsOrders) : ?>
         <div class="mass-print-container">
+          <form id="itella-show-pp-form" method="post">
+            <?php _e('Show', 'itella-shipping') ?>
+            <select id="itella-show-pp" name="show_pp">
+              <?php foreach ($pp_values as $pp) {
+                echo '<option value="' . $pp . '"';
+                echo ($max_per_page == $pp) ? 'selected' : '';
+                echo '>' . $pp . '</option>';
+              } ?>
+            </select>
+          </form>
             <form id="labels-print-form" action="admin-post.php" method="GET">
                 <input type="hidden" name="action" value="itella_labels"/>
               <?php wp_nonce_field('itella_labels', 'itella_labels_nonce'); ?>
@@ -284,6 +295,11 @@ class Itella_Manifest
                   <input type="hidden" name="action" value="itella_manifests"/>
                 <?php wp_nonce_field('itella_manifest', 'itella_manifest_nonce'); ?>
               </form>
+              <label class="itella-manifest-switch" title="<?php _e('Generate manifest for ...', 'itella-shipping') ?>">
+                <?php $confirm_txt = __("Generating a manifest for a large number of orders can take a long time.\nAre you sure you want to continue?", 'itella-shipping'); ?>
+                <input id="itella-manifest-cb" type="checkbox" data-txt="<?php echo $confirm_txt; ?>" data-tab="<?php echo $action; ?>">
+                <span class="slider"><span class="on"><?php _ex('All', 'for', 'itella-shipping') ?></span><span class="off"><?php _ex('Visible', 'for', 'itella-shipping') ?></span></span>
+              </label>
               <button id="submit_manifest_items" title="<?php echo __('Generate manifests', 'itella-shipping'); ?>"
                       type="button" class="button action">
                 <?php echo __('Generate manifests', 'itella-shipping'); ?>

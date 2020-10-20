@@ -338,3 +338,86 @@
 #call-courier-form {
     display: inline-block;
 }
+
+#itella-show-pp-form {
+  float: left;
+}
+
+.mass-print-container .button {
+  vertical-align: middle;
+}
+
+.itella-manifest-switch {
+  position: relative;
+  display: inline-block;
+  width: 84px;
+  height: 22px;
+}
+.itella-manifest-switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.itella-manifest-switch .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  border: 1px solid #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+  border-radius: 5px;
+}
+.itella-manifest-switch .slider:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 11px;
+  left: 4px;
+  bottom: 3px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+.itella-manifest-switch input:checked + .slider {
+  background-color: #7FB8D4;
+}
+.itella-manifest-switch input:focus + .slider {
+  border-color: #7FB8D4;
+}
+.itella-manifest-switch input:checked + .slider:before {
+  -webkit-transform: translateX(63px);
+  -ms-transform: translateX(63px);
+  transform: translateX(63px);
+}
+.itella-manifest-switch .on
+{
+  display: none;
+}
+.itella-manifest-switch .on, .itella-manifest-switch .off
+{
+  color: white;
+  position: absolute;
+  top: 50%;
+  font-size: 10px;
+  font-family: Verdana, sans-serif;
+  transform: translate(0%,-50%);
+  width: 62px;
+  text-align: center;
+  text-transform: uppercase;
+}
+.itella-manifest-switch .on {
+  left: 3px;
+}
+.itella-manifest-switch .off {
+  right: 3px;
+}
+.itella-manifest-switch input:checked + .slider .on {
+  display: block;
+}
+.itella-manifest-switch input:checked + .slider .off {
+  display: none;
+}
