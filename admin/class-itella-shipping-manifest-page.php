@@ -46,11 +46,13 @@ class Itella_Manifest
    *
    * @since    1.0.0
    */
-  public function enqueue_styles()
+  public function enqueue_styles($hook)
   {
 
-    wp_enqueue_style($this->name . 'css/itella-shipping-manifest.css', plugin_dir_url(__FILE__) . 'css/itella-shipping-manifest.css', array(), $this->version, 'all');
-    wp_enqueue_style($this->name . 'bootstrap-datetimepicker', plugins_url('/js/datetimepicker/bootstrap-datetimepicker.min.css', __FILE__));
+    if ( $hook == 'woocommerce_page_itella-manifest') {
+      wp_enqueue_style($this->name . 'css/itella-shipping-manifest.css', plugin_dir_url(__FILE__) . 'css/itella-shipping-manifest.css', array(), $this->version, 'all');
+      wp_enqueue_style($this->name . 'bootstrap-datetimepicker', plugins_url('/js/datetimepicker/bootstrap-datetimepicker.min.css', __FILE__));
+    }
 
   }
 
@@ -59,15 +61,18 @@ class Itella_Manifest
    *
    * @since    1.0.0
    */
-  public function enqueue_scripts()
+  public function enqueue_scripts($hook)
   {
 
-    wp_enqueue_script($this->name . 'itella-shipping-manifest.js', plugin_dir_url(__FILE__) . 'js/itella-shipping-manifest.js', array('jquery'), $this->version, TRUE);
-    wp_localize_script($this->name . 'itella-shipping-manifest.js', 'translations', array(
-        'select_orders' => __('Select at least one order to perform this action.', 'itella-shipping')
-    ));
-    wp_enqueue_script($this->name . 'moment', plugin_dir_url(__FILE__) . 'js/datetimepicker/moment.min.js', array(), null, true);
-    wp_enqueue_script($this->name . 'bootstrap-datetimepicker', plugin_dir_url(__FILE__) . 'js/datetimepicker/bootstrap-datetimepicker.min.js', array('jquery', 'moment'), null, true);
+    if ( $hook == 'woocommerce_page_itella-manifest') {
+      wp_enqueue_script($this->name . 'itella-shipping-manifest.js', plugin_dir_url(__FILE__) . 'js/itella-shipping-manifest.js', array('jquery'), $this->version, TRUE);
+      wp_localize_script($this->name . 'itella-shipping-manifest.js', 'translations', array(
+        'select_orders' => __('Select at least one order to perform this action.', 'itella-shipping'),
+        'switch_confirm' => __("Generating a manifest for a large number of orders can take a long time.\nAre you sure you want to continue?", 'itella-shipping')
+      ));
+      wp_enqueue_script($this->name . 'moment', plugin_dir_url(__FILE__) . 'js/datetimepicker/moment.min.js', array(), null, true);
+      wp_enqueue_script($this->name . 'bootstrap-datetimepicker', plugin_dir_url(__FILE__) . 'js/datetimepicker/bootstrap-datetimepicker.min.js', array('jquery', 'moment'), null, true);
+    }
 
   }
 
@@ -296,8 +301,7 @@ class Itella_Manifest
                 <?php wp_nonce_field('itella_manifest', 'itella_manifest_nonce'); ?>
               </form>
               <label class="itella-manifest-switch" title="<?php _e('Generate manifest for ...', 'itella-shipping') ?>">
-                <?php $confirm_txt = __("Generating a manifest for a large number of orders can take a long time.\nAre you sure you want to continue?", 'itella-shipping'); ?>
-                <input id="itella-manifest-cb" type="checkbox" data-txt="<?php echo $confirm_txt; ?>" data-tab="<?php echo $action; ?>">
+                <input id="itella-manifest-cb" type="checkbox" data-tab="<?php echo $action; ?>">
                 <span class="slider"><span class="on"><?php _ex('All', 'for', 'itella-shipping') ?></span><span class="off"><?php _ex('Visible', 'for', 'itella-shipping') ?></span></span>
               </label>
               <button id="submit_manifest_items" title="<?php echo __('Generate manifests', 'itella-shipping'); ?>"

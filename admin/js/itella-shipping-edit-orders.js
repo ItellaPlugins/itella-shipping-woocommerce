@@ -3,6 +3,8 @@
 (() => {
     const itellaShippingOptionsLink = document.getElementById('itella-shipping-options');
 
+    if (itellaShippingOptionsLink == null) return;
+
     itellaShippingOptionsLink.addEventListener('click', () => {
 
         // gather elements

@@ -71,8 +71,7 @@ jQuery('document').ready(function($) {
         var checked = $(this).is(':checked');
         $('#manifest-print-form .print_all').remove();
         if(checked) {
-            var confirm_txt = $(this).data("txt");
-            if(!confirm(confirm_txt)) {         
+            if(!confirm(translations.switch_confirm)) {         
                 $(this).removeAttr('checked');
             } else {
                 var tab_name = $(this).data("tab");
@@ -137,16 +136,15 @@ jQuery('document').ready(function($) {
     });
 
     $('#itella-show-pp').on('change', function() {
-        window.location = add_param_to_url('show_pp', $(this).val(), ["paged"]);
+        window.location = add_param_to_url('show_pp', $(this).val(), ["show_pp", "paged"]);
     });
 });
 
 function add_param_to_url( paramName, paramValue, removeParams = [] ) {
     var url = window.location.href;
-    console.log(removeParams);
     if (removeParams.length > 0) {
         for (var i = 0; i < removeParams.length; ++i) {
-            var pattern = new RegExp('\\b(&'+removeParams[i]+'=).*?(&|#|$)');
+            var pattern = new RegExp("[?&]" + removeParams[i] + "=([^&]+)");
             url = url.replace(pattern, "");
         }
     }
