@@ -1,6 +1,6 @@
 # Changelog
 
-## [unreleased]
+## [1.2.0] - 2020-10-30
 ### Fixed
 - fixed scripts loading only in their designated locations
 

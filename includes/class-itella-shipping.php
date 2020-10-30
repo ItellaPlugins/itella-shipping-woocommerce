@@ -76,7 +76,7 @@ class Itella_Shipping
   {
 
     $this->plugin_name = 'itella-shipping';
-    $this->version = '1.1.9';
+    $this->version = '1.2.0';
     $this->available_countries = array('LT', 'EE', 'LV', 'FI');
 
     add_action('plugins_loaded', array($this, 'run'));
