@@ -93,7 +93,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   public function enqueue_scripts($hook)
   {
 
-    if ( $hook == 'woocommerce_page_wc-settings' && $_GET['section'] == 'itella-shipping' ) {
+    if ( $hook == 'woocommerce_page_wc-settings' && isset($_GET['section']) && $_GET['section'] == 'itella-shipping' ) {
       wp_enqueue_script($this->name . 'itella-shipping-admin.js', plugin_dir_url(__FILE__) . 'js/itella-shipping-admin.js', array('jquery'), $this->version, TRUE);
     }
     if ( $hook == 'post.php') {
