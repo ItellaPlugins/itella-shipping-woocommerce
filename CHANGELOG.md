@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+### Fixed
+- fixed notice error in Woocommerce settings pages
 ### Updated
 - itella-api library to v2.2.5
 
