@@ -5,6 +5,7 @@ namespace Mijora\Itella\Shipment;
 use Mijora\Itella\ItellaException;
 use Mijora\Itella\Shipment\AdditionalService;
 use Mijora\Itella\Helper;
+use Mijora\Itella\Locations\PickupPoints;
 
 use Pakettikauppa\Client as _Client;
 use Pakettikauppa\Shipment as _Shipment;
@@ -19,6 +20,9 @@ class Shipment
   // Service code (product)
   const PRODUCT_COURIER = 2317;
   const PRODUCT_PICKUP = 2711;
+
+  // Locations API endpoint
+  const LOCATIONS_API_URL = 'https://locationservice.posti.com/api/2/location';
 
   public $valid_product_codes;
 
@@ -42,6 +46,9 @@ class Shipment
   // Shipment specific
   public $shipmentNumber;
   public $shipmentDateTime; // when shipment is ready for pickup
+
+  // Location pupCode
+  private $pickup_point_id = false;
 
   /** @var int|string */
   private $product_code;
@@ -201,6 +208,45 @@ class Shipment
     $this->checkForMultiParcel();
   }
 
+
+  /**
+   * If its a pickup point shipment alters receiver info to have have pickup point address, city and postal code
+   */
+  private function modifyReceiverForPickupPoint()
+  {
+    // Only need alteration for set pickup point
+    if ($this->product_code !== self::PRODUCT_PICKUP) {
+      return;
+    }
+
+    // Make sure pupCode is set
+    if (!$this->pickup_point_id) {
+      throw new ItellaException("Shipment set for pickup point but no location pupCode given");
+    }
+
+    // Retrieve location information from locations api
+    $pickup_points = new PickupPoints(self::LOCATIONS_API_URL);
+    $location = $pickup_points->getLocations([
+      'countryCode' => $this->receiverParty->countryCode,
+      'pupCode' => $this->pickup_point_id
+    ]);
+
+    if (!$location) {
+      throw new ItellaException("Could not find location with pupCode = " . $this->pickup_point_id);
+    }
+
+    $location = $location[0];
+
+    $address = $location['address']['address'];
+    if (empty($address)) {
+      $address = $location['address']['streetName'] . ' ' . $location['address']['streetNumber'];
+    }
+
+    $this->receiverParty->setStreet1($address);
+    $this->receiverParty->setCity($location['address']['municipality']);
+    $this->receiverParty->setPostCode($location['postalCode']);
+  }
+
   /**
    * Creates Pakettikauppa shipment object
    */
@@ -211,6 +257,8 @@ class Shipment
     $shipment = new _Shipment();
     $shipment->setShippingMethod($this->product_code);
     $shipment->setSender($this->senderParty->getPakettikauppaParty());
+
+    $this->modifyReceiverForPickupPoint();
     $shipment->setReceiver($this->receiverParty->getPakettikauppaParty());
 
     $info = new _Info();

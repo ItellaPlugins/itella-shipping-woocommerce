@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+### Fixed
+- fixed notice error in Woocommerce settings pages
+### Updated
+- itella-api library to v2.2.5
+
 ## [1.2.0] - 2020-10-30
 ### Fixed
 - fixed scripts loading only in their designated locations

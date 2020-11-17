@@ -65,7 +65,6 @@ class PickupPoints
     $locations = CurlRequest::getLocations($result, $this->lang);
 
     if (isset($locations['error'])) {
-      echo $locations['error'];
       return false;
     }
 
