@@ -1011,8 +1011,11 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    *
    * executes after Register shipment is pressed
    */
-  public function itella_post_shipment_actions()
+  public function itella_post_shipment_actions( $exit_modes = '' )
   {
+    if (!is_array($exit_modes)) {
+      $exit_modes = array('msg','redirect');
+    }
     $order_ids = $_REQUEST['post'];
     $order_ids = is_array($order_ids) ? $order_ids : array($order_ids);
 
@@ -1024,12 +1027,18 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
       // check if itella shipping method
       if ($shipping_method !== 'itella_pp' && $shipping_method !== 'itella_c') {
-        $this->add_msg($order_id . ' - ' . __('Shipment is not registered.', 'itella-shipping')
+        if (in_array('msg',$exit_modes)) {
+          $this->add_msg($order_id . ' - ' . __('Shipment is not registered.', 'itella-shipping')
             . "<br>"
             . __('Error: ', 'itella-shipping')
             . __('Not Itella Shipping Method', 'itella-shipping'), 'error');
-
-        wp_safe_redirect(wp_get_referer());
+        }
+        if (in_array('redirect',$exit_modes)) {
+          wp_safe_redirect(wp_get_referer());
+        }
+        if (in_array('return',$exit_modes)) {
+          return array('status' => 'error', 'msg' => __('Not Itella Shipping Method', 'itella-shipping'));
+        }
       }
 
       $contract_number = $shipping_method === 'itella_pp'
@@ -1059,52 +1068,154 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         $order->add_order_note( $note );
 
         // add notices
-        $this->add_msg(
+        if (in_array('msg',$exit_modes)) {
+          $this->add_msg(
             'Order ' . $order_id . ' - '
             . __('Shipment registered successfully.', 'itella-shipping'), 'success'
-        );
-        $this->add_msg(
+          );
+          $this->add_msg(
             'Order ' . $order_id . ' - '
             . __('Tracking number: ', 'itella-shipping') . $result, 'info'
-        );
+          );
+        }
 
         // log order id and tracking number
         file_put_contents(plugin_dir_path(dirname(__FILE__)) . 'var/log/registered_tracks.log',
             "\nOrder ID : " . $order->get_id() . "\n" . 'Tracking number: ' . $result, FILE_APPEND);
 
+        if (in_array('return',$exit_modes)) {
+          return array('status' => 'success', 'msg' => __('Shipment registered successfully.', 'itella-shipping'));
+        }
+
       } catch (ItellaException $th) {
 
         // add error message
-        $this->add_msg($order_id . ' - ' . __('Shipment is not registered.', 'itella-shipping')
+        if (in_array('msg',$exit_modes)) {
+          $this->add_msg($order_id . ' - ' . __('Shipment is not registered.', 'itella-shipping')
             . "<br>"
             . __('An error occurred. ', 'itella-shipping')
             . $th->getMessage()
             , 'error');
+        }
 
         // log error
         file_put_contents(plugin_dir_path(dirname(__FILE__)) . 'var/log/errors.log',
             "\n" . date('Y-m-d H:i:s') . ": Exception:\n" . $th->getMessage() . "\n"
             . $th->getTraceAsString(), FILE_APPEND);
+
+        if (in_array('return',$exit_modes)) {
+          return array('status' => 'error', 'msg' => __('An error occurred. ', 'itella-shipping') . $th->getMessage());
+        }
       }
 
       catch (\Exception $e) {
 
           // add error message
-          $this->add_msg($order_id . ' - ' . __('Shipment is not registered.', 'itella-shipping')
+          if (in_array('msg',$exit_modes)) {
+            $this->add_msg($order_id . ' - ' . __('Shipment is not registered.', 'itella-shipping')
               . "<br>"
               . __('An error occurred. ', 'itella-shipping')
               . $e->getMessage()
               , 'error');
+          }
 
           // log error
           file_put_contents(plugin_dir_path(dirname(__FILE__)) . 'var/log/errors.log',
               "\n" . date('Y-m-d H:i:s') . ": Exception:\n" . $e->getMessage() . "\n"
               . $e->getTraceAsString(), FILE_APPEND);
+
+          if (in_array('return',$exit_modes)) {
+            return array('status' => 'error', 'msg' => __('An error occurred. ', 'itella-shipping') . $th->getMessage());
+          }
       }
     }
 
     // return to shipments
-    wp_safe_redirect(wp_get_referer());
+    if (in_array('redirect',$exit_modes)) {
+      wp_safe_redirect(wp_get_referer());
+    }
+  }
+
+  /**
+   * AJAX function for single shipment registration
+   */
+  public function itella_ajax_single_register_shipment() {
+    if ( !isset($_REQUEST['nonce']) || !wp_verify_nonce($_REQUEST['nonce'], 'itella_shipments') ) {
+      echo json_encode(array(
+        'status' => 'error',
+        'msg' => __("Failed to validate nonce", 'itella-shipping')
+      ));
+      die();
+    }
+    if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
+      $id = $_REQUEST['id'];
+      $check_code = get_post_meta($id, '_itella_tracking_code');
+      if (empty($check_code)) {
+        $_REQUEST['post'] = $id;
+        $status = $this->itella_post_shipment_actions( array('return') );
+        if ($status['status'] === 'error') {
+          echo json_encode(array(
+            'status' => 'error',
+            'msg' => __("Failed to register shipment", 'itella-shipping')
+          ));
+        } else {
+          echo json_encode(array(
+            'status' => 'success',
+            'msg' => __("Shipment successfully registered", 'itella-shipping')
+          ));
+        }
+      }
+    } else {
+      echo json_encode(array(
+        'status' => 'error',
+        'msg' => __("Couldn't get order", 'itella-shipping')
+      ));
+    }
+    die();
+  }
+
+  /**
+   * AJAX function for massive shipments registration
+   */
+  public function itella_ajax_bulk_register_shipments() {
+    if ( !isset($_REQUEST['nonce']) || !wp_verify_nonce($_REQUEST['nonce'], 'itella_shipments') ) {
+      echo json_encode(array(
+        'status' => 'error',
+        'msg' => __("Failed to validate nonce", 'itella-shipping')
+      ));
+      die();
+    }
+    if (isset($_REQUEST['ids']) && is_array($_REQUEST['ids'])) {
+      $failed = array();
+      foreach($_REQUEST['ids'] as $id) {
+        $check_code = get_post_meta($id, '_itella_tracking_code');
+        if (empty($check_code)) {
+          $_REQUEST['post'] = $id;
+          $status = $this->itella_post_shipment_actions( array('return') );
+          if ($status['status'] === 'error') {
+            array_push($failed, array('id' => $id, 'msg' => $status['msg']));
+          }
+        }
+      }
+      if (empty($failed)) {
+        echo json_encode(array(
+          'status' => 'success',
+          'msg' => __("Shipments successfully registered", 'itella-shipping')
+        ));
+      } else {
+        echo json_encode(array(
+          'status' => 'notice',
+          'msg' => __("Some orders failed to register the shipment", 'itella-shipping'),
+          'values' => $failed
+        ));
+      }
+    } else {
+      echo json_encode(array(
+        'status' => 'error',
+        'msg' => __("Couldn't get list of selected orders", 'itella-shipping')
+      ));
+    }
+    die();
   }
 
   /**

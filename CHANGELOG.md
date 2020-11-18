@@ -1,8 +1,16 @@
 # Changelog
 
-## [1.2.1]
+## [Unreleased] - 2020-11-18
+### Changed
+- changed button behavior via ajax
+
+### Improved
+- added the ability to register shipments via bulk action
+
+## [1.2.1] - 2020-11-18
 ### Fixed
 - fixed notice error in Woocommerce settings pages
+
 ### Updated
 - itella-api library to v2.2.5
 

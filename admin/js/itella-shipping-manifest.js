@@ -67,6 +67,92 @@ jQuery('document').ready(function($) {
         $('#itella-courier-modal').removeClass('open');
     });
 
+    $('#submit_shipments_register').on('click', function(e) {
+        var ids = [];
+        $('#register-print-form .post_id').remove();
+        $('.manifest-item:checked').each(function() {
+            ids.push($(this).val());
+        });
+        if (ids.length === 0) {
+            alert(translations.select_orders);
+        } else {
+            var nonce = $('#itella_shipments_nonce').val();
+            $(this).prop('disabled', true);
+            $(this).find('.spinner-holder').addClass('active');
+            var button = $(this);
+            $.ajax({
+                type: "post",
+                dataType: "json",
+                url: manifest_ajax.ajax_url,
+                data: {
+                    action : "bulk_register_shipments",
+                    ids : ids,
+                    nonce : nonce
+                },
+                success: function(response){
+                    if (response.status == 'error') {
+                        alert(response.msg);
+                    }
+                    if (response.status == 'notice') {
+                        var output = response.msg + ':\n';
+                        response.values.forEach(function(entry) {
+                            output += '#' + entry.id + ': ' + entry.msg + '\n';
+                        })
+                        alert(output);
+                        location.reload();
+                    }
+                    $(button).find('.spinner-holder').removeClass('active');
+                    $(button).prop('disabled', false);
+                    if (response.status == 'success') {
+                        alert(response.msg);
+                        location.reload();
+                    }
+                },
+                error: function(xhr, status, error){
+                    var errorMessage = xhr.status + ': ' + xhr.statusText;
+                    alert('Error - ' + errorMessage);
+                    $(button).find('.spinner-holder').removeClass('active');
+                    $(button).prop('disabled', false);
+                }
+            });
+        }
+    });
+
+    $('.itella-register-shipment').on('click', function(e) {
+        $(this).prop('disabled', true);
+        $(this).find('.spinner-holder').addClass('active');
+        var id = $(this).data("id");
+        var button = $(this);
+        var nonce = $('#itella_shipments_nonce').val();
+        $.ajax({
+            type: "post",
+            dataType: "json",
+            url: manifest_ajax.ajax_url,
+            data: {
+                action : "single_register_shipment",
+                id : id,
+                nonce : nonce
+            },
+            success: function(response){
+                if (response.status == 'error') {
+                    alert(response.msg);
+                }
+                $(button).find('.spinner-holder').removeClass('active');
+                $(button).prop('disabled', false);
+                if (response.status == 'success') {
+                    alert(response.msg);
+                    location.reload();
+                }
+            },
+            error: function(xhr, status, error){
+                var errorMessage = xhr.status + ': ' + xhr.statusText;
+                alert('Error - ' + errorMessage);
+                $(button).find('.spinner-holder').removeClass('active');
+                $(button).prop('disabled', false);
+            }
+        });
+    });
+
     $('#itella-manifest-cb').on('change', function() {
         var checked = $(this).is(':checked');
         $('#manifest-print-form .print_all').remove();
@@ -94,7 +180,6 @@ jQuery('document').ready(function($) {
         } else {
             $('#manifest-print-form').submit();
         }
-
     });
 
     $('.submit_manifest_items').on('click', function() {
