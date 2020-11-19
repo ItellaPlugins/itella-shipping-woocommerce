@@ -1,4 +1,16 @@
 'use strict';
+jQuery( document ).ready(function($) {
+    $(document.body).on('updated_checkout', function() {
+        if ( ! $('input[value="itella_pp"]').length) {
+            if ($('.shipping_method').length) {
+                if ($('.shipping_method').val() === 'itella_pp' && ! $('#itella-pickup-block').length ) {
+                    $('<div id="itella-pickup-block"></div>').insertAfter('.shipping_method');
+                    itella_init();
+                }
+            }
+        }
+    });
+});
 
 if (jQuery('input[name^="shipping_method"]:checked').val() === 'itella_pp') {
     itella_init();
@@ -7,7 +19,14 @@ if (jQuery('input[name^="shipping_method"]:checked').val() === 'itella_pp') {
 function itella_init() {
     let itellaPpShippingMethod = jQuery('input[value="itella_pp"]');
 
-    window.itella = new itellaMapping(itellaPpShippingMethod[0].nextSibling);
+    if (itellaPpShippingMethod.length) {
+        var add_to = itellaPpShippingMethod[0].nextSibling;
+    } else {
+        var elem = jQuery('#itella-pickup-block');
+        var add_to = elem[0];
+    }
+
+    window.itella = new itellaMapping(add_to);
 
     var show_map = (variables.show_style == 'map') ? true : false;
     let terminals = [];
@@ -77,7 +96,10 @@ function setHiddenPpIdInput() {
         chosenPpIdElement.remove();
     }
 
-    const radio = jQuery('input[value="itella_pp"]');
+    var radio = jQuery('input[value="itella_pp"]');
+    if (!radio.length) {
+        radio = jQuery('#itella-pickup-block');
+    }
     const ppIdElement = document.createElement('input');
     ppIdElement.setAttribute('type', 'hidden');
     ppIdElement.setAttribute('name', 'itella-chosen-point-id');

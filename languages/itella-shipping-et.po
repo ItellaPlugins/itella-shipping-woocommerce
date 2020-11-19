@@ -1,27 +1,27 @@
 # Loco Gettext template
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: itella_shipping\n"
 "Report-Msgid-Bugs-To: mantas tarutis\n"
 "POT-Creation-Date: 2020-11-19 08:57+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: \n"
-"Language: \n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"PO-Revision-Date: 2020-11-19 09:19+0000\n"
+"Last-Translator: \n"
+"Language-Team: Estonian\n"
+"Language: et\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/\n"
 "X-Loco-Source-Locale: en\n"
 "X-Loco-Project-Id: 89232\n"
-"X-Loco-Api-Version: 1.0.24 20200414-1"
+"X-Loco-Api-Version: 1.0.24 20200414-1\n"
+"X-Loco-Version: 2.4.4; wp-5.5.3"
 
 #. Name of the plugin
 #: admin/class-itella-shipping-method.php:63
 msgid "Itella Shipping"
-msgstr ""
+msgstr "Itella tarne"
 
 #: admin/class-itella-shipping-method.php:64
 msgid "Plugin to use with Itella Shipping methods"
@@ -29,11 +29,11 @@ msgstr ""
 
 #: admin/class-itella-shipping-method.php:180
 msgid "Itella Pickup Point"
-msgstr ""
+msgstr "Itella kättesaamiskoht"
 
 #: admin/class-itella-shipping-method.php:197
 msgid "Itella Courier"
-msgstr ""
+msgstr "Itella kuller"
 
 #: admin/class-itella-shipping-method.php:259
 msgid "Enable"
@@ -69,7 +69,7 @@ msgstr ""
 
 #: admin/class-itella-shipping-method.php:289
 msgid "Company name"
-msgstr ""
+msgstr "Ettevõtte nimi"
 
 #: admin/class-itella-shipping-method.php:293
 msgid "Bank account"
@@ -81,31 +81,31 @@ msgstr ""
 
 #: admin/class-itella-shipping-method.php:301
 msgid "Shop name"
-msgstr ""
+msgstr "Poe nimi"
 
 #: admin/class-itella-shipping-method.php:305
 msgid "Shop city"
-msgstr ""
+msgstr "Poe linn"
 
 #: admin/class-itella-shipping-method.php:309
 msgid "Shop address"
-msgstr ""
+msgstr "Poe aadress"
 
 #: admin/class-itella-shipping-method.php:313
 msgid "Shop postcode"
-msgstr ""
+msgstr "Poe sihtnumber"
 
 #: admin/class-itella-shipping-method.php:317
 msgid "Shop country code"
-msgstr ""
+msgstr "Poe riigikood"
 
 #: admin/class-itella-shipping-method.php:321
 msgid "Shop phone number"
-msgstr ""
+msgstr "Poe telefoninumber"
 
 #: admin/class-itella-shipping-method.php:325
 msgid "Shop email"
-msgstr ""
+msgstr "Poe e-post"
 
 #: admin/class-itella-shipping-method.php:329
 msgid "Enable Pickup Point"
@@ -165,19 +165,19 @@ msgstr ""
 #: admin/class-itella-shipping-method.php:505
 #: admin/class-itella-shipping-manifest-page.php:521
 msgid "Oversized"
-msgstr ""
+msgstr "Ülemõõduline"
 
 #: admin/class-itella-shipping-method.php:426
 #: admin/class-itella-shipping-method.php:508
 #: admin/class-itella-shipping-manifest-page.php:525
 msgid "Call before delivery"
-msgstr ""
+msgstr "Helista enne kohaletoimetamist"
 
 #: admin/class-itella-shipping-method.php:427
 #: admin/class-itella-shipping-method.php:512
 #: admin/class-itella-shipping-manifest-page.php:529
 msgid "Fragile"
-msgstr ""
+msgstr "Õrn"
 
 #: admin/class-itella-shipping-method.php:463
 msgid "Itella Shipping Options"
@@ -185,38 +185,38 @@ msgstr ""
 
 #: admin/class-itella-shipping-method.php:467
 msgid "Packets(total):"
-msgstr ""
+msgstr "Pakke (kokku):"
 
 #: admin/class-itella-shipping-method.php:470
 #, php-format
 msgid "Weight (%s):"
-msgstr ""
+msgstr "Kaal (%s):"
 
 #: admin/class-itella-shipping-method.php:472
 #: admin/class-itella-shipping-method.php:549
 msgid "COD:"
-msgstr ""
+msgstr "Kaardimakse kauba kättesaamisel:"
 
 #: admin/class-itella-shipping-method.php:479
 #: admin/class-itella-shipping-method.php:560
 #, php-format
 msgid "COD amount (%s):"
-msgstr ""
+msgstr "Kauba kättesaamisel kaardiga tasutav summa (%s):"
 
 #: admin/class-itella-shipping-method.php:482
 msgid "Shipping method:"
-msgstr ""
+msgstr "Tarneviis:"
 
 #: admin/class-itella-shipping-method.php:484
 #: admin/class-itella-shipping-method.php:570
 msgid "Pickup Point"
-msgstr ""
+msgstr "Kättesaamiskoht"
 
 #: admin/class-itella-shipping-method.php:485
 #: admin/class-itella-shipping-method.php:571
 #: admin/class-itella-shipping-method.php:1572
 msgid "Courier"
-msgstr ""
+msgstr "Kullerteenus"
 
 #: admin/class-itella-shipping-method.php:486
 msgid "No Itella Shipping method selected"
@@ -224,24 +224,24 @@ msgstr ""
 
 #: admin/class-itella-shipping-method.php:490
 msgid "Chosen Pickup Point"
-msgstr ""
+msgstr "Valitud kättesaamiskoht"
 
 #: admin/class-itella-shipping-method.php:499
 msgid "Extra Services:"
-msgstr ""
+msgstr "Lisateenused:"
 
 #: admin/class-itella-shipping-method.php:502
 msgid "No extra services selected"
-msgstr ""
+msgstr "Lisateenuseid ei ole valitud"
 
 #: admin/class-itella-shipping-method.php:524
 msgid "Packets (total):"
-msgstr ""
+msgstr "Pakke (kokku):"
 
 #: admin/class-itella-shipping-method.php:532
 #: admin/class-itella-shipping-manifest-page.php:711
 msgid "Multi Parcel"
-msgstr ""
+msgstr "Mitu pakki"
 
 #: admin/class-itella-shipping-method.php:534
 msgid ""
@@ -251,23 +251,23 @@ msgstr ""
 #: admin/class-itella-shipping-method.php:542
 #, php-format
 msgid "Weight (%s)"
-msgstr ""
+msgstr "Kaal (%s)"
 
 #: admin/class-itella-shipping-method.php:567
 msgid "Carrier:"
-msgstr ""
+msgstr "Transpordiettevõte:"
 
 #: admin/class-itella-shipping-method.php:578
 msgid "Select Pickup Point:"
-msgstr ""
+msgstr "Vali kättesaamiskoht:"
 
 #: admin/class-itella-shipping-method.php:590
 msgid "Extra Services"
-msgstr ""
+msgstr "Lisateenused"
 
 #: admin/class-itella-shipping-method.php:709
 msgid "You must choose Itella Pickup Point"
-msgstr ""
+msgstr "Peate valima Itella kättesaamiskoha"
 
 #: admin/class-itella-shipping-method.php:760
 msgid "Failed to save label pdf to: "
@@ -276,52 +276,52 @@ msgstr ""
 #: admin/class-itella-shipping-method.php:770
 #: admin/class-itella-shipping-method.php:780
 msgid "An error occurred."
-msgstr ""
+msgstr "Ilmnes viga."
 
 #: admin/class-itella-shipping-method.php:870
 #: public/class-itella-shipping-public.php:131
 msgid "Shipping information"
-msgstr ""
+msgstr "Tarneandmed"
 
 #: admin/class-itella-shipping-method.php:872
 #: public/class-itella-shipping-public.php:133
 msgid "Shipping method"
-msgstr ""
+msgstr "Tarneviis"
 
 #: admin/class-itella-shipping-method.php:874
 #, php-format
 msgid "Your order has been shipped with %s."
-msgstr ""
+msgstr "Teie tellimus on saadetud koos %s."
 
 #: admin/class-itella-shipping-method.php:881
 #, php-format
 msgid "The order will be delivered to %s."
-msgstr ""
+msgstr "Tellimus tarnitakse %s."
 
 #: admin/class-itella-shipping-method.php:883
 #: public/class-itella-shipping-public.php:136
 msgid "Deliver to"
-msgstr ""
+msgstr "Kohaletoimetamine"
 
 #: admin/class-itella-shipping-method.php:891
 #, php-format
 msgid "The tracking number is %s and you can track it at %s."
-msgstr ""
+msgstr "Saadetise kood on %s ja seda saab jälgida %s."
 
 #: admin/class-itella-shipping-method.php:896
 #, php-format
 msgid "The tracking number is %s."
-msgstr ""
+msgstr "Saadetise kood on %s."
 
 #: admin/class-itella-shipping-method.php:901
 #: admin/class-itella-shipping-method.php:948
 msgid "Tracking number"
-msgstr ""
+msgstr "Saadetise kood"
 
 #: admin/class-itella-shipping-method.php:958
 #: public/class-itella-shipping-public.php:93
 msgid "Pickup point"
-msgstr ""
+msgstr "Kättesaamiskoht"
 
 #: admin/class-itella-shipping-method.php:1031
 #: admin/class-itella-shipping-method.php:1094
@@ -350,14 +350,14 @@ msgstr ""
 
 #: admin/class-itella-shipping-method.php:1078
 msgid "Tracking number: "
-msgstr ""
+msgstr "Saadetise kood:"
 
 #: admin/class-itella-shipping-method.php:1096
 #: admin/class-itella-shipping-method.php:1107
 #: admin/class-itella-shipping-method.php:1117
 #: admin/class-itella-shipping-method.php:1128
 msgid "An error occurred. "
-msgstr ""
+msgstr "Ilmnes viga."
 
 #: admin/class-itella-shipping-method.php:1146
 #: admin/class-itella-shipping-method.php:1184
@@ -402,7 +402,7 @@ msgstr ""
 
 #: admin/class-itella-shipping-method.php:1542
 msgid "Error:"
-msgstr ""
+msgstr "Viga:"
 
 #: admin/class-itella-shipping-method.php:1565
 msgid "Sender address:"
@@ -410,27 +410,27 @@ msgstr ""
 
 #: admin/class-itella-shipping-method.php:1566
 msgid "No.:"
-msgstr ""
+msgstr "Nr:"
 
 #: admin/class-itella-shipping-method.php:1567
 msgid "Tracking number:"
-msgstr ""
+msgstr "Saadetise kood:"
 
 #: admin/class-itella-shipping-method.php:1568
 msgid "Date:"
-msgstr ""
+msgstr "Kuupäev:"
 
 #: admin/class-itella-shipping-method.php:1569
 msgid "Amount:"
-msgstr ""
+msgstr "Kogus:"
 
 #: admin/class-itella-shipping-method.php:1570
 msgid "Weight:"
-msgstr ""
+msgstr "Kaal:"
 
 #: admin/class-itella-shipping-method.php:1571
 msgid "Delivery address:"
-msgstr ""
+msgstr "Kohaletoimetamise aadress:"
 
 #: admin/class-itella-shipping-method.php:1573
 msgid "Sender"
@@ -476,7 +476,7 @@ msgstr ""
 
 #: admin/class-itella-shipping-manifest-page.php:286
 msgid "Show"
-msgstr ""
+msgstr "Näita"
 
 #: admin/class-itella-shipping-manifest-page.php:300
 #: admin/class-itella-shipping-manifest-page.php:303
@@ -495,7 +495,7 @@ msgstr ""
 #: admin/class-itella-shipping-manifest-page.php:324
 msgctxt "for"
 msgid "All"
-msgstr ""
+msgstr "Kõik"
 
 #: admin/class-itella-shipping-manifest-page.php:324
 msgctxt "for"
@@ -515,37 +515,37 @@ msgstr ""
 #: admin/class-itella-shipping-manifest-page.php:356
 #: admin/class-itella-shipping-manifest-page.php:403
 msgid "Customer"
-msgstr ""
+msgstr "Klient"
 
 #: admin/class-itella-shipping-manifest-page.php:373
 #: admin/class-itella-shipping-manifest-page.php:406
 #: public/class-itella-shipping-public.php:140
 msgid "Tracking code"
-msgstr ""
+msgstr "Saadetise kood"
 
 #: admin/class-itella-shipping-manifest-page.php:381
 msgid "From"
-msgstr ""
+msgstr "Saatja"
 
 #: admin/class-itella-shipping-manifest-page.php:386
 msgid "To"
-msgstr ""
+msgstr "Saaja"
 
 #: admin/class-itella-shipping-manifest-page.php:393
 msgid "Filter"
-msgstr ""
+msgstr "Filter"
 
 #: admin/class-itella-shipping-manifest-page.php:395
 msgid "Reset"
-msgstr ""
+msgstr "Lähtesta"
 
 #: admin/class-itella-shipping-manifest-page.php:404
 msgid "Order Status"
-msgstr ""
+msgstr "Tellimuse seisund"
 
 #: admin/class-itella-shipping-manifest-page.php:405
 msgid "Service"
-msgstr ""
+msgstr "Teenus"
 
 #: admin/class-itella-shipping-manifest-page.php:407
 msgid "Manifest date"
@@ -564,11 +564,11 @@ msgstr ""
 
 #: admin/class-itella-shipping-manifest-page.php:478
 msgid "Itella Pickup Point:"
-msgstr ""
+msgstr "Itella kättesaamiskoht:"
 
 #: admin/class-itella-shipping-manifest-page.php:480
 msgid "City: "
-msgstr ""
+msgstr "Linn:"
 
 #: admin/class-itella-shipping-manifest-page.php:482
 msgid "Public Name: "
@@ -576,35 +576,35 @@ msgstr ""
 
 #: admin/class-itella-shipping-manifest-page.php:484
 msgid "Address: "
-msgstr ""
+msgstr "Aadress:"
 
 #: admin/class-itella-shipping-manifest-page.php:486
 msgid "Postal Code: "
-msgstr ""
+msgstr "Sihtnumber:"
 
 #: admin/class-itella-shipping-manifest-page.php:493
 msgid "Itella Courier:"
-msgstr ""
+msgstr "Itella kuller:"
 
 #: admin/class-itella-shipping-manifest-page.php:496
 msgid "Packet Count: "
-msgstr ""
+msgstr "Pakiloend:"
 
 #: admin/class-itella-shipping-manifest-page.php:499
 msgid "Weight: "
-msgstr ""
+msgstr "Kaal:"
 
 #: admin/class-itella-shipping-manifest-page.php:502
 msgid "COD: "
-msgstr ""
+msgstr "Kaardimakse kauba kättesaamisel:"
 
 #: admin/class-itella-shipping-manifest-page.php:507
 msgid "COD amount: "
-msgstr ""
+msgstr "Kauba kättesaamisel kaardiga tasutav summa:"
 
 #: admin/class-itella-shipping-manifest-page.php:512
 msgid "Extra services:"
-msgstr ""
+msgstr "Lisateenused:"
 
 #: admin/class-itella-shipping-manifest-page.php:563
 #: admin/class-itella-shipping-manifest-page.php:576
@@ -619,7 +619,7 @@ msgstr ""
 
 #: admin/class-itella-shipping-manifest-page.php:613
 msgid "Important!"
-msgstr ""
+msgstr "NB!"
 
 #: admin/class-itella-shipping-manifest-page.php:613
 msgid "Check your credentials."
@@ -631,35 +631,35 @@ msgstr ""
 
 #: public/class-itella-shipping-public.php:91
 msgid "Nothing found"
-msgstr ""
+msgstr "Midagi ei leitud"
 
 #: public/class-itella-shipping-public.php:92
 msgid "Pickup points"
-msgstr ""
+msgstr "Kättesaamiskohad"
 
 #: public/class-itella-shipping-public.php:94
 msgid "Workhours"
-msgstr ""
+msgstr "Tööaeg"
 
 #: public/class-itella-shipping-public.php:95
 msgid "Contacts"
-msgstr ""
+msgstr "Kontakt"
 
 #: public/class-itella-shipping-public.php:96
 msgid "Enter postcode/address"
-msgstr ""
+msgstr "Sisesta sihtnumber/aadress"
 
 #: public/class-itella-shipping-public.php:97
 msgid "Select a pickup point"
-msgstr ""
+msgstr "Vali kättesaamiskoht"
 
 #: public/class-itella-shipping-public.php:98
 msgid "No points to select"
-msgstr ""
+msgstr "Valitavad punktid puuduvad"
 
 #: public/class-itella-shipping-public.php:99
 msgid "select"
-msgstr ""
+msgstr "vali"
 
 #: public/class-itella-shipping-public.php:100
 msgid "reset search"
@@ -667,27 +667,27 @@ msgstr ""
 
 #: public/class-itella-shipping-public.php:101
 msgid "Select pickup point"
-msgstr ""
+msgstr "Vali kättesaamiskoht"
 
 #: public/class-itella-shipping-public.php:102
 msgid "No information"
-msgstr ""
+msgstr "Teave puudub"
 
 #: public/class-itella-shipping-public.php:103
 msgid "Leaflet is required for Itella-Mapping"
-msgstr ""
+msgstr "Itella kaardistamise jaoks on vaja teabelehte"
 
 #: public/class-itella-shipping-public.php:104
 msgid "No mount supplied to itellaShipping"
-msgstr ""
+msgstr "ItellaShippingu ühendus puudub"
 
 #: public/class-itella-shipping-public.php:148
 msgid "Status"
-msgstr ""
+msgstr "Seisund"
 
 #: public/class-itella-shipping-public.php:148
 msgid "Not shipped"
-msgstr ""
+msgstr "Ei ole saadetud"
 
 #. Description of the plugin
 msgid "Itella shipping plugin for Woocommerce"

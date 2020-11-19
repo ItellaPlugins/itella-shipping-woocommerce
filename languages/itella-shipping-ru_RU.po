@@ -1,27 +1,28 @@
 # Loco Gettext template
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: itella_shipping\n"
 "Report-Msgid-Bugs-To: mantas tarutis\n"
 "POT-Creation-Date: 2020-11-19 08:57+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: \n"
-"Language: \n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"PO-Revision-Date: 2020-11-19 10:19+0000\n"
+"Last-Translator: \n"
+"Language-Team: Russian\n"
+"Language: ru_RU\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
+"n%10<=4 &&(n%100<10||n%100 >= 20)? 1 : 2);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/\n"
 "X-Loco-Source-Locale: en\n"
 "X-Loco-Project-Id: 89232\n"
-"X-Loco-Api-Version: 1.0.24 20200414-1"
+"X-Loco-Api-Version: 1.0.24 20200414-1\n"
+"X-Loco-Version: 2.4.4; wp-5.5.3"
 
 #. Name of the plugin
 #: admin/class-itella-shipping-method.php:63
 msgid "Itella Shipping"
-msgstr ""
+msgstr "Smartpost Itella отправка"
 
 #: admin/class-itella-shipping-method.php:64
 msgid "Plugin to use with Itella Shipping methods"
@@ -29,11 +30,11 @@ msgstr ""
 
 #: admin/class-itella-shipping-method.php:180
 msgid "Itella Pickup Point"
-msgstr ""
+msgstr "Smartpost Itella пункт посылок"
 
 #: admin/class-itella-shipping-method.php:197
 msgid "Itella Courier"
-msgstr ""
+msgstr "Smartpost Itella курьер"
 
 #: admin/class-itella-shipping-method.php:259
 msgid "Enable"
@@ -69,7 +70,7 @@ msgstr ""
 
 #: admin/class-itella-shipping-method.php:289
 msgid "Company name"
-msgstr ""
+msgstr "Название компании"
 
 #: admin/class-itella-shipping-method.php:293
 msgid "Bank account"
@@ -81,31 +82,31 @@ msgstr ""
 
 #: admin/class-itella-shipping-method.php:301
 msgid "Shop name"
-msgstr ""
+msgstr "Название магазина"
 
 #: admin/class-itella-shipping-method.php:305
 msgid "Shop city"
-msgstr ""
+msgstr "Город магазина"
 
 #: admin/class-itella-shipping-method.php:309
 msgid "Shop address"
-msgstr ""
+msgstr "Адрес магазина"
 
 #: admin/class-itella-shipping-method.php:313
 msgid "Shop postcode"
-msgstr ""
+msgstr "Почтовый индекс магазина"
 
 #: admin/class-itella-shipping-method.php:317
 msgid "Shop country code"
-msgstr ""
+msgstr "Код страны магазина"
 
 #: admin/class-itella-shipping-method.php:321
 msgid "Shop phone number"
-msgstr ""
+msgstr "Телефонный номер магазина"
 
 #: admin/class-itella-shipping-method.php:325
 msgid "Shop email"
-msgstr ""
+msgstr "Электронная почта магазина"
 
 #: admin/class-itella-shipping-method.php:329
 msgid "Enable Pickup Point"
@@ -165,19 +166,19 @@ msgstr ""
 #: admin/class-itella-shipping-method.php:505
 #: admin/class-itella-shipping-manifest-page.php:521
 msgid "Oversized"
-msgstr ""
+msgstr "Негабаритный"
 
 #: admin/class-itella-shipping-method.php:426
 #: admin/class-itella-shipping-method.php:508
 #: admin/class-itella-shipping-manifest-page.php:525
 msgid "Call before delivery"
-msgstr ""
+msgstr "Звонок перед доставкой"
 
 #: admin/class-itella-shipping-method.php:427
 #: admin/class-itella-shipping-method.php:512
 #: admin/class-itella-shipping-manifest-page.php:529
 msgid "Fragile"
-msgstr ""
+msgstr "Хрупкий"
 
 #: admin/class-itella-shipping-method.php:463
 msgid "Itella Shipping Options"
@@ -185,38 +186,38 @@ msgstr ""
 
 #: admin/class-itella-shipping-method.php:467
 msgid "Packets(total):"
-msgstr ""
+msgstr "Посылки (вместе):"
 
 #: admin/class-itella-shipping-method.php:470
 #, php-format
 msgid "Weight (%s):"
-msgstr ""
+msgstr "Вес (%s):"
 
 #: admin/class-itella-shipping-method.php:472
 #: admin/class-itella-shipping-method.php:549
 msgid "COD:"
-msgstr ""
+msgstr "COD:"
 
 #: admin/class-itella-shipping-method.php:479
 #: admin/class-itella-shipping-method.php:560
 #, php-format
 msgid "COD amount (%s):"
-msgstr ""
+msgstr "Cумма COD (%s):"
 
 #: admin/class-itella-shipping-method.php:482
 msgid "Shipping method:"
-msgstr ""
+msgstr "Способ доставки:"
 
 #: admin/class-itella-shipping-method.php:484
 #: admin/class-itella-shipping-method.php:570
 msgid "Pickup Point"
-msgstr ""
+msgstr "Пункт получения"
 
 #: admin/class-itella-shipping-method.php:485
 #: admin/class-itella-shipping-method.php:571
 #: admin/class-itella-shipping-method.php:1572
 msgid "Courier"
-msgstr ""
+msgstr "Курьер"
 
 #: admin/class-itella-shipping-method.php:486
 msgid "No Itella Shipping method selected"
@@ -224,24 +225,24 @@ msgstr ""
 
 #: admin/class-itella-shipping-method.php:490
 msgid "Chosen Pickup Point"
-msgstr ""
+msgstr "Bыбранный пункт получения"
 
 #: admin/class-itella-shipping-method.php:499
 msgid "Extra Services:"
-msgstr ""
+msgstr "Дополнительные услуги:"
 
 #: admin/class-itella-shipping-method.php:502
 msgid "No extra services selected"
-msgstr ""
+msgstr "Дополнительные услуги не выбраны"
 
 #: admin/class-itella-shipping-method.php:524
 msgid "Packets (total):"
-msgstr ""
+msgstr "Посылки (вместе):"
 
 #: admin/class-itella-shipping-method.php:532
 #: admin/class-itella-shipping-manifest-page.php:711
 msgid "Multi Parcel"
-msgstr ""
+msgstr "Oтправка нескольких посылок"
 
 #: admin/class-itella-shipping-method.php:534
 msgid ""
@@ -251,23 +252,23 @@ msgstr ""
 #: admin/class-itella-shipping-method.php:542
 #, php-format
 msgid "Weight (%s)"
-msgstr ""
+msgstr "Вес (%s)"
 
 #: admin/class-itella-shipping-method.php:567
 msgid "Carrier:"
-msgstr ""
+msgstr "Перевозчик:"
 
 #: admin/class-itella-shipping-method.php:578
 msgid "Select Pickup Point:"
-msgstr ""
+msgstr "Выбрать пункт получения:"
 
 #: admin/class-itella-shipping-method.php:590
 msgid "Extra Services"
-msgstr ""
+msgstr "Дополнительные услуги"
 
 #: admin/class-itella-shipping-method.php:709
 msgid "You must choose Itella Pickup Point"
-msgstr ""
+msgstr "Вы должны выбрать пункт получения Smartpost Itella"
 
 #: admin/class-itella-shipping-method.php:760
 msgid "Failed to save label pdf to: "
@@ -276,52 +277,53 @@ msgstr ""
 #: admin/class-itella-shipping-method.php:770
 #: admin/class-itella-shipping-method.php:780
 msgid "An error occurred."
-msgstr ""
+msgstr "Bозникла ошибка."
 
 #: admin/class-itella-shipping-method.php:870
 #: public/class-itella-shipping-public.php:131
 msgid "Shipping information"
-msgstr ""
+msgstr "Информация о доставке"
 
 #: admin/class-itella-shipping-method.php:872
 #: public/class-itella-shipping-public.php:133
 msgid "Shipping method"
-msgstr ""
+msgstr "Способ доставки"
 
 #: admin/class-itella-shipping-method.php:874
 #, php-format
 msgid "Your order has been shipped with %s."
-msgstr ""
+msgstr "Ваш заказ отправлен %s."
 
 #: admin/class-itella-shipping-method.php:881
 #, php-format
 msgid "The order will be delivered to %s."
-msgstr ""
+msgstr "Заказ будет доставлен на %s."
 
 #: admin/class-itella-shipping-method.php:883
 #: public/class-itella-shipping-public.php:136
 msgid "Deliver to"
-msgstr ""
+msgstr "Доставить"
 
 #: admin/class-itella-shipping-method.php:891
 #, php-format
 msgid "The tracking number is %s and you can track it at %s."
 msgstr ""
+"Hомер отслеживания отправки: %s. Вы можете следить за отправкой здесь: %s."
 
 #: admin/class-itella-shipping-method.php:896
 #, php-format
 msgid "The tracking number is %s."
-msgstr ""
+msgstr "Номер отслеживания отправки %s."
 
 #: admin/class-itella-shipping-method.php:901
 #: admin/class-itella-shipping-method.php:948
 msgid "Tracking number"
-msgstr ""
+msgstr "Номер для отслеживания отправки"
 
 #: admin/class-itella-shipping-method.php:958
 #: public/class-itella-shipping-public.php:93
 msgid "Pickup point"
-msgstr ""
+msgstr "Пункт получения"
 
 #: admin/class-itella-shipping-method.php:1031
 #: admin/class-itella-shipping-method.php:1094
@@ -331,7 +333,7 @@ msgstr ""
 
 #: admin/class-itella-shipping-method.php:1033
 msgid "Error: "
-msgstr ""
+msgstr "Ошибка:"
 
 #: admin/class-itella-shipping-method.php:1034
 #: admin/class-itella-shipping-method.php:1040
@@ -350,14 +352,14 @@ msgstr ""
 
 #: admin/class-itella-shipping-method.php:1078
 msgid "Tracking number: "
-msgstr ""
+msgstr "Номер для отслеживания отправки:"
 
 #: admin/class-itella-shipping-method.php:1096
 #: admin/class-itella-shipping-method.php:1107
 #: admin/class-itella-shipping-method.php:1117
 #: admin/class-itella-shipping-method.php:1128
 msgid "An error occurred. "
-msgstr ""
+msgstr "Bозникла ошибка."
 
 #: admin/class-itella-shipping-method.php:1146
 #: admin/class-itella-shipping-method.php:1184
@@ -402,7 +404,7 @@ msgstr ""
 
 #: admin/class-itella-shipping-method.php:1542
 msgid "Error:"
-msgstr ""
+msgstr "Ошибка:"
 
 #: admin/class-itella-shipping-method.php:1565
 msgid "Sender address:"
@@ -410,27 +412,27 @@ msgstr ""
 
 #: admin/class-itella-shipping-method.php:1566
 msgid "No.:"
-msgstr ""
+msgstr "Нр.:"
 
 #: admin/class-itella-shipping-method.php:1567
 msgid "Tracking number:"
-msgstr ""
+msgstr "Номер для отслеживания отправки:"
 
 #: admin/class-itella-shipping-method.php:1568
 msgid "Date:"
-msgstr ""
+msgstr "Дата:"
 
 #: admin/class-itella-shipping-method.php:1569
 msgid "Amount:"
-msgstr ""
+msgstr "Kоличество:"
 
 #: admin/class-itella-shipping-method.php:1570
 msgid "Weight:"
-msgstr ""
+msgstr "Вес:"
 
 #: admin/class-itella-shipping-method.php:1571
 msgid "Delivery address:"
-msgstr ""
+msgstr "Адрес доставки:"
 
 #: admin/class-itella-shipping-method.php:1573
 msgid "Sender"
@@ -438,7 +440,7 @@ msgstr ""
 
 #: admin/class-itella-shipping-method.php:1574
 msgid "name, lastname, signature"
-msgstr ""
+msgstr "имя, фамилия, подпись"
 
 #: admin/class-itella-shipping-manifest-page.php:70
 msgid "Select at least one order to perform this action."
@@ -476,7 +478,7 @@ msgstr ""
 
 #: admin/class-itella-shipping-manifest-page.php:286
 msgid "Show"
-msgstr ""
+msgstr "Показать"
 
 #: admin/class-itella-shipping-manifest-page.php:300
 #: admin/class-itella-shipping-manifest-page.php:303
@@ -495,7 +497,7 @@ msgstr ""
 #: admin/class-itella-shipping-manifest-page.php:324
 msgctxt "for"
 msgid "All"
-msgstr ""
+msgstr "Всё"
 
 #: admin/class-itella-shipping-manifest-page.php:324
 msgctxt "for"
@@ -515,37 +517,37 @@ msgstr ""
 #: admin/class-itella-shipping-manifest-page.php:356
 #: admin/class-itella-shipping-manifest-page.php:403
 msgid "Customer"
-msgstr ""
+msgstr "Клиент"
 
 #: admin/class-itella-shipping-manifest-page.php:373
 #: admin/class-itella-shipping-manifest-page.php:406
 #: public/class-itella-shipping-public.php:140
 msgid "Tracking code"
-msgstr ""
+msgstr "Код для отслеживания "
 
 #: admin/class-itella-shipping-manifest-page.php:381
 msgid "From"
-msgstr ""
+msgstr "От"
 
 #: admin/class-itella-shipping-manifest-page.php:386
 msgid "To"
-msgstr ""
+msgstr "На"
 
 #: admin/class-itella-shipping-manifest-page.php:393
 msgid "Filter"
-msgstr ""
+msgstr "Фильтровать"
 
 #: admin/class-itella-shipping-manifest-page.php:395
 msgid "Reset"
-msgstr ""
+msgstr "Восстановить"
 
 #: admin/class-itella-shipping-manifest-page.php:404
 msgid "Order Status"
-msgstr ""
+msgstr "Статус заказа"
 
 #: admin/class-itella-shipping-manifest-page.php:405
 msgid "Service"
-msgstr ""
+msgstr "Сервис"
 
 #: admin/class-itella-shipping-manifest-page.php:407
 msgid "Manifest date"
@@ -564,11 +566,11 @@ msgstr ""
 
 #: admin/class-itella-shipping-manifest-page.php:478
 msgid "Itella Pickup Point:"
-msgstr ""
+msgstr "Smartpost Itella пункт посылок:"
 
 #: admin/class-itella-shipping-manifest-page.php:480
 msgid "City: "
-msgstr ""
+msgstr "Город:"
 
 #: admin/class-itella-shipping-manifest-page.php:482
 msgid "Public Name: "
@@ -576,35 +578,35 @@ msgstr ""
 
 #: admin/class-itella-shipping-manifest-page.php:484
 msgid "Address: "
-msgstr ""
+msgstr "Адрес:"
 
 #: admin/class-itella-shipping-manifest-page.php:486
 msgid "Postal Code: "
-msgstr ""
+msgstr "Почтовый индекс:"
 
 #: admin/class-itella-shipping-manifest-page.php:493
 msgid "Itella Courier:"
-msgstr ""
+msgstr "Smartpost Itella курьер:"
 
 #: admin/class-itella-shipping-manifest-page.php:496
 msgid "Packet Count: "
-msgstr ""
+msgstr "Kоличество посылок:"
 
 #: admin/class-itella-shipping-manifest-page.php:499
 msgid "Weight: "
-msgstr ""
+msgstr "Вес:"
 
 #: admin/class-itella-shipping-manifest-page.php:502
 msgid "COD: "
-msgstr ""
+msgstr "COD:"
 
 #: admin/class-itella-shipping-manifest-page.php:507
 msgid "COD amount: "
-msgstr ""
+msgstr "Cумма COD:"
 
 #: admin/class-itella-shipping-manifest-page.php:512
 msgid "Extra services:"
-msgstr ""
+msgstr "Дополнительные услуги:"
 
 #: admin/class-itella-shipping-manifest-page.php:563
 #: admin/class-itella-shipping-manifest-page.php:576
@@ -619,7 +621,7 @@ msgstr ""
 
 #: admin/class-itella-shipping-manifest-page.php:613
 msgid "Important!"
-msgstr ""
+msgstr "Важно!"
 
 #: admin/class-itella-shipping-manifest-page.php:613
 msgid "Check your credentials."
@@ -631,51 +633,51 @@ msgstr ""
 
 #: public/class-itella-shipping-public.php:91
 msgid "Nothing found"
-msgstr ""
+msgstr "Ничего не найдено"
 
 #: public/class-itella-shipping-public.php:92
 msgid "Pickup points"
-msgstr ""
+msgstr "Пункты получения"
 
 #: public/class-itella-shipping-public.php:94
 msgid "Workhours"
-msgstr ""
+msgstr "Рабочее время"
 
 #: public/class-itella-shipping-public.php:95
 msgid "Contacts"
-msgstr ""
+msgstr "Контакты"
 
 #: public/class-itella-shipping-public.php:96
 msgid "Enter postcode/address"
-msgstr ""
+msgstr "Ввести почтовый индекс/адрес"
 
 #: public/class-itella-shipping-public.php:97
 msgid "Select a pickup point"
-msgstr ""
+msgstr "Выбрать пункт получения"
 
 #: public/class-itella-shipping-public.php:98
 msgid "No points to select"
-msgstr ""
+msgstr "Выбор невозможен"
 
 #: public/class-itella-shipping-public.php:99
 msgid "select"
-msgstr ""
+msgstr "выбрать"
 
 #: public/class-itella-shipping-public.php:100
 msgid "reset search"
-msgstr ""
+msgstr "восстановить поиск"
 
 #: public/class-itella-shipping-public.php:101
 msgid "Select pickup point"
-msgstr ""
+msgstr "Выбрать пункт получения"
 
 #: public/class-itella-shipping-public.php:102
 msgid "No information"
-msgstr ""
+msgstr "Нет информации"
 
 #: public/class-itella-shipping-public.php:103
 msgid "Leaflet is required for Itella-Mapping"
-msgstr ""
+msgstr "Форма требуется для картирования Itella"
 
 #: public/class-itella-shipping-public.php:104
 msgid "No mount supplied to itellaShipping"
@@ -683,11 +685,11 @@ msgstr ""
 
 #: public/class-itella-shipping-public.php:148
 msgid "Status"
-msgstr ""
+msgstr "Статус"
 
 #: public/class-itella-shipping-public.php:148
 msgid "Not shipped"
-msgstr ""
+msgstr "Не отправлен"
 
 #. Description of the plugin
 msgid "Itella shipping plugin for Woocommerce"
