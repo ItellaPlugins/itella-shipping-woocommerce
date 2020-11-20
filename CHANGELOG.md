@@ -5,7 +5,7 @@
 - fixed plugin deletion error
 
 ### Changed
-- changed button behavior via ajax
+- changed button "Register shipment" behavior via ajax in "Itella shipments" admin page
 
 ### Improved
 - added the ability to register shipments via bulk action
