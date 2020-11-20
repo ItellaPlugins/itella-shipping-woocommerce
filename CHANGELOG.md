@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased] - 2020-11-20
+## [1.2.2] - 2020-11-20
 ### Fixed
 - fixed plugin deletion error
 
