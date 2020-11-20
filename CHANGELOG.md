@@ -10,6 +10,7 @@
 ### Improved
 - added the ability to register shipments via bulk action
 - added pickup point selection field display, when shipping method selection style is dropdown
+- added the ability to display the shipping price according to the weight of the cart
 
 ### Added
 - added Latvian frontend translation
