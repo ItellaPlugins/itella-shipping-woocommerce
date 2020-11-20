@@ -1,8 +1,26 @@
 # Changelog
 
-## [1.2.1]
+## [Unreleased] - 2020-11-20
+### Fixed
+- fixed plugin deletion error
+
+### Changed
+- changed button "Register shipment" behavior via ajax in "Itella shipments" admin page
+
+### Improved
+- added the ability to register shipments via bulk action
+- added pickup point selection field display, when shipping method selection style is dropdown
+- added the ability to display the shipping price according to the weight of the cart
+
+### Added
+- added Latvian frontend translation
+- added Estonian frontend translation
+- added Russian frontend translation
+
+## [1.2.1] - 2020-11-18
 ### Fixed
 - fixed notice error in Woocommerce settings pages
+
 ### Updated
 - itella-api library to v2.2.5
 

@@ -1,458 +1,443 @@
 # Loco Gettext template
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: itella_shipping\n"
 "Report-Msgid-Bugs-To: mantas tarutis\n"
-"POT-Creation-Date: 2020-11-20 12:28+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: \n"
-"Language: \n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"POT-Creation-Date: 2020-11-19 08:57+0000\n"
+"PO-Revision-Date: 2020-11-19 09:54+0000\n"
+"Last-Translator: \n"
+"Language-Team: Latvian\n"
+"Language: lv\n"
+"Plural-Forms: nplurals=3; plural=n % 10 == 1 && n % 100 != 11 ? 0 : n != 0 ? "
+"1 : 2;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/\n"
 "X-Loco-Source-Locale: en\n"
 "X-Loco-Project-Id: 89232\n"
-"X-Loco-Api-Version: 1.0.24 20200414-1"
+"X-Loco-Api-Version: 1.0.24 20200414-1\n"
+"X-Loco-Version: 2.4.4; wp-5.5.3"
 
 #. Name of the plugin
 #: admin/class-itella-shipping-method.php:63
 msgid "Itella Shipping"
-msgstr ""
+msgstr "Smartpost Itella nosūtīšana"
 
 #: admin/class-itella-shipping-method.php:64
 msgid "Plugin to use with Itella Shipping methods"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:182
+#: admin/class-itella-shipping-method.php:180
 msgid "Itella Pickup Point"
-msgstr ""
+msgstr "Smartpost Itella paku punkts"
 
-#: admin/class-itella-shipping-method.php:201
+#: admin/class-itella-shipping-method.php:197
 msgid "Itella Courier"
-msgstr ""
+msgstr "Smartpost Itella kurjers"
 
-#: admin/class-itella-shipping-method.php:305
+#: admin/class-itella-shipping-method.php:259
 msgid "Enable"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:307
+#: admin/class-itella-shipping-method.php:261
 msgid "Enable this shipping."
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:311
+#: admin/class-itella-shipping-method.php:265
 msgid "API user (Product 2711)"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:315
+#: admin/class-itella-shipping-method.php:269
 msgid "Api password (Product 2711)"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:319
+#: admin/class-itella-shipping-method.php:273
 msgid "Api contract number (Product 2711)"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:323
+#: admin/class-itella-shipping-method.php:277
 msgid "API user (Product 2317)"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:327
+#: admin/class-itella-shipping-method.php:281
 msgid "Api password (Product 2317)"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:331
+#: admin/class-itella-shipping-method.php:285
 msgid "Api contract number (Product 2317)"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:335
+#: admin/class-itella-shipping-method.php:289
 msgid "Company name"
-msgstr ""
+msgstr "Uzņēmuma nosaukums"
 
-#: admin/class-itella-shipping-method.php:339
+#: admin/class-itella-shipping-method.php:293
 msgid "Bank account"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:343
+#: admin/class-itella-shipping-method.php:297
 msgid "BIC"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:347
+#: admin/class-itella-shipping-method.php:301
 msgid "Shop name"
-msgstr ""
+msgstr "Vekala nosaukums"
 
-#: admin/class-itella-shipping-method.php:351
+#: admin/class-itella-shipping-method.php:305
 msgid "Shop city"
-msgstr ""
+msgstr "Veikala pilsēta"
 
-#: admin/class-itella-shipping-method.php:355
+#: admin/class-itella-shipping-method.php:309
 msgid "Shop address"
-msgstr ""
+msgstr "Veikala adrese"
 
-#: admin/class-itella-shipping-method.php:359
+#: admin/class-itella-shipping-method.php:313
 msgid "Shop postcode"
-msgstr ""
+msgstr "Veikala pasta indeks"
 
-#: admin/class-itella-shipping-method.php:363
+#: admin/class-itella-shipping-method.php:317
 msgid "Shop country code"
-msgstr ""
+msgstr "Veikala valsts kods"
 
-#: admin/class-itella-shipping-method.php:367
+#: admin/class-itella-shipping-method.php:321
 msgid "Shop phone number"
-msgstr ""
+msgstr "Veikala telefona nummurs"
 
-#: admin/class-itella-shipping-method.php:371
+#: admin/class-itella-shipping-method.php:325
 msgid "Shop email"
-msgstr ""
+msgstr "Veikala epasts"
 
-#: admin/class-itella-shipping-method.php:375
+#: admin/class-itella-shipping-method.php:329
 msgid "Enable Pickup Point"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:378
+#: admin/class-itella-shipping-method.php:332
 msgid "Show pickup point shipping method in checkout."
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:382
+#: admin/class-itella-shipping-method.php:336
 msgid "Enable Courier"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:385
+#: admin/class-itella-shipping-method.php:339
 msgid "Show courier shipping method in checkout."
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:389
+#: admin/class-itella-shipping-method.php:343
 msgid "Pickup point selection style"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:393
+#: admin/class-itella-shipping-method.php:347
 msgid "Map"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:394
+#: admin/class-itella-shipping-method.php:348
 msgid "Dropdown"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:397
+#: admin/class-itella-shipping-method.php:351
 msgid "Choose what the pickup point selection in the checkout will look like."
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:402
+#: admin/class-itella-shipping-method.php:356
 msgid "Pickup Point price"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:406
-#: admin/class-itella-shipping-method.php:413
+#: admin/class-itella-shipping-method.php:364
+#: admin/class-itella-shipping-method.php:375
 msgid "Leave empty to disable this method"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:409
+#: admin/class-itella-shipping-method.php:367
 msgid "Courier price"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:416
+#: admin/class-itella-shipping-method.php:378
 msgid ""
 "Disable pickup point fee if cart amount is greater or equal than this limit"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:426
+#: admin/class-itella-shipping-method.php:388
 msgid "Disable courier fee if cart amount is greater or equal than this limit"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:477
-msgid "Price by weight"
-msgstr ""
-
-#: admin/class-itella-shipping-method.php:491
-msgid "Weight"
-msgstr ""
-
-#: admin/class-itella-shipping-method.php:492
-msgid "Price"
-msgstr ""
-
-#: admin/class-itella-shipping-method.php:520
-msgid "Add row"
-msgstr ""
-
-#: admin/class-itella-shipping-method.php:562
-#: admin/class-itella-shipping-method.php:642
+#: admin/class-itella-shipping-method.php:425
+#: admin/class-itella-shipping-method.php:505
 #: admin/class-itella-shipping-manifest-page.php:521
 msgid "Oversized"
-msgstr ""
+msgstr "Lielizmēra"
 
-#: admin/class-itella-shipping-method.php:563
-#: admin/class-itella-shipping-method.php:645
+#: admin/class-itella-shipping-method.php:426
+#: admin/class-itella-shipping-method.php:508
 #: admin/class-itella-shipping-manifest-page.php:525
 msgid "Call before delivery"
-msgstr ""
+msgstr "Zvans pirms piegādes"
 
-#: admin/class-itella-shipping-method.php:564
-#: admin/class-itella-shipping-method.php:649
+#: admin/class-itella-shipping-method.php:427
+#: admin/class-itella-shipping-method.php:512
 #: admin/class-itella-shipping-manifest-page.php:529
 msgid "Fragile"
-msgstr ""
+msgstr "Trausls"
 
-#: admin/class-itella-shipping-method.php:600
+#: admin/class-itella-shipping-method.php:463
 msgid "Itella Shipping Options"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:604
+#: admin/class-itella-shipping-method.php:467
 msgid "Packets(total):"
-msgstr ""
+msgstr "Pakas (kopā):"
 
-#: admin/class-itella-shipping-method.php:607
+#: admin/class-itella-shipping-method.php:470
 #, php-format
 msgid "Weight (%s):"
-msgstr ""
+msgstr "Svars (%s):"
 
-#: admin/class-itella-shipping-method.php:609
-#: admin/class-itella-shipping-method.php:686
+#: admin/class-itella-shipping-method.php:472
+#: admin/class-itella-shipping-method.php:549
 msgid "COD:"
-msgstr ""
+msgstr "COD:"
 
-#: admin/class-itella-shipping-method.php:616
-#: admin/class-itella-shipping-method.php:697
+#: admin/class-itella-shipping-method.php:479
+#: admin/class-itella-shipping-method.php:560
 #, php-format
 msgid "COD amount (%s):"
-msgstr ""
+msgstr "COD summa (%s):"
 
-#: admin/class-itella-shipping-method.php:619
+#: admin/class-itella-shipping-method.php:482
 msgid "Shipping method:"
-msgstr ""
+msgstr "Piegādes veids:"
 
-#: admin/class-itella-shipping-method.php:621
-#: admin/class-itella-shipping-method.php:707
+#: admin/class-itella-shipping-method.php:484
+#: admin/class-itella-shipping-method.php:570
 msgid "Pickup Point"
-msgstr ""
+msgstr "Saņemšanas punkts"
 
-#: admin/class-itella-shipping-method.php:622
-#: admin/class-itella-shipping-method.php:708
-#: admin/class-itella-shipping-method.php:1709
+#: admin/class-itella-shipping-method.php:485
+#: admin/class-itella-shipping-method.php:571
+#: admin/class-itella-shipping-method.php:1572
 msgid "Courier"
-msgstr ""
+msgstr "Kurjers"
 
-#: admin/class-itella-shipping-method.php:623
+#: admin/class-itella-shipping-method.php:486
 msgid "No Itella Shipping method selected"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:627
+#: admin/class-itella-shipping-method.php:490
 msgid "Chosen Pickup Point"
-msgstr ""
+msgstr "Izvēlētais saņemšanas punkts"
 
-#: admin/class-itella-shipping-method.php:636
+#: admin/class-itella-shipping-method.php:499
 msgid "Extra Services:"
-msgstr ""
+msgstr "Papildus pakalpojumi:"
 
-#: admin/class-itella-shipping-method.php:639
+#: admin/class-itella-shipping-method.php:502
 msgid "No extra services selected"
-msgstr ""
+msgstr "Nav izvēlēti papildu pakalpojumi"
 
-#: admin/class-itella-shipping-method.php:661
+#: admin/class-itella-shipping-method.php:524
 msgid "Packets (total):"
-msgstr ""
+msgstr "Pakas (kopā):"
 
-#: admin/class-itella-shipping-method.php:669
+#: admin/class-itella-shipping-method.php:532
 #: admin/class-itella-shipping-manifest-page.php:711
 msgid "Multi Parcel"
-msgstr ""
+msgstr "Daudzpaku sūtījums"
 
-#: admin/class-itella-shipping-method.php:671
+#: admin/class-itella-shipping-method.php:534
 msgid ""
 "If more than one packet is selected, then a multi parcel service is mandatory"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:679
+#: admin/class-itella-shipping-method.php:542
 #, php-format
 msgid "Weight (%s)"
-msgstr ""
+msgstr "Svars (%s)"
 
-#: admin/class-itella-shipping-method.php:704
+#: admin/class-itella-shipping-method.php:567
 msgid "Carrier:"
-msgstr ""
+msgstr "Pārvadātājs:"
 
-#: admin/class-itella-shipping-method.php:715
+#: admin/class-itella-shipping-method.php:578
 msgid "Select Pickup Point:"
-msgstr ""
+msgstr "Izvēlēties saņemšanas punktu:"
 
-#: admin/class-itella-shipping-method.php:727
+#: admin/class-itella-shipping-method.php:590
 msgid "Extra Services"
-msgstr ""
+msgstr "Papildus pakalpojumi"
 
-#: admin/class-itella-shipping-method.php:846
+#: admin/class-itella-shipping-method.php:709
 msgid "You must choose Itella Pickup Point"
-msgstr ""
+msgstr "Jums jāizvēlas Smartpost Itella saņemšanas punkts "
 
-#: admin/class-itella-shipping-method.php:897
+#: admin/class-itella-shipping-method.php:760
 msgid "Failed to save label pdf to: "
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:907
-#: admin/class-itella-shipping-method.php:917
+#: admin/class-itella-shipping-method.php:770
+#: admin/class-itella-shipping-method.php:780
 msgid "An error occurred."
-msgstr ""
+msgstr "Ir radusies kļūda."
 
-#: admin/class-itella-shipping-method.php:1007
+#: admin/class-itella-shipping-method.php:870
 #: public/class-itella-shipping-public.php:131
 msgid "Shipping information"
-msgstr ""
+msgstr "Piegādes infromācija"
 
-#: admin/class-itella-shipping-method.php:1009
+#: admin/class-itella-shipping-method.php:872
 #: public/class-itella-shipping-public.php:133
 msgid "Shipping method"
-msgstr ""
+msgstr "Piegādes veids"
 
-#: admin/class-itella-shipping-method.php:1011
+#: admin/class-itella-shipping-method.php:874
 #, php-format
 msgid "Your order has been shipped with %s."
-msgstr ""
+msgstr "Jūsu pasūtījums ir nosūtīts ar %s."
 
-#: admin/class-itella-shipping-method.php:1018
+#: admin/class-itella-shipping-method.php:881
 #, php-format
 msgid "The order will be delivered to %s."
-msgstr ""
+msgstr "Pasūtījums tiks piegādāts uz %s."
 
-#: admin/class-itella-shipping-method.php:1020
+#: admin/class-itella-shipping-method.php:883
 #: public/class-itella-shipping-public.php:136
 msgid "Deliver to"
-msgstr ""
+msgstr "Piegādāt uz"
 
-#: admin/class-itella-shipping-method.php:1028
+#: admin/class-itella-shipping-method.php:891
 #, php-format
 msgid "The tracking number is %s and you can track it at %s."
-msgstr ""
+msgstr "Sūtījuma izsekošanas numurs:  %s. Jūs variet sekot sūtījumam šeit: %s."
 
-#: admin/class-itella-shipping-method.php:1033
+#: admin/class-itella-shipping-method.php:896
 #, php-format
 msgid "The tracking number is %s."
-msgstr ""
+msgstr "Sūtījuma izsekošanas numurs: %s."
 
-#: admin/class-itella-shipping-method.php:1038
-#: admin/class-itella-shipping-method.php:1085
+#: admin/class-itella-shipping-method.php:901
+#: admin/class-itella-shipping-method.php:948
 msgid "Tracking number"
-msgstr ""
+msgstr "Sūtījuma izsekošanas numurs"
 
-#: admin/class-itella-shipping-method.php:1095
+#: admin/class-itella-shipping-method.php:958
 #: public/class-itella-shipping-public.php:93
 msgid "Pickup point"
-msgstr ""
+msgstr "Saņemšanas punkts"
 
-#: admin/class-itella-shipping-method.php:1168
-#: admin/class-itella-shipping-method.php:1231
-#: admin/class-itella-shipping-method.php:1252
+#: admin/class-itella-shipping-method.php:1031
+#: admin/class-itella-shipping-method.php:1094
+#: admin/class-itella-shipping-method.php:1115
 msgid "Shipment is not registered."
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1170
+#: admin/class-itella-shipping-method.php:1033
 msgid "Error: "
-msgstr ""
+msgstr "Kļūda:"
 
-#: admin/class-itella-shipping-method.php:1171
-#: admin/class-itella-shipping-method.php:1177
+#: admin/class-itella-shipping-method.php:1034
+#: admin/class-itella-shipping-method.php:1040
 msgid "Not Itella Shipping Method"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1202
+#: admin/class-itella-shipping-method.php:1065
 #, php-format
 msgid "Itella shipment registered successfully. Tracking number: %s"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1211
-#: admin/class-itella-shipping-method.php:1224
+#: admin/class-itella-shipping-method.php:1074
+#: admin/class-itella-shipping-method.php:1087
 msgid "Shipment registered successfully."
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1215
+#: admin/class-itella-shipping-method.php:1078
 msgid "Tracking number: "
-msgstr ""
+msgstr "Sūtījuma izsekošanas numurs:"
 
-#: admin/class-itella-shipping-method.php:1233
-#: admin/class-itella-shipping-method.php:1244
-#: admin/class-itella-shipping-method.php:1254
-#: admin/class-itella-shipping-method.php:1265
+#: admin/class-itella-shipping-method.php:1096
+#: admin/class-itella-shipping-method.php:1107
+#: admin/class-itella-shipping-method.php:1117
+#: admin/class-itella-shipping-method.php:1128
 msgid "An error occurred. "
-msgstr ""
+msgstr "Ir radusies kļūda."
 
-#: admin/class-itella-shipping-method.php:1283
-#: admin/class-itella-shipping-method.php:1321
+#: admin/class-itella-shipping-method.php:1146
+#: admin/class-itella-shipping-method.php:1184
 msgid "Failed to validate nonce"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1296
+#: admin/class-itella-shipping-method.php:1159
 msgid "Failed to register shipment"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1301
+#: admin/class-itella-shipping-method.php:1164
 msgid "Shipment successfully registered"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1308
+#: admin/class-itella-shipping-method.php:1171
 msgid "Couldn't get order"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1340
+#: admin/class-itella-shipping-method.php:1203
 msgid "Shipments successfully registered"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1345
+#: admin/class-itella-shipping-method.php:1208
 msgid "Some orders failed to register the shipment"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1352
+#: admin/class-itella-shipping-method.php:1215
 msgid "Couldn't get list of selected orders"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1656
+#: admin/class-itella-shipping-method.php:1519
 msgid "E-com order booking"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1671
+#: admin/class-itella-shipping-method.php:1534
 msgid "Email sent to courier"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1677
+#: admin/class-itella-shipping-method.php:1540
 msgid "Failed to send email."
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1679
+#: admin/class-itella-shipping-method.php:1542
 msgid "Error:"
-msgstr ""
+msgstr "Kļūda:"
 
-#: admin/class-itella-shipping-method.php:1702
+#: admin/class-itella-shipping-method.php:1565
 msgid "Sender address:"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1703
+#: admin/class-itella-shipping-method.php:1566
 msgid "No.:"
-msgstr ""
+msgstr "No.:"
 
-#: admin/class-itella-shipping-method.php:1704
+#: admin/class-itella-shipping-method.php:1567
 msgid "Tracking number:"
-msgstr ""
+msgstr "Sūtījuma izsekošanas numurs:"
 
-#: admin/class-itella-shipping-method.php:1705
+#: admin/class-itella-shipping-method.php:1568
 msgid "Date:"
-msgstr ""
+msgstr "Datums:"
 
-#: admin/class-itella-shipping-method.php:1706
+#: admin/class-itella-shipping-method.php:1569
 msgid "Amount:"
-msgstr ""
+msgstr "Daudzums:"
 
-#: admin/class-itella-shipping-method.php:1707
+#: admin/class-itella-shipping-method.php:1570
 msgid "Weight:"
-msgstr ""
+msgstr "Svars:"
 
-#: admin/class-itella-shipping-method.php:1708
+#: admin/class-itella-shipping-method.php:1571
 msgid "Delivery address:"
-msgstr ""
+msgstr "Piegādes adrese:"
 
-#: admin/class-itella-shipping-method.php:1710
+#: admin/class-itella-shipping-method.php:1573
 msgid "Sender"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1711
+#: admin/class-itella-shipping-method.php:1574
 msgid "name, lastname, signature"
 msgstr ""
 
@@ -492,7 +477,7 @@ msgstr ""
 
 #: admin/class-itella-shipping-manifest-page.php:286
 msgid "Show"
-msgstr ""
+msgstr "Parādīt"
 
 #: admin/class-itella-shipping-manifest-page.php:300
 #: admin/class-itella-shipping-manifest-page.php:303
@@ -511,7 +496,7 @@ msgstr ""
 #: admin/class-itella-shipping-manifest-page.php:324
 msgctxt "for"
 msgid "All"
-msgstr ""
+msgstr "Viss"
 
 #: admin/class-itella-shipping-manifest-page.php:324
 msgctxt "for"
@@ -531,37 +516,37 @@ msgstr ""
 #: admin/class-itella-shipping-manifest-page.php:356
 #: admin/class-itella-shipping-manifest-page.php:403
 msgid "Customer"
-msgstr ""
+msgstr "Klients"
 
 #: admin/class-itella-shipping-manifest-page.php:373
 #: admin/class-itella-shipping-manifest-page.php:406
 #: public/class-itella-shipping-public.php:140
 msgid "Tracking code"
-msgstr ""
+msgstr "Sūtījuma izsekošanas kods"
 
 #: admin/class-itella-shipping-manifest-page.php:381
 msgid "From"
-msgstr ""
+msgstr "No"
 
 #: admin/class-itella-shipping-manifest-page.php:386
 msgid "To"
-msgstr ""
+msgstr "Uz"
 
 #: admin/class-itella-shipping-manifest-page.php:393
 msgid "Filter"
-msgstr ""
+msgstr "Filtrēt"
 
 #: admin/class-itella-shipping-manifest-page.php:395
 msgid "Reset"
-msgstr ""
+msgstr "Atjaunot"
 
 #: admin/class-itella-shipping-manifest-page.php:404
 msgid "Order Status"
-msgstr ""
+msgstr "Pasūtījuma statuss"
 
 #: admin/class-itella-shipping-manifest-page.php:405
 msgid "Service"
-msgstr ""
+msgstr "Serviss"
 
 #: admin/class-itella-shipping-manifest-page.php:407
 msgid "Manifest date"
@@ -580,11 +565,11 @@ msgstr ""
 
 #: admin/class-itella-shipping-manifest-page.php:478
 msgid "Itella Pickup Point:"
-msgstr ""
+msgstr "Smartpost Itella paku punkts:"
 
 #: admin/class-itella-shipping-manifest-page.php:480
 msgid "City: "
-msgstr ""
+msgstr "Pilsēta:"
 
 #: admin/class-itella-shipping-manifest-page.php:482
 msgid "Public Name: "
@@ -592,35 +577,35 @@ msgstr ""
 
 #: admin/class-itella-shipping-manifest-page.php:484
 msgid "Address: "
-msgstr ""
+msgstr "Adrese:"
 
 #: admin/class-itella-shipping-manifest-page.php:486
 msgid "Postal Code: "
-msgstr ""
+msgstr "Pasta indekss:"
 
 #: admin/class-itella-shipping-manifest-page.php:493
 msgid "Itella Courier:"
-msgstr ""
+msgstr "Smartpost Itella kurjers:"
 
 #: admin/class-itella-shipping-manifest-page.php:496
 msgid "Packet Count: "
-msgstr ""
+msgstr "Paku skaits:"
 
 #: admin/class-itella-shipping-manifest-page.php:499
 msgid "Weight: "
-msgstr ""
+msgstr "Svars:"
 
 #: admin/class-itella-shipping-manifest-page.php:502
 msgid "COD: "
-msgstr ""
+msgstr "COD:"
 
 #: admin/class-itella-shipping-manifest-page.php:507
 msgid "COD amount: "
-msgstr ""
+msgstr "COD summa:"
 
 #: admin/class-itella-shipping-manifest-page.php:512
 msgid "Extra services:"
-msgstr ""
+msgstr "Papildus pakalpojumi:"
 
 #: admin/class-itella-shipping-manifest-page.php:563
 #: admin/class-itella-shipping-manifest-page.php:576
@@ -635,7 +620,7 @@ msgstr ""
 
 #: admin/class-itella-shipping-manifest-page.php:613
 msgid "Important!"
-msgstr ""
+msgstr "Svarīgi!"
 
 #: admin/class-itella-shipping-manifest-page.php:613
 msgid "Check your credentials."
@@ -647,51 +632,51 @@ msgstr ""
 
 #: public/class-itella-shipping-public.php:91
 msgid "Nothing found"
-msgstr ""
+msgstr "Nekas nav atrasts"
 
 #: public/class-itella-shipping-public.php:92
 msgid "Pickup points"
-msgstr ""
+msgstr "Saņemšanas punkti"
 
 #: public/class-itella-shipping-public.php:94
 msgid "Workhours"
-msgstr ""
+msgstr "Darba laiks"
 
 #: public/class-itella-shipping-public.php:95
 msgid "Contacts"
-msgstr ""
+msgstr "Kontakti"
 
 #: public/class-itella-shipping-public.php:96
 msgid "Enter postcode/address"
-msgstr ""
+msgstr "Ievadīt pasta indeksu/adresi"
 
 #: public/class-itella-shipping-public.php:97
 msgid "Select a pickup point"
-msgstr ""
+msgstr "Izvēlēties saņemšanas punktu"
 
 #: public/class-itella-shipping-public.php:98
 msgid "No points to select"
-msgstr ""
+msgstr "Nav iespējama atlase"
 
 #: public/class-itella-shipping-public.php:99
 msgid "select"
-msgstr ""
+msgstr "izvēlēties"
 
 #: public/class-itella-shipping-public.php:100
 msgid "reset search"
-msgstr ""
+msgstr "atjaunot meklēšanu"
 
 #: public/class-itella-shipping-public.php:101
 msgid "Select pickup point"
-msgstr ""
+msgstr "Izvēlēties saņemšanas punktu"
 
 #: public/class-itella-shipping-public.php:102
 msgid "No information"
-msgstr ""
+msgstr "Nav informācijas"
 
 #: public/class-itella-shipping-public.php:103
 msgid "Leaflet is required for Itella-Mapping"
-msgstr ""
+msgstr "Itella kartēšanai nepieciešama veidlapa"
 
 #: public/class-itella-shipping-public.php:104
 msgid "No mount supplied to itellaShipping"
@@ -699,11 +684,11 @@ msgstr ""
 
 #: public/class-itella-shipping-public.php:148
 msgid "Status"
-msgstr ""
+msgstr "Statuss"
 
 #: public/class-itella-shipping-public.php:148
 msgid "Not shipped"
-msgstr ""
+msgstr "Nav nosūtīts"
 
 #. Description of the plugin
 msgid "Itella shipping plugin for Woocommerce"

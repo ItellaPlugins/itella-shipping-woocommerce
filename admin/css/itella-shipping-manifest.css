@@ -347,11 +347,46 @@
   vertical-align: middle;
 }
 
+.has-spinner {
+  position: relative;
+}
+.has-spinner .spinner-holder {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: none;
+}
+.has-spinner .spinner-holder.active {
+  display: block;
+}
+.has-spinner .spinner-holder .spinner {
+  float: unset;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translateY(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.itella-bulk-block {
+  display: inline-block;
+}
+
+.itella-bulk-button-manifest {
+  z-index: 1;
+  position: relative;
+}
+
 .itella-manifest-switch {
   position: relative;
   display: inline-block;
   width: 84px;
-  height: 22px;
+  /*height: 22px;*/
+  height: 30px;
+  margin-right: -5px;
 }
 .itella-manifest-switch input { 
   opacity: 0;
@@ -369,12 +404,14 @@
   border: 1px solid #ccc;
   -webkit-transition: .4s;
   transition: .4s;
-  border-radius: 5px;
+  /*border-radius: 5px;*/
+  border-radius: 5px 0 0 5px;
 }
 .itella-manifest-switch .slider:before {
   position: absolute;
   content: "";
-  height: 14px;
+  /*height: 14px;*/
+  height: 22px;
   width: 11px;
   left: 4px;
   bottom: 3px;
