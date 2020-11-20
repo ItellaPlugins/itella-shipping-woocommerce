@@ -108,8 +108,8 @@
             var table = $(rm_btn).closest('.row-values').parent();
             $(row).remove();
             var all_weight_inputs = $(table).find('.column-weight input[type="number"]');
-            $(all_weight_inputs).prop('disabled', false);
-            $(all_weight_inputs).last().prop('disabled', true);
+            $(all_weight_inputs).prop('readonly', false);
+            $(all_weight_inputs).last().prop('readonly', true);
         }, 1000);
     }
 
@@ -122,7 +122,7 @@
             prev_value = $(prev_row).find('.column-weight input[type="number"]').val();
             prev_value = parseFloat(prev_value) + 0.001;
         }
-        $(btn_row).parent().find('.column-weight input[type="number"]').prop('disabled', false);
+        $(btn_row).parent().find('.column-weight input[type="number"]').prop('readonly', false);
         var new_row = build_prices_table_row(id,prev_value);
         $(new_row).insertBefore(btn_row);
     }
@@ -145,7 +145,7 @@
             .attr('step', 0.001)
             .attr('id', id + '_weight_' + date)
             .attr('name', id + '[weight][' + date + ']');
-        $(new_col_weight_input).prop('disabled', true);
+        $(new_col_weight_input).prop('readonly', true);
         $(new_col_weight_input).on('keyup change', function() {
             update_prices_table_weight(this);
         });

@@ -503,7 +503,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
                   	id="<?php echo esc_html($field_key); ?>_weight_<?php echo $i+1; ?>"
                   	name="<?php echo esc_html($field_key); ?>[weight][<?php echo $i; ?>]"
                     min="<?php echo $prev_value+0.001; ?>" max="<?php echo $next_value; ?>" step="0.001"
-                    <?php if (!isset($table_values[$i+1])) echo 'disabled'; ?>>
+                    <?php if (!isset($table_values[$i+1])) echo 'readonly'; ?>>
                 </td>
                 <td class="column-price">
                   <input type="number" id="<?php echo esc_html($field_key); ?>_price_<?php echo $i+1; ?>"
