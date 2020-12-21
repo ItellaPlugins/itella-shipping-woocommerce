@@ -72,12 +72,13 @@ class Itella_Shipping
    *
    * @since    1.0.0
    */
-  public function __construct()
+  public function __construct($plugin_basename)
   {
 
     $this->plugin_name = 'itella-shipping';
-    $this->version = '1.2.2';
+    $this->version = '1.2.3';
     $this->available_countries = array('LT', 'EE', 'LV', 'FI');
+    $this->plugin_basename = $plugin_basename;
 
     add_action('plugins_loaded', array($this, 'run'));
     add_action('admin_notices', array($this, 'notify_on_activation'));
@@ -185,6 +186,7 @@ class Itella_Shipping
 
     $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
     $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
+    $this->loader->add_action('plugin_action_links_' . $this->plugin_basename, $plugin_admin, 'plugin_links');
     $this->loader->add_action('woocommerce_update_options_shipping_' . $plugin_admin->id, $plugin_admin, 'process_admin_options');
     $this->loader->add_action('woocommerce_admin_order_data_after_shipping_address', $plugin_admin, 'add_shipping_details_to_order');
     $this->loader->add_action('woocommerce_process_shop_order_meta', $plugin_admin, 'save_shipping_settings');
@@ -240,6 +242,8 @@ class Itella_Shipping
 
     $this->loader->add_filter('woocommerce_order_data_store_cpt_get_orders_query', $plugin_manifest, 'handle_custom_itella_query_var', 10, 2);
   }
+
+
 
   /**
    * Run the loader to execute all of the hooks with WordPress.

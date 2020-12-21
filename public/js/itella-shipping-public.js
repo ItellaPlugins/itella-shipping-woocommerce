@@ -121,6 +121,6 @@ function updateDropdown() {
                      document.querySelector('#shipping_postcode').value :
                      (document.querySelector('#billing_postcode') ?
                      document.querySelector('#billing_postcode').value : '');
-    itella.UI.container.getElementsByClassName("search-input")[0].value = post_value;
+    itella.UI[itella.isModal ? 'modal' : 'container'].getElementsByClassName('search-input')[0].value = post_value;
     itella.searchNearest(""+post_value);
 }

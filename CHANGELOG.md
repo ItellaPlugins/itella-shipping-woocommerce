@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.2.3] - 2020-12-21
+### Fixed
+- fixed js error on checkout page
+- fixed shipping method settings display by checkbox
+
+### Improved
+- added "Settings" link for Itella plugin in plugins list
+- added more information to plugin description
+
 ## [1.2.2] - 2020-11-20
 ### Fixed
 - fixed plugin deletion error

@@ -16,13 +16,15 @@
  * Plugin Name:       Itella Shipping
  * Plugin URI:
  * Description:       Itella shipping plugin for Woocommerce
- * Version:           1.2.2
+ * Version:           1.2.3
  * Author:            Itella Team
- * Author URI:
+ * Author URI:        https://itella.lt/en/
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       itella-shipping
  * Domain Path:       /languages
+ * Tested up to:      5.6
+ * WC tested up to:   4.8.0
  */
 
 // If this file is called directly, abort.
@@ -63,7 +65,7 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-itella-shipping.php';
  */
 function run_itella_shipping() {
 
-	$plugin = new Itella_Shipping();
+	$plugin = new Itella_Shipping(plugin_basename(__FILE__));
 
 }
 run_itella_shipping();
