@@ -70,6 +70,14 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
   }
 
+  public function plugin_links($links)
+  {
+    array_unshift($links, '<a href="' .
+      admin_url( 'admin.php?page=wc-settings&tab=shipping&section=' . $this->id ) .
+      '">' . __('Settings', 'itella-shipping') . '</a>');
+    return $links;
+  }
+
   /**
    * Register the stylesheets for the Dashboard.
    *
@@ -388,7 +396,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         'checkout_show_style' => array(
             'title' => __('Pickup point selection style', 'itella-shipping'),
             'type'    => 'select',
-            'class' => 'checkout-style',
+            'class' => 'checkout-style pickup-point',
             'options' => array(
                 'map'  => __('Map', 'itella-shipping'),
                 'dropdown' => __('Dropdown', 'itella-shipping'),
