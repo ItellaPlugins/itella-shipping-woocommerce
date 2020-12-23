@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.2.3] - Unreleased
+## [1.2.3] - 2020-12-23
 ### Fixed
 - fixed js error on checkout page
 - fixed shipping method settings display by checkbox

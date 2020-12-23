@@ -16,7 +16,7 @@
  * Plugin Name:       Itella Shipping
  * Plugin URI:
  * Description:       Itella shipping plugin for Woocommerce
- * Version:           1.2.3-beta
+ * Version:           1.2.3
  * Author:            Itella Team
  * Author URI:        https://itella.lt/en/
  * License:           GPL-2.0+
