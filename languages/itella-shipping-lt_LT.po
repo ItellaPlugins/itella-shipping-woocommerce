@@ -3,9 +3,9 @@ msgstr ""
 "Project-Id-Version: itella_shipping\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-20 12:28+0000\n"
-"PO-Revision-Date: 2020-12-21 09:52+0000\n"
+"PO-Revision-Date: 2021-01-12 09:16+0000\n"
 "Last-Translator: \n"
-"Language-Team: Lietuvių kalba\n"
+"Language-Team: Lithuanian\n"
 "Language: lt_LT\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 "
 "&&(n%100<10||n%100 >= 20)? 1 : 2);\n"
@@ -27,9 +27,10 @@ msgid "Add row"
 msgstr "Pridėti eilutę"
 
 #: admin/class-itella-shipping-manifest-page.php:615
-msgid "Address and contact information can be changed in Itella settings."
+#| msgid "Address and contact information can be changed in Itella settings."
+msgid "Address and contact information can be changed in Smartpost settings."
 msgstr ""
-"Adresas ir kontaktinė informacija gali būti keičiama Itella siuntų "
+"Adresas ir kontaktinė informacija gali būti keičiama Smartpost siuntų "
 "nustatymuose."
 
 #: admin/class-itella-shipping-manifest-page.php:484
@@ -94,11 +95,14 @@ msgstr "BIC"
 msgid "Call before delivery"
 msgstr "Paskambinti prieš pristatant"
 
-#: admin/class-itella-shipping-manifest-page.php:263
 #: admin/class-itella-shipping-manifest-page.php:443
-#: admin/class-itella-shipping-manifest-page.php:634
 msgid "Call Itella courier"
 msgstr "Iškviesti Itella kurjerį"
+
+#: admin/class-itella-shipping-manifest-page.php:263
+#: admin/class-itella-shipping-manifest-page.php:634
+msgid "Call Smartpost courier"
+msgstr "Iškviesti Smartpost kurjerį"
 
 #: admin/class-itella-shipping-method.php:713
 msgid "Carrier:"
@@ -338,54 +342,13 @@ msgstr ""
 msgid "Important!"
 msgstr "Svarbu!"
 
-#: admin/class-itella-shipping-method.php:209
-msgid "Itella Courier"
-msgstr "Itella pristatymas į nurodytą adresą"
-
-#: admin/class-itella-shipping-manifest-page.php:493
-msgid "Itella Courier:"
-msgstr "Itella kurjeris:"
-
-#: admin/class-itella-shipping-method.php:190
-msgid "Itella Pickup Point"
-msgstr "Itella pristatymas į atsiėmimo tašką"
-
-#: admin/class-itella-shipping-manifest-page.php:478
-msgid "Itella Pickup Point:"
-msgstr "Itella atsiėmimo taškas:"
-
-#: admin/class-itella-shipping-method.php:1211
-#, php-format
-msgid "Itella shipment registered successfully. Tracking number: %s"
-msgstr ""
-"Itella pristatymas sėkmingai užregistruotas. Siuntos sekimo numeris: %s"
-
-#: admin/class-itella-shipping-manifest-page.php:87
-#: admin/class-itella-shipping-manifest-page.php:88
-#: admin/class-itella-shipping-manifest-page.php:131
-msgid "Itella shipments"
-msgstr "Itella siuntiniai"
-
-#. Name of the plugin
-#: admin/class-itella-shipping-method.php:63
-msgid "Itella Shipping"
-msgstr "Itella siuntos"
-
-#: admin/class-itella-shipping-method.php:609
-msgid "Itella Shipping Options"
-msgstr "Itella siuntimo nustatymai"
-
-#. Description of the plugin
-msgid "Itella shipping plugin for Woocommerce"
-msgstr "Itella siuntų įskiepis skirtas naudoti su \"Woocommerce\"."
-
 #. Author of the plugin
 msgid "Itella Team"
 msgstr "Itella komanda"
 
 #: public/class-itella-shipping-public.php:103
 msgid "Leaflet is required for Itella-Mapping"
-msgstr ""
+msgstr "Forma reikalinga Smartpost Itella atvaizdavimui"
 
 #: admin/class-itella-shipping-method.php:414
 #: admin/class-itella-shipping-method.php:421
@@ -421,30 +384,31 @@ msgstr "Nepasirinkta papildomų paslaugų"
 msgid "No information"
 msgstr "Nėra informacijos"
 
-#: admin/class-itella-shipping-method.php:632
-msgid "No Itella Shipping method selected"
-msgstr "Nepasirinktas Itella siuntimo būdas"
-
 #: public/class-itella-shipping-public.php:104
 msgid "No mount supplied to itellaShipping"
-msgstr ""
+msgstr "Nėra Smartpost Itella siuntimo nustatymų"
 
 #: public/class-itella-shipping-public.php:98
 msgid "No points to select"
 msgstr "Nėra atsiėmimo taškų"
 
+#: admin/class-itella-shipping-method.php:632
+#| msgid "No Itella Shipping method selected"
+msgid "No Smartpost Shipping method selected"
+msgstr "Nepasirinktas Smartpost siuntimo būdas"
+
 #: admin/class-itella-shipping-method.php:1712
 msgid "No.:"
 msgstr "Nr.:"
 
-#: admin/class-itella-shipping-method.php:1180
-#: admin/class-itella-shipping-method.php:1186
-msgid "Not Itella Shipping Method"
-msgstr "Ne Itella siuntimo būdas"
-
 #: public/class-itella-shipping-public.php:148
 msgid "Not shipped"
 msgstr "Neišsiųsta"
+
+#: admin/class-itella-shipping-method.php:1180
+#: admin/class-itella-shipping-method.php:1186
+msgid "Not Smartpost Shipping Method"
+msgstr "Ne Smartpost pristatymo būdas"
 
 #: public/class-itella-shipping-public.php:91
 msgid "Nothing found"
@@ -495,8 +459,9 @@ msgid "Pickup points"
 msgstr "Atsiėmimo taškai"
 
 #: admin/class-itella-shipping-method.php:64
-msgid "Plugin to use with Itella Shipping methods"
-msgstr "Įskiepis skirtas naudoti su Itella siuntimo būdais"
+#| msgid "Plugin to use with Itella Shipping methods"
+msgid "Plugin to use with Smartpost Shipping methods"
+msgstr "Įskiepis skirtas naudoti su Smartpost siuntimo būdais"
 
 #: admin/class-itella-shipping-manifest-page.php:486
 msgid "Postal Code: "
@@ -652,6 +617,49 @@ msgstr "Pirkimo metu rodyti siuntimo kurjeriu būdą."
 msgid "Show pickup point shipping method in checkout."
 msgstr "Pirkimo metu rodyti atsiėmimo taškų siuntimo būdą."
 
+#: admin/class-itella-shipping-method.php:209
+msgid "Smartpost Courier"
+msgstr "Smartpost kurjeris"
+
+#: admin/class-itella-shipping-manifest-page.php:493
+msgid "Smartpost Courier:"
+msgstr "Smartpost kurjeris:"
+
+#. Description of the plugin
+#| msgid "Itella shipping plugin for Woocommerce"
+msgid "Smartpost Itella shipping plugin for Woocommerce"
+msgstr "Smartpost Itella siuntų įskiepis skirtas naudoti su \"Woocommerce\""
+
+#: admin/class-itella-shipping-method.php:190
+msgid "Smartpost Pickup Point"
+msgstr "Smartpost atsiėmimo taškas"
+
+#: admin/class-itella-shipping-manifest-page.php:478
+msgid "Smartpost Pickup Point:"
+msgstr "Smartpost atsiėmimo taškas:"
+
+#: admin/class-itella-shipping-method.php:1211
+#, php-format
+#| msgid "Itella shipment registered successfully. Tracking number: %s"
+msgid "Smartpost shipment registered successfully. Tracking number: %s"
+msgstr ""
+"Smartpost pristatymas sėkmingai užregistruotas. Siuntos sekimo numeris: %s"
+
+#: admin/class-itella-shipping-manifest-page.php:87
+#: admin/class-itella-shipping-manifest-page.php:88
+#: admin/class-itella-shipping-manifest-page.php:131
+msgid "Smartpost shipments"
+msgstr "Smartpost siuntos"
+
+#. Name of the plugin
+#: admin/class-itella-shipping-method.php:63
+msgid "Smartpost Shipping"
+msgstr "Smartpost pristatymas"
+
+#: admin/class-itella-shipping-method.php:609
+msgid "Smartpost Shipping Options"
+msgstr "Smartpost pristatymo nustatymai"
+
 #: admin/class-itella-shipping-method.php:1354
 msgid "Some orders failed to register the shipment"
 msgstr "Kai kuriems užsakymams nepavyko užregistruoti siuntos"
@@ -722,8 +730,9 @@ msgid "Workhours"
 msgstr "Darbo valandos"
 
 #: admin/class-itella-shipping-method.php:855
-msgid "You must choose Itella Pickup Point"
-msgstr "Privalote pasirinkti atsiėmimo tašką"
+#| msgid "You must choose Itella Pickup Point"
+msgid "You must choose Smartpost Pickup Point"
+msgstr "Privalote pasirinkti Smartpost atsiėmimo tašką"
 
 #: admin/class-itella-shipping-method.php:1020
 #, php-format

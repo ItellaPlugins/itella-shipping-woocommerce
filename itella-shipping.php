@@ -13,10 +13,10 @@
  * @package           Itella_Shipping
  *
  * @wordpress-plugin
- * Plugin Name:       Itella Shipping
+ * Plugin Name:       Smartpost Shipping
  * Plugin URI:
- * Description:       Itella shipping plugin for Woocommerce
- * Version:           1.2.3
+ * Description:       Smartpost Itella shipping plugin for Woocommerce
+ * Version:           1.2.4
  * Author:            Itella Team
  * Author URI:        https://itella.lt/en/
  * License:           GPL-2.0+

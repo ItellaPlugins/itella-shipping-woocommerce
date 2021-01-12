@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: itella_shipping\n"
 "Report-Msgid-Bugs-To: mantas tarutis\n"
 "POT-Creation-Date: 2020-10-13 10:45+0000\n"
-"PO-Revision-Date: 2020-10-19 08:41+0000\n"
+"PO-Revision-Date: 2021-01-12 09:32+0000\n"
 "Last-Translator: \n"
 "Language-Team: Finnish\n"
 "Language: fi\n"
@@ -18,620 +18,717 @@ msgstr ""
 "X-Loco-Api-Version: 1.0.24 20200414-1\n"
 "X-Loco-Version: 2.4.3; wp-5.5.1"
 
-#. Name of the plugin
-#: admin/class-itella-shipping-method.php:63
-msgid "Itella Shipping"
-msgstr "Itella toimitus"
+#: admin/class-itella-shipping-manifest-page.php:408
+msgid "Actions"
+msgstr "Toiminnot"
 
-#: admin/class-itella-shipping-method.php:64
-msgid "Plugin to use with Itella Shipping methods"
-msgstr "Moduuli Itellan toimitustavoille"
+#: admin/class-itella-shipping-method.php:529
+msgid "Add row"
+msgstr ""
 
-#: admin/class-itella-shipping-method.php:173
-msgid "Itella Pickup Point"
-msgstr "Itella noutopiste"
+#: admin/class-itella-shipping-manifest-page.php:615
+#| msgid "Address and contact information can be changed in Itella settings."
+msgid "Address and contact information can be changed in Smartpost settings."
+msgstr "Osoite ja yhteistiedot voidaan muuttaa Smartpost asetuksissa."
 
-#: admin/class-itella-shipping-method.php:190
-msgid "Itella Courier"
-msgstr "Itella kuriiir"
+#: admin/class-itella-shipping-manifest-page.php:484
+msgid "Address: "
+msgstr "Osoite:"
 
-#: admin/class-itella-shipping-method.php:252
-msgid "Enable"
-msgstr "Ota käyttöön"
+#: admin/class-itella-shipping-manifest-page.php:110
+msgid "All orders"
+msgstr "Kaikki tilaukset"
 
-#: admin/class-itella-shipping-method.php:254
-msgid "Enable this shipping."
-msgstr "Ota käyttöön tämä toimitus."
+#: admin/class-itella-shipping-method.php:1715
+msgid "Amount:"
+msgstr "Määrä:"
 
-#: admin/class-itella-shipping-method.php:258
-msgid "API user (Product 2711)"
-msgstr "API käyttäjä (Product 2711)"
+#: admin/class-itella-shipping-method.php:916
+#: admin/class-itella-shipping-method.php:926
+msgid "An error occurred."
+msgstr "Tapahtui virhe."
 
-#: admin/class-itella-shipping-method.php:262
-msgid "Api password (Product 2711)"
-msgstr "API salasana (Product 2711)"
+#: admin/class-itella-shipping-method.php:1242
+#: admin/class-itella-shipping-method.php:1253
+#: admin/class-itella-shipping-method.php:1263
+#: admin/class-itella-shipping-method.php:1274
+msgid "An error occurred. "
+msgstr "Tapahtui virhe."
 
-#: admin/class-itella-shipping-method.php:266
-msgid "Api contract number (Product 2711)"
-msgstr "API sopimusnumero (Product 2711)"
-
-#: admin/class-itella-shipping-method.php:270
-msgid "API user (Product 2317)"
-msgstr "API käyttäjä (Product 2317)"
-
-#: admin/class-itella-shipping-method.php:274
-msgid "Api password (Product 2317)"
-msgstr "API salasana (Product 2317)"
-
-#: admin/class-itella-shipping-method.php:278
+#: admin/class-itella-shipping-method.php:339
 msgid "Api contract number (Product 2317)"
 msgstr "API sopimusnumero (Product 2317)"
 
-#: admin/class-itella-shipping-method.php:282
-msgid "Company name"
-msgstr "Yrityksen nimi"
+#: admin/class-itella-shipping-method.php:327
+msgid "Api contract number (Product 2711)"
+msgstr "API sopimusnumero (Product 2711)"
 
-#: admin/class-itella-shipping-method.php:286
+#: admin/class-itella-shipping-method.php:335
+msgid "Api password (Product 2317)"
+msgstr "API salasana (Product 2317)"
+
+#: admin/class-itella-shipping-method.php:323
+msgid "Api password (Product 2711)"
+msgstr "API salasana (Product 2711)"
+
+#: admin/class-itella-shipping-method.php:331
+msgid "API user (Product 2317)"
+msgstr "API käyttäjä (Product 2317)"
+
+#: admin/class-itella-shipping-method.php:319
+msgid "API user (Product 2711)"
+msgstr "API käyttäjä (Product 2711)"
+
+#: admin/class-itella-shipping-method.php:347
 msgid "Bank account"
 msgstr "Pankkitili"
 
-#: admin/class-itella-shipping-method.php:290
+#: admin/class-itella-shipping-method.php:351
 msgid "BIC"
 msgstr "BIC"
 
-#: admin/class-itella-shipping-method.php:294
-msgid "Shop name"
-msgstr "Kaupan nimi"
+#: admin/class-itella-shipping-method.php:572
+#: admin/class-itella-shipping-method.php:654
+#: admin/class-itella-shipping-manifest-page.php:525
+msgid "Call before delivery"
+msgstr "Soita ennen toimitusta"
 
-#: admin/class-itella-shipping-method.php:298
-msgid "Shop city"
-msgstr "Kaupan kaupunki"
+#: admin/class-itella-shipping-manifest-page.php:443
+msgid "Call Itella courier"
+msgstr "Soita Itellan kuriirille"
 
-#: admin/class-itella-shipping-method.php:302
-msgid "Shop address"
-msgstr "Kaupan osoite"
+#: admin/class-itella-shipping-manifest-page.php:263
+#: admin/class-itella-shipping-manifest-page.php:634
+msgid "Call Smartpost courier"
+msgstr "Soita Smartpost kuriirille"
 
-#: admin/class-itella-shipping-method.php:306
-msgid "Shop postcode"
-msgstr "Kaupan postinumero"
+#: admin/class-itella-shipping-method.php:713
+msgid "Carrier:"
+msgstr "Kuljettaja:"
 
-#: admin/class-itella-shipping-method.php:310
-msgid "Shop country code"
-msgstr "Kaupan maakoodi"
+#: admin/class-itella-shipping-manifest-page.php:613
+msgid "Check your credentials."
+msgstr "Tarkista tietosi."
 
-#: admin/class-itella-shipping-method.php:314
-msgid "Shop phone number"
-msgstr "Kaupan puhelinnumero"
-
-#: admin/class-itella-shipping-method.php:318
-msgid "Shop email"
-msgstr "Kaupan sähköposti"
-
-#: admin/class-itella-shipping-method.php:322
-msgid "Enable Pickup Point"
-msgstr "Ota käyttöön noutopisteet"
-
-#: admin/class-itella-shipping-method.php:325
-msgid "Show pickup point shipping method in checkout."
-msgstr "Näytä noutopisteet toimitustapa kassalla."
-
-#: admin/class-itella-shipping-method.php:329
-msgid "Enable Courier"
-msgstr "Ota käyttöön kuriiritoimitus"
-
-#: admin/class-itella-shipping-method.php:332
-msgid "Show courier shipping method in checkout."
-msgstr "Näytä kuriiri toimitustapa kassalla."
-
-#: admin/class-itella-shipping-method.php:336
-msgid "Pickup point selection style"
-msgstr "Noutopisteen valinta"
-
-#: admin/class-itella-shipping-method.php:340
-msgid "Map"
-msgstr "Kartta"
-
-#: admin/class-itella-shipping-method.php:341
-msgid "Dropdown"
-msgstr "Alasvetovalikko"
-
-#: admin/class-itella-shipping-method.php:344
+#: admin/class-itella-shipping-method.php:405
 msgid "Choose what the pickup point selection in the checkout will look like."
 msgstr "Valitse miltä haluat noutopistevalinnan näyttävän kassalla."
 
-#: admin/class-itella-shipping-method.php:349
-msgid "Pickup Point price"
-msgstr "Noutopistetoimitus hinta"
+#: admin/class-itella-shipping-method.php:636
+msgid "Chosen Pickup Point"
+msgstr "Valittu noutopiste"
 
-#: admin/class-itella-shipping-method.php:357
-#: admin/class-itella-shipping-method.php:368
-msgid "Leave empty to disable this method"
-msgstr "Jätä tyhjäksi, jos haluat poistaa tämän menetelmän käytöstä"
+#: admin/class-itella-shipping-manifest-page.php:480
+msgid "City: "
+msgstr "Kaupunki:"
 
-#: admin/class-itella-shipping-method.php:360
+#: admin/class-itella-shipping-method.php:625
+#: admin/class-itella-shipping-method.php:706
+#, php-format
+msgid "COD amount (%s):"
+msgstr "Maksu toimittaessa määrä (%s):"
+
+#: admin/class-itella-shipping-manifest-page.php:507
+msgid "COD amount: "
+msgstr "Maksu toimittaessa määrä:"
+
+#: admin/class-itella-shipping-method.php:618
+#: admin/class-itella-shipping-method.php:695
+msgid "COD:"
+msgstr "Maksu toimittaessa:"
+
+#: admin/class-itella-shipping-manifest-page.php:502
+msgid "COD: "
+msgstr "Maksu toimittaessa:"
+
+#: admin/class-itella-shipping-method.php:343
+msgid "Company name"
+msgstr "Yrityksen nimi"
+
+#: admin/class-itella-shipping-manifest-page.php:111
+msgid "Completed orders"
+msgstr "Viimeistellyt tilaukset"
+
+#: public/class-itella-shipping-public.php:95
+msgid "Contacts"
+msgstr "Yhteystiedot"
+
+#: admin/class-itella-shipping-method.php:1361
+msgid "Couldn't get list of selected orders"
+msgstr ""
+
+#: admin/class-itella-shipping-method.php:1317
+msgid "Couldn't get order"
+msgstr ""
+
+#: admin/class-itella-shipping-method.php:631
+#: admin/class-itella-shipping-method.php:717
+#: admin/class-itella-shipping-method.php:1718
+msgid "Courier"
+msgstr "Kuriiri"
+
+#: admin/class-itella-shipping-method.php:417
 msgid "Courier price"
 msgstr "Kuriiritoimitus hinta"
 
-#: admin/class-itella-shipping-method.php:371
+#: admin/class-itella-shipping-manifest-page.php:356
+#: admin/class-itella-shipping-manifest-page.php:403
+msgid "Customer"
+msgstr "Asiakas"
+
+#: admin/class-itella-shipping-method.php:1714
+msgid "Date:"
+msgstr "Päivämäärä:"
+
+#: admin/class-itella-shipping-method.php:1029
+#: public/class-itella-shipping-public.php:136
+msgid "Deliver to"
+msgstr "Toimitetaan"
+
+#: admin/class-itella-shipping-method.php:1717
+msgid "Delivery address:"
+msgstr "Toimitusosoite:"
+
+#: admin/class-itella-shipping-method.php:434
+msgid "Disable courier fee if cart amount is greater or equal than this limit"
+msgstr ""
+"Poista kuriiri toimitusmaksu käytöstä, jos ostoskorin määrän on suurempi tai "
+"yhtä suuri, kuin tämä raja"
+
+#: admin/class-itella-shipping-method.php:424
 msgid ""
 "Disable pickup point fee if cart amount is greater or equal than this limit"
 msgstr ""
 "Poista noutopistemaksu käytöstä, jos ostoskorin määrän on suurempi tai yhtä "
 "suuri, kuin tämä raja"
 
-#: admin/class-itella-shipping-method.php:381
-msgid "Disable courier fee if cart amount is greater or equal than this limit"
-msgstr ""
-"Poista kuriiri toimitusmaksu käytöstä, jos ostoskorin määrän on suurempi tai "
-"yhtä suuri, kuin tämä raja"
+#: admin/class-itella-shipping-method.php:402
+msgid "Dropdown"
+msgstr "Alasvetovalikko"
 
-#: admin/class-itella-shipping-method.php:418
-#: admin/class-itella-shipping-method.php:498
-#: admin/class-itella-shipping-manifest-page.php:485
-msgid "Oversized"
-msgstr "Ylisuuri"
-
-#: admin/class-itella-shipping-method.php:419
-#: admin/class-itella-shipping-method.php:501
-#: admin/class-itella-shipping-manifest-page.php:489
-msgid "Call before delivery"
-msgstr "Soita ennen toimitusta"
-
-#: admin/class-itella-shipping-method.php:420
-#: admin/class-itella-shipping-method.php:505
-#: admin/class-itella-shipping-manifest-page.php:493
-msgid "Fragile"
-msgstr "Helposti särkyvä"
-
-#: admin/class-itella-shipping-method.php:456
-msgid "Itella Shipping Options"
-msgstr "Itella toimitus ominaisuudet"
-
-#: admin/class-itella-shipping-method.php:460
-msgid "Packets(total):"
-msgstr "Paketteja (yhteensä):"
-
-#: admin/class-itella-shipping-method.php:463
-#, php-format
-msgid "Weight (%s):"
-msgstr "Paino (%s):"
-
-#: admin/class-itella-shipping-method.php:465
-#: admin/class-itella-shipping-method.php:542
-msgid "COD:"
-msgstr "Maksu toimittaessa:"
-
-#: admin/class-itella-shipping-method.php:472
-#: admin/class-itella-shipping-method.php:553
-#, php-format
-msgid "COD amount (%s):"
-msgstr "Maksu toimittaessa määrä (%s):"
-
-#: admin/class-itella-shipping-method.php:475
-msgid "Shipping method:"
-msgstr "Toimitustapa:"
-
-#: admin/class-itella-shipping-method.php:477
-#: admin/class-itella-shipping-method.php:563
-msgid "Pickup Point"
-msgstr "Noutopiste"
-
-#: admin/class-itella-shipping-method.php:478
-#: admin/class-itella-shipping-method.php:564
-#: admin/class-itella-shipping-method.php:1422
-msgid "Courier"
-msgstr "Kuriiri"
-
-#: admin/class-itella-shipping-method.php:479
-msgid "No Itella Shipping method selected"
-msgstr "Ei valittua toimitustapaa"
-
-#: admin/class-itella-shipping-method.php:483
-msgid "Chosen Pickup Point"
-msgstr "Valittu noutopiste"
-
-#: admin/class-itella-shipping-method.php:492
-msgid "Extra Services:"
-msgstr "Lisäpalvelut:"
-
-#: admin/class-itella-shipping-method.php:495
-msgid "No extra services selected"
-msgstr "Lisäpalveluita ei ole valittu"
-
-#: admin/class-itella-shipping-method.php:517
-msgid "Packets (total):"
-msgstr "Paketteja (yhteensä):"
-
-#: admin/class-itella-shipping-method.php:525
-#: admin/class-itella-shipping-manifest-page.php:674
-msgid "Multi Parcel"
-msgstr "Monipaketti"
-
-#: admin/class-itella-shipping-method.php:527
-msgid ""
-"If more than one packet is selected, then a multi parcel service is mandatory"
-msgstr ""
-"Jos valitaan useampi kuin yksi paketti, monipakettipalvelu on pakollinen"
-
-#: admin/class-itella-shipping-method.php:535
-#, php-format
-msgid "Weight (%s)"
-msgstr "Paino (%s)"
-
-#: admin/class-itella-shipping-method.php:560
-msgid "Carrier:"
-msgstr "Kuljettaja:"
-
-#: admin/class-itella-shipping-method.php:571
-msgid "Select Pickup Point:"
-msgstr "Valitse noutopiste:"
-
-#: admin/class-itella-shipping-method.php:583
-msgid "Extra Services"
-msgstr "Lisäpalvelut"
-
-#: admin/class-itella-shipping-method.php:702
-msgid "You must choose Itella Pickup Point"
-msgstr "Sinun on valittava Itella noutopiste"
-
-#: admin/class-itella-shipping-method.php:753
-msgid "Failed to save label pdf to: "
-msgstr "Etiketin pdf-tiedoston tallennus epäonnistui:"
-
-#: admin/class-itella-shipping-method.php:763
-#: admin/class-itella-shipping-method.php:773
-msgid "An error occurred."
-msgstr "Tapahtui virhe."
-
-#: admin/class-itella-shipping-method.php:831
-#: public/class-itella-shipping-public.php:131
-msgid "Shipping information"
-msgstr "Toimitustiedot"
-
-#: admin/class-itella-shipping-method.php:833
-#: public/class-itella-shipping-public.php:133
-msgid "Shipping method"
-msgstr "Toimitustapa"
-
-#: admin/class-itella-shipping-method.php:835
-#, php-format
-msgid "Your order has been shipped with %s."
-msgstr "Tilauksesi on lähetetty käyttäen %s."
-
-#: admin/class-itella-shipping-method.php:842
-#, php-format
-msgid "The order will be delivered to %s."
-msgstr "Tilauksesi toimitetaan %s."
-
-#: admin/class-itella-shipping-method.php:844
-#: public/class-itella-shipping-public.php:136
-msgid "Deliver to"
-msgstr "Toimitetaan"
-
-#: admin/class-itella-shipping-method.php:852
-#, php-format
-msgid "The tracking number is %s and you can track it at %s."
-msgstr "Tilauksesi seurantakoodi on %s voit seurata tilaustasi %s."
-
-#: admin/class-itella-shipping-method.php:857
-#, php-format
-msgid "The tracking number is %s."
-msgstr "Tilauksen seurantakoodi on %s."
-
-#: admin/class-itella-shipping-method.php:862
-#: admin/class-itella-shipping-method.php:909
-msgid "Tracking number"
-msgstr "Seurantakoodi"
-
-#: admin/class-itella-shipping-method.php:919
-#: public/class-itella-shipping-public.php:93
-msgid "Pickup point"
-msgstr "Noutopiste"
-
-#: admin/class-itella-shipping-method.php:988
-#: admin/class-itella-shipping-method.php:1039
-#: admin/class-itella-shipping-method.php:1054
-msgid "Shipment is not registered."
-msgstr "Tilaustasi ei ole rekisteröity."
-
-#: admin/class-itella-shipping-method.php:990
-msgid "Error: "
-msgstr "Virhe:"
-
-#: admin/class-itella-shipping-method.php:991
-msgid "Not Itella Shipping Method"
-msgstr "Ei Itellan toimitustapa"
-
-#: admin/class-itella-shipping-method.php:1017
-#, php-format
-msgid "Itella shipment registered successfully. Tracking number: %s"
-msgstr ""
-"Itellan toimitus rekisteröity onnistuneesti. Tilauksen seurantakoodi: %s"
-
-#: admin/class-itella-shipping-method.php:1025
-msgid "Shipment registered successfully."
-msgstr "Tilaus rekisteröity onnistuneesti."
-
-#: admin/class-itella-shipping-method.php:1029
-msgid "Tracking number: "
-msgstr "Seurantakoodi:"
-
-#: admin/class-itella-shipping-method.php:1041
-#: admin/class-itella-shipping-method.php:1056
-msgid "An error occurred. "
-msgstr "Tapahtui virhe."
-
-#: admin/class-itella-shipping-method.php:1369
+#: admin/class-itella-shipping-method.php:1665
 msgid "E-com order booking"
 msgstr "Verkkokaupan tilauksen varaaminen"
 
-#: admin/class-itella-shipping-method.php:1384
+#: admin/class-itella-shipping-method.php:1680
 msgid "Email sent to courier"
 msgstr "Sähköposti lähetetty kuriirille"
 
-#: admin/class-itella-shipping-method.php:1390
-msgid "Failed to send email."
-msgstr "Sähköpostin lähettäminen epäonnistui."
+#: admin/class-itella-shipping-method.php:313
+msgid "Enable"
+msgstr "Ota käyttöön"
 
-#: admin/class-itella-shipping-method.php:1392
-msgid "Error:"
-msgstr "Virhe:"
+#: admin/class-itella-shipping-method.php:390
+msgid "Enable Courier"
+msgstr "Ota käyttöön kuriiritoimitus"
 
-#: admin/class-itella-shipping-method.php:1415
-msgid "Sender address:"
-msgstr "Lähettäjän osoite:"
+#: admin/class-itella-shipping-method.php:383
+msgid "Enable Pickup Point"
+msgstr "Ota käyttöön noutopisteet"
 
-#: admin/class-itella-shipping-method.php:1416
-msgid "No.:"
-msgstr "Numero:"
-
-#: admin/class-itella-shipping-method.php:1417
-msgid "Tracking number:"
-msgstr "Seurantakoodi:"
-
-#: admin/class-itella-shipping-method.php:1418
-msgid "Date:"
-msgstr "Päivämäärä:"
-
-#: admin/class-itella-shipping-method.php:1419
-msgid "Amount:"
-msgstr "Määrä:"
-
-#: admin/class-itella-shipping-method.php:1420
-msgid "Weight:"
-msgstr "Paino:"
-
-#: admin/class-itella-shipping-method.php:1421
-msgid "Delivery address:"
-msgstr "Toimitusosoite:"
-
-#: admin/class-itella-shipping-method.php:1423
-msgid "Sender"
-msgstr "Lähettäjä"
-
-#: admin/class-itella-shipping-method.php:1424
-msgid "name, lastname, signature"
-msgstr "nimi, sukunimi, allekirjoitus"
-
-#: admin/class-itella-shipping-manifest-page.php:67
-msgid "Select at least one order to perform this action."
-msgstr "Valitse vähintään yksi tilaus tämän toiminnon suorittamiseksi."
-
-#: admin/class-itella-shipping-manifest-page.php:81
-#: admin/class-itella-shipping-manifest-page.php:82
-#: admin/class-itella-shipping-manifest-page.php:124
-msgid "Itella shipments"
-msgstr "Itella toimitustavat"
-
-#: admin/class-itella-shipping-manifest-page.php:103
-msgid "New orders"
-msgstr "Uudet tilaukset"
-
-#: admin/class-itella-shipping-manifest-page.php:104
-msgid "All orders"
-msgstr "Kaikki tilaukset"
-
-#: admin/class-itella-shipping-manifest-page.php:105
-msgid "Completed orders"
-msgstr "Viimeistellyt tilaukset"
-
-#: admin/class-itella-shipping-manifest-page.php:256
-#: admin/class-itella-shipping-manifest-page.php:407
-#: admin/class-itella-shipping-manifest-page.php:597
-msgid "Call Itella courier"
-msgstr "Soita Itellan kuriirille"
-
-#: admin/class-itella-shipping-manifest-page.php:287
-#: admin/class-itella-shipping-manifest-page.php:289
-msgid "Generate manifests"
-msgstr "Luo lastiluettelot"
-
-#: admin/class-itella-shipping-manifest-page.php:292
-#: admin/class-itella-shipping-manifest-page.php:294
-msgid "Print labels"
-msgstr "Tulosta etiketit"
-
-#: admin/class-itella-shipping-manifest-page.php:315
-#: admin/class-itella-shipping-manifest-page.php:366
-msgid "ID"
-msgstr "ID"
-
-#: admin/class-itella-shipping-manifest-page.php:320
-#: admin/class-itella-shipping-manifest-page.php:367
-msgid "Customer"
-msgstr "Asiakas"
-
-#: admin/class-itella-shipping-manifest-page.php:337
-#: admin/class-itella-shipping-manifest-page.php:370
-#: public/class-itella-shipping-public.php:140
-msgid "Tracking code"
-msgstr "Seurantakoodi"
-
-#: admin/class-itella-shipping-manifest-page.php:345
-msgid "From"
-msgstr "Keneltä"
-
-#: admin/class-itella-shipping-manifest-page.php:350
-msgid "To"
-msgstr "Kenelle"
-
-#: admin/class-itella-shipping-manifest-page.php:357
-msgid "Filter"
-msgstr "Suodatin"
-
-#: admin/class-itella-shipping-manifest-page.php:359
-msgid "Reset"
-msgstr "Nollaa"
-
-#: admin/class-itella-shipping-manifest-page.php:368
-msgid "Order Status"
-msgstr "Tilauksen tila"
-
-#: admin/class-itella-shipping-manifest-page.php:369
-msgid "Service"
-msgstr "Palvelu"
-
-#: admin/class-itella-shipping-manifest-page.php:371
-msgid "Manifest date"
-msgstr "Lastiluettelon päivämäärä"
-
-#: admin/class-itella-shipping-manifest-page.php:372
-msgid "Actions"
-msgstr "Toiminnot"
-
-#: admin/class-itella-shipping-manifest-page.php:397
-#: admin/class-itella-shipping-manifest-page.php:400
-#: admin/class-itella-shipping-manifest-page.php:536
-#: admin/class-itella-shipping-manifest-page.php:550
-msgid "Generate manifest"
-msgstr "Luo lastiluettelo"
-
-#: admin/class-itella-shipping-manifest-page.php:442
-msgid "Itella Pickup Point:"
-msgstr "Itella noutopiste:"
-
-#: admin/class-itella-shipping-manifest-page.php:444
-msgid "City: "
-msgstr "Kaupunki:"
-
-#: admin/class-itella-shipping-manifest-page.php:446
-msgid "Public Name: "
-msgstr "Nimi:"
-
-#: admin/class-itella-shipping-manifest-page.php:448
-msgid "Address: "
-msgstr "Osoite:"
-
-#: admin/class-itella-shipping-manifest-page.php:450
-msgid "Postal Code: "
-msgstr "Postinumero:"
-
-#: admin/class-itella-shipping-manifest-page.php:457
-msgid "Itella Courier:"
-msgstr "Itella kuriiir:"
-
-#: admin/class-itella-shipping-manifest-page.php:460
-msgid "Packet Count: "
-msgstr "Pakettimäärä:"
-
-#: admin/class-itella-shipping-manifest-page.php:463
-msgid "Weight: "
-msgstr "Paino:"
-
-#: admin/class-itella-shipping-manifest-page.php:466
-msgid "COD: "
-msgstr "Maksu toimittaessa:"
-
-#: admin/class-itella-shipping-manifest-page.php:471
-msgid "COD amount: "
-msgstr "Maksu toimittaessa määrä:"
-
-#: admin/class-itella-shipping-manifest-page.php:476
-msgid "Extra services:"
-msgstr "Lisäpalvelut:"
-
-#: admin/class-itella-shipping-manifest-page.php:527
-#: admin/class-itella-shipping-manifest-page.php:543
-msgid "Register shipment"
-msgstr "Rekisteröi lähetys"
-
-#: admin/class-itella-shipping-manifest-page.php:531
-#: admin/class-itella-shipping-manifest-page.php:546
-msgid "Print label"
-msgstr "Tulosta etiketti"
-
-#: admin/class-itella-shipping-manifest-page.php:576
-msgid "Important!"
-msgstr "Tärkeä!"
-
-#: admin/class-itella-shipping-manifest-page.php:576
-msgid "Check your credentials."
-msgstr "Tarkista tietosi."
-
-#: admin/class-itella-shipping-manifest-page.php:578
-msgid "Address and contact information can be changed in Itella settings."
-msgstr "Osoite ja yhteistiedot voidaan muuttaa Itellan asetuksissa."
-
-#: public/class-itella-shipping-public.php:91
-msgid "Nothing found"
-msgstr "Mitään ei löytynyt"
-
-#: public/class-itella-shipping-public.php:92
-msgid "Pickup points"
-msgstr "Noutopisteet"
-
-#: public/class-itella-shipping-public.php:94
-msgid "Workhours"
-msgstr "Työajat"
-
-#: public/class-itella-shipping-public.php:95
-msgid "Contacts"
-msgstr "Yhteystiedot"
+#: admin/class-itella-shipping-method.php:315
+msgid "Enable this shipping."
+msgstr "Ota käyttöön tämä toimitus."
 
 #: public/class-itella-shipping-public.php:96
 msgid "Enter postcode/address"
 msgstr "Syötä postinumero/osoite"
 
-#: public/class-itella-shipping-public.php:97
-msgid "Select a pickup point"
-msgstr "Valitse noutopiste"
+#: admin/class-itella-shipping-method.php:1688
+msgid "Error:"
+msgstr "Virhe:"
 
-#: public/class-itella-shipping-public.php:98
-msgid "No points to select"
-msgstr "Ei valittua noutopistettä"
+#: admin/class-itella-shipping-method.php:1179
+msgid "Error: "
+msgstr "Virhe:"
 
-#: public/class-itella-shipping-public.php:99
-msgid "select"
-msgstr "valitse"
+#: admin/class-itella-shipping-method.php:736
+msgid "Extra Services"
+msgstr "Lisäpalvelut"
 
-#: public/class-itella-shipping-public.php:100
-msgid "reset search"
-msgstr "nollaa valinta"
+#: admin/class-itella-shipping-method.php:645
+msgid "Extra Services:"
+msgstr "Lisäpalvelut:"
 
-#: public/class-itella-shipping-public.php:101
-msgid "Select pickup point"
-msgstr "Valitse noutopiste"
+#: admin/class-itella-shipping-manifest-page.php:512
+msgid "Extra services:"
+msgstr "Lisäpalvelut:"
 
-#: public/class-itella-shipping-public.php:102
-msgid "No information"
-msgstr "Ei tietoja"
+#: admin/class-itella-shipping-method.php:1305
+msgid "Failed to register shipment"
+msgstr ""
+
+#: admin/class-itella-shipping-method.php:906
+msgid "Failed to save label pdf to: "
+msgstr "Etiketin pdf-tiedoston tallennus epäonnistui:"
+
+#: admin/class-itella-shipping-method.php:1686
+msgid "Failed to send email."
+msgstr "Sähköpostin lähettäminen epäonnistui."
+
+#: admin/class-itella-shipping-method.php:1292
+#: admin/class-itella-shipping-method.php:1330
+msgid "Failed to validate nonce"
+msgstr ""
+
+#: admin/class-itella-shipping-manifest-page.php:393
+msgid "Filter"
+msgstr "Suodatin"
+
+#: admin/class-itella-shipping-manifest-page.php:324
+msgctxt "for"
+msgid "All"
+msgstr ""
+
+#: admin/class-itella-shipping-manifest-page.php:324
+msgctxt "for"
+msgid "Visible"
+msgstr ""
+
+#: admin/class-itella-shipping-method.php:573
+#: admin/class-itella-shipping-method.php:658
+#: admin/class-itella-shipping-manifest-page.php:529
+msgid "Fragile"
+msgstr "Helposti särkyvä"
+
+#: admin/class-itella-shipping-manifest-page.php:381
+msgid "From"
+msgstr "Keneltä"
+
+#: admin/class-itella-shipping-manifest-page.php:433
+#: admin/class-itella-shipping-manifest-page.php:436
+#: admin/class-itella-shipping-manifest-page.php:572
+#: admin/class-itella-shipping-manifest-page.php:587
+msgid "Generate manifest"
+msgstr "Luo lastiluettelo"
+
+#: admin/class-itella-shipping-manifest-page.php:326
+#: admin/class-itella-shipping-manifest-page.php:328
+msgid "Generate manifests"
+msgstr "Luo lastiluettelot"
+
+#: admin/class-itella-shipping-manifest-page.php:322
+msgid "Generate manifests for ..."
+msgstr ""
+
+#: admin/class-itella-shipping-manifest-page.php:71
+msgid ""
+"Generating a manifest for a large number of orders can take a long time.\n"
+"Are you sure you want to continue?"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://itella.lt/en/"
+msgstr ""
+
+#: admin/class-itella-shipping-manifest-page.php:351
+#: admin/class-itella-shipping-manifest-page.php:402
+msgid "ID"
+msgstr "ID"
+
+#: admin/class-itella-shipping-method.php:680
+msgid ""
+"If more than one packet is selected, then a multi parcel service is mandatory"
+msgstr ""
+"Jos valitaan useampi kuin yksi paketti, monipakettipalvelu on pakollinen"
+
+#: admin/class-itella-shipping-manifest-page.php:613
+msgid "Important!"
+msgstr "Tärkeä!"
+
+#. Author of the plugin
+msgid "Itella Team"
+msgstr ""
 
 #: public/class-itella-shipping-public.php:103
 msgid "Leaflet is required for Itella-Mapping"
 msgstr "Valinta vaaditaan Itellan kartoitusta varten"
 
+#: admin/class-itella-shipping-method.php:414
+#: admin/class-itella-shipping-method.php:421
+msgid "Leave empty to disable this method"
+msgstr "Jätä tyhjäksi, jos haluat poistaa tämän menetelmän käytöstä"
+
+#: admin/class-itella-shipping-manifest-page.php:407
+msgid "Manifest date"
+msgstr "Lastiluettelon päivämäärä"
+
+#: admin/class-itella-shipping-method.php:401
+msgid "Map"
+msgstr "Kartta"
+
+#: admin/class-itella-shipping-method.php:678
+#: admin/class-itella-shipping-manifest-page.php:711
+msgid "Multi Parcel"
+msgstr "Monipaketti"
+
+#: admin/class-itella-shipping-method.php:1720
+msgid "name, lastname, signature"
+msgstr "nimi, sukunimi, allekirjoitus"
+
+#: admin/class-itella-shipping-manifest-page.php:109
+msgid "New orders"
+msgstr "Uudet tilaukset"
+
+#: admin/class-itella-shipping-method.php:648
+msgid "No extra services selected"
+msgstr "Lisäpalveluita ei ole valittu"
+
+#: public/class-itella-shipping-public.php:102
+msgid "No information"
+msgstr "Ei tietoja"
+
 #: public/class-itella-shipping-public.php:104
 msgid "No mount supplied to itellaShipping"
 msgstr "Ei toimitusta Itellalle"
 
-#: public/class-itella-shipping-public.php:148
-msgid "Status"
-msgstr "Tila"
+#: public/class-itella-shipping-public.php:98
+msgid "No points to select"
+msgstr "Ei valittua noutopistettä"
+
+#: admin/class-itella-shipping-method.php:632
+#| msgid "No Itella Shipping method selected"
+msgid "No Smartpost Shipping method selected"
+msgstr "Ei valittua toimitustapaa"
+
+#: admin/class-itella-shipping-method.php:1712
+msgid "No.:"
+msgstr "Numero:"
 
 #: public/class-itella-shipping-public.php:148
 msgid "Not shipped"
 msgstr "Ei lähetetty"
 
+#: admin/class-itella-shipping-method.php:1180
+#: admin/class-itella-shipping-method.php:1186
+msgid "Not Smartpost Shipping Method"
+msgstr "Ei Smartpost toimitustapa"
+
+#: public/class-itella-shipping-public.php:91
+msgid "Nothing found"
+msgstr "Mitään ei löytynyt"
+
+#: admin/class-itella-shipping-manifest-page.php:404
+msgid "Order Status"
+msgstr "Tilauksen tila"
+
+#: admin/class-itella-shipping-method.php:571
+#: admin/class-itella-shipping-method.php:651
+#: admin/class-itella-shipping-manifest-page.php:521
+msgid "Oversized"
+msgstr "Ylisuuri"
+
+#: admin/class-itella-shipping-manifest-page.php:496
+msgid "Packet Count: "
+msgstr "Pakettimäärä:"
+
+#: admin/class-itella-shipping-method.php:670
+msgid "Packets (total):"
+msgstr "Paketteja (yhteensä):"
+
+#: admin/class-itella-shipping-method.php:613
+msgid "Packets(total):"
+msgstr "Paketteja (yhteensä):"
+
+#: admin/class-itella-shipping-method.php:630
+#: admin/class-itella-shipping-method.php:716
+msgid "Pickup Point"
+msgstr "Noutopiste"
+
+#: admin/class-itella-shipping-method.php:1104
+#: public/class-itella-shipping-public.php:93
+msgid "Pickup point"
+msgstr "Noutopiste"
+
+#: admin/class-itella-shipping-method.php:410
+msgid "Pickup Point price"
+msgstr "Noutopistetoimitus hinta"
+
+#: admin/class-itella-shipping-method.php:397
+msgid "Pickup point selection style"
+msgstr "Noutopisteen valinta"
+
+#: public/class-itella-shipping-public.php:92
+msgid "Pickup points"
+msgstr "Noutopisteet"
+
+#: admin/class-itella-shipping-method.php:64
+#| msgid "Plugin to use with Itella Shipping methods"
+msgid "Plugin to use with Smartpost Shipping methods"
+msgstr "Moduuli Smartpost Itellan toimitustavoille"
+
+#: admin/class-itella-shipping-manifest-page.php:486
+msgid "Postal Code: "
+msgstr "Postinumero:"
+
+#: admin/class-itella-shipping-method.php:501
+msgid "Price"
+msgstr ""
+
+#: admin/class-itella-shipping-method.php:486
+msgid "Price by weight"
+msgstr ""
+
+#: admin/class-itella-shipping-manifest-page.php:567
+#: admin/class-itella-shipping-manifest-page.php:583
+msgid "Print label"
+msgstr "Tulosta etiketti"
+
+#: admin/class-itella-shipping-manifest-page.php:311
+#: admin/class-itella-shipping-manifest-page.php:313
+msgid "Print labels"
+msgstr "Tulosta etiketit"
+
+#: admin/class-itella-shipping-manifest-page.php:482
+msgid "Public Name: "
+msgstr "Nimi:"
+
+#: admin/class-itella-shipping-manifest-page.php:563
+#: admin/class-itella-shipping-manifest-page.php:576
+#: admin/class-itella-shipping-manifest-page.php:580
+msgid "Register shipment"
+msgstr "Rekisteröi lähetys"
+
+#: admin/class-itella-shipping-manifest-page.php:300
+#: admin/class-itella-shipping-manifest-page.php:303
+msgid "Register shipments"
+msgstr ""
+
+#: admin/class-itella-shipping-manifest-page.php:395
+msgid "Reset"
+msgstr "Nollaa"
+
+#: public/class-itella-shipping-public.php:100
+msgid "reset search"
+msgstr "nollaa valinta"
+
+#: public/class-itella-shipping-public.php:99
+msgid "select"
+msgstr "valitse"
+
+#: public/class-itella-shipping-public.php:97
+msgid "Select a pickup point"
+msgstr "Valitse noutopiste"
+
+#: admin/class-itella-shipping-manifest-page.php:70
+msgid "Select at least one order to perform this action."
+msgstr "Valitse vähintään yksi tilaus tämän toiminnon suorittamiseksi."
+
+#: public/class-itella-shipping-public.php:101
+msgid "Select pickup point"
+msgstr "Valitse noutopiste"
+
+#: admin/class-itella-shipping-method.php:724
+msgid "Select Pickup Point:"
+msgstr "Valitse noutopiste:"
+
+#: admin/class-itella-shipping-method.php:1719
+msgid "Sender"
+msgstr "Lähettäjä"
+
+#: admin/class-itella-shipping-method.php:1711
+msgid "Sender address:"
+msgstr "Lähettäjän osoite:"
+
+#: admin/class-itella-shipping-manifest-page.php:405
+msgid "Service"
+msgstr "Palvelu"
+
+#: admin/class-itella-shipping-method.php:77
+msgid "Settings"
+msgstr ""
+
+#: admin/class-itella-shipping-method.php:1177
+#: admin/class-itella-shipping-method.php:1240
+#: admin/class-itella-shipping-method.php:1261
+msgid "Shipment is not registered."
+msgstr "Tilaustasi ei ole rekisteröity."
+
+#: admin/class-itella-shipping-method.php:1220
+#: admin/class-itella-shipping-method.php:1233
+msgid "Shipment registered successfully."
+msgstr "Tilaus rekisteröity onnistuneesti."
+
+#: admin/class-itella-shipping-method.php:1310
+msgid "Shipment successfully registered"
+msgstr ""
+
+#: admin/class-itella-shipping-method.php:1349
+msgid "Shipments successfully registered"
+msgstr ""
+
+#: admin/class-itella-shipping-method.php:1016
+#: public/class-itella-shipping-public.php:131
+msgid "Shipping information"
+msgstr "Toimitustiedot"
+
+#: admin/class-itella-shipping-method.php:1018
+#: public/class-itella-shipping-public.php:133
+msgid "Shipping method"
+msgstr "Toimitustapa"
+
+#: admin/class-itella-shipping-method.php:628
+msgid "Shipping method:"
+msgstr "Toimitustapa:"
+
+#: admin/class-itella-shipping-method.php:363
+msgid "Shop address"
+msgstr "Kaupan osoite"
+
+#: admin/class-itella-shipping-method.php:359
+msgid "Shop city"
+msgstr "Kaupan kaupunki"
+
+#: admin/class-itella-shipping-method.php:371
+msgid "Shop country code"
+msgstr "Kaupan maakoodi"
+
+#: admin/class-itella-shipping-method.php:379
+msgid "Shop email"
+msgstr "Kaupan sähköposti"
+
+#: admin/class-itella-shipping-method.php:355
+msgid "Shop name"
+msgstr "Kaupan nimi"
+
+#: admin/class-itella-shipping-method.php:375
+msgid "Shop phone number"
+msgstr "Kaupan puhelinnumero"
+
+#: admin/class-itella-shipping-method.php:367
+msgid "Shop postcode"
+msgstr "Kaupan postinumero"
+
+#: admin/class-itella-shipping-manifest-page.php:286
+msgid "Show"
+msgstr ""
+
+#: admin/class-itella-shipping-method.php:393
+msgid "Show courier shipping method in checkout."
+msgstr "Näytä kuriiri toimitustapa kassalla."
+
+#: admin/class-itella-shipping-method.php:386
+msgid "Show pickup point shipping method in checkout."
+msgstr "Näytä noutopisteet toimitustapa kassalla."
+
+#: admin/class-itella-shipping-method.php:209
+msgid "Smartpost Courier"
+msgstr "Smartpost kuriiir"
+
+#: admin/class-itella-shipping-manifest-page.php:493
+msgid "Smartpost Courier:"
+msgstr "Smartpost kuriiir:"
+
 #. Description of the plugin
-msgid "Itella shipping plugin for Woocommerce"
-msgstr "Itella toimitustavat Woocommercelle"
+#| msgid "Itella shipping plugin for Woocommerce"
+msgid "Smartpost Itella shipping plugin for Woocommerce"
+msgstr "Smartpost Itella toimitustavat Woocommercelle"
+
+#: admin/class-itella-shipping-method.php:190
+msgid "Smartpost Pickup Point"
+msgstr "Smartpost noutopiste"
+
+#: admin/class-itella-shipping-manifest-page.php:478
+msgid "Smartpost Pickup Point:"
+msgstr "Smartpost noutopiste:"
+
+#: admin/class-itella-shipping-method.php:1211
+#, php-format
+#| msgid "Itella shipment registered successfully. Tracking number: %s"
+msgid "Smartpost shipment registered successfully. Tracking number: %s"
+msgstr ""
+"Smartpost toimitus rekisteröity onnistuneesti. Tilauksen seurantakoodi: %s"
+
+#: admin/class-itella-shipping-manifest-page.php:87
+#: admin/class-itella-shipping-manifest-page.php:88
+#: admin/class-itella-shipping-manifest-page.php:131
+msgid "Smartpost shipments"
+msgstr "Smartpost toimitustavat"
+
+#. Name of the plugin
+#: admin/class-itella-shipping-method.php:63
+msgid "Smartpost Shipping"
+msgstr "Smartpost toimitus"
+
+#: admin/class-itella-shipping-method.php:609
+msgid "Smartpost Shipping Options"
+msgstr "Smartpost toimitus ominaisuudet"
+
+#: admin/class-itella-shipping-method.php:1354
+msgid "Some orders failed to register the shipment"
+msgstr ""
+
+#: public/class-itella-shipping-public.php:148
+msgid "Status"
+msgstr "Tila"
+
+#: admin/class-itella-shipping-method.php:1027
+#, php-format
+msgid "The order will be delivered to %s."
+msgstr "Tilauksesi toimitetaan %s."
+
+#: admin/class-itella-shipping-method.php:1037
+#, php-format
+msgid "The tracking number is %s and you can track it at %s."
+msgstr "Tilauksesi seurantakoodi on %s voit seurata tilaustasi %s."
+
+#: admin/class-itella-shipping-method.php:1042
+#, php-format
+msgid "The tracking number is %s."
+msgstr "Tilauksen seurantakoodi on %s."
+
+#: admin/class-itella-shipping-manifest-page.php:386
+msgid "To"
+msgstr "Kenelle"
+
+#: admin/class-itella-shipping-manifest-page.php:373
+#: admin/class-itella-shipping-manifest-page.php:406
+#: public/class-itella-shipping-public.php:140
+msgid "Tracking code"
+msgstr "Seurantakoodi"
+
+#: admin/class-itella-shipping-method.php:1047
+#: admin/class-itella-shipping-method.php:1094
+msgid "Tracking number"
+msgstr "Seurantakoodi"
+
+#: admin/class-itella-shipping-method.php:1713
+msgid "Tracking number:"
+msgstr "Seurantakoodi:"
+
+#: admin/class-itella-shipping-method.php:1224
+msgid "Tracking number: "
+msgstr "Seurantakoodi:"
+
+#: admin/class-itella-shipping-method.php:500
+#: admin/class-itella-shipping-method.php:688
+#, php-format
+msgid "Weight (%s)"
+msgstr "Paino (%s)"
+
+#: admin/class-itella-shipping-method.php:616
+#, php-format
+msgid "Weight (%s):"
+msgstr "Paino (%s):"
+
+#: admin/class-itella-shipping-method.php:1716
+msgid "Weight:"
+msgstr "Paino:"
+
+#: admin/class-itella-shipping-manifest-page.php:499
+msgid "Weight: "
+msgstr "Paino:"
+
+#: public/class-itella-shipping-public.php:94
+msgid "Workhours"
+msgstr "Työajat"
+
+#: admin/class-itella-shipping-method.php:855
+#| msgid "You must choose Itella Pickup Point"
+msgid "You must choose Smartpost Pickup Point"
+msgstr "Sinun on valittava Smartpost noutopiste"
+
+#: admin/class-itella-shipping-method.php:1020
+#, php-format
+msgid "Your order has been shipped with %s."
+msgstr "Tilauksesi on lähetetty käyttäen %s."
