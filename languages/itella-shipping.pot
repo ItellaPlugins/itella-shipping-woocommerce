@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: itella_shipping\n"
 "Report-Msgid-Bugs-To: mantas tarutis\n"
-"POT-Creation-Date: 2020-12-21 09:52+0000\n"
+"POT-Creation-Date: 2021-01-12 09:15+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -27,7 +27,7 @@ msgid "Add row"
 msgstr ""
 
 #: admin/class-itella-shipping-manifest-page.php:615
-msgid "Address and contact information can be changed in Itella settings."
+msgid "Address and contact information can be changed in Smartpost settings."
 msgstr ""
 
 #: admin/class-itella-shipping-manifest-page.php:484
@@ -92,10 +92,13 @@ msgstr ""
 msgid "Call before delivery"
 msgstr ""
 
-#: admin/class-itella-shipping-manifest-page.php:263
 #: admin/class-itella-shipping-manifest-page.php:443
-#: admin/class-itella-shipping-manifest-page.php:634
 msgid "Call Itella courier"
+msgstr ""
+
+#: admin/class-itella-shipping-manifest-page.php:263
+#: admin/class-itella-shipping-manifest-page.php:634
+msgid "Call Smartpost courier"
 msgstr ""
 
 #: admin/class-itella-shipping-method.php:713
@@ -327,46 +330,6 @@ msgstr ""
 msgid "Important!"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:209
-msgid "Itella Courier"
-msgstr ""
-
-#: admin/class-itella-shipping-manifest-page.php:493
-msgid "Itella Courier:"
-msgstr ""
-
-#: admin/class-itella-shipping-method.php:190
-msgid "Itella Pickup Point"
-msgstr ""
-
-#: admin/class-itella-shipping-manifest-page.php:478
-msgid "Itella Pickup Point:"
-msgstr ""
-
-#: admin/class-itella-shipping-method.php:1211
-#, php-format
-msgid "Itella shipment registered successfully. Tracking number: %s"
-msgstr ""
-
-#: admin/class-itella-shipping-manifest-page.php:87
-#: admin/class-itella-shipping-manifest-page.php:88
-#: admin/class-itella-shipping-manifest-page.php:131
-msgid "Itella shipments"
-msgstr ""
-
-#. Name of the plugin
-#: admin/class-itella-shipping-method.php:63
-msgid "Itella Shipping"
-msgstr ""
-
-#: admin/class-itella-shipping-method.php:609
-msgid "Itella Shipping Options"
-msgstr ""
-
-#. Description of the plugin
-msgid "Itella shipping plugin for Woocommerce"
-msgstr ""
-
 #. Author of the plugin
 msgid "Itella Team"
 msgstr ""
@@ -409,10 +372,6 @@ msgstr ""
 msgid "No information"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:632
-msgid "No Itella Shipping method selected"
-msgstr ""
-
 #: public/class-itella-shipping-public.php:104
 msgid "No mount supplied to itellaShipping"
 msgstr ""
@@ -421,17 +380,21 @@ msgstr ""
 msgid "No points to select"
 msgstr ""
 
+#: admin/class-itella-shipping-method.php:632
+msgid "No Smartpost Shipping method selected"
+msgstr ""
+
 #: admin/class-itella-shipping-method.php:1712
 msgid "No.:"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1180
-#: admin/class-itella-shipping-method.php:1186
-msgid "Not Itella Shipping Method"
-msgstr ""
-
 #: public/class-itella-shipping-public.php:148
 msgid "Not shipped"
+msgstr ""
+
+#: admin/class-itella-shipping-method.php:1180
+#: admin/class-itella-shipping-method.php:1186
+msgid "Not Smartpost Shipping Method"
 msgstr ""
 
 #: public/class-itella-shipping-public.php:91
@@ -483,7 +446,7 @@ msgid "Pickup points"
 msgstr ""
 
 #: admin/class-itella-shipping-method.php:64
-msgid "Plugin to use with Itella Shipping methods"
+msgid "Plugin to use with Smartpost Shipping methods"
 msgstr ""
 
 #: admin/class-itella-shipping-manifest-page.php:486
@@ -640,6 +603,46 @@ msgstr ""
 msgid "Show pickup point shipping method in checkout."
 msgstr ""
 
+#: admin/class-itella-shipping-method.php:209
+msgid "Smartpost Courier"
+msgstr ""
+
+#: admin/class-itella-shipping-manifest-page.php:493
+msgid "Smartpost Courier:"
+msgstr ""
+
+#. Description of the plugin
+msgid "Smartpost Itella shipping plugin for Woocommerce"
+msgstr ""
+
+#: admin/class-itella-shipping-method.php:190
+msgid "Smartpost Pickup Point"
+msgstr ""
+
+#: admin/class-itella-shipping-manifest-page.php:478
+msgid "Smartpost Pickup Point:"
+msgstr ""
+
+#: admin/class-itella-shipping-method.php:1211
+#, php-format
+msgid "Smartpost shipment registered successfully. Tracking number: %s"
+msgstr ""
+
+#: admin/class-itella-shipping-manifest-page.php:87
+#: admin/class-itella-shipping-manifest-page.php:88
+#: admin/class-itella-shipping-manifest-page.php:131
+msgid "Smartpost shipments"
+msgstr ""
+
+#. Name of the plugin
+#: admin/class-itella-shipping-method.php:63
+msgid "Smartpost Shipping"
+msgstr ""
+
+#: admin/class-itella-shipping-method.php:609
+msgid "Smartpost Shipping Options"
+msgstr ""
+
 #: admin/class-itella-shipping-method.php:1354
 msgid "Some orders failed to register the shipment"
 msgstr ""
@@ -710,7 +713,7 @@ msgid "Workhours"
 msgstr ""
 
 #: admin/class-itella-shipping-method.php:855
-msgid "You must choose Itella Pickup Point"
+msgid "You must choose Smartpost Pickup Point"
 msgstr ""
 
 #: admin/class-itella-shipping-method.php:1020

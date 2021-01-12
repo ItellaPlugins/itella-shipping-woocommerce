@@ -60,9 +60,9 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $this->name = $name;
     $this->version = $version;
     $this->id = "itella-shipping";
-    $this->method_title = __('Itella Shipping', 'itella-shipping');
-    $this->method_description = __('Plugin to use with Itella Shipping methods', 'itella-shipping');
-    $this->title = "Itella Shipping Method";
+    $this->method_title = __('Smartpost Shipping', 'itella-shipping');
+    $this->method_description = __('Plugin to use with Smartpost Shipping methods', 'itella-shipping');
+    $this->title = "Smartpost Shipping Method";
 
     $this->available_countries = array('lt', 'ee', 'lv', 'fi');
 
@@ -187,7 +187,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
       $rate = array(
           'id' => 'itella_pp',
-          'label' => __('Itella Pickup Point', 'itella-shipping'),
+          'label' => __('Smartpost Pickup Point', 'itella-shipping'),
           'cost' => $price_pickup
       );
 
@@ -206,7 +206,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
       $rate = array(
           'id' => 'itella_c',
-          'label' => __('Itella Courier', 'itella-shipping'),
+          'label' => __('Smartpost Courier', 'itella-shipping'),
           'cost' => $price_courier
       );
 
@@ -606,7 +606,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
       ?>
         <br class="clear"/>
-        <h4><?= __('Itella Shipping Options', 'itella-shipping') ?><a href="#" class="edit_address"
+        <h4><?= __('Smartpost Shipping Options', 'itella-shipping') ?><a href="#" class="edit_address"
                                                                       id="itella-shipping-options">Edit</a></h4>
         <div class="address">
             <p>
@@ -629,7 +629,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
               <?=
               $is_itella_pp ? __('Pickup Point', 'itella-shipping') :
                   ($is_itella_c ? __('Courier', 'itella-shipping') :
-                      __('No Itella Shipping method selected', 'itella-shipping'))
+                      __('No Smartpost Shipping method selected', 'itella-shipping'))
               ?>
             </p>
           <?php if ($is_itella_pp): ?>
@@ -852,7 +852,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   {
     $isItellaPp = in_array('itella_pp',wc_clean($_POST['shipping_method']));
     if ($isItellaPp && empty($_POST['itella-chosen-point-id'])) {
-      wc_add_notice( __( "You must choose Itella Pickup Point", 'itella-shipping' ), 'error');
+      wc_add_notice( __( "You must choose Smartpost Pickup Point", 'itella-shipping' ), 'error');
     }
   }
 
@@ -1177,13 +1177,13 @@ class Itella_Shipping_Method extends WC_Shipping_Method
           $this->add_msg($order_id . ' - ' . __('Shipment is not registered.', 'itella-shipping')
             . "<br>"
             . __('Error: ', 'itella-shipping')
-            . __('Not Itella Shipping Method', 'itella-shipping'), 'error');
+            . __('Not Smartpost Shipping Method', 'itella-shipping'), 'error');
         }
         if (in_array('redirect',$exit_modes)) {
           wp_safe_redirect(wp_get_referer());
         }
         if (in_array('return',$exit_modes)) {
-          return array('status' => 'error', 'msg' => __('Not Itella Shipping Method', 'itella-shipping'));
+          return array('status' => 'error', 'msg' => __('Not Smartpost Shipping Method', 'itella-shipping'));
         }
       }
 
@@ -1208,7 +1208,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
         // add order note
         $note = sprintf(
-          __('Itella shipment registered successfully. Tracking number: %s', 'itella-shipping'),
+          __('Smartpost shipment registered successfully. Tracking number: %s', 'itella-shipping'),
           '<a href="' . self::ITELLA_TRACKING_URL . $result . '" target="_blank">' . $result . '</a>'
         );
         $order->add_order_note( $note );
