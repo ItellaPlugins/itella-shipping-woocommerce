@@ -175,6 +175,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     global $woocommerce;
     $current_country = $woocommerce->customer->get_shipping_country();
     $cart_amount = floatval($woocommerce->cart->get_cart_contents_total()) + floatval($woocommerce->cart->get_tax_totals());
+    $items = (isset($package['contents'])) ? $package['contents'] : $woocommerce->cart->get_cart();
 
     // add Pickup Point Rate
     if ($this->settings['pickup_point_method'] === 'yes') {
@@ -183,7 +184,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         'cart_amount' => $cart_amount,
       ));
 
-      $price_pickup = $this->get_shipping_price($pickup_params, $woocommerce->cart->cart_contents_weight);
+      $price_pickup = $this->get_shipping_price($pickup_params, $woocommerce->cart->cart_contents_weight, $items);
 
       $rate = array(
           'id' => 'itella_pp',
@@ -202,7 +203,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         'cart_amount' => $cart_amount,
       ));
 
-      $price_courier = $this->get_shipping_price($courier_params, $woocommerce->cart->cart_contents_weight);
+      $price_courier = $this->get_shipping_price($courier_params, $woocommerce->cart->cart_contents_weight, $items);
 
       $rate = array(
           'id' => 'itella_c',
@@ -223,8 +224,10 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    * @param float $cart_weight
    * @return integer
    */
-  private function get_shipping_price($shipping_params, $cart_weight) {
+  private function get_shipping_price($shipping_params, $cart_weight, $cart_items=array()) {
+    $cart_amount = $shipping_params['cart_amount'];
   	$price_shipping = $shipping_params['amount'];
+    $free_from = $shipping_params['free_from'];
 		$amount_values = array();
 		if ($this->if_this_json($shipping_params['amount'])) {
 			$amount_values = json_decode($shipping_params['amount'], true);
@@ -242,6 +245,32 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 				$prev_weight = $weight;
 			}
 		}
+    if ($this->if_this_json($shipping_params['classes_amount'])) {
+      $classes_amount = json_decode($shipping_params['classes_amount']);
+      $use_shipclass = true;
+      $class_price = 0;
+      foreach ($cart_items as $item => $values) {
+        $shipping_class = $values['data']->get_shipping_class_id();
+        $found = false;
+        foreach ($classes_amount as $class) {
+          if ($class->ship_class == $shipping_class) {
+            $found = true;
+            if (!empty($class->price) && $class->price > $class_price) {
+              $class_price = $class->price;
+            }
+          }
+        }
+        if (!$found) {
+          $use_shipclass = false;
+        }
+      }
+      if (!empty($cart_items) && $use_shipclass) {
+        $price_shipping = $class_price;
+      }
+    }
+    if ($cart_amount > $free_from && $free_from > 0) {
+      $price_shipping = 0.0;
+    }
 		return $price_shipping;
   }
 
@@ -274,9 +303,16 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
     $amount = $this->settings['pickup_point_price_' . $country_code];
     $free_from = floatval($this->settings['pickup_point_nocharge_amount_' . $country_code]);
+    $classes_amount = '';
+    if (isset($this->settings['pickup_point_classes_' . $country_code])) {
+      $classes_amount = $this->settings['pickup_point_classes_' . $country_code];
+    }
     return array(
       'show' => $amount !== '',
-      'amount' => ($cart_amount > $free_from && $free_from > 0) ? 0.0 : $amount,
+      'amount' => $amount,
+      'classes_amount' => (!empty($classes_amount)) ? $classes_amount : '',
+      'cart_amount' => $cart_amount,
+      'free_from' => $free_from,
     );
   }
 
@@ -297,9 +333,16 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
     $amount = $this->settings['courier_price_' . $country_code];
     $free_from = floatval($this->settings['courier_nocharge_amount_' . $country_code]);
+    $classes_amount = '';
+    if (isset($this->settings['courier_classes_' . $country_code])) {
+      $classes_amount = $this->settings['courier_classes_' . $country_code];
+    }
     return array(
       'show' => $amount !== '',
-      'amount' => ($cart_amount > $free_from && $free_from > 0) ? 0.0 : $amount,
+      'amount' => $amount,
+      'classes_amount' => (!empty($classes_amount)) ? $classes_amount : '',
+      'cart_amount' => $cart_amount,
+      'free_from' => $free_from,
     );
   }
 
@@ -406,6 +449,15 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         ),
     );
     foreach ($this->available_countries as $country_code) {
+      $fields['hr_' . $country_code] = array(
+        'title' => strtoupper($country_code),
+        'type' => 'hr'
+      );
+      /*$fields['section_pickup_' . $country_code] = array(
+        'title' => __('Pickup Point', 'itella-shipping'),
+        'type' => 'section_name',
+        'class' => 'pickup-point'
+      );*/
       $fields['pickup_point_price_' . $country_code] = array(
         'title' => strtoupper($country_code) . '. ' . __('Pickup Point price', 'itella-shipping'),
         'class' => 'pickup-point',
@@ -413,15 +465,15 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         'default' => 2,
         'description' => __('Leave empty to disable this method', 'itella-shipping'),
       );
-      $fields['courier_price_' . $country_code] = array(
-        'title' => strtoupper($country_code) . '. ' . __('Courier price', 'itella-shipping'),
-        'class' => 'courier',
-        'type' => 'price_by_weight',
-        'default' => 2,
-        'description' => __('Leave empty to disable this method', 'itella-shipping'),
+      $fields['pickup_point_classes_' . $country_code] = array(
+        'title' => strtoupper($country_code) . '. ' . __('Pickup Point price by class', 'itella-shipping'),
+        'class' => 'pickup-point',
+        'type' => 'shipping_class',
+        'default' => '',
+        'description' => __('Set custom price for specific shipping class. Only works when all items in the cart belong to this class', 'itella-shipping'),
       );
       $fields['pickup_point_nocharge_amount_' . $country_code] = array(
-        'title' => strtoupper($country_code) . '. ' . __('Disable pickup point fee if cart amount is greater or equal than this limit', 'itella-shipping'),
+        'title' => strtoupper($country_code) . '. ' . __('Pickup Point free from', 'itella-shipping'),
         'class' => 'pickup-point',
         'type' => 'number',
         'custom_attributes' => array(
@@ -429,9 +481,29 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             'min' => 0.01,
         ),
         'default' => 100,
+        'description' => __('Disable pickup point fee if cart amount is greater or equal than this limit', 'itella-shipping'),
+      );
+      /*$fields['section_courier_' . $country_code] = array(
+        'title' => __('Courier', 'itella-shipping'),
+        'type' => 'section_name',
+        'class' => 'courier'
+      );*/
+      $fields['courier_price_' . $country_code] = array(
+        'title' => strtoupper($country_code) . '. ' . __('Courier price', 'itella-shipping'),
+        'class' => 'courier',
+        'type' => 'price_by_weight',
+        'default' => 2,
+        'description' => __('Leave empty to disable this method', 'itella-shipping'),
+      );
+      $fields['courier_classes_' . $country_code] = array(
+        'title' => strtoupper($country_code) . '. ' . __('Courier price by class', 'itella-shipping'),
+        'class' => 'courier',
+        'type' => 'shipping_class',
+        'default' => '',
+        'description' => __('Set custom price for specific shipping class. Only works when all items in the cart belong to this class', 'itella-shipping'),
       );
       $fields['courier_nocharge_amount_' . $country_code] = array(
-        'title' => strtoupper($country_code) . '. ' . __('Disable courier fee if cart amount is greater or equal than this limit', 'itella-shipping'),
+        'title' => strtoupper($country_code) . '. ' . __('Courier free from', 'itella-shipping'),
         'class' => 'courier',
         'type' => 'number',
         'custom_attributes' => array(
@@ -439,6 +511,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             'min' => 0.01,
         ),
         'default' => 100,
+        'description' => __('Disable courier fee if cart amount is greater or equal than this limit', 'itella-shipping'),
       );
     }
     $this->form_fields = $fields;
@@ -540,6 +613,96 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   }
 
   public function validate_price_by_weight_field( $key, $value ) {
+    $values = wp_json_encode($value);
+    return $values;
+  }
+
+  public function generate_hr_html( $key, $value ) {
+    $class = (isset($value['class'])) ? $value['class'] : '';
+    ob_start();
+    ?>
+    <tr valign="top">
+      <td colspan="2" class="itella-hr">
+        <hr class="' . $class . '">
+        <?php if (isset($value['title'])) : ?>
+          <small><?php echo esc_html($value['title']); ?></small>
+        <?php endif; ?>
+      </td>
+    </tr>
+    <?php
+    $html = ob_get_contents();
+    ob_end_clean();
+    return $html;
+  }
+
+  public function generate_section_name_html( $key, $value ) {
+    $class = (isset($value['class'])) ? $value['class'] : '';
+    ob_start();
+    ?>
+    <tr valign="top">
+      <td colspan="2" class="itella-section_name">
+        <small class="<?php echo $class;?>"><?php echo esc_html($value['title']); ?></small>
+      </td>
+    </tr>
+    <?php
+    $html = ob_get_contents();
+    ob_end_clean();
+    return $html;
+  }
+
+  public function generate_shipping_class_html( $key, $value ) {
+    $field_key = $this->get_field_key($key);
+    $shipping_classes = WC()->shipping->get_shipping_classes();
+
+    if ( $this->get_option($key) !== '' ) {
+      $values = $this->get_option($key);
+      if ( is_string($values) ) {
+        $values = json_decode($this->get_option($key), true);
+      }
+    } else {
+      $values = array();
+    }
+
+    ob_start();
+    ?>
+    <tr valign="top">
+      <th scope="row" class="titledesc">
+        <label><?php echo esc_html($value['title']); ?></label>
+      </th>
+      <td class="forminp itella-shipping_class">
+        <fieldset class="field-select">
+          <?php for ($i=0;$i<1;$i++) : ?>
+            <?php
+            $this_name = esc_html($field_key) . '[' . $i . ']';
+            $this_key = esc_html($field_key) . '_' . ($i+1);
+            ?>
+            <select name="<?php echo $this_name; ?>[ship_class]" id="<?php echo $this_key; ?>_class">
+              <?php $selected = (!isset($values[$i]['ship_class']) || empty($values[$i]['ship_class'])) ? 'selected' : ''; ?>
+              <option value="" <?php echo $selected; ?>>-</option>
+              <?php foreach ($shipping_classes as $ship_class) : ?>
+                <?php $selected = (isset($values[$i]['ship_class']) && $values[$i]['ship_class'] == $ship_class->term_id) ? 'selected' : ''; ?>
+                <option value="<?php echo $ship_class->term_id; ?>" <?php echo $selected; ?>><?php echo $ship_class->name; ?></option>
+              <?php endforeach; ?>
+            </select>
+            <?php $price = (isset($values[$i]['price'])) ? $values[$i]['price'] : ''; ?>
+            <label for="<?php echo $this_key; ?>_price"><?php echo __('Price', 'itella-shipping'); ?>:</label>
+            <input class="input-text regular-input <?php echo esc_html($value['class']); ?>" type="number"
+              name="<?php echo $this_name; ?>[price]" id="<?php echo $this_key; ?>_price"
+              value="<?php echo $price; ?>" step="0.01" min="0">
+          <?php endfor; ?>
+          <?php if (!empty($value['description'])) : ?>
+            <p class="description"><?php echo esc_html($value['description']); ?></p>
+          <?php endif; ?>
+        </fieldset>
+      </td>
+    </tr>
+    <?php
+    $html = ob_get_contents();
+    ob_end_clean();
+    return $html;
+  }
+
+  public function validate_shipping_class_field( $key, $value ) {
     $values = wp_json_encode($value);
     return $values;
   }

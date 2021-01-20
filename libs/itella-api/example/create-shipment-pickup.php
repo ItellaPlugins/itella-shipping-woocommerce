@@ -18,23 +18,23 @@ try {
   $sender
     ->setContract(${'contract_' . Shipment::PRODUCT_PICKUP}) // important, given by itella
     ->setName1('TEST Web Shop')
-    ->setStreet1('Raudondvario pl. 150')
+    ->setStreet1('Shop str. 150')
     ->setPostCode('47174')
     ->setCity('Kaunas')
     ->setCountryCode('LT')
-    ->setContactMobile('+37065454321')
+    ->setContactMobile('+37060000000')
     ->setContactEmail('sender@test.lt');
 
   // Create and configure receiver
   $receiver = new Party(Party::ROLE_RECEIVER);
   $receiver
-    ->setName1('Testas Testutis')
-    ->setStreet1("latvia str. 6")
+    ->setName1('Test Tester')
+    ->setStreet1("test str. 6")
     ->setPostCode("10011")
     ->setCity("vilnius")
     ->setCountryCode('lt')
     ->setContactName('Mike')
-    ->setContactMobile('865841345')
+    ->setContactMobile('860000000')
     ->setContactEmail('receiver@test.lt')
     ;
 
