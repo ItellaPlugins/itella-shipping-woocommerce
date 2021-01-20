@@ -1,4 +1,12 @@
 # Changelog
+
+## [1.2.5] - 2021-01-20
+### Improved
+- added a ability set shipping price for specific shipping class
+
+### Updated
+- itella-api library to v2.3.0
+
 ## [1.2.4] - 2021-01-12
 ### Changed
 - changed name "Itella" to "Smartpost"

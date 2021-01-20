@@ -1,4 +1,8 @@
 # Changelog
+## [2.3.0] - ItellaPickups API
+### Added
+- created ItellaPickups API
+- added a ability to call courier via API
 
 ## [2.2.5] - Receiver info change for Pickups
 ### Changed

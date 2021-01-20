@@ -18,29 +18,29 @@ $items = array(
   array(
     'track_num' => 'JJFItestnr00000000015',
     'weight' => 1,
-    'delivery_address' => 'Testas Testutis, Pramones pr. 6, 51267 Kaunas, LT',
+    'delivery_address' => 'Test Tester, Example str. 6, 44320 City, LT',
   ),
   array(
     'track_num' => 'JJFItestnr00000000016',
     'weight' => 1,
-    'delivery_address' => 'Testas Testutis, Pramones pr. 6, 51267 Kaunas, LT',
+    'delivery_address' => 'Test Tester, Example str. 6, 44320 City, LT',
   ),
   array(
     'track_num' => 'JJFItestnr00000000017',
     'weight' => 1,
-    'delivery_address' => 'Testas Testutis, Pramones pr. 6, 51267 Kaunas, LT',
+    'delivery_address' => 'Test Tester, Example str. 6, 44320 City, LT',
   ),
   array(
     'track_num' => 'JJFItestnr00000000018',
     'weight' => 1,
-    'delivery_address' => 'Testas Testutis, Pramones pr. 6, 51267 Kaunas, LT',
+    'delivery_address' => 'Test Tester, Example str. 6, 44320 City, LT',
   ),
 );
 
 $manifest = new Manifest();
 $manifest_string = $manifest
   ->setSenderName('TEST Web Shop')
-  ->setSenderAddress('Raudondvario pl. 150')
+  ->setSenderAddress('Shop str. 150')
   ->setSenderPostCode('47174')
   ->setSenderCity('Kaunas')
   ->setSenderCountry('LT')
@@ -61,7 +61,7 @@ try {
       'sender' => 'Name / Company name',
       'address' => 'Street, Postcode City, Country',
       'pickup_time' => '8:00 - 17:00',
-      'contact_phone' => '865465412',
+      'contact_phone' => '860000000',
     ))
     ->setAttachment($manifest_string, true)
     //->buildMailBody()

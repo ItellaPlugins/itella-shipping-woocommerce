@@ -21,11 +21,11 @@ try {
   $sender
     ->setContract(${'contract_' . Shipment::PRODUCT_COURIER}) // important comes from supplied tracking code interval
     ->setName1('TEST Web Shop')
-    ->setStreet1('Raudondvario pl. 150')
+    ->setStreet1('Shop str. 150')
     ->setPostCode('47174')
     ->setCity('Kaunas')
     ->setCountryCode('LT')
-    ->setContactMobile('+37065454321')
+    ->setContactMobile('+37060000000')
     ->setContactEmail('sender@test.lt');
 
   // Create and configure receiver

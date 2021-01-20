@@ -49,3 +49,22 @@
 .itella-settings .field-table table .column-actions {
 	max-width: 30px;
 }
+
+.itella-settings .itella-hr {
+  padding: 0;
+}
+.itella-settings .itella-hr hr {
+  margin-bottom: 0;
+}
+
+.itella-settings .itella-section_name {
+  padding-left: 0;
+  padding-bottom: 0;
+}
+
+.itella-settings .itella-shipping_class input {
+  max-width: 100px;
+}
+.itella-settings .itella-shipping_class label {
+  margin-left: 10px !important;
+}
