@@ -432,6 +432,15 @@ $items = array( // selected orders array
   ),
 );
 
+$translates = array( // translate text in email, recommend use english
+  'mail_title' => 'Pickup information',
+  'mail_sender' => 'Sender',
+  'mail_address' => 'Address (pickup from)',
+  'mail_phone' => 'Contact Phone',
+  'mail_pickup_time' => 'Pickup time',
+  'mail_attachment' => 'See attachment for manifest PDF.',
+);
+
 $sendTo = 'test@test.com'; // email to send courier call to
 try {
   $caller = new CallCourier($sendTo);
@@ -440,11 +449,16 @@ try {
     ->setSubject('E-com order booking') // currently it must be 'E-com order booking'
     ->setPickUpAddress(array( // strings to show in email message
       'sender' => 'Name / Company name',
-      'address' => 'Street, Postcode City, Country',
-      'contact_phone' => '860000000',
+      'address_1' => 'Street str. 1',
+      'postcode' => '12345',
+      'city' => 'City name',
+      'country' => 'LT', // Country code
+      'pickup_time' => '8:00 - 17:00',
+      'contact_phone' => '+37060000000',
     ))
     ->setAttachment($manifest_string, true) // attachment is previously generated manifest, true - means we are passing base64 encoded string
     ->setItems($items) // add orders
+    ->setTranslates($translates) // add translated email text
     ->callCourier() // send email
   ;
   if ($result) {

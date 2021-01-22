@@ -1827,21 +1827,22 @@ class Itella_Shipping_Method extends WC_Shipping_Method
           ->setSenderEmail($this->settings['shop_email'])
           ->setSubject(__('E-com order booking', 'itella-shipping'))
           ->setPickUpAddress(array(
-              'sender' => $this->settings['shop_email'],
-              'address' => $this->settings['shop_address'] . ', '
-                  . $this->settings['shop_postcode'] . ',  '
-                  . $this->settings['shop_city'] . ', '
-                  . $this->settings['shop_countrycode'],
+              'sender' => $this->settings['shop_name'],
+              'address_1' => $this->settings['shop_address'],
+              'postcode' => $this->settings['shop_postcode'],
+              'city' => $this->settings['shop_city'],
+              'country' => $this->settings['shop_countrycode'],
               'pickup_time' => '8:00 - 17:00',
               'contact_phone' => $this->settings['shop_phone'],
           ))
           ->setAttachment($manifest_string, true)
+          ->setItems($items)
           ->callCourier();
 
       if ($result) {
         // add notices
         $this->add_msg(__('Email sent to courier', 'itella-shipping')
-            . '(' . $email . ')', 'success');
+            . ' (' . $email . ')', 'success');
       }
     } catch (ItellaException $e) {
 

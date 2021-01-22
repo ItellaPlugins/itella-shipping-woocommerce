@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.6] - 2021-01-22
+### Updated
+- itella-api library to v2.3.1
+
+### Changed
+- applied changes by the updated library
+
 ## [1.2.5] - 2021-01-20
 ### Improved
 - added a ability set shipping price for specific shipping class

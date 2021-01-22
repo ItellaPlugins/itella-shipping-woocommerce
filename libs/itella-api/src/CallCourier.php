@@ -13,12 +13,23 @@ class CallCourier
   private $isTest = false;
   private $pickupAddress = array(
     'sender' => '',
-    'address' => '',
+    'address_1' => '',
+    'postcode' => '',
+    'city' => '',
+    'country' => '',
     'pickup_time' => '',
     'contact_phone' => '',
   );
   private $subject = 'Call Itella Courier';
   private $items = array();
+  private $translates = array(
+    'mail_title' => 'Pickup information',
+    'mail_sender' => 'Sender',
+    'mail_address' => 'Address (pickup from)',
+    'mail_phone' => 'Contact Phone',
+    'mail_pickup_time' => 'Pickup time',
+    'mail_attachment' => 'See attachment for manifest PDF.',
+  );
 
   public function __construct($itella_email, $isTest = false)
   {
@@ -84,23 +95,27 @@ class CallCourier
 
   public function buildMailBody()
   {
-    $body = '<h2>Pickup information</h2><br/>' . PHP_EOL;
+    $body = '<h2>' . $this->translates['mail_title'] . '</h2><br/>' . PHP_EOL;
     $body .= '<table>' . PHP_EOL;
     if (!empty($this->pickupAddress['sender'])) {
-      $body .= "<tr><td>Sender:</td><td>" . $this->pickupAddress['sender'] . "</td></tr>" . PHP_EOL;
+      $body .= "<tr><td>" . $this->translates['mail_sender'] . ":</td><td>" . $this->pickupAddress['sender'] . "</td></tr>" . PHP_EOL;
     }
-    if (!empty($this->pickupAddress['address'])) {
-      $body .= "<tr><td>Adress (pickup from):</td><td>" . $this->pickupAddress['address'] . "</td></tr>" . PHP_EOL;
+    if (!empty($this->pickupAddress['address_1'])) {
+      $address = $this->pickupAddress['address_1'];
+      $address .= (!empty($this->pickupAddress['postcode'])) ? ', ' . $this->pickupAddress['postcode'] : '';
+      $address .= (!empty($this->pickupAddress['city'])) ? ', ' . $this->pickupAddress['city'] : '';
+      $address .= (!empty($this->pickupAddress['country'])) ? ', ' . $this->pickupAddress['country'] : '';
+      $body .= "<tr><td>" . $this->translates['mail_address'] . ":</td><td>" . $address . "</td></tr>" . PHP_EOL;
     }
     if (!empty($this->pickupAddress['contact_phone'])) {
-      $body .= "<tr><td>Contact Phone:</td><td>" . $this->pickupAddress['contact_phone'] . "</td></tr>" . PHP_EOL;
+      $body .= "<tr><td>" . $this->translates['mail_phone'] . ":</td><td>" . $this->pickupAddress['contact_phone'] . "</td></tr>" . PHP_EOL;
     }
     if (!empty($this->pickupAddress['pickup_time'])) {
-      $body .= "<tr><td>Pickup time:</td><td>" . $this->pickupAddress['pickup_time'] . "</td></tr>" . PHP_EOL;
+      $body .= "<tr><td>" . $this->translates['mail_pickup_time'] . ":</td><td>" . $this->pickupAddress['pickup_time'] . "</td></tr>" . PHP_EOL;
     }
     $body .= '</table>' . PHP_EOL;
     if ($this->attachment) {
-      $body .= "<br/>See attachment for manifest PDF." . PHP_EOL;
+      $body .= "<br/>" . $this->translates['mail_attachment'] . PHP_EOL;
     }
     return $body;
   }
@@ -119,10 +134,12 @@ class CallCourier
     
     $data['sender']['name'] = (!empty($this->pickupAddress['sender'])) ? $this->pickupAddress['sender'] : '';
     $data['sender']['email'] = (!empty($this->sender_email)) ? $this->sender_email : '';
-    $data['sender']['address'] = (!empty($this->pickupAddress['address'])) ? $this->pickupAddress['address'] : '';
+    $data['sender']['address_1'] = (!empty($this->pickupAddress['address_1'])) ? $this->pickupAddress['address_1'] : '';
+    $data['sender']['postcode'] = (!empty($this->pickupAddress['postcode'])) ? $this->pickupAddress['postcode'] : '';
+    $data['sender']['city'] = (!empty($this->pickupAddress['city'])) ? $this->pickupAddress['city'] : '';
+    $data['sender']['country'] = (!empty($this->pickupAddress['country'])) ? $this->pickupAddress['country'] : '';
     $data['sender']['phone'] = (!empty($this->pickupAddress['contact_phone'])) ? $this->pickupAddress['contact_phone'] : '';
     $data['pickup_time'] = (!empty($this->pickupAddress['pickup_time'])) ? $this->pickupAddress['pickup_time'] : '';
-    $data['total_items'] = (!empty($this->items)) ? count($this->items) : 0;
     $data['items'] = (!empty($this->items)) ? $this->items : array();
     
     return $data;
@@ -131,9 +148,12 @@ class CallCourier
   /**
    * $pickup = array(
    *  'sender' => 'Name / Company name',
-   *  'address' => 'Street, Postcode City, Country',
+   *  'address_1' => 'Street st. 1',
+   *  'postcode' => '12345',
+   *  'city' => 'City name',
+   *  'country' => 'LT',
    *  'pickup_time' => '8:00 - 17:00',
-   *  'contact_phone' => '865465411',
+   *  'contact_phone' => '+37060000000',
    * );
    */
   public function setPickUpAddress($pickupAddress)
@@ -173,6 +193,12 @@ class CallCourier
   public function setItems($items = [])
   {
     $this->items = $items;
+    return $this;
+  }
+
+  public function setTranslates($translates)
+  {
+    $this->translates = array_merge($this->translates, $translates);
     return $this;
   }
 }
