@@ -1,4 +1,10 @@
 # Changelog
+
+## [2.3.1] - Address splitting
+### Changed
+- divided sender address into different parameters
+- added a ability to translate email text
+
 ## [2.3.0] - ItellaPickups API
 ### Added
 - created ItellaPickups API
