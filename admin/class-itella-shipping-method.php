@@ -252,11 +252,13 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       foreach ($cart_items as $item => $values) {
         $shipping_class = $values['data']->get_shipping_class_id();
         $found = false;
-        foreach ($classes_amount as $class) {
-          if ($class->ship_class == $shipping_class) {
-            $found = true;
-            if (!empty($class->price) && $class->price > $class_price) {
-              $class_price = $class->price;
+        if (!empty($shipping_class)) {
+          foreach ($classes_amount as $class) {
+            if ($class->ship_class == $shipping_class) {
+              $found = true;
+              if (!empty($class->price) && $class->price > $class_price) {
+                $class_price = $class->price;
+              }
             }
           }
         }
