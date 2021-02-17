@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.6.1] - 2021-02-17
+### Fixed
+- fixed shipping price calculation
+
 ## [1.2.6] - 2021-01-22
 ### Updated
 - itella-api library to v2.3.1
