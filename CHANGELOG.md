@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.7] - 2021-02-19
+### Fixed
+- fixed shipping methods showing in cart/checkout
+
+### Changed
+- changed country code input field to select field
+
 ## [1.2.6.1] - 2021-02-17
 ### Fixed
 - fixed shipping price calculation
