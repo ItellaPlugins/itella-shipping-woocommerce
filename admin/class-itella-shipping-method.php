@@ -549,6 +549,21 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         'description' => __('Disable courier fee if cart amount is greater or equal than this limit', 'itella-shipping'),
       );
     }
+    $fields['hr_courier_mail'] = array(
+      'type' => 'hr'
+    );
+    foreach ($this->available_countries as $country_code) {
+      $fields['call_courier_mail_' . $country_code] = array(
+        'title' => sprintf(__('Smartpost %s email', 'itella-shipping'), strtoupper($country_code)),
+        'type' => 'text',
+        'default' => sprintf('smartship.routing.%s@itella.com', $country_code),
+      );
+    }
+    $fields['call_courier_mail_subject'] = array(
+        'title' => __('Smartpost email subject', 'itella-shipping'),
+        'type' => 'text',
+        'default' => 'E-com order booking',
+      );
     $this->form_fields = $fields;
   }
 
@@ -1858,17 +1873,21 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         ->printManifest('manifest.pdf');
 
     $shop_country_code = strtolower($this->settings['shop_countrycode']);
-    if ( in_array($shop_country_code, $this->available_countries) ) {
-      $email = sprintf('smartship.routing.%s@itella.com', $shop_country_code);
+    if ( in_array($shop_country_code, $this->available_countries) && $this->settings['call_courier_mail_' . $shop_country_code] ) {
+      $email = $this->settings['call_courier_mail_' . $shop_country_code];
     } else {
       $email = 'smartship.routing.lt@itella.com';
+    }
+    $email_subject = __('E-com order booking', 'itella-shipping');
+    if (!empty($this->settings['call_courier_mail_subject'])) {
+      $email_subject = $this->settings['call_courier_mail_subject'];
     }
 
     try {
       $caller = new CallCourier($email);
       $result = $caller
           ->setSenderEmail($this->settings['shop_email'])
-          ->setSubject(__('E-com order booking', 'itella-shipping'))
+          ->setSubject($email_subject)
           ->setPickUpAddress(array(
               'sender' => $this->settings['shop_name'],
               'address_1' => $this->settings['shop_address'],
