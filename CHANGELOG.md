@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+### Fixed
+- added hidden fields to cart page
+- customized map marker jumping animation to avoid conflicts
+- removed "important" from hidden class
+
 ## [1.2.7] - 2021-02-19
 ### Fixed
 - fixed shipping methods showing in cart/checkout
