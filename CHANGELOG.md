@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.3.0] - 2021-05-13
 ### Fixed
 - added hidden fields to cart page
 - customized map marker jumping animation to avoid conflicts
