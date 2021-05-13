@@ -76,7 +76,7 @@ class Itella_Shipping
   {
 
     $this->plugin_name = 'itella-shipping';
-    $this->version = '1.2.7';
+    $this->version = '1.3.0';
     $this->available_countries = array('LT', 'EE', 'LV', 'FI');
     $this->plugin_basename = $plugin_basename;
 
@@ -228,6 +228,7 @@ class Itella_Shipping
     $this->loader->add_action('woocommerce_checkout_update_order_meta', $plugin_public, 'add_pp_id_to_order');
     $this->loader->add_action('woocommerce_order_status_completed', $plugin_public, 'show_pp');
     $this->loader->add_action('woocommerce_checkout_before_order_review', $plugin_public, 'itella_checkout_hidden_fields');
+    $this->loader->add_action('woocommerce_cart_totals_before_shipping', $plugin_public, 'itella_checkout_hidden_fields');
 
     $this->loader->add_filter('woocommerce_package_rates', $plugin_public, 'show_itella_shipping_methods', 10, 1);
   }

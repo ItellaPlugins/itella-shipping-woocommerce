@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.3.0] - 2021-05-13
+### Fixed
+- added hidden fields to cart page
+- customized map marker jumping animation to avoid conflicts
+- removed "important" from hidden class
+- fixed notice message in shipping class function
+
+### Improved
+- added a ability to specify the courier email address
+- improved to use billing_country if shipping_country not exist
+- created detailed error display when the label cannot be generated
+
 ## [1.2.7] - 2021-02-19
 ### Fixed
 - fixed shipping methods showing in cart/checkout
