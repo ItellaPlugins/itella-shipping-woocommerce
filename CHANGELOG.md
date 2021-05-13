@@ -5,6 +5,7 @@
 - added hidden fields to cart page
 - customized map marker jumping animation to avoid conflicts
 - removed "important" from hidden class
+- fixed notice message in shipping class function
 
 ### Improved
 - added a ability to specify the courier email address
