@@ -8,6 +8,8 @@
 
 ### Improved
 - added a ability to specify the courier email address
+- improved to use billing_country if shipping_country not exist
+- created detailed error display when the label cannot be generated
 
 ## [1.2.7] - 2021-02-19
 ### Fixed

@@ -471,7 +471,7 @@ class Itella_Manifest
                                 if ($shipping_parameters) {
                                   if ($shipping_parameters['itella_shipping_method'] === 'itella_pp') {
                                     $chosen_pickup_point = $itella_shipping->get_chosen_pickup_point(
-                                        $order->get_shipping_country(),
+                                        Itella_Manifest::order_getCountry($order),
                                         $shipping_parameters['pickup_point_id']
                                     );
                                     ?>
@@ -718,6 +718,21 @@ class Itella_Manifest
     }
 
     return $shipping_parameters;
+  }
+
+  /**
+   * Get country from order
+   *
+   * @param $order
+   * @return string
+   */
+  public static function order_getCountry($order)
+  {
+    $order_country = $order->get_shipping_country();
+    if ( empty($order_country) ) $order_country = $order->get_billing_country();
+    if ( empty($order_country) ) $order_country = 'LT';
+
+    return $order_country;
   }
 
   /**

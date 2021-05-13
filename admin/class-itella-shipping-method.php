@@ -813,7 +813,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       $is_itella_c = $itella_method === 'itella_c';
 
       $chosen_pickup_point_id = get_post_meta($order_id, '_pp_id', true);
-      $chosen_pickup_point = $this->get_chosen_pickup_point($order->get_shipping_country(), $chosen_pickup_point_id);
+      $chosen_pickup_point = $this->get_chosen_pickup_point(Itella_Manifest::order_getCountry($order), $chosen_pickup_point_id);
 
       $weight_unit = get_option('woocommerce_weight_unit');
 
@@ -942,7 +942,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
               'id' => '_pp_id',
               'label' => __('Select Pickup Point:', 'itella-shipping'),
               'value' => $chosen_pickup_point_id,
-              'options' => $this->build_pickup_points_list($order->get_shipping_country()),
+              'options' => $this->build_pickup_points_list(Itella_Manifest::order_getCountry($order)),
               'wrapper_class' => 'form-field-wide'
           ));
 
@@ -1333,7 +1333,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   private function build_pickup_address_for_display( $order, $chosen_pickup_point_id )
   {
     $order_id = $order->get_id();
-    $chosen_pickup_point = $this->get_chosen_pickup_point($order->get_shipping_country(), $chosen_pickup_point_id);
+    $chosen_pickup_point = $this->get_chosen_pickup_point(Itella_Manifest::order_getCountry($order), $chosen_pickup_point_id);
     return $chosen_pickup_point->address->municipality . ' - ' .
            $chosen_pickup_point->address->address . ', ' .
            $chosen_pickup_point->address->postalCode . ' (' .
@@ -1522,7 +1522,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         if ($status['status'] === 'error') {
           echo json_encode(array(
             'status' => 'error',
-            'msg' => __("Failed to register shipment", 'itella-shipping')
+            'msg' => (!empty($status['msg'])) ? $status['msg'] : __("Failed to register shipment", 'itella-shipping')
           ));
         } else {
           echo json_encode(array(
@@ -1669,7 +1669,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $p_user = htmlspecialchars_decode($this->settings['api_user_2317']);
     $p_secret = htmlspecialchars_decode($this->settings['api_pass_2317']);
     $is_test = true;
-    $shipping_country = wc_get_order($order_id)->get_shipping_country();
+    $shipping_country = Itella_Manifest::order_getCountry(wc_get_order($order_id));
     $chosen_pickup_point = $this->get_chosen_pickup_point($shipping_country, $shipping_parameters['pickup_point_id']);
 
     // Create GoodsItem (parcel)
@@ -1728,7 +1728,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         ->setStreet1($order->get_shipping_address_1())
         ->setPostCode($order->get_shipping_postcode())
         ->setCity($order->get_shipping_city())
-        ->setCountryCode($order->get_shipping_country())
+        ->setCountryCode(Itella_Manifest::order_getCountry($order))
         ->setContactMobile($order->get_billing_phone())
         ->setContactEmail($order->get_billing_email());
 
@@ -1985,7 +1985,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       $order = wc_get_order($order_id);
       $shipping_parameters = Itella_Manifest::get_shipping_parameters($order_id);
       $shipping_method = $shipping_parameters['itella_shipping_method'];
-      $shipping_country = wc_get_order($order_id)->get_shipping_country();
+      $shipping_country = Itella_Manifest::order_getCountry(wc_get_order($order_id));
       $chosen_pickup_point = $this->get_chosen_pickup_point($shipping_country, $shipping_parameters['pickup_point_id']);
 
       $tracking_code = $this->get_tracking_code($order_id);
@@ -2001,7 +2001,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
                       . $order->get_shipping_address_1() . ', '
                       . $order->get_shipping_postcode() . ' '
                       . $order->get_shipping_city() . ', '
-                      . $order->get_shipping_country()
+                      . Itella_Manifest::order_getCountry($order)
               );
           }
 
