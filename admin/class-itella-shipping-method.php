@@ -19,8 +19,6 @@ use Mijora\Itella\Shipment\Shipment;
  */
 class Itella_Shipping_Method extends WC_Shipping_Method
 {
-  const ITELLA_TRACKING_URL = 'https://itella.lt/verslui/siuntos-sekimas/?trackingCode=';
-
   /**
    * The ID of this plugin.
    *
@@ -960,6 +958,22 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     <?php }
   }
 
+  public static function getTrackingUrl($country_code = 'lt')
+  {
+    $all_tracking_urls = array(
+      'lt' => 'https://itella.lt/verslui/siuntos-sekimas/?trackingCode=',
+      'lv' => 'https://itella.lv/private-customer/sutijuma-meklesana/?trackingCode=',
+      'ee' => 'https://itella.ee/eraklient/saadetise-jalgimine/?trackingCode=',
+    );
+    $country_code = strtolower($country_code);
+
+    if (isset($all_tracking_urls[$country_code])) {
+      return $all_tracking_urls[$country_code];
+    }
+
+    return $all_tracking_urls['lt'];
+  }
+
   // Multi Checkbox field for woocommerce backend
   function woocommerce_wp_multi_checkbox($field)
   {
@@ -1387,6 +1401,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     foreach ($order_ids as $order_id) {
       $order = wc_get_order($order_id);
       $shipping_parameters = Itella_Manifest::get_shipping_parameters($order_id);
+      $order_country = Itella_Manifest::order_getCountry($order);
       $shipping_method = $shipping_parameters['itella_shipping_method'];
       $shipment = null;
 
@@ -1423,12 +1438,12 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
         // set tracking number
         update_post_meta($order_id, '_itella_tracking_code', $result->__toString());
-        update_post_meta($order_id, '_itella_tracking_url', self::ITELLA_TRACKING_URL . $result->__toString());
+        update_post_meta($order_id, '_itella_tracking_url', self::getTrackingUrl($order_country) . $result->__toString());
 
         // add order note
         $note = sprintf(
           __('Smartpost shipment registered successfully. Tracking number: %s', 'itella-shipping'),
-          '<a href="' . self::ITELLA_TRACKING_URL . $result . '" target="_blank">' . $result . '</a>'
+          '<a href="' . self::getTrackingUrl($order_country) . $result . '" target="_blank">' . $result . '</a>'
         );
         $order->add_order_note( $note );
 
