@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.3.1] - 2021-06-29
+### Improved
+- added a ability to set shipping price by cart amount
+- created tracking code url set by order country
+
 ## [1.3.0] - 2021-05-13
 ### Fixed
 - added hidden fields to cart page

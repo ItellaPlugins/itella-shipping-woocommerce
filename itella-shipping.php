@@ -16,7 +16,7 @@
  * Plugin Name:       Smartpost Itella Shipping
  * Plugin URI:
  * Description:       Smartpost Itella shipping plugin for Woocommerce
- * Version:           1.3.0
+ * Version:           1.3.1
  * Author:            Itella Team
  * Author URI:        https://itella.lt/en/
  * License:           GPL-2.0+
@@ -24,7 +24,7 @@
  * Text Domain:       itella-shipping
  * Domain Path:       /languages
  * Tested up to:      5.7.2
- * WC tested up to:   5.2.2
+ * WC tested up to:   5.4.1
  */
 
 // If this file is called directly, abort.

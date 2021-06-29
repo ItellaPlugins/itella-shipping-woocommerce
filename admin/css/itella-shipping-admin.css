@@ -18,6 +18,11 @@
     margin-bottom: 1.5em;
 }
 
+.itella-settings .field-radio .radio-option {
+  display: inline-block;
+  margin-right: 10px;
+}
+
 .itella-settings .field-table table tr {
 	transition: background .5s ease;
 }
@@ -28,14 +33,14 @@
 .itella-settings .field-table table th {
 	text-align: center;
 }
-.itella-settings .field-table table .column-weight .from_value {
+.itella-settings .field-table table .column-values .from_value {
 	width: 33%;
 	vertical-align: middle;
 	display: inline-block;
 	color: #999;
 	text-align: right;
 }
-.itella-settings .field-table table .column-weight input[type="number"] {
+.itella-settings .field-table table .column-values input[type="number"] {
 	width: 65%;
 	vertical-align: middle;
 }

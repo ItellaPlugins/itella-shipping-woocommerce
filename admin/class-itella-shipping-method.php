@@ -19,8 +19,6 @@ use Mijora\Itella\Shipment\Shipment;
  */
 class Itella_Shipping_Method extends WC_Shipping_Method
 {
-  const ITELLA_TRACKING_URL = 'https://itella.lt/verslui/siuntos-sekimas/?trackingCode=';
-
   /**
    * The ID of this plugin.
    *
@@ -224,7 +222,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $free_from = $shipping_params['free_from'];
     $amount_values = (is_array($shipping_params['amount'])) ? $shipping_params['amount'] : array();
     $price_shipping = (isset($amount_values['single'])) ? $amount_values['single'] : $price_shipping;
-    if (isset($amount_values['cb']) && isset($amount_values['weight'])) {
+    if (isset($amount_values['cb']) && isset($amount_values['weight'])) { // Compatibility with old versions
       $prev_weight = -0.001;
       foreach ($amount_values['weight'] as $key => $weight) {
         if (empty($weight)) {
@@ -234,6 +232,14 @@ class Itella_Shipping_Method extends WC_Shipping_Method
           $price_shipping = (isset($amount_values['price'][$key])) ? $amount_values['price'][$key] : 0;
         }
         $prev_weight = $weight;
+      }
+    }
+    if (isset($amount_values['radio'])) {
+      if ($amount_values['radio'] == 'weight' && isset($amount_values['byWeight'])) {
+        $price_shipping = $this->getShippingPriceValueFromTable($amount_values['byWeight'], $cart_weight);
+      }
+      if ($amount_values['radio'] == 'price' && isset($amount_values['byPrice'])) {
+        $price_shipping = $this->getShippingPriceValueFromTable($amount_values['byPrice'], $cart_amount);
       }
     }
     if (!empty($shipping_params['classes_amount'])) {
@@ -356,7 +362,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $show = true;
     if (is_array($amount)) {
       $show = false;
-      if (isset($amount['single'])) {
+      if (isset($amount['single'])) { // Compatibility with old versions
         if ($amount['single'] === '') {
           if (isset($amount['cb'])) {
             $show = true;
@@ -365,12 +371,38 @@ class Itella_Shipping_Method extends WC_Shipping_Method
           $show = true;
         }
       }
+      if (isset($amount['radio'])) {
+        if ($amount['radio'] == 'disabled') {
+          $show = false;
+        } else {
+          $show = true;
+        }
+      } else {
+        $show = false;
+      }
     } else {
       if ($amount === '') {
         $show = false;
       }
     }
+
     return $show;
+  }
+
+  private function getShippingPriceValueFromTable($values, $cart_value) {
+    $price_shipping = 0;
+    $prev_value = -0.001;
+    foreach ($values as $key => $value) {
+      if (empty($value['value'])) {
+        $value['value'] = 1000000;
+      }
+      if ($cart_value > $prev_value && $cart_value <= $value['value']) {
+        $price_shipping = (isset($value['price'])) ? $value['price'] : 0;
+      }
+      $prev_value = $value['value'];
+    }
+
+    return $price_shipping;
   }
 
   /**
@@ -498,7 +530,6 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         'class' => 'pickup-point',
         'type' => 'price_by_weight',
         'default' => 2,
-        'description' => __('Leave empty to disable this method', 'itella-shipping'),
       );
       $fields['pickup_point_classes_' . $country_code] = array(
         'title' => strtoupper($country_code) . '. ' . __('Pickup Point price by class', 'itella-shipping'),
@@ -528,7 +559,6 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         'class' => 'courier',
         'type' => 'price_by_weight',
         'default' => 2,
-        'description' => __('Leave empty to disable this method', 'itella-shipping'),
       );
       $fields['courier_classes_' . $country_code] = array(
         'title' => strtoupper($country_code) . '. ' . __('Courier price by class', 'itella-shipping'),
@@ -580,11 +610,28 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       $values = array();
     }
 
-    $table_values = array();
-    if (isset($values['weight'])) {
-      foreach ($values['weight'] as $k => $val) {
-        $price_value = (isset($values['price'][$k])) ? $values['price'][$k] : $value['default'];
-        array_push($table_values, array($val,$price_value));
+    $table_weight_values = array();
+    if (isset($values['byWeight'])) {
+      foreach ($values['byWeight'] as $k => $vals) {
+        $value_value = (isset($vals['value'])) ? $vals['value'] : 0;
+        $value_price = (isset($vals['price'])) ? $vals['price'] : $value['default'];
+        array_push($table_weight_values, array($value_value,$value_price));
+      }
+    } else {
+      if (isset($values['weight'])) { // Compatibility with old versions
+        foreach ($values['weight'] as $k => $val) {
+          $price_value = (isset($values['price'][$k])) ? $values['price'][$k] : $value['default'];
+          array_push($table_weight_values, array($val,$price_value));
+        }
+      }
+    }
+
+    $table_prices_values = array();
+    if (isset($values['byPrice'])) {
+      foreach ($values['byPrice'] as $k => $vals) {
+        $value_value = (isset($vals['value'])) ? $vals['value'] : 0;
+        $value_price = (isset($vals['price'])) ? $vals['price'] : $value['default'];
+        array_push($table_prices_values, array($value_value,$value_price));
       }
     }
 
@@ -594,7 +641,33 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       $single_value = (!empty($values)) ? esc_html($values) : esc_html($value['default']);
     }
 
-    $show_fieldset = (isset($values['cb'])) ? 'table' : 'number';
+    $radio_list = array(
+      'disabled' => __('Disabled', 'itella-shipping'),
+      'single' => __('Simple', 'itella-shipping'),
+      'weight' => __('By weight', 'itella-shipping'),
+      'price' => __('By amount', 'itella-shipping'),
+    );
+    $radio_checked = 'single';
+
+    $show_fieldset = 'single';
+    if (isset($values['radio'])) {
+      foreach ($radio_list as $radio_key => $radio_label) {
+        $radio_checked = ($values['radio'] == $radio_key) ? $radio_key : $radio_checked;
+      }
+      $show_fieldset = ($radio_checked == 'disabled') ? '' : $show_fieldset;
+      $show_fieldset = ($radio_checked == 'single') ? 'single' : $show_fieldset;
+      $show_fieldset = ($radio_checked == 'weight') ? 'table-weight' : $show_fieldset;
+      $show_fieldset = ($radio_checked == 'price') ? 'table-price' : $show_fieldset;
+    } else { // Compatibility with old versions
+      if (empty($single_value)) {
+        $radio_checked = 'disabled';
+        $show_fieldset = '';
+      }
+      if (isset($values['cb'])) {
+        $radio_checked = 'weight';
+        $show_fieldset = 'table-weight';
+      }
+    }
     $weight_unit = get_option('woocommerce_weight_unit');
 
     ob_start();
@@ -604,12 +677,18 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         <label><?php echo esc_html($value['title']); ?></label>
       </th>
       <td class="forminp itella-price_by_weight">
-        <fieldset class="field-cb">
-          <input type="checkbox" name="<?php echo esc_html($field_key); ?>[cb]" id="<?php echo esc_html($field_key); ?>_cb"
-          value="true" <?php if (isset($values['cb'])) echo 'checked'; ?>>
-          <label for="<?php echo esc_html($field_key); ?>_cb"><?php echo __('Price by weight', 'itella-shipping'); ?></label>
+        <fieldset class="field-radio">
+          <?php foreach ($radio_list as $radio_key => $radio_label) : ?>
+            <?php
+            $radio_id = $field_key . '_radio_' . $radio_key;
+            ?>
+            <div class="radio-option">
+              <input type="radio" name="<?php echo esc_html($field_key); ?>[radio]" id="<?php echo esc_html($radio_id); ?>" value="<?php echo esc_html($radio_key); ?>" <?php echo ($radio_checked == $radio_key) ? 'checked' : ''; ?>>
+              <label for="<?php echo esc_html($radio_id); ?>"><?php echo $radio_label; ?></label>
+            </div>
+          <?php endforeach; ?>
         </fieldset>
-        <fieldset class="field-number" <?php echo ($show_fieldset !== 'number') ? 'style="display:none;"' : ''; ?>>
+        <fieldset class="field-number" <?php echo ($show_fieldset !== 'single') ? 'style="display:none;"' : ''; ?>>
           <legend class="screen-reader-text"><span><?php echo esc_html($value['title']); ?></span></legend>
           <input class="input-text regular-input <?php echo esc_html($value['class']); ?>" type="number"
             name="<?php echo esc_html($field_key); ?>[single]" id="<?php echo esc_html($field_key); ?>"
@@ -618,45 +697,91 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             <p class="description"><?php echo esc_html($value['description']); ?></p>
           <?php endif; ?>
         </fieldset>
-        <fieldset class="field-table" <?php echo ($show_fieldset !== 'table') ? 'style="display:none;"' : ''; ?>>
-          <table class="<?php echo esc_html($value['class']); ?>">
-            <tr>
-              <th class="column-weight"><?php printf(__('Weight (%s)', 'itella-shipping'),$weight_unit); ?></th>
-              <th class="column-price"><?php echo __('Price', 'itella-shipping'); ?></th>
-              <th class="column-actions"></th>
-            </tr>
-            <?php $prev_value = 0; ?>
-            <?php for ($i=0;$i<count($table_values);$i++) : ?>
-              <?php $next_value = (isset($table_values[$i+1]) && $table_values[$i+1][0] != '') ? $table_values[$i+1][0]-0.001 : ''; ?>
-              <tr valign="middle" class="row-values">
-                <td class="column-weight">
-                  <span class="from_value"><?php echo ($prev_value == 0) ? number_format((float)$prev_value, 3, '.', '') : number_format((float)$prev_value+0.001, 3, '.', ''); ?> -</span>
-                  <input type="number" value="<?php echo $table_values[$i][0]; ?>"
-                    id="<?php echo esc_html($field_key); ?>_weight_<?php echo $i+1; ?>"
-                    name="<?php echo esc_html($field_key); ?>[weight][<?php echo $i; ?>]"
-                    min="<?php echo $prev_value+0.001; ?>" max="<?php echo $next_value; ?>" step="0.001"
-                    <?php if (!isset($table_values[$i+1])) echo 'readonly'; ?>>
-                </td>
-                <td class="column-price">
-                  <input type="number" id="<?php echo esc_html($field_key); ?>_price_<?php echo $i+1; ?>"
-                    name="<?php echo esc_html($field_key); ?>[price][<?php echo $i; ?>]"
-                    value="<?php echo $table_values[$i][1]; ?>" min="0" step="0.01">
-                </td>
-                <td class="column-actions">
-                  <button class="remove-row">X</button>
-                </td>
-              </tr>
-              <?php $prev_value = $table_values[$i][0]; ?>
-            <?php endfor; ?>
-            <tr>
-              <td colspan="3" class="column-footer">
-                <button class="insert-row" data-id="<?php echo esc_html($field_key); ?>"><?php echo __('Add row', 'itella-shipping'); ?></button>
-              </td>
-            </tr>
-          </table>
+        <fieldset class="field-table table-weight" <?php echo ($show_fieldset !== 'table-weight') ? 'style="display:none;"' : ''; ?>>
+          <?php
+          $table_params = array(
+            'key' => $field_key,
+            'type' => 'byWeight',
+            'class' => $value['class'],
+            'column-1-title' => sprintf(__('Weight (%s)', 'itella-shipping'), $weight_unit),
+            'values' => $table_weight_values,
+            'step' => 0.001,
+          );
+          echo $this->build_prices_table_html($table_params);
+          ?>
+        </fieldset>
+        <fieldset class="field-table table-price" <?php echo ($show_fieldset !== 'table-price') ? 'style="display:none;"' : ''; ?>>
+          <?php
+          $table_params = array(
+            'key' => $field_key,
+            'type' => 'byPrice',
+            'class' => $value['class'],
+            'column-1-title' => __('Amount range', 'itella-shipping'),
+            'values' => $table_prices_values,
+            'step' => 0.01,
+          );
+          echo $this->build_prices_table_html($table_params);
+          ?>
         </fieldset>
       </td>
     </tr>
+    <?php
+    $html = ob_get_contents();
+    ob_end_clean();
+    return $html;
+  }
+
+  private function build_prices_table_html( $params=array() )
+  {
+    $params['key'] = (isset($params['key'])) ? $params['key'] : 'itella';
+    $params['type'] = (isset($params['type'])) ? $params['type'] : '';
+    $params['class'] = (isset($params['class'])) ? $params['class'] : '';
+    $params['column-1-title'] = (isset($params['column-1-title'])) ? $params['column-1-title'] : '';
+    $params['column-2-title'] = (isset($params['column-2-title'])) ? $params['column-2-title'] : __('Price', 'itella-shipping');
+    $params['column-3-title'] = (isset($params['column-3-title'])) ? $params['column-3-title'] : '';
+    $params['values'] = (isset($params['values']) && is_array($params['values'])) ? $params['values'] : array();
+    $params['step'] = (isset($params['step'])) ? $params['step'] : 0.01;
+    $decimal = strlen(substr(strrchr((float)$params['step'], "."), 1));
+    
+    ob_start();
+    ?>
+    <table class="<?php echo esc_html($params['class']); ?>">
+      <tr>
+        <th class="column-values"><?php echo esc_html($params['column-1-title']); ?></th>
+        <th class="column-price"><?php echo esc_html($params['column-2-title']); ?></th>
+        <th class="column-actions"><?php echo esc_html($params['column-3-title']); ?></th>
+      </tr>
+      <?php $prev_value = 0; ?>
+      <?php for ($i=0;$i<count($params['values']);$i++) : ?>
+        <?php $next_value = (isset($params['values'][$i+1]) && $params['values'][$i+1][0] != '') ? $params['values'][$i+1][0]-$params['step'] : ''; ?>
+        <tr valign="middle" class="row-values">
+          <td class="column-values">
+            <span class="from_value"><?php echo ($prev_value == 0) ? number_format((float)$prev_value, $decimal, '.', '') : number_format((float)$prev_value+$params['step'], $decimal, '.', ''); ?> -</span>
+            <input type="number" value="<?php echo $params['values'][$i][0]; ?>"
+              id="<?php echo esc_html($params['key'] . '_' . $params['type'] . '_' . ($i+1)); ?>"
+              name="<?php echo esc_html($params['key'] . '[' . $params['type'] . '][' . $i . '][value]'); ?>"
+              min="<?php echo $prev_value+$params['step']; ?>" max="<?php echo $next_value; ?>" step="<?php echo $params['step'];?>"
+              <?php if (!isset($params['values'][$i+1])) echo 'readonly'; ?>>
+          </td>
+          <td class="column-price">
+            <input type="number" id="<?php echo esc_html($params['key'] . '_' . $params['type'] . '_price_' . ($i+1)); ?>"
+              name="<?php echo esc_html($params['key'] . '[' . $params['type'] . '][' . $i . '][price]'); ?>" value="<?php echo $params['values'][$i][1]; ?>" min="0" step="0.01">
+          </td>
+          <td class="column-actions">
+            <button class="remove-row">X</button>
+          </td>
+        </tr>
+        <?php $prev_value = $params['values'][$i][0]; ?>
+      <?php endfor; ?>
+      <tr>
+        <td colspan="3" class="column-footer">
+          <button class="insert-row" data-id="<?php echo esc_html($params['key']); ?>"
+            data-type="<?php echo esc_html($params['type']); ?>"
+            data-step="<?php echo esc_html($params['step']); ?>"
+          ><?php echo __('Add row', 'itella-shipping'); ?></button>
+        </td>
+      </tr>
+    </table>
     <?php
     $html = ob_get_contents();
     ob_end_clean();
@@ -958,6 +1083,22 @@ class Itella_Shipping_Method extends WC_Shipping_Method
           ));
           ?></div>
     <?php }
+  }
+
+  public static function getTrackingUrl($country_code = 'lt')
+  {
+    $all_tracking_urls = array(
+      'lt' => 'https://itella.lt/verslui/siuntos-sekimas/?trackingCode=',
+      'lv' => 'https://itella.lv/private-customer/sutijuma-meklesana/?trackingCode=',
+      'ee' => 'https://itella.ee/eraklient/saadetise-jalgimine/?trackingCode=',
+    );
+    $country_code = strtolower($country_code);
+
+    if (isset($all_tracking_urls[$country_code])) {
+      return $all_tracking_urls[$country_code];
+    }
+
+    return $all_tracking_urls['lt'];
   }
 
   // Multi Checkbox field for woocommerce backend
@@ -1387,6 +1528,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     foreach ($order_ids as $order_id) {
       $order = wc_get_order($order_id);
       $shipping_parameters = Itella_Manifest::get_shipping_parameters($order_id);
+      $order_country = Itella_Manifest::order_getCountry($order);
       $shipping_method = $shipping_parameters['itella_shipping_method'];
       $shipment = null;
 
@@ -1423,12 +1565,12 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
         // set tracking number
         update_post_meta($order_id, '_itella_tracking_code', $result->__toString());
-        update_post_meta($order_id, '_itella_tracking_url', self::ITELLA_TRACKING_URL . $result->__toString());
+        update_post_meta($order_id, '_itella_tracking_url', self::getTrackingUrl($order_country) . $result->__toString());
 
         // add order note
         $note = sprintf(
           __('Smartpost shipment registered successfully. Tracking number: %s', 'itella-shipping'),
-          '<a href="' . self::ITELLA_TRACKING_URL . $result . '" target="_blank">' . $result . '</a>'
+          '<a href="' . self::getTrackingUrl($order_country) . $result . '" target="_blank">' . $result . '</a>'
         );
         $order->add_order_note( $note );
 
