@@ -15,8 +15,8 @@ Shipping plugin for Woocommerce to use with Itella shipping methods
 
 ## Installation
 
-1. Download latest version of this plugin from releases [here](https://github.com/MikeTango30/itella-woocommerce/releases)
+1. Download latest version of this plugin from [releases](https://github.com/ItellaPlugins/itella-shipping-woocommerce/releases) or pressing [here](https://github.com/ItellaPlugins/itella-shipping-woocommerce/releases/latest/download/itella-shipping.zip)
 2. In the WordPress dashboard, go to:
  *Plugins* -> *Add New* -> *Upload plugin* -> *Choose file*(Select file and press open) -> *Install Now*
 3. In *Plugins* section locate “Itella Shipping”
-4. Click on *Activate.* 
+4. Click on *Activate* 
