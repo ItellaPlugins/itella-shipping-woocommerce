@@ -1,5 +1,9 @@
 # Changelog
 
+## [Unreleased]
+### Fixed
+- changed file content get PHP function to Wordpress function
+
 ## [1.3.1] - 2021-06-29
 ### Improved
 - added a ability to set shipping price by cart amount
