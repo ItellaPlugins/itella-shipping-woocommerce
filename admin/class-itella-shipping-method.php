@@ -549,6 +549,13 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         'default' => 100,
         'description' => __('Disable pickup point fee if cart amount is greater or equal than this limit', 'itella-shipping'),
       );
+      $fields['pickup_point_description_' . $country_code] = array(
+        'title' => strtoupper($country_code) . '. ' . __('Pickup Point description', 'itella-shipping'),
+        'class' => 'pickup-point',
+        'type' => 'textarea',
+        'default' => '',
+        'description' => __('Show shipping method description on Checkout page'),
+      );
       /*$fields['section_courier_' . $country_code] = array(
         'title' => __('Courier', 'itella-shipping'),
         'type' => 'section_name',
@@ -577,6 +584,13 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         ),
         'default' => 100,
         'description' => __('Disable courier fee if cart amount is greater or equal than this limit', 'itella-shipping'),
+      );
+      $fields['courier_description_' . $country_code] = array(
+        'title' => strtoupper($country_code) . '. ' . __('Courier description', 'itella-shipping'),
+        'class' => 'courier',
+        'type' => 'textarea',
+        'default' => '',
+        'description' => __('Show shipping method description on Checkout page'),
       );
     }
     $fields['hr_courier_mail'] = array(
@@ -1416,6 +1430,31 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
     if ( ! $plain_text ) {
       echo '</table></div>';
+    }
+  }
+
+  public function itella_shipping_method_description( $method, $index )
+  {
+    if( is_cart() ) return; // Exit on cart page
+
+    $Itella_Shipping_Method = new Itella_Shipping_Method();
+    if ( ! isset($Itella_Shipping_Method->settings) ) {
+      return;
+    }
+
+    $customer = WC()->session->get('customer');
+    if ( ! isset($customer['country']) ) {
+      return;
+    }
+
+    $pt_description_name = 'pickup_point_description_' . strtolower($customer['country']);
+    $c_description_name = 'courier_description_' . strtolower($customer['country']);
+
+    if ( ! empty($Itella_Shipping_Method->settings[$pt_description_name]) && $method->id === 'itella_pp' ) {
+      echo '<span class="itella-shipping-description">' . $Itella_Shipping_Method->settings[$pt_description_name] . '</span>';
+    }
+    if ( ! empty($Itella_Shipping_Method->settings[$c_description_name]) && $method->id === 'itella_c' ) {
+      echo '<span class="itella-shipping-description">' . $Itella_Shipping_Method->settings[$c_description_name] . '</span>';
     }
   }
 

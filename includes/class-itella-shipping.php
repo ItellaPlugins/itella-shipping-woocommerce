@@ -76,7 +76,7 @@ class Itella_Shipping
   {
 
     $this->plugin_name = 'itella-shipping';
-    $this->version = '1.3.1';
+    $this->version = '1.3.1-new';
     $this->available_countries = array('LT', 'EE', 'LV', 'FI');
     $this->plugin_basename = $plugin_basename;
 
@@ -200,6 +200,7 @@ class Itella_Shipping
     $this->loader->add_action('wp_ajax_nopriv_single_register_shipment', $plugin_admin, 'itella_ajax_single_register_shipment');
     $this->loader->add_action('wp_ajax_bulk_register_shipments', $plugin_admin, 'itella_ajax_bulk_register_shipments');
     $this->loader->add_action('wp_ajax_nopriv_bulk_register_shipments', $plugin_admin, 'itella_ajax_bulk_register_shipments');
+    $this->loader->add_action('woocommerce_after_shipping_rate', $plugin_admin, 'itella_shipping_method_description', 20, 2);
 
     $this->loader->add_filter('admin_post_itella_labels', $plugin_admin, 'itella_post_label_actions', 20);
     $this->loader->add_filter('admin_post_itella_shipments', $plugin_admin, 'itella_post_shipment_actions', 20);
