@@ -4,6 +4,9 @@
 ### Fixed
 - changed file content get PHP function to Wordpress function
 
+### Improved
+- added a ability to set shipping method description
+
 ## [1.3.1] - 2021-06-29
 ### Improved
 - added a ability to set shipping price by cart amount
