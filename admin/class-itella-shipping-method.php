@@ -165,7 +165,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   {
     global $woocommerce;
     $current_country = $woocommerce->customer->get_shipping_country();
-    $cart_amount = floatval($woocommerce->cart->get_cart_contents_total()) + floatval($woocommerce->cart->get_tax_totals());
+    $cart_amount = floatval($woocommerce->cart->cart_contents_total) + floatval($woocommerce->cart->tax_total);
     $items = (isset($package['contents'])) ? $package['contents'] : $woocommerce->cart->get_cart();
 
     // add Pickup Point Rate
