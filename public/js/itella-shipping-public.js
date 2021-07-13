@@ -10,6 +10,16 @@ jQuery( document ).ready(function($) {
             }
         }
     });
+    $(document.body).on('updated_checkout', function() {
+        var itella_descriptions = $(".itella-shipping-description");
+        for (var i=0;i<itella_descriptions.length;i++) {
+            if ($(itella_descriptions[i]).closest("li").find("input.shipping_method").is(':checked')) {
+                $(itella_descriptions[i]).show();
+            } else {
+                $(itella_descriptions[i]).hide();
+            }
+        }
+    });
 });
 
 if (jQuery('input[name^="shipping_method"]:checked').val() === 'itella_pp') {
