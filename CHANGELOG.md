@@ -1,8 +1,8 @@
 # Changelog
 
-## [Unreleased]
+## [1.3.2] - 2021-07-13
 ### Fixed
-- changed file content get PHP function to Wordpress function
+- changed file_get_contents() PHP function to equivalent Wordpress function
 - cart amount total calculation
 
 ### Improved
