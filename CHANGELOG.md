@@ -3,6 +3,7 @@
 ## [Unreleased]
 ### Fixed
 - changed file content get PHP function to Wordpress function
+- cart amount total calculation
 
 ### Improved
 - added a ability to set shipping method description
