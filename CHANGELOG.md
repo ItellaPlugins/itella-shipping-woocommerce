@@ -4,6 +4,7 @@
 ### Fixed
 - changed file_get_contents() PHP function to equivalent Wordpress function
 - cart amount total calculation
+- fixed min value for price table first input field
 
 ### Improved
 - added a ability to set shipping method description
