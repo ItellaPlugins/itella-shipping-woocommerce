@@ -773,7 +773,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         ?>
         <tr valign="middle" class="row-values">
           <td class="column-values">
-            <span class="from_value"><?php echo ($prev_value == 0) ? number_format((float)$prev_value, $decimal, '.', '') : number_format((float)$prev_value+$params['step'], $decimal, '.', ''); ?> -</span>
+            <span class="from_value"><?php echo ($i == 0) ? number_format((float)$prev_value, $decimal, '.', '') : number_format((float)$prev_value+$params['step'], $decimal, '.', ''); ?> -</span>
             <input type="number" value="<?php echo $params['values'][$i][0]; ?>"
               id="<?php echo esc_html($params['key'] . '_' . $params['type'] . '_' . ($i+1)); ?>"
               name="<?php echo esc_html($params['key'] . '[' . $params['type'] . '][' . $i . '][value]'); ?>"
