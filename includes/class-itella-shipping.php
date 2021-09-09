@@ -227,7 +227,7 @@ class Itella_Shipping
     $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
     $this->loader->add_action('woocommerce_order_details_after_order_table', $plugin_public, 'show_pp_details', 10, 1);
     $this->loader->add_action('woocommerce_checkout_update_order_meta', $plugin_public, 'add_pp_id_to_order');
-    $this->loader->add_action('woocommerce_order_status_completed', $plugin_public, 'show_pp');
+    //$this->loader->add_action('woocommerce_order_status_completed', $plugin_public, 'show_pp');
     $this->loader->add_action('woocommerce_checkout_before_order_review', $plugin_public, 'itella_checkout_hidden_fields');
     $this->loader->add_action('woocommerce_cart_totals_before_shipping', $plugin_public, 'itella_checkout_hidden_fields');
 
