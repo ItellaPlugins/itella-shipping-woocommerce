@@ -1240,6 +1240,11 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   public function save_shipping_settings($order_id)
   {
+    $check_fields = array('packet_count', 'weight_total', 'itella_cod_enabled', 'itella_cod_amount', 'itella_shipping_method', '_pp_id', 'itella_extra_services');
+    foreach ($check_fields as $field) {
+      if (!isset($_POST[$field])) return;
+    }
+
     update_post_meta($order_id, 'packet_count', wc_clean($_POST['packet_count']));
     if (intval(wc_clean($_POST['packet_count']) > 1)) {
       update_post_meta($order_id, 'itella_multi_parcel', 'true');
