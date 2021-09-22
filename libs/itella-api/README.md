@@ -2,6 +2,11 @@
 
 Its a wrapper library for Pakettikauppa API library.
 
+## Installing Itella-API using composer
+```
+composer require mijora/itella-api
+```
+
 ## Using Itella-API library
 - `__PATH_TO_LIB__` is path to where itella-api is placed. This will load Mijora\Itella namespace
 ```php
@@ -196,6 +201,7 @@ try {
     ->addGoodsItems(                            // Register GoodsItem
       array($item)
     )
+    ->setComment('Comment about shipment')      // Comment string
   ;
 } catch (ItellaException $e) {
   // Handle validation exceptions here
@@ -219,6 +225,7 @@ try {
     ->setReceiverParty($receiver)               // Register Receiver
     ->setPickupPoint('071503201')               // Register pickup point pupCode
     ->addGoodsItem($item)                       // Register GoodsItem (this adds just one)
+    ->setComment('Comment about shipment')      // Comment string
   ;
 } catch (ItellaException $e) {
   // Handle validation exceptions here
@@ -309,7 +316,7 @@ $pickup = new PickupPoints('https://locationservice.posti.com/api/2/location');
 // this will return filtered pickup points list as array
 $itella_loc = $pickup->getLocationsByCountry('LT');
 // now points can be stored into file or database for future use
-$pickup->saveLocationsToJSONFile('itella_locations_lt.json', json_encode($itella_oc));
+$pickup->saveLocationsToJSONFile('itella_locations_lt.json', json_encode($itella_loc));
 ```
 
 ## Manifest generating

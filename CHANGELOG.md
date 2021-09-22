@@ -5,6 +5,12 @@
 - removed action with not existing function for bulk status change to complete
 - added POST fields check before values save
 
+### Updated
+- itella-api library to v2.3.3
+
+### Improved
+- added a ability to add comment to label
+
 ## [1.3.2] - 2021-07-13
 ### Fixed
 - changed file_get_contents() PHP function to equivalent Wordpress function

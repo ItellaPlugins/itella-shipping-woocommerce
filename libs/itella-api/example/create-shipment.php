@@ -72,6 +72,7 @@ try {
     ->setReceiverParty($receiver) // Receiver class object
     ->addAdditionalServices([$service_fragile, $service_cod]) // set additional services
     ->addGoodsItems([$item, $item2])
+    ->setComment('Comment for courier label')
   ;
 
   $xml = false;
