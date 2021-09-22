@@ -201,7 +201,6 @@ class Client
         if($this->comment != null) {
             $shipment_xml->{"ROUTING"}->{"Routing.Comment"} = $this->comment;
         }
-
         if (!$draft) {
             $response = $this->doPost("/prinetti/create-shipment?lang={$language}", null, $shipment_xml->asXML());
         } else {
@@ -301,6 +300,7 @@ class Client
         if(!$response_xml) {
             throw new \Exception("Failed to load response xml: " . var_export($response, true));
         }
+
         $this->response = $response_xml;
 
         if($response_xml->{'response.status'} != 0) {

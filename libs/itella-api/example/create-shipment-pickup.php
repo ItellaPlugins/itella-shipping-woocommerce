@@ -54,6 +54,7 @@ try {
     ->setReceiverParty($receiver) // Receiver class object
     ->setPickupPoint("621353201")
     ->addGoodsItem($item) // GoodsItem class object (or in case of multiparcel can be array of GoodsItem)
+    ->setComment('Comment for pickup label')
   ;
 
   $xml = false;

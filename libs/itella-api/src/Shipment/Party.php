@@ -43,6 +43,9 @@ class Party
   public $contactPhone; // optional
   public $contactEmail; // should always set in case pakettikaupa requires it
 
+  // Should lib try and fix phone number, if set to false only checks that number format matches international standart
+  public $checkPhone = true;
+
   public function __construct($role)
   {
     if ($role != self::ROLE_RECEIVER && $role != self::ROLE_SENDER) {
@@ -65,8 +68,10 @@ class Party
 
   private function validatePhone($phone)
   {
+    $country = $this->checkPhone ? strtoupper($this->countryCode) : 'GLOBAL';
+
     // set regex
-    switch (strtoupper($this->countryCode)) {
+    switch ($country) {
       case 'LT':
         $regex = '/^\+3706[0-9]{7}$/';
         break;
@@ -86,9 +91,13 @@ class Party
     }
 
     if (!preg_match($regex, $phone)) {
-      throw new ItellaException("Invalid phone number supplied for "
-        . strtoupper($this->countryCode)
-        . " country. Tested phone number: " . $phone);
+      if ($this->checkPhone) {
+        $message = "Invalid phone number supplied for " . strtoupper($this->countryCode) . " country.";
+      } else {
+        $message = "Supplied phone number does not match international format.";
+      }
+
+      throw new ItellaException($message . " Tested phone number: " . $phone);
     }
 
     return true;
@@ -187,7 +196,9 @@ class Party
   public function setContactMobile($contactMobile)
   {
     $this->isCountrySet();
-    $contactMobile = Helper::fixPhoneNumber($contactMobile, $this->countryCode);
+    if ($this->checkPhone) {
+      $contactMobile = Helper::fixPhoneNumber($contactMobile, $this->countryCode);
+    }
     $this->validatePhone($contactMobile);
 
     $this->contactMobile = $contactMobile;
@@ -198,7 +209,9 @@ class Party
   public function setContactPhone($contactPhone)
   {
     $this->isCountrySet();
-    $contactPhone = Helper::fixPhoneNumber($contactPhone, $this->countryCode);
+    if ($this->checkPhone) {
+      $contactPhone = Helper::fixPhoneNumber($contactPhone, $this->countryCode);
+    }
     $this->validatePhone($contactPhone);
 
     $this->contactPhone = $contactPhone;
@@ -210,6 +223,18 @@ class Party
   {
     $this->contactEmail = $contactEmail;
     $this->party->setEmail($contactEmail);
+    return $this;
+  }
+
+  public function disablePhoneCheck()
+  {
+    $this->phoneCheck = false;
+    return $this;
+  }
+
+  public function enablePhoneCheck()
+  {
+    $this->phoneCheck = true;
     return $this;
   }
 }

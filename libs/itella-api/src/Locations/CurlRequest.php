@@ -47,8 +47,12 @@ class CurlRequest
       $outputObj = new Output($loc, $lang);
       $type = strtoupper($outputObj->getType());
       $partner = strtoupper($outputObj->getPartnerType());
+      $countryCode = $outputObj->getCountryCode();
       // Filter just Itella supported locations
-      if (($type != 'PICKUPPOINT' && $type != 'SMARTPOST') || ($type == 'SMARTPOST' && $partner == 'POSTI')) {
+      if (($type != 'PICKUPPOINT' && $type != 'SMARTPOST') 
+        || ($type == 'SMARTPOST' && $partner == 'POSTI')
+        || ($type == 'PICKUPPOINT' && strtoupper($countryCode) == 'FI')
+      ) {
         $locations[] = array(
           "id" => $outputObj->getId(),
           "type" => $outputObj->getType(),
@@ -57,7 +61,7 @@ class CurlRequest
           "publicName" => $outputObj->getPublicName(),
           'locationName' => $outputObj->getLocationName(),
           "labelName" => $outputObj->getLabelName(),
-          "countryCode" => $outputObj->getCountryCode(),
+          "countryCode" => $countryCode,
           'dropOfTimeParcel' => $outputObj->getDropOffTimeParcel(),
           'dropOfTimeLetters' => $outputObj->getDropOffTimeLetters(),
           'dropOfTimeExpress' => $outputObj->getDropOffTimeExpress(),

@@ -410,6 +410,13 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   function init_form_fields()
   {
+    $allowed_comment_variables_pp = array(
+      'order_id' => __('Order ID', 'itella-shipping'),
+    );
+    $allowed_comment_variables_c = array(
+      'order_id' => __('Order ID', 'itella-shipping'),
+    );
+
     $fields = array(
         'enabled' => array(
             'title' => __('Enable', 'itella-shipping'),
@@ -590,12 +597,33 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         'class' => 'courier',
         'type' => 'textarea',
         'default' => '',
-        'description' => __('Show shipping method description on Checkout page'),
+        'description' => __('Show shipping method description on Checkout page', 'itella-shipping'),
       );
     }
     $fields['hr_courier_mail'] = array(
       'type' => 'hr'
     );
+
+    $comment_pp_desc = __('Add custom comment to label', 'itella-shipping') . '.';
+    foreach ($allowed_comment_variables_pp as $key => $desc) {
+      $comment_pp_desc .= '<br/><code>{' . $key . '}</code> - ' . $desc;
+    }
+    $fields['comment_pp'] = array(
+      'title' => __('Pickup point label comment', 'itella-shipping'),
+      'type' => 'text',
+      'description' => $comment_pp_desc,
+    );
+
+    $comment_c_desc = __('Add custom comment to label', 'itella-shipping') . '.';
+    foreach ($allowed_comment_variables_c as $key => $desc) {
+      $comment_c_desc .= '<br/><code>{' . $key . '}</code> - ' . $desc;
+    }
+    $fields['comment_c'] = array(
+      'title' => __('Courier label comment', 'itella-shipping'),
+      'type' => 'text',
+      'description' => $comment_c_desc,
+    );
+
     foreach ($this->available_countries as $country_code) {
       $fields['call_courier_mail_' . $country_code] = array(
         'title' => sprintf(__('Smartpost %s email', 'itella-shipping'), strtoupper($country_code)),
@@ -1829,6 +1857,12 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       $additional_services[] = $call_before_delivery;
     }
 
+    // Prepare label comment
+    $comment_replaces = array(
+      'order_id' => $order_id,
+    );
+    $comment = $this->prepare_comment(htmlspecialchars_decode($this->settings['comment_c']), $comment_replaces);
+
     // Create shipment object
     $shipment = new Shipment($p_user, $p_secret, $is_test);
     $shipment
@@ -1838,7 +1872,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         ->setSenderParty($sender)
         ->setReceiverParty($receiver)
         ->addAdditionalServices($additional_services)
-        ->addGoodsItems($items);
+        ->addGoodsItems($items)
+        ->setComment($comment);
 
     return $shipment;
   }
@@ -1865,6 +1900,12 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $item = new GoodsItem();
     $item->setGrossWeight(intval($shipping_parameters['weight'])); // kg
 
+    // Prepare label comment
+    $comment_replaces = array(
+      'order_id' => $order_id,
+    );
+    $comment = $this->prepare_comment(htmlspecialchars_decode($this->settings['comment_pp']), $comment_replaces);
+
     // Create shipment object
     $shipment = new Shipment($p_user, $p_secret, $is_test);
     $shipment
@@ -1874,10 +1915,20 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         ->setSenderParty($sender)
         ->setReceiverParty($receiver)
         ->setPickupPoint($chosen_pickup_point->pupCode) // pupCode
-        ->addGoodsItem($item);
+        ->addGoodsItem($item)
+        ->setComment($comment);
 
     return $shipment;
 
+  }
+
+  private function prepare_comment($comment, $variables)
+  {
+    foreach ($variables as $key => $value) {
+      $comment = str_replace('{' . $key . '}', $value, $comment);
+    }
+
+    return $comment;
   }
 
   /**

@@ -46,6 +46,7 @@ class Shipment
   // Shipment specific
   public $shipmentNumber;
   public $shipmentDateTime; // when shipment is ready for pickup
+  public $comment; // custom comment for label
 
   // Location pupCode
   private $pickup_point_id = false;
@@ -83,6 +84,7 @@ class Shipment
     $this->additionalServices = array();
     $this->goodsItems = array();
     $this->totalItems = 0;
+    $this->comment = null;
 
     $this->valid_product_codes = array(
       self::PRODUCT_COURIER,
@@ -263,6 +265,9 @@ class Shipment
 
     $info = new _Info();
     $info->setReference($this->shipmentNumber);
+    if ($this->comment) {
+      $info->setAdditionalInfoText($this->comment);
+    }
 
     $shipment->setShipmentInfo($info);
 
@@ -392,6 +397,12 @@ class Shipment
   public function setShipmentNumber($shipmentNumber)
   {
     $this->shipmentNumber = $shipmentNumber;
+    return $this;
+  }
+
+  public function setComment($comment)
+  {
+    $this->comment = $comment;
     return $this;
   }
 
