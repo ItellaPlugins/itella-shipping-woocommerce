@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.3.4] - COD Service for Pickup Point type of shipment
+### Added
+- For product (2711) it is now allowed to set COD additional service (3101)
+
 ## [2.3.3] - FI pickupoints
 ### Changed
 - PickupPoints for country FI wont filter out type PICKUPPOINT

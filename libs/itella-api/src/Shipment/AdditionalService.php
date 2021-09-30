@@ -37,7 +37,7 @@ class AdditionalService
       self::COD, self::MULTI_PARCEL, self::FRAGILE,
       self::CALL_BEFORE_DELIVERY, self::OVERSIZED
     ),
-    '2711' => array(self::PICKUP_POINT)
+    '2711' => array(self::PICKUP_POINT, self::COD)
   );
 
   private $code; // Additional service code
