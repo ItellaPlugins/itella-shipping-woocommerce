@@ -1828,22 +1828,17 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     // Create additional services
     $additional_services = array();
 
-    // get services from order
+    // Get services from order
     $extra_services = $shipping_parameters['extra_services'];
     $extra_services = is_array($extra_services) ? $extra_services : array($extra_services);
 
-    // cod
-    if ($shipping_parameters['is_cod'] === 'yes' || $shipping_parameters['is_cod'] === true) {
-      $service_cod = new AdditionalService(3101, array(
-          'amount' => $shipping_parameters['cod_amount'],
-          'account' => $this->settings['bank_account'],
-          'reference' => ItellaHelper::generateCODReference($order_id),
-          'codbic' => $this->settings['cod_bic']
-      ));
+    // COD
+    $service_cod = $this->get_service_cod_info($order_id, $shipping_parameters);
+    if ($service_cod) {
       $additional_services[] = $service_cod;
     }
 
-    // other services
+    // Other services
     $oversized = in_array('oversized', $extra_services) ? new AdditionalService(3174) : false;
     if ($oversized) {
       $additional_services[] = $oversized;
@@ -1900,6 +1895,15 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $item = new GoodsItem();
     $item->setGrossWeight(intval($shipping_parameters['weight'])); // kg
 
+    // Create additional services
+    $additional_services = array();
+
+    // COD
+    $service_cod = $this->get_service_cod_info($order_id, $shipping_parameters);
+    if ($service_cod) {
+      $additional_services[] = $service_cod;
+    }
+
     // Prepare label comment
     $comment_replaces = array(
       'order_id' => $order_id,
@@ -1914,6 +1918,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         ->setShipmentDateTime(date('c'))
         ->setSenderParty($sender)
         ->setReceiverParty($receiver)
+        ->addAdditionalServices($additional_services)
         ->setPickupPoint($chosen_pickup_point->pupCode) // pupCode
         ->addGoodsItem($item)
         ->setComment($comment);
@@ -1929,6 +1934,21 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     }
 
     return $comment;
+  }
+
+  private function get_service_cod_info($order_id, $shipping_parameters)
+  {
+    if ($shipping_parameters['is_cod'] === 'yes' || $shipping_parameters['is_cod'] === true) {
+      $service_cod = new AdditionalService(3101, array(
+        'amount' => $shipping_parameters['cod_amount'],
+        'account' => $this->settings['bank_account'],
+        'reference' => ItellaHelper::generateCODReference($order_id),
+        'codbic' => $this->settings['cod_bic']
+      ));
+      return $service_cod;
+    }
+
+    return false;
   }
 
   /**
