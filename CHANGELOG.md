@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.3.4] - 2021-09-30
 ### Improved
 - added COD service support to Pickup Point delivery method
 
