@@ -685,7 +685,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
     $radio_list = array(
       'disabled' => __('Disabled', 'itella-shipping'),
-      'single' => __('Simple', 'itella-shipping'),
+      'single' => _x('Simple', 'Price type', 'itella-shipping'),
       'weight' => __('By weight', 'itella-shipping'),
       'price' => __('By amount', 'itella-shipping'),
     );
