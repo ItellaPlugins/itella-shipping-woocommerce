@@ -49,11 +49,6 @@
                 "posti",
                 "smartpost"
             ],
-            "support": {
-                "email": "integration@pakettikauppa.fi",
-                "issues": "https://github.com/Pakettikauppa/api-library/issues",
-                "source": "https://github.com/Pakettikauppa/api-library/tree/2.0.2"
-            },
             "install-path": "../pakettikauppa/api-library"
         },
         {
@@ -194,10 +189,6 @@
                 "pdf417",
                 "qrcode"
             ],
-            "support": {
-                "issues": "https://github.com/tecnickcom/TCPDF/issues",
-                "source": "https://github.com/tecnickcom/TCPDF/tree/6.3.5"
-            },
             "install-path": "../tecnickcom/tcpdf"
         }
     ],

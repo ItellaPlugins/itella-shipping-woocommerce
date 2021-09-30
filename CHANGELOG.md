@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.4] - 2021-09-30
+### Improved
+- added COD service support to Pickup Point delivery method
+
+### Updated
+- itella-api library to v2.3.4
+
 ## [1.3.3] - 2021-09-22
 ### Fixed
 - removed action with not existing function for bulk status change to complete

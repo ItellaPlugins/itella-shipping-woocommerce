@@ -471,65 +471,52 @@ class Itella_Manifest
                                 if ($shipping_parameters) {
                                   if ($shipping_parameters['itella_shipping_method'] === 'itella_pp') {
                                     $chosen_pickup_point = $itella_shipping->get_chosen_pickup_point(
-                                        Itella_Manifest::order_getCountry($order),
-                                        $shipping_parameters['pickup_point_id']
+                                      Itella_Manifest::order_getCountry($order),
+                                      $shipping_parameters['pickup_point_id']
                                     );
-                                    ?>
-                                      <strong> <?= __('Smartpost Pickup Point:', 'itella-shipping'); ?> </strong>
-                                      <br>
-                                    <?= __('City: ', 'itella-shipping') ?>
-                                      <em> <?= $chosen_pickup_point->address->municipality ?></em><br>
-                                    <?= __('Public Name: ', 'itella-shipping') ?>
-                                      <em> <?= $chosen_pickup_point->publicName ?></em><br>
-                                    <?= __('Address: ', 'itella-shipping') ?>
-                                      <em> <?= $chosen_pickup_point->address->address ?></em><br>
-                                    <?= __('Postal Code: ', 'itella-shipping') ?>
-                                      <em> <?= $chosen_pickup_point->address->postalCode ?></em>
-                                    <?php
+                                    echo '<strong>' . __('Smartpost Pickup Point', 'itella-shipping') . ':</strong>';
+                                    echo '<br>' . __('City', 'itella-shipping') . ': ';
+                                    echo '<em>' . $chosen_pickup_point->address->municipality . '</em>';
+                                    echo '<br>' . __('Public Name', 'itella-shipping') . ': ';
+                                    echo '<em>' . $chosen_pickup_point->publicName . '</em>';
+                                    echo '<br>' . __('Address', 'itella-shipping') . ': ';
+                                    echo '<em>' . $chosen_pickup_point->address->address . '</em>';
+                                    echo '<br>' . __('Postal Code', 'itella-shipping') . ': ';
+                                    echo '<em>' . $chosen_pickup_point->address->postalCode . '</em>';
                                   }
-                                }
-                                if ($shipping_parameters['itella_shipping_method'] === 'itella_c') {
-                                  ?>
-                                    <strong> <?= __('Smartpost Courier:', 'itella-shipping'); ?> </strong>
-                                    <br>
-                                  <?php
-                                  echo __('Packet Count: ', 'itella-shipping') ?>
-                                    <em> <?= $shipping_parameters['packet_count']; ?></em><?php
-                                  ?> <br> <?php
-                                  echo __('Weight: ', 'itella-shipping') ?>
-                                    <em> <?= $shipping_parameters['weight']; ?></em><?php
-                                  ?> <br> <?php
-                                  echo __('COD: ', 'itella-shipping');
-                                  ?>
-                                    <em> <?= $shipping_parameters['is_cod'] ? __('Yes', 'woocommerce') : __('No', 'woocommerce'); ?></em>
-                                    <br> <?php
+                                  if ($shipping_parameters['itella_shipping_method'] === 'itella_c') {
+                                    echo '<strong>' . __('Smartpost Courier', 'itella-shipping') . ':</strong>';
+                                    echo '<br>' . __('Packet Count', 'itella-shipping') . ': ';
+                                    echo '<em>' . $shipping_parameters['packet_count'] . '</em>';
+                                    echo '<br>' . __('Weight', 'itella-shipping') . ': ';
+                                    echo '<em>' . $shipping_parameters['weight'] . '</em>';
+                                    if ($shipping_parameters['extra_services']) {
+                                      echo '<br>' . __('Extra services', 'itella-shipping') . ': ';
+                                      if ($shipping_parameters['multi_parcel']) {
+                                        echo '<br><em> - ' . $shipping_parameters['multi_parcel'] . '</em>';
+                                        foreach ($shipping_parameters['extra_services'] as $extra_service) {
+                                          echo '<br><em> - ';
+                                          if ($extra_service === 'oversized') {
+                                            echo __('Oversized', 'itella-shipping');
+                                          }
+                                          if ($extra_service === 'call_before_delivery') {
+                                            echo __('Call before delivery', 'itella-shipping');
+                                          }
+                                          if ($extra_service === 'fragile') {
+                                            echo __('Fragile', 'itella-shipping');
+                                          }
+                                        }
+                                        echo '</em>';
+                                      }
+                                    }
+                                  }
+                                  echo '<br>' . __('COD', 'itella-shipping') . ': ';
                                   if ($shipping_parameters['is_cod']) {
-                                    echo __('COD amount: ', 'itella-shipping') ?>
-                                      <em> <?= $shipping_parameters['cod_amount']; ?></em><?php
-                                    ?> <br> <?php
-                                  }
-                                  if ($shipping_parameters['extra_services']) {
-                                    echo __('Extra services:', 'itella-shipping');
-                                    ?> <br> <?php
-                                    if ($shipping_parameters['multi_parcel']) {
-                                      ?><em> <?= '- ' . $shipping_parameters['multi_parcel']; ?></em>
-                                        <br> <?php
-                                    }
-                                    foreach ($shipping_parameters['extra_services'] as $extra_service) {
-                                      echo '-';
-                                      if ($extra_service === 'oversized') {
-                                        ?><em> <?= __('Oversized', 'itella-shipping'); ?></em>
-                                          <br> <?php
-                                      }
-                                      if ($extra_service === 'call_before_delivery') {
-                                        ?><em> <?= __('Call before delivery', 'itella-shipping'); ?></em>
-                                          <br> <?php
-                                      }
-                                      if ($extra_service === 'fragile') {
-                                        ?><em> <?= __('Fragile', 'itella-shipping'); ?></em>
-                                          <br> <?php
-                                      }
-                                    }
+                                    echo '<em>' . __('Yes', 'woocommerce') . '</em>';
+                                    echo '<br>' . __('COD amount', 'itella-shipping') . ': ';
+                                    echo '<em>' . $shipping_parameters['cod_amount'] . '</em>';
+                                  } else {
+                                    echo '<em>' . __('No', 'woocommerce') . '</em>';
                                   }
                                 }
                                 ?>

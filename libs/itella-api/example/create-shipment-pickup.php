@@ -10,6 +10,8 @@ require '../vendor/autoload.php';
 use \Mijora\Itella\Shipment\Party;
 use \Mijora\Itella\Shipment\GoodsItem;
 use \Mijora\Itella\Shipment\Shipment;
+use \Mijora\Itella\Shipment\AdditionalService;
+use \Mijora\Itella\Helper;
 
 try {
 
@@ -44,6 +46,14 @@ try {
     ->setGrossWeight(2) // kg
     ->setVolume(0.1); // m3
 
+  // Create additional services
+  $service_cod = new AdditionalService(3101, array(
+    'amount' => 100,
+    'account' => 'LT100000000000',
+    'reference' => Helper::generateCODReference('666'),
+    'codbic' => 'XBC0101'
+  ));
+
   // Create shipment object
   $shipment = new Shipment($p_user, $p_secret);
   $shipment
@@ -53,6 +63,7 @@ try {
     ->setSenderParty($sender) // Sender class object
     ->setReceiverParty($receiver) // Receiver class object
     ->setPickupPoint("621353201")
+    ->addAdditionalService($service_cod)
     ->addGoodsItem($item) // GoodsItem class object (or in case of multiparcel can be array of GoodsItem)
     ->setComment('Comment for pickup label')
   ;
