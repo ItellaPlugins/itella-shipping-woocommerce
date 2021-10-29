@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.3.5] - 2021-10-29
 ### Improved
 - added pick-up point code saving in Order meta
 
