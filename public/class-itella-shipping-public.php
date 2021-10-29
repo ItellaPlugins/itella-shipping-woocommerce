@@ -160,6 +160,9 @@ class Itella_Shipping_Public
   {
     if (isset($_POST['itella-chosen-point-id']) && $order_id) {
       update_post_meta($order_id, '_pp_id', $_POST['itella-chosen-point-id']);
+      $country = (!empty($_POST['shipping_country'])) ? $_POST['shipping_country'] : $_POST['billing_country'];
+      $pickup_point = $this->itella_shipping->get_chosen_pickup_point($country, $_POST['itella-chosen-point-id']);
+      update_post_meta($order_id, 'itella_pupCode', $pickup_point->pupCode);
     }
 
     // set itella method todo refactor
