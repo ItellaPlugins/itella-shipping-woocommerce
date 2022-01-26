@@ -28,12 +28,16 @@ if (jQuery('input[name^="shipping_method"]:checked').val() === 'itella_pp') {
 
 function itella_init() {
     let itellaPpShippingMethod = jQuery('input[value="itella_pp"]');
+    var add_to;
 
     if (itellaPpShippingMethod.length) {
-        var add_to = itellaPpShippingMethod[0].nextSibling;
+        add_to = itellaPpShippingMethod[0].nextSibling;
+        if (itellaPpShippingMethod[0].nextSibling === null) {
+            add_to = itellaPpShippingMethod[0].closest('li');
+        }
     } else {
         var elem = jQuery('#itella-pickup-block');
-        var add_to = elem[0];
+        add_to = elem[0];
     }
 
     window.itella = new itellaMapping(add_to);
