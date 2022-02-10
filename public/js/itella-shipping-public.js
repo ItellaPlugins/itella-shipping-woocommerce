@@ -31,8 +31,8 @@ function itella_init() {
     var add_to;
 
     if (itellaPpShippingMethod.length) {
-        add_to = itellaPpShippingMethod[0].nextSibling;
-        if (itellaPpShippingMethod[0].nextSibling === null) {
+        add_to = itellaPpShippingMethod[0].nextElementSibling;
+        if (itellaPpShippingMethod[0].nextElementSibling === null) {
             add_to = itellaPpShippingMethod[0].closest('li');
         }
     } else {
