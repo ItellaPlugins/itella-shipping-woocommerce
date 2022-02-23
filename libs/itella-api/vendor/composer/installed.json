@@ -2,17 +2,17 @@
     "packages": [
         {
             "name": "pakettikauppa/api-library",
-            "version": "2.0.2",
-            "version_normalized": "2.0.2.0",
+            "version": "2.0.5",
+            "version_normalized": "2.0.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Pakettikauppa/api-library.git",
-                "reference": "b0a197cc0dfda33c2e1dafba23de9617016b0300"
+                "reference": "6ba538d45abac262b4a38eafb200104e76e0e264"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Pakettikauppa/api-library/zipball/b0a197cc0dfda33c2e1dafba23de9617016b0300",
-                "reference": "b0a197cc0dfda33c2e1dafba23de9617016b0300",
+                "url": "https://api.github.com/repos/Pakettikauppa/api-library/zipball/6ba538d45abac262b4a38eafb200104e76e0e264",
+                "reference": "6ba538d45abac262b4a38eafb200104e76e0e264",
                 "shasum": ""
             },
             "require": {
@@ -20,7 +20,7 @@
                 "ext-json": "*",
                 "ext-simplexml": "*"
             },
-            "time": "2020-04-22T07:08:03+00:00",
+            "time": "2022-02-01T12:58:16+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -33,6 +33,10 @@
                 "MIT"
             ],
             "authors": [
+                {
+                    "name": "Joose Vettenranta",
+                    "email": "joose.vettenranta@kompassi.fi"
+                },
                 {
                     "name": "Matti Särkikoski",
                     "email": "matti@pakettikauppa.fi"
@@ -49,6 +53,11 @@
                 "posti",
                 "smartpost"
             ],
+            "support": {
+                "email": "integration@pakettikauppa.fi",
+                "issues": "https://github.com/Pakettikauppa/api-library/issues",
+                "source": "https://github.com/Pakettikauppa/api-library/tree/2.0.5"
+            },
             "install-path": "../pakettikauppa/api-library"
         },
         {
@@ -128,23 +137,23 @@
         },
         {
             "name": "tecnickcom/tcpdf",
-            "version": "6.3.5",
-            "version_normalized": "6.3.5.0",
+            "version": "6.4.4",
+            "version_normalized": "6.4.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tecnickcom/TCPDF.git",
-                "reference": "19a535eaa7fb1c1cac499109deeb1a7a201b4549"
+                "reference": "42cd0f9786af7e5db4fcedaa66f717b0d0032320"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tecnickcom/TCPDF/zipball/19a535eaa7fb1c1cac499109deeb1a7a201b4549",
-                "reference": "19a535eaa7fb1c1cac499109deeb1a7a201b4549",
+                "url": "https://api.github.com/repos/tecnickcom/TCPDF/zipball/42cd0f9786af7e5db4fcedaa66f717b0d0032320",
+                "reference": "42cd0f9786af7e5db4fcedaa66f717b0d0032320",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0"
             },
-            "time": "2020-02-14T14:20:12+00:00",
+            "time": "2021-12-31T08:39:24+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -188,6 +197,16 @@
                 "pdf",
                 "pdf417",
                 "qrcode"
+            ],
+            "support": {
+                "issues": "https://github.com/tecnickcom/TCPDF/issues",
+                "source": "https://github.com/tecnickcom/TCPDF/tree/6.4.4"
+            },
+            "funding": [
+                {
+                    "url": "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&currency_code=GBP&business=paypal@tecnick.com&item_name=donation%20for%20tcpdf%20project",
+                    "type": "custom"
+                }
             ],
             "install-path": "../tecnickcom/tcpdf"
         }

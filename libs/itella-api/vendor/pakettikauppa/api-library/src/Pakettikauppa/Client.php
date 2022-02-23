@@ -47,8 +47,10 @@ class Client
      */
     private $access_token       = null;
 
-    private $http_response_code;
-    private $http_error;
+    public $http_response_code;
+    public $http_error;
+    public $http_response;
+    public $http_request;
 
     /**
      * Client constructor.
@@ -230,7 +232,7 @@ class Client
 
     /**
      * Returns latest response as XML
-     * 
+     *
      * @return \SimpleXMLElement
      */
     public function getResponse() {
@@ -243,7 +245,7 @@ class Client
      * The shipment must have $tracking_code and $reference set.
      *
      * @param Shipment $shipment
-     * @return bool
+     * @return string
      * @throws \Exception
      */
     public function fetchShippingLabel(Shipment &$shipment)
@@ -301,6 +303,7 @@ class Client
         if(!$response_xml) {
             throw new \Exception("Failed to load response xml: " . var_export($response, true));
         }
+
         $this->response = $response_xml;
 
         if($response_xml->{'response.status'} != 0) {
@@ -416,8 +419,8 @@ class Client
         }
 
         $post_params = array(
-            'postcode'          => (string) $postcode,
-            'address'           => (string) $street_address,
+            'postcode'          => (string) trim($postcode),
+            'address'           => (string) trim($street_address),
             'country'           => (string) $country,
             'service_provider'  => (string) $service_provider,
             'limit'             => (int) $limit
@@ -441,7 +444,7 @@ class Client
         }
 
         $post_params = array(
-            'query'             => (string) $query_text,
+            'query'             => (string) trim($query_text),
             'service_provider'  => (string) $service_provider,
             'limit'             => (int) $limit
         );
@@ -574,11 +577,11 @@ class Client
                 if(!isset($post_params['api_key'])) {
                     $post_params['api_key'] = $this->api_key;
                 }
-                
+
                 if(!isset($post_params['timestamp'])) {
                     $post_params['timestamp'] = time();
                 }
-                
+
                 ksort($post_params);
 
                 $post_params['hash'] = hash_hmac('sha256', join('&', $post_params), $this->secret);
@@ -606,12 +609,15 @@ class Client
                 CURLOPT_HTTPHEADER      =>  $headers,
                 CURLOPT_POSTFIELDS      =>  $post_data
         );
-        
+
         $ch = curl_init();
         curl_setopt_array($ch, $options);
+        $response = curl_exec($ch);
+
+        $this->http_request         = $post_data;
         $this->http_response_code   = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $this->http_error           = curl_errno($ch);
-        $response = curl_exec($ch);
+        $this->http_response        = $response;
 
         return $response;
     }
@@ -629,6 +635,8 @@ class Client
 
         $headers[] = 'Accept: application/json';
         $headers[] = 'Authorization: Basic ' .base64_encode("$user:$secret");
+        $headers[] = 'Content-Length: 0';
+        $headers[] = 'Expect:';
 
         $options = array(
             CURLOPT_POST            => 1,
