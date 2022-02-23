@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.3.6] - 2022-02-23
 ### Fixed
 - fixed pick-up point selection showing in some not standard themes
 
