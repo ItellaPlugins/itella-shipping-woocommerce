@@ -4,6 +4,12 @@
 ### Fixed
 - fixed pick-up point selection showing in some not standard themes
 
+### Improved
+- adapted for PHP 8.x
+
+### Updated
+- itella-api library to v2.3.5
+
 ## [1.3.5] - 2021-10-29
 ### Improved
 - added pick-up point code saving in Order meta
