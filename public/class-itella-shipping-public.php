@@ -185,7 +185,8 @@ class Itella_Shipping_Public
 
     $shipping_country = $woocommerce->customer->get_shipping_country();
     $chosen_pickup_point_id = get_post_meta($order->get_id(), '_pp_id', true);
-    $pickup_points = file_get_contents(plugin_dir_url(__FILE__) . '../locations/locations' . $shipping_country . '.json');
+    $plugin_url = trailingslashit(plugins_url(basename(dirname(__DIR__))));
+    $pickup_points = file_get_contents($plugin_url . 'locations/locations' . $shipping_country . '.json');
     $pickup_points = json_decode($pickup_points);
 
     foreach ($pickup_points as $pickup_point) {
