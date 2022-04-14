@@ -657,9 +657,15 @@ class Itella_Manifest
     $default_extra_services = array();
     $default_packet_count = '1';
     $default_multi_parcel = false;
-    $default_weight = '1.00';
+    $default_weight = 0;
     $default_is_cod = $order->get_payment_method() === 'itella_cod';
     $default_cod_amount = $order->get_total();
+
+    $order_items = $order->get_items();
+    foreach ( $order_items as $item ) {
+      $product = $item->get_product();
+      $default_weight += floatval($product->get_weight() * $item->get_quantity());
+    }
 
     $itella_method = $is_shipping_updated ?
         get_post_meta($order_id, 'itella_shipping_method', true) :
@@ -673,10 +679,11 @@ class Itella_Manifest
     if (empty($multi_parcel)) {
       $multi_parcel = $default_multi_parcel;
     }
+
     $weight = get_post_meta($order_id, 'weight_total', true);
-    if (empty($weight)) {
-      $weight = $default_weight;
-    }
+    $weight = (!empty($weight)) ? $weight : $default_weight;
+    $weight = (!empty($weight)) ? $weight : 0;
+    
     $is_cod = get_post_meta($order_id, 'itella_cod_enabled', true) === 'yes';
     if (!$is_cod) {
       $is_cod = $default_is_cod;

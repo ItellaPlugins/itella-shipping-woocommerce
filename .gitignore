@@ -9,6 +9,7 @@
 *.vi
 *~
 *.sass-cache
+/var/*/*.pdf
 
 # OS or Editor folders
 .DS_Store
