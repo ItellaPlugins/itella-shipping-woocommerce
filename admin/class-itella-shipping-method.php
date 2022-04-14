@@ -951,7 +951,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       $call_before_delivery = 'call_before_delivery';
       $fragile = 'fragile';
       $default_packet_count = '1';
-      $default_weight = '0.00';
+      $default_weight = 0;
       $extra_services = array();
       $default_is_cod = $order->get_payment_method() === 'itella_cod';
       $default_cod_amount = $order->get_total();
@@ -961,6 +961,12 @@ class Itella_Shipping_Method extends WC_Shipping_Method
           $call_before_delivery => __('Call before delivery', 'itella-shipping'),
           $fragile => __('Fragile', 'itella-shipping')
       );
+
+      $order_items = $order->get_items();
+      foreach ( $order_items as $item ) {
+        $product = $item->get_product();
+        $default_weight += floatval($product->get_weight() * $item->get_quantity());
+      }
 
       // vars
       if ($is_shipping_updated) {
@@ -1002,7 +1008,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
                 <strong><?= __('Packets(total):', 'itella-shipping') ?></strong> <?= $packet_count ?>
             </p>
             <p>
-                <strong><?= sprintf(__('Weight (%s):', 'itella-shipping'), $weight_unit) ?></strong> <?= $weight ?>
+                <strong><?= sprintf(__('Weight (%s):', 'itella-shipping'), $weight_unit) ?></strong> <?= number_format($weight,3) ?>
             </p>
             <p><strong><?= __('COD:', 'itella-shipping') ?></strong>
               <?=
@@ -1893,7 +1899,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
     // Create GoodsItem (parcel)
     $item = new GoodsItem();
-    $item->setGrossWeight(intval($shipping_parameters['weight'])); // kg
+    $item->setGrossWeight(floatval($shipping_parameters['weight'])); // kg
 
     // Create additional services
     $additional_services = array();

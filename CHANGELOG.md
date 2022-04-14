@@ -1,5 +1,9 @@
 # Changelog
 
+## [Unreleased]
+### Fixed
+- fixed order weight adding to shipment
+
 ## [1.3.6] - 2022-02-23
 ### Fixed
 - fixed pick-up point selection showing in some not standard themes
