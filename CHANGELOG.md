@@ -4,6 +4,7 @@
 ### Fixed
 - fixed order weight adding to shipment
 - fixed params updating in order edit page
+- fixed pickup points file getting
 
 ### Improved
 - improved handling of plugin files on frontend pages
