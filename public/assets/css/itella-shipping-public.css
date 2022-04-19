@@ -1,0 +1,9 @@
+.itella-modal-btn {
+    text-decoration: unset!important;
+    text-align: center;
+}
+.itella-shipping-description {
+    display: block;
+    font-size: 80%;
+    color: #999;
+}

@@ -14,26 +14,28 @@ class Itella_Shipping_Public
 {
 
   /**
-   * The ID of this plugin.
+   * This plugin information.
    *
-   * @since    1.0.0
+   * @since    1.3.7
    * @access   private
-   * @var      string $name The ID of this plugin.
+   * @var      object $plugin
    */
-  private $name;
+  private $plugin;
 
   /**
-   * The version of this plugin.
+   * URL's for every assets group.
    *
-   * @since    1.0.0
+   * @since    1.3.7
    * @access   private
-   * @var      string $version The current version of this plugin.
+   * @var      object $assets
    */
-  private $version;
+  private $assets;
 
   /**
    * Itella shipping available country list
    *
+   * @since    1.1.0
+   * @access   private
    * @var array $available_countries
    */
   private $available_countries;
@@ -41,52 +43,61 @@ class Itella_Shipping_Public
   /**
    * Initialize the class and set its properties.
    *
-   * @param $name
-   * @param $version
-   * @param string[] $available_countries
-   * @since    1.0.0
+   * @param object $plugin
+   * @param array $available_countries
+   * @since 1.0.0
    *
    */
-  public function __construct($name, $version, $available_countries)
+  public function __construct($plugin, $available_countries)
   {
-
-    $this->name = $name;
-    $this->version = $version;
+    $this->plugin = $plugin;
     $this->available_countries = $available_countries;
-    $this->itella_shipping = new Itella_Shipping_Method();
 
+    $this->assets = (object) array(
+      'css' => $plugin->url . 'public/assets/css/',
+      'js' => $plugin->url . 'public/assets/js/',
+      'img' => $plugin->url . 'public/assets/images/',
+    );
+
+    $this->itella_shipping = new Itella_Shipping_Method();
   }
 
   /**
    * Register the stylesheets for the public-facing side of the site.
    *
-   * @since    1.0.0
+   * @since 1.0.0
    */
   public function enqueue_styles()
   {
-    wp_enqueue_style($this->name . 'itella-shipping-public.css', plugin_dir_url(__FILE__) . 'css/itella-shipping-public.css', array(), $this->version, 'all');
-    wp_enqueue_style($this->name . 'leaflet.css', "https://unpkg.com/leaflet@1.5.1/dist/leaflet.css", array(), $this->version, 'all');
-    wp_enqueue_style($this->name . 'MarkerCluster.css', "https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css", array(), $this->version, 'all');
-    wp_enqueue_style($this->name . 'MarkerCluster.Default.css', "https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css", array(), $this->version, 'all');
-    wp_enqueue_style($this->name . 'itella-mapping.css', plugin_dir_url(__FILE__) . 'css/itella-mapping.css', array(), $this->version, 'all');
+    $css_files = array(
+      'itella-shipping-public' => $this->assets->css . 'itella-shipping-public.css',
+      'leaflet' => "https://unpkg.com/leaflet@1.5.1/dist/leaflet.css",
+      'MarkerCluster' => "https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css",
+      'MarkerCluster-Default' => "https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css",
+      'itella-mapping' => $this->assets->css . 'itella-mapping.css',
+    );
+
+    foreach ( $css_files as $id => $url ) {
+      wp_enqueue_style($this->plugin->name . '-' . $id, $url, array(), $this->plugin->version, 'all');
+    }
   }
 
   /**
    * Register the stylesheets for the public-facing side of the site.
    *
-   * @since    1.0.0
+   * @since 1.0.0
    */
   public function enqueue_scripts()
   {
-    wp_enqueue_script($this->name . 'leaflet.js', plugin_dir_url(__FILE__) . 'js/leaflet.min.js', array(), $this->version, TRUE);
-//    wp_enqueue_script($this->name . 'leaflet.markercluster.js', "https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js", array($this->name . 'leaflet.js'), $this->version, TRUE);
-    wp_enqueue_script($this->name . 'itella-mapping.js', plugin_dir_url(__FILE__) . 'js/itella-mapping.js', array($this->name . 'leaflet.js'), $this->version, TRUE);
-    wp_enqueue_script($this->name . 'itella-shipping-public.js', plugin_dir_url(__FILE__) . 'js/itella-shipping-public.js', array(), $this->version, TRUE);
-    wp_localize_script($this->name . 'itella-shipping-public.js',
+    wp_enqueue_script($this->plugin->name . 'leaflet.js', $this->assets->js . 'leaflet.min.js', array(), $this->plugin->version, TRUE);
+//    wp_enqueue_script($this->plugin->name . 'leaflet.markercluster.js', "https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js", array($this->plugin->name . 'leaflet.js'), $this->plugin->version, TRUE);
+    wp_enqueue_script($this->plugin->name . 'itella-mapping.js', $this->assets->js . 'itella-mapping.js', array($this->plugin->name . 'leaflet.js'), $this->plugin->version, TRUE);
+    wp_enqueue_script($this->plugin->name . 'itella-shipping-public.js', $this->assets->js . 'itella-shipping-public.js', array(), $this->plugin->version, TRUE);
+    wp_localize_script($this->plugin->name . 'itella-shipping-public.js',
         'variables', array(
             'show_style' => $this->itella_shipping->settings['checkout_show_style'],
-            'imagesUrl' => plugin_dir_url(__FILE__) . 'assets/images/',
-            'locationsUrl' => plugin_dir_url(__FILE__) . '/../../locations/',
+            'imagesUrl' => $this->assets->img,
+            'locationsUrl' => $this->plugin->url . 'locations/',
             'translations' => array(
                 'nothing_found' => __('Nothing found', 'itella-shipping'),
                 'modal_header' => __('Pickup points', 'itella-shipping'),
@@ -106,7 +117,7 @@ class Itella_Shipping_Public
         )
     );
 
-    wp_enqueue_script($this->name . 'itella-init-map.js', plugin_dir_url(__FILE__) . 'js/itella-init-map.js?20200601', array('jquery'), $this->version, TRUE);
+    wp_enqueue_script($this->plugin->name . 'itella-init-map.js', $this->assets->js . 'itella-init-map.js', array('jquery'), $this->plugin->version, TRUE);
 
   }
 
@@ -185,7 +196,7 @@ class Itella_Shipping_Public
 
     $shipping_country = $woocommerce->customer->get_shipping_country();
     $chosen_pickup_point_id = get_post_meta($order->get_id(), '_pp_id', true);
-    $pickup_points = file_get_contents(plugin_dir_url(__FILE__) . '../locations/locations' . $shipping_country . '.json');
+    $pickup_points = file_get_contents($this->plugin->path . 'locations/locations' . $shipping_country . '.json');
     $pickup_points = json_decode($pickup_points);
 
     foreach ($pickup_points as $pickup_point) {
