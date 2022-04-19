@@ -1005,7 +1005,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
                                                                       id="itella-shipping-options">Edit</a></h4>
         <div class="address">
             <p>
-                <strong><?= __('Packets(total):', 'itella-shipping') ?></strong> <?= $packet_count ?>
+                <strong><?= __('Packets (total):', 'itella-shipping') ?></strong> <?= $packet_count ?>
             </p>
             <p>
                 <strong><?= sprintf(__('Weight (%s):', 'itella-shipping'), $weight_unit) ?></strong> <?= number_format($weight,3) ?>
@@ -1274,21 +1274,17 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   public function save_shipping_settings($order_id)
   {
-    $check_fields = array('packet_count', 'weight_total', 'itella_cod_enabled', 'itella_cod_amount', 'itella_shipping_method', '_pp_id', 'itella_extra_services');
-    foreach ($check_fields as $field) {
-      if (!isset($_POST[$field])) return;
-    }
+    $post_fields = array('packet_count', 'weight_total', 'itella_cod_enabled', 'itella_cod_amount', 'itella_shipping_method', '_pp_id', 'itella_extra_services');
+    
+    foreach ( $post_fields as $field)  {
+      if ( ! isset($_POST[$field]) ) continue;
 
-    update_post_meta($order_id, 'packet_count', wc_clean($_POST['packet_count']));
-    if (intval(wc_clean($_POST['packet_count']) > 1)) {
-      update_post_meta($order_id, 'itella_multi_parcel', 'true');
+      if ( $field == 'packet_count' && intval(wc_clean($_POST[$field]) > 1) ) {
+        update_post_meta($order_id, 'itella_multi_parcel', 'true');
+      }
+
+      update_post_meta($order_id, $field, wc_clean($_POST[$field]));
     }
-    update_post_meta($order_id, 'weight_total', wc_clean($_POST['weight_total']));
-    update_post_meta($order_id, 'itella_cod_enabled', wc_clean($_POST['itella_cod_enabled']));
-    update_post_meta($order_id, 'itella_cod_amount', wc_clean($_POST['itella_cod_amount']));
-    update_post_meta($order_id, 'itella_shipping_method', wc_clean($_POST['itella_shipping_method']));
-    update_post_meta($order_id, '_pp_id', wc_clean($_POST['_pp_id']));
-    update_post_meta($order_id, 'itella_extra_services', wc_clean($_POST['itella_extra_services']));
   }
 
   /**
