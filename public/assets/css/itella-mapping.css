@@ -1,0 +1,398 @@
+.itella-mapping-modal *,
+.itella-shipping-container * {
+  box-sizing: border-box;
+}
+
+.hidden {
+  display: none;
+}
+
+.presta_extra_content {
+  margin: -1rem auto 0.9rem;
+  padding: 0.5rem;
+}
+
+.itella-shipping-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 12px;
+}
+
+.itella-shipping-container .itella-chosen-point {
+  padding-bottom: 0.5em;
+}
+
+.itella-shipping-container .itella-modal-btn {
+  background: #0005cc;
+  color: #fff;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 12px;
+  padding: 0 1em;
+  line-height: 30px;
+  border-radius: 4px;
+}
+
+.itella-shipping-container .itella-modal-btn:hover {
+  color: #fff!important;
+  cursor: pointer;
+}
+
+.itella-mapping-modal {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 12px;
+}
+.itella-mapping-modal.hidden {
+  display: none;
+}
+
+.itella-mapping-modal h2,
+.itella-mapping-modal h3,
+.itella-mapping-modal h4 {
+  margin: 0;
+}
+
+.itella-container {
+  width: 80%;
+  height: 80%;
+  background-color: #fff;
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+}
+
+.itella-container .close-modal {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  height: 20px;
+  width: 20px;
+  z-index: 1000;
+  cursor: pointer;
+}
+
+.itella-container .close-modal img {
+  width: 100%!important;
+  height: 100%;
+  filter: opacity(0.6);
+}
+
+.itella-container .close-modal:hover img {
+  filter: opacity(0.8);
+}
+
+.itella-map {
+  background-color: #fff;
+  flex: 1;
+  height: 100%;
+  border-radius: 4px;
+}
+
+.itella-card {
+  height: 90%;
+  width: 50%;
+  
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0px 0px 15.2px 0.8px rgba(0, 0, 0, 0.13);
+  position: absolute;
+  z-index: 400;
+  
+  display: flex;
+  flex-direction: column;
+}
+
+.itella-card-header {
+  padding: 12px 24px;
+  background-color: #0000CC;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 4px 4px 0 0;
+}
+
+.itella-card-header h2 {
+  font-size: 1.5em;
+  color: #fff;
+}
+
+.itella-card-header img {
+  height: 30px;
+}
+
+.itella-card-content {
+  flex: 1;
+  padding: 12px;
+}
+
+.itella-card-content h3 {
+  font-size: 1.2em;
+  font-weight: 700;
+  padding-bottom: 4px;
+}
+
+.itella-card-content h4 {
+  font-size: 1em;
+  font-weight: 700;
+  padding-bottom: 4px;
+}
+
+.itella-card-content .point-info {
+  padding-top: 15px;
+  display: flex;
+}
+.itella-card-content .point-info > div {
+  flex: 1;
+}
+.itella-card-content .point-info .workhours-info,
+.itella-card-content .point-info .contacts-info {
+  font-size: 0.8em;
+}
+
+.itella-card-content .workhours-info ol {
+  list-style: upper-roman;
+  margin: 0;
+  padding-left: 2em;
+}
+
+.itella-card-content .workhours-info ol li {
+  padding: 0;
+  padding-left: 1em;
+  padding-bottom: 0.5em;
+}
+
+.itella-card-content .contacts-info ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.itella-card-content .contacts-info ul li {
+  padding-bottom: 0.5em;
+}
+
+.itella-card-footer {
+  padding: 12px;
+  position: relative;
+  border-radius: 0 0 4px 4px;
+}
+
+.itella-card-footer .itella-btn {
+  border-radius: 4px;
+  background-color: #575757;
+  padding: 0;
+  width: 100%;
+  line-height: 30px;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+/* Custom Dropdown */
+.itella-select {
+  background-color: #fff;
+  position: relative;
+}
+
+.itella-shipping-container > .itella-select {
+  width: 100%;
+}
+
+.itella-select .dropdown {
+  height: 30px;
+  line-height: 24px;
+  border-radius: 4px;
+  background-color: #f4f4f4;
+  border: solid 1px #d4d4d4;
+
+  word-wrap: normal;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  padding: 4px 20px 4px 5px;
+}
+
+.itella-select .dropdown:after {
+  position: absolute;
+  content: "";
+  border-color: #888 transparent transparent transparent;
+  border-style: solid;
+  border-width: 5px 4px 0 4px;
+  height: 0;
+  right: 7px;
+  margin-left: -4px;
+  margin-top: -2px;
+  position: absolute;
+  top: 50%;
+  width: 0;
+}
+
+.itella-select.open .dropdown {
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+}
+
+.itella-select.open .dropdown:after {
+  border-color: transparent transparent #888 transparent;
+  border-width: 0px 4px 5px 4px;
+}
+
+.itella-select .dropdown-inner {
+  display: none;
+  position: absolute;
+  z-index: 100;
+  background-color: #f4f4f4;
+  border: solid 1px #d4d4d4;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  width: 100%;
+}
+
+.itella-select.open .dropdown-inner {
+  display: block;
+}
+
+.itella-select .search-bar {
+  width: 100%;
+  background-color: #cfd2f1;
+  padding: 7px 5px;
+  position: relative;
+}
+
+.itella-select .search-bar .search-input {
+  width: 100%;
+  background-color: transparent;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  outline: none;
+  border: none;
+  font: unset;
+  border-bottom: 1px solid #aeb1c8;
+  font-family: inherit;
+  font-size: 1em;
+  padding-right: 30px;
+}
+
+.itella-select .search-bar img {
+  height: 15px;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  width: auto!important;
+}
+
+.itella-select .search-by {
+  padding: 4px 10px;
+  text-align: center;
+  display: block;
+  font-size: 0.8em;
+  color: rgba(0,0,0,0.6);
+}
+
+.itella-select ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  height: 200px;
+  overflow-y: auto;
+}
+
+.itella-select ul li {
+  background: none;
+  border-radius: 0;
+  border: none;
+  padding: 3px 5px;
+  margin: 0;
+  line-height: 17px;
+  padding-left: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.itella-select ul li.active {
+  background-color: #0000CC;
+  color: #fff;
+}
+
+.itella-select ul li:not(.city):not(.active):hover {
+  background-color: #aeb1c8;
+  cursor: pointer;
+}
+
+.itella-select ul li.city {
+  font-weight: 700;
+  padding-left: 5px;
+}
+
+/* Map Markers */
+@-webkit-keyframes itella-bounce {
+  from {
+    top: 0px;
+  }
+  to {
+    top: -10px;
+  }
+}
+@keyframes itella-bounce {
+  from {
+    top: 0px;
+  }
+  to {
+    top: -10px;
+  }
+}
+
+.itella-map img.active {
+  filter: hue-rotate(90deg);
+  -webkit-animation: itella-bounce 0.4s infinite alternate;
+          animation: itella-bounce 0.4s infinite alternate;
+}
+
+/**
+ * Media queries
+ **/
+ @media only screen and (max-width: 768px) {
+  .itella-container {
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+  }
+
+  .itella-map, .itella-card {
+    /* flex: 1; */
+    position: relative;
+  }
+
+  .itella-card {
+    height: 70%;
+    width: 100%;
+  }
+
+  
+ }
+
+ @media only screen and (min-width: 769px) {
+  .itella-card {
+    max-width: 400px;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 10px;
+  }
+ }
+/*# sourceMappingURL=itella-mapping.css.map */

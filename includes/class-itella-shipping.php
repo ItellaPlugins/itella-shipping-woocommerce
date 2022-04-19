@@ -50,6 +50,24 @@ class Itella_Shipping
   protected $plugin_name;
 
   /**
+   * URL of this plugin directory.
+   *
+   * @since    1.0.0
+   * @access   protected
+   * @var      string $plugin_url The URL of this plugin directory.
+   */
+  protected $plugin_url;
+
+  /**
+   * Path of this plugin directory.
+   *
+   * @since    1.0.0
+   * @access   protected
+   * @var      string $plugin_path The path in server of this plugin directory.
+   */
+  protected $plugin_path;
+
+  /**
    * The current version of the plugin.
    *
    * @since    1.0.0
@@ -72,13 +90,14 @@ class Itella_Shipping
    *
    * @since    1.0.0
    */
-  public function __construct($plugin_basename)
+  public function __construct($plugin)
   {
-
     $this->plugin_name = 'itella-shipping';
     $this->version = '1.3.6';
     $this->available_countries = array('LT', 'EE', 'LV', 'FI');
-    $this->plugin_basename = $plugin_basename;
+    $this->plugin_basename = $plugin['basename'];
+    $this->plugin_url = $plugin['url'];
+    $this->plugin_path = $plugin['path'];
 
     add_action('plugins_loaded', array($this, 'run'));
     add_action('admin_notices', array($this, 'notify_on_activation'));
@@ -221,7 +240,15 @@ class Itella_Shipping
   private function define_public_hooks()
   {
 
-    $plugin_public = new Itella_Shipping_Public($this->get_plugin_name(), $this->get_version(), $this->available_countries);
+    $plugin_public = new Itella_Shipping_Public(
+      (object) array(
+        'name' => $this->get_plugin_name(),
+        'version' => $this->get_version(),
+        'url' => $this->get_plugin_url(),
+        'path' => $this->get_plugin_path(),
+      ),
+      $this->available_countries
+    );
 
     $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
     $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
@@ -267,6 +294,28 @@ class Itella_Shipping
   public function get_plugin_name()
   {
     return $this->plugin_name;
+  }
+
+  /**
+   * The plugin URL used for publicly available files.
+   *
+   * @return    string    The URL of the plugin.
+   * @since     1.3.7
+   */
+  public function get_plugin_url()
+  {
+    return $this->plugin_url;
+  }
+
+  /**
+   * The plugin path used for get files in server context.
+   *
+   * @return    string    The path of the plugin.
+   * @since     1.3.7
+   */
+  public function get_plugin_path()
+  {
+    return $this->plugin_path;
   }
 
   /**

@@ -65,7 +65,11 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-itella-shipping.php';
  */
 function run_itella_shipping() {
 
-	$plugin = new Itella_Shipping(plugin_basename(__FILE__));
+	$plugin = new Itella_Shipping(array(
+    'basename' => plugin_basename(__FILE__),
+    'url' => plugin_dir_url(__FILE__),
+    'path' => plugin_dir_path(__FILE__),
+  ));
 
 }
 run_itella_shipping();
