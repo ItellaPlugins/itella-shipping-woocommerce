@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.3.7] - 2022-04-19
 ### Fixed
 - fixed order weight adding to shipment
 - fixed params updating in order edit page
