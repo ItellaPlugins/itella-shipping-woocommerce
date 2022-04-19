@@ -1203,9 +1203,9 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   public function get_pickup_points($shipping_country_id)
   {
-    $pickup_points = wp_remote_get(plugin_dir_path(__FILE__) . '../locations/locations' . $shipping_country_id . '.json');
+    $pickup_points = file_get_contents(plugin_dir_path(__FILE__) . '../locations/locations' . $shipping_country_id . '.json');
 
-    return json_decode($pickup_points['body']);
+    return json_decode($pickup_points);
   }
 
   /**
