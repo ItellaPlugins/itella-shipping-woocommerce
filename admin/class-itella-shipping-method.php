@@ -965,7 +965,9 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       $order_items = $order->get_items();
       foreach ( $order_items as $item ) {
         $product = $item->get_product();
-        $default_weight += floatval($product->get_weight() * $item->get_quantity());
+        if ( ! empty($product) ) {
+          $default_weight += floatval((float)$product->get_weight() * (int)$item->get_quantity());
+        }
       }
 
       // vars

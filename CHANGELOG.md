@@ -1,5 +1,9 @@
 # Changelog
 
+## [Unreleased]
+### Fixed
+- fixed error, when product in order is deleted
+
 ## [1.3.7] - 2022-04-19
 ### Fixed
 - fixed order weight adding to shipment
