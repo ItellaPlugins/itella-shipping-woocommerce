@@ -1263,7 +1263,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   public function validate_pickup_point()
   {
-    $isItellaPp = in_array('itella_pp',wc_clean($_POST['shipping_method']));
+		$shipping_method = (isset($_POST['shipping_method']) && is_array($_POST['shipping_method'])) ? wc_clean($_POST['shipping_method']) : [];
+    $isItellaPp = in_array('itella_pp',$shipping_method);
     if ($isItellaPp && empty($_POST['itella-chosen-point-id'])) {
       wc_add_notice( __( "You must choose Smartpost Pickup Point", 'itella-shipping' ), 'error');
     }
