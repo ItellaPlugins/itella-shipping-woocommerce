@@ -3,6 +3,7 @@
 ## [Unreleased]
 ### Fixed
 - fixed error, when product in order is deleted
+- fixed error, when all products in cart is virtual
 
 ## [1.3.7] - 2022-04-19
 ### Fixed
