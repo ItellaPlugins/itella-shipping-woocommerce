@@ -183,7 +183,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
           'cost' => $price_pickup
       );
 
-      if ($pickup_params['show'] == true && $this->settings['enabled'] == 'yes')
+      if ($pickup_params['show'] == true && $this->settings['enabled'] == 'yes' && $price_pickup !== false)
         $this->add_rate($rate);
     }
 
@@ -202,7 +202,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
           'cost' => $price_courier
       );
 
-      if ($courier_params['show'] == true && $this->settings['enabled'] == 'yes')
+      if ($courier_params['show'] == true && $this->settings['enabled'] == 'yes' && $price_courier !== false)
         $this->add_rate($rate);
     }
   }
@@ -213,7 +213,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    * @access private
    * @param array $shipping_params
    * @param float $cart_weight
-   * @return integer
+   * @return integer|boolean
    */
   private function get_shipping_price($shipping_params, $cart_weight, $cart_items=array())
   {
@@ -390,7 +390,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   }
 
   private function getShippingPriceValueFromTable($values, $cart_value) {
-    $price_shipping = 0;
+    $price_shipping = false;
     $prev_value = -0.001;
     foreach ($values as $key => $value) {
       if (empty($value['value'])) {
