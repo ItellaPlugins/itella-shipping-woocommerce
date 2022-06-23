@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.3.8] - 2022-06-23
 ### Fixed
 - fixed error, when product in order is deleted
 - fixed error, when all products in cart is virtual
