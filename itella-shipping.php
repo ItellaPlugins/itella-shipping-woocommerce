@@ -23,8 +23,9 @@
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       itella-shipping
  * Domain Path:       /languages
- * Tested up to:      5.9.3
- * WC tested up to:   6.4.0
+ *
+ * Tested up to:      6.0
+ * WC tested up to:   6.6.1
  */
 
 // If this file is called directly, abort.
@@ -66,10 +67,11 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-itella-shipping.php';
 function run_itella_shipping() {
 
 	$plugin = new Itella_Shipping(array(
-    'basename' => plugin_basename(__FILE__),
-    'url' => plugin_dir_url(__FILE__),
-    'path' => plugin_dir_path(__FILE__),
-  ));
+        'basename' => plugin_basename(__FILE__),
+        'url' => plugin_dir_url(__FILE__),
+        'path' => plugin_dir_path(__FILE__),
+        'version' => '1.3.7',
+    ));
 
 }
 run_itella_shipping();
