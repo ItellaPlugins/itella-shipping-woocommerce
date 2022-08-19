@@ -1712,7 +1712,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
               . $e->getTraceAsString(), FILE_APPEND);
 
           if (in_array('return',$exit_modes)) {
-            return array('status' => 'error', 'msg' => __('An error occurred. ', 'itella-shipping') . $th->getMessage());
+            return array('status' => 'error', 'msg' => __('An error occurred. ', 'itella-shipping') . $e->getMessage());
           }
       }
     }
