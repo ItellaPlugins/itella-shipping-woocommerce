@@ -685,6 +685,7 @@ class Itella_Manifest
 
     $weight = get_post_meta($order_id, 'weight_total', true);
     $weight = (empty($weight)) ? $order_weight : $weight;
+    $weight = wc_get_weight($weight, 'kg');
     $weight = (empty($weight)) ? $default_weight : $weight;
     
     $is_cod = get_post_meta($order_id, 'itella_cod_enabled', true) === 'yes';
