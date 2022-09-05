@@ -4,6 +4,7 @@
 ### Fixed
 - added order weight conversion to kilograms if other weight units are used on the website
 - fixed error message, when get error on label generation
+- fixed settings page values after settings save
 
 ## [1.3.8] - 2022-06-23
 ### Fixed
