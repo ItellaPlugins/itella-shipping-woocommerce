@@ -293,8 +293,14 @@ try {
 
 ## Printing Label
 ---
+Available label sizes:
+* Shipment::LABEL_SIZE_A5 = A5
+* Shipment::LABEL_SIZE_107X225 = 107x225
+
 It is advised to always download label when it is needed. For that Shipment class is used.
 result will be base64 encoded pdf file. If multiple tracking numbers (in array) is passed pdf will contain all those labels. For getting and merging labels pdf from two different users please refer to `get-merge-labels.php` example
+
+`$shipment->downloadLabels($track, $size = null)` secondary parameter `$size` is optional and will work once posti/itella enviroment has it implemented on pakettikauppa side.
 
 **Important**: If tracking number is from different user it will be ignored.
 ```php
@@ -310,7 +316,7 @@ $track = 'JJFI12345600000000001';
 
 try {
   $shipment = new Shipment($user, $secret);
-  $pdf_base64 = $shipment->downloadLabels($track);
+  $pdf_base64 = $shipment->downloadLabels($track, Shipment::LABEL_SIZE_A5);
   $pdf = base64_decode($pdf_base64);
   if ($pdf) { // check if its not empty
     if (is_array($track)) {

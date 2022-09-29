@@ -16,13 +16,14 @@ $track = $sample_track_nr;
 
 try {
   $shipment = new Shipment($p_user, $p_secret);
-  $pdf_base64 = $shipment->downloadLabels($track);
+  $size = Shipment::LABEL_SIZE_107X225;
+  $pdf_base64 = $shipment->downloadLabels($track, $size);
   $pdf = base64_decode($pdf_base64);
   if ($pdf) { // check if its not empty
     if (is_array($track)) {
       $track = 'labels';
     }
-    $path = dirname(__FILE__) . '/../temp/' . $track . '.pdf';
+    $path = dirname(__FILE__) . '/../temp/' . $track . '_' . $size . '.pdf';
     $is_saved = file_put_contents($path, $pdf);
     $filename = 'labels.pdf';
     if (!$is_saved) { // make sure it was saved

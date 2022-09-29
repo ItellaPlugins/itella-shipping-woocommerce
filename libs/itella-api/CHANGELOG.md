@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.3.7] - Logo & PDF lib
+### Updated
+- updated logo used for manifest
+- tecnickcom/tcpdf updated to 6.5.0
+
+## [2.3.6] - Dependencies update
+### Updated
+- pakettikauppa/api-library to v2.0.6
+- added support for $size variable in downloadLabels
+
+## [2.3.5] - Dependencies update
+### Updated
+- Updated dependencies, to support PHP 8
+
 ## [2.3.4] - COD Service for Pickup Point type of shipment
 ### Added
 - For product (2711) it is now allowed to set COD additional service (3101)

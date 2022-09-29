@@ -6,6 +6,9 @@
 - fixed error message, when get error on label generation
 - fixed settings page values after settings save
 
+### Updated
+- itella-api library to v2.3.7
+
 ## [1.3.8] - 2022-06-23
 ### Fixed
 - fixed error, when product in order is deleted
