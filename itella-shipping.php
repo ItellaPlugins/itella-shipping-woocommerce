@@ -24,8 +24,8 @@
  * Text Domain:       itella-shipping
  * Domain Path:       /languages
  *
- * Tested up to:      6.0
- * WC tested up to:   6.6.1
+ * Tested up to:      6.0.2
+ * WC tested up to:   6.9.4
  */
 
 // If this file is called directly, abort.
