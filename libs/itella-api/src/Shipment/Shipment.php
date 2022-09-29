@@ -21,6 +21,10 @@ class Shipment
   const PRODUCT_COURIER = 2317;
   const PRODUCT_PICKUP = 2711;
 
+  // Label sizes
+  const LABEL_SIZE_A5 = 'A5';
+  const LABEL_SIZE_107X225 = '107x225';
+
   // Locations API endpoint
   const LOCATIONS_API_URL = 'https://locationservice.posti.com/api/2/location';
 
@@ -150,12 +154,12 @@ class Shipment
     return $track;
   }
 
-  public function downloadLabels($track)
+  public function downloadLabels($track, $size = null)
   {
     if (!is_array($track)) {
       $track = array($track);
     }
-    $base = $this->_client->fetchShippingLabels($track);
+    $base = $this->_client->fetchShippingLabels($track, $size);
     return $base->{'response.file'};
   }
 

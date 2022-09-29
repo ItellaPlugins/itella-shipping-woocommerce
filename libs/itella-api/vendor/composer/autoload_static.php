@@ -11,6 +11,10 @@ class ComposerStaticIniteb694a5ce30c38b2e7cf8e65f539539e
         array (
             'setasign\\Fpdi\\' => 14,
         ),
+        'T' => 
+        array (
+            'Tests\\Pakettikauppa\\' => 20,
+        ),
         'P' => 
         array (
             'Pakettikauppa\\' => 14,
@@ -25,6 +29,10 @@ class ComposerStaticIniteb694a5ce30c38b2e7cf8e65f539539e
         'setasign\\Fpdi\\' => 
         array (
             0 => __DIR__ . '/..' . '/setasign/fpdi/src',
+        ),
+        'Tests\\Pakettikauppa\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/pakettikauppa/api-library/src/Tests/Pakettikauppa',
         ),
         'Pakettikauppa\\' => 
         array (
