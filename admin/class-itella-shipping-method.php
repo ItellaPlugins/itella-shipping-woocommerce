@@ -2038,9 +2038,31 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     }
   }
 
-  public function itella_shipping_shop_order_bulk_actions($actions)
+  public function itella_register_orders_bulk_actions($bulk_actions)
   {
-    // TODO
+    global $wp_version;
+
+    $title = 'Smartpost';
+    $grouped = (version_compare($wp_version, '5.6.0', '>=')) ? true : false;
+    $actions = array(
+        'ship_labels' => __('Print shipping labels', 'itella-shipping'),
+    );
+
+    foreach ( $actions as $action_key => $action_title ) {
+        if ( $grouped ) {
+            $bulk_actions[$title]['itella_' . $action_key] = $action_title;
+        } else {
+            $bulk_actions['itella_' . $action_key] = $title . ': ' . $action_title;
+        }
+    }
+    
+    return $bulk_actions;
+  }
+
+  public function itella_handle_orders_bulk_actions($redirect_to, $action, $ids)
+  {
+    //TODO
+    return $redirect_to;
   }
 
   /**
