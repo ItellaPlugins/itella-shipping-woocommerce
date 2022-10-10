@@ -6,6 +6,9 @@
 - fixed error message, when get error on label generation
 - fixed settings page values after settings save
 
+### Improved
+- improved order registration ajax function
+
 ### Updated
 - itella-api library to v2.3.7
 
