@@ -86,10 +86,10 @@ class Itella_Manifest
         'woocommerce',
         __('Smartpost shipments', 'itella-shipping'),
         __('Smartpost shipments', 'itella-shipping'),
-        'manage_options',
+        'manage_woocommerce',
         'itella-manifest',
         'itella_manifest_page',
-        1
+        10
     );
 
     function itella_manifest_page()
