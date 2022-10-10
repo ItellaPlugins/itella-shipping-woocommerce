@@ -5,9 +5,11 @@
 - added order weight conversion to kilograms if other weight units are used on the website
 - fixed error message, when get error on label generation
 - fixed settings page values after settings save
+- added display of "Smartpost shipments" page for "Shop manager" user role
 
 ### Improved
 - improved order registration ajax function
+- Woocommerce submenu element "Smartpost shipments" moved after "Orders" element
 
 ### Updated
 - itella-api library to v2.3.7
