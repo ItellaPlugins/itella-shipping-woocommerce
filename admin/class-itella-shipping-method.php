@@ -1740,7 +1740,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     }
     if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
       $id = $_REQUEST['id'];
-      $check_code = get_post_meta($id, '_itella_tracking_code');
+      $check_code = get_post_meta($id, '_itella_tracking_code', true);
       if (empty($check_code)) {
         $_REQUEST['post'] = $id;
         $status = $this->itella_post_shipment_actions( array('return') );
