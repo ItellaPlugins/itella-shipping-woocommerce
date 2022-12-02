@@ -8,37 +8,40 @@
  */
 class Itella_Manifest
 {
-
   /**
-   * The ID of this plugin.
-   *
-   * @since    1.0.0
-   * @access   private
-   * @var      string $name The ID of this plugin.
+   * Plugin data
+   * 
+   * @access  private
+   * @var     object $plugin Plugin data
    */
-  private $name;
-
-  /**
-   * The version of this plugin.
-   *
-   * @since    1.0.0
-   * @access   private
-   * @var      string $version The current version of this plugin.
-   */
-  private $version;
+  private $plugin;
 
   /**
    * Initialize the class and set its properties.
    *
    * @since    1.0.0
-   * @var      string $name The name of this plugin.
-   * @var      string $version The version of this plugin.
+   * @var      string $plugin Plugin data.
    */
 
-  public function __construct($name, $version)
+  public function __construct($plugin)
   {
-    $this->name = $name;
-    $this->version = $version;
+    $this->plugin = $plugin;
+  }
+
+  /**
+   * Get plugin name
+   */
+  private function get_plugin_name()
+  {
+    return $this->plugin->name;
+  }
+
+  /**
+   * Get plugin version
+   */
+  private function get_plugin_version()
+  {
+    return $this->plugin->version;
   }
 
   /**
@@ -50,8 +53,8 @@ class Itella_Manifest
   {
 
     if ( $hook == 'woocommerce_page_itella-manifest') {
-      wp_enqueue_style($this->name . 'css/itella-shipping-manifest.css', plugin_dir_url(__FILE__) . 'css/itella-shipping-manifest.css', array(), $this->version, 'all');
-      wp_enqueue_style($this->name . 'bootstrap-datetimepicker', plugins_url('/js/datetimepicker/bootstrap-datetimepicker.min.css', __FILE__));
+      wp_enqueue_style($this->get_plugin_name() . 'css/itella-shipping-manifest.css', plugin_dir_url(__FILE__) . 'css/itella-shipping-manifest.css', array(), $this->get_plugin_version(), 'all');
+      wp_enqueue_style($this->get_plugin_name() . 'bootstrap-datetimepicker', plugins_url('/js/datetimepicker/bootstrap-datetimepicker.min.css', __FILE__));
     }
 
   }
@@ -65,14 +68,14 @@ class Itella_Manifest
   {
 
     if ( $hook == 'woocommerce_page_itella-manifest') {
-      wp_enqueue_script($this->name . 'itella-shipping-manifest.js', plugin_dir_url(__FILE__) . 'js/itella-shipping-manifest.js', array('jquery'), $this->version, TRUE);
-      wp_localize_script($this->name . 'itella-shipping-manifest.js', 'translations', array(
+      wp_enqueue_script($this->get_plugin_name() . 'itella-shipping-manifest.js', plugin_dir_url(__FILE__) . 'js/itella-shipping-manifest.js', array('jquery'), $this->get_plugin_version(), TRUE);
+      wp_localize_script($this->get_plugin_name() . 'itella-shipping-manifest.js', 'translations', array(
         'select_orders' => __('Select at least one order to perform this action.', 'itella-shipping'),
         'switch_confirm' => __("Generating a manifest for a large number of orders can take a long time.\nAre you sure you want to continue?", 'itella-shipping')
       ));
-      wp_enqueue_script($this->name . 'moment', plugin_dir_url(__FILE__) . 'js/datetimepicker/moment.min.js', array(), null, true);
-      wp_enqueue_script($this->name . 'bootstrap-datetimepicker', plugin_dir_url(__FILE__) . 'js/datetimepicker/bootstrap-datetimepicker.min.js', array('jquery', 'moment'), null, true);
-      wp_localize_script( $this->name . 'itella-shipping-manifest.js', 'manifest_ajax', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
+      wp_enqueue_script($this->get_plugin_name() . 'moment', plugin_dir_url(__FILE__) . 'js/datetimepicker/moment.min.js', array(), null, true);
+      wp_enqueue_script($this->get_plugin_name() . 'bootstrap-datetimepicker', plugin_dir_url(__FILE__) . 'js/datetimepicker/bootstrap-datetimepicker.min.js', array('jquery', 'moment'), null, true);
+      wp_localize_script( $this->get_plugin_name() . 'itella-shipping-manifest.js', 'manifest_ajax', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
     }
 
   }
@@ -474,7 +477,7 @@ class Itella_Manifest
                                       Itella_Manifest::order_getCountry($order),
                                       $shipping_parameters['pickup_point_id']
                                     );
-                                    echo '<strong>' . __('Smartpost Pickup Point', 'itella-shipping') . ':</strong>';
+                                    echo '<strong>' . __('Smartpost Parcel locker', 'itella-shipping') . ':</strong>';
                                     echo '<br>' . __('City', 'itella-shipping') . ': ';
                                     echo '<em>' . $chosen_pickup_point->address->municipality . '</em>';
                                     echo '<br>' . __('Public Name', 'itella-shipping') . ': ';
