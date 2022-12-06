@@ -199,6 +199,10 @@ class Itella_Shipping_Public
     $pickup_points = file_get_contents($this->plugin->path . 'locations/locations' . $shipping_country . '.json');
     $pickup_points = json_decode($pickup_points);
 
+    if ( empty($pickup_points) ) {
+        return '';
+    }
+
     foreach ($pickup_points as $pickup_point) {
       $chosen_pickup_point = $pickup_point->id === $chosen_pickup_point_id ? $pickup_point : null;
       if ($chosen_pickup_point) {
