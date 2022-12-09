@@ -10,6 +10,11 @@
 ### Improved
 - improved order registration ajax function
 - Woocommerce submenu element "Smartpost shipments" moved after "Orders" element
+- added courier delivery to almost all EU countries
+- added a ability to change the name of the shipping method visible in the cart to a custom one
+
+### Changed
+- changed "Pickup point" to "Parcel locker"
 
 ### Updated
 - itella-api library to v2.3.7

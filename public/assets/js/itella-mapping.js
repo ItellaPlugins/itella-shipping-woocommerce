@@ -47,17 +47,17 @@ var itellaMapping = /*#__PURE__*/function () {
     this.UI.modal = null;
     this.images_url = '';
     this.strings = {
-      modal_header: 'Pickup points',
-      selector_header: 'Pickup point',
+      modal_header: 'Parcel lockers',
+      selector_header: 'Parcel locker',
       workhours_header: 'Workhours',
       contacts_header: 'Contacts',
       search_placeholder: 'Enter postcode/address',
-      select_pickup_point: 'Select a pickup point',
-      no_pickup_points: 'No points to select',
+      select_pickup_point: 'Select a parcel locker',
+      no_pickup_points: 'No locker to select',
       select_btn: 'select',
       back_to_list_btn: 'reset search',
       nothing_found: 'Nothing found',
-      select_pickup_point_btn: 'Select pickup point',
+      select_pickup_point_btn: 'Select parcel locker',
       no_information: 'No information',
       error_leaflet: 'Leaflet is required for Itella-Mapping',
       error_missing_mount_el: 'No mount supplied to itellaShipping'

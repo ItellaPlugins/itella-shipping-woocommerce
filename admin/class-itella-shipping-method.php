@@ -38,31 +38,58 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   private $version;
 
   /**
+   * Helper class of this class with custom functions
+   * 
+   * @since    1.4.0
+   * @access   private
+   * @var      class $helper Helper class
+   */
+  private $helper;
+
+  /**
    * @var string
    */
   public $id;
+
+    /**
+     * @var array
+     */
+    private $itella_methods;
+
+    /**
+     * @var array
+     */
+    private $plugin_url;
+
+    /**
+     * @var array
+     */
+    private $sender_countries;
 
   /**
    * Initialize the class and set its properties.
    *
    * @since    1.0.0
-   * @var      string $name The name of this plugin.
-   * @var      string $version The version of this plugin.
    */
-  // TODO find bug - wp throws fatal error, that 0 args are passed to constructor, but debugger shows, that args are getting through
-  public function __construct($name = 'itella-shipping', $version = '1.0.0')
+  public function __construct()
   {
+    $plugin = Itella_Shipping::get_instance()->get_plugin_data();
 
     parent::__construct();
 
-    $this->name = $name;
-    $this->version = $version;
+    $this->name = $plugin->name ?? 'itella-shipping';
+    $this->version = $plugin->version ?? '1.0.0';
     $this->id = "itella-shipping";
     $this->method_title = __('Smartpost Shipping', 'itella-shipping');
     $this->method_description = __('Plugin to use with Smartpost Shipping methods', 'itella-shipping');
     $this->title = "Smartpost Shipping Method";
+    $this->itella_methods = $plugin->methods ?? array();
+    $this->plugin_url = $plugin->url ?? home_url() . '/';
 
-    $this->available_countries = array('lt', 'ee', 'lv', 'fi');
+    $this->available_countries = $plugin->countries ?? array();
+    $this->grouped_countries = $plugin->countries_grouped ?? array();
+    $this->sender_countries = $plugin->sender_countries ?? array();
+    $this->helper = new Itella_Shipping_Method_Helper();
 
     $this->init();
 
@@ -97,10 +124,10 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   public function enqueue_scripts($hook)
   {
     if ( $hook == 'woocommerce_page_wc-settings' && isset($_GET['section']) && $_GET['section'] == 'itella-shipping' ) {
-      wp_enqueue_script($this->name . 'itella-shipping-admin.js', plugin_dir_url(__FILE__) . 'js/itella-shipping-admin.js', array('jquery'), $this->version, TRUE);
+      wp_enqueue_script($this->name . 'itella-shipping-admin.js', plugin_dir_url(__FILE__) . 'assets/js/itella-shipping-admin.js', array('jquery'), $this->version, TRUE);
     }
     if ( $hook == 'post.php') {
-      wp_enqueue_script($this->name . 'itella-shipping-edit-orders.js', plugin_dir_url(__FILE__) . 'js/itella-shipping-edit-orders.js', array('jquery'), $this->version, TRUE);
+      wp_enqueue_script($this->name . 'itella-shipping-edit-orders.js', plugin_dir_url(__FILE__) . 'assets/js/itella-shipping-edit-orders.js', array('jquery'), $this->version, TRUE);
     }
   }
 
@@ -133,6 +160,14 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     <?php
   }
 
+    /**
+     * Get available itella shipping methods list
+     */
+    private function get_itella_shipping_methods()
+    {
+        return $this->itella_methods;
+    }
+
   /**
    * Update locations
    *
@@ -142,16 +177,25 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   {
     $itella_pickup_points_obj = new PickupPoints('https://locationservice.posti.com/api/2/location');
 
-    foreach ($this->available_countries as $country_code) {
+    foreach ( $this->available_countries as $country_code ) {
       $filename = plugin_dir_path(dirname(__FILE__))
           . 'locations/locations' . wc_strtoupper($country_code) . '.json';
-      if (file_exists($filename)) {
-        if ((time() - filemtime($filename)) > 86400) {
-          $locations = $itella_pickup_points_obj->getLocationsByCountry($country_code);
-          $itella_pickup_points_obj
-              ->saveLocationsToJSONFile(plugin_dir_path(dirname(__FILE__))
-                  . 'locations/locations' . wc_strtoupper($country_code) . '.json',
-                  json_encode($locations));
+      $update_file = false;
+
+      if ( ! file_exists($filename) ) {
+        file_put_contents($filename, '');
+        $update_file = true;
+      }
+
+      if ( (time() - filemtime($filename)) > 86400 ) {
+        $update_file = true;
+      }
+
+      if ( $update_file ) {
+        $locations = $itella_pickup_points_obj->getLocationsByCountry($country_code);
+        
+        if ( ! empty($locations) ) {
+          $itella_pickup_points_obj->saveLocationsToJSONFile($filename, json_encode($locations));
         }
       }
     }
@@ -167,245 +211,161 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   public function calculate_shipping($package = array())
   {
     global $woocommerce;
-    $current_country = $woocommerce->customer->get_shipping_country();
+    $current_country = strtoupper($woocommerce->customer->get_shipping_country());
     $cart_amount = floatval($woocommerce->cart->cart_contents_total) + floatval($woocommerce->cart->tax_total);
-    $items = (isset($package['contents'])) ? $package['contents'] : $woocommerce->cart->get_cart();
+    $items = $package['contents'] ?? $woocommerce->cart->get_cart();
 
-    // add Pickup Point Rate
-    if ($this->settings['pickup_point_method'] === 'yes') {
-      $pickup_params = $this->get_pickup_params(array(
-        'country_code' => $current_country,
-        'cart_amount' => $cart_amount,
-      ));
+    $all_methods = $this->get_itella_shipping_methods();
+    $country_methods = $all_methods[strtoupper($current_country)] ?? array();
+    $all_prices_settings = (!empty($this->settings['methods'])) ? json_decode($this->settings['methods'],true) : $this->methods_backward_compatibility();
+    $country_prices = $all_prices_settings[strtolower($current_country)] ?? array();
 
-      $price_pickup = $this->get_shipping_price($pickup_params, $woocommerce->cart->cart_contents_weight, $items);
+    foreach ( $country_prices as $method => $prices ) {
+      if ( $this->settings[$method . '_method'] === 'yes' ) {
+        if ( ! isset($prices['price_type']) || $prices['price_type'] == 'disabled' ) {
+          continue;
+        }
 
-      $rate = array(
-          'id' => 'itella_pp',
-          'label' => __('Smartpost Pickup Point', 'itella-shipping'),
-          'cost' => $price_pickup
-      );
+        $shipping_price = $this->get_shipping_price($prices, array(
+          'amount' => $cart_amount,
+          'weight' => $woocommerce->cart->cart_contents_weight,
+          'country' => $current_country,
+          'items' => $items,
+        ));
 
-      if ($pickup_params['show'] == true && $this->settings['enabled'] == 'yes' && $price_pickup !== false)
+        if ( $shipping_price === false ) {
+          continue;
+        }
+
+        $rate = array(
+          'id' => 'itella_' . Itella_Shipping::get_instance()->get_method_short_key($method),
+          'label' => (! empty($prices['name'])) ? $prices['name'] : 'Smartpost ' . $country_methods[$method],
+          'cost' => $shipping_price
+        );
+
         $this->add_rate($rate);
-    }
-
-    // add Courier rate
-    if ($this->settings['courier_method'] === 'yes') {
-      $courier_params = $this->get_courier_params(array(
-        'country_code' => $current_country,
-        'cart_amount' => $cart_amount,
-      ));
-
-      $price_courier = $this->get_shipping_price($courier_params, $woocommerce->cart->cart_contents_weight, $items);
-
-      $rate = array(
-          'id' => 'itella_c',
-          'label' => __('Smartpost Courier', 'itella-shipping'),
-          'cost' => $price_courier
-      );
-
-      if ($courier_params['show'] == true && $this->settings['enabled'] == 'yes' && $price_courier !== false)
-        $this->add_rate($rate);
+      }
     }
   }
 
   /**
-   * Get shipping price from params.
+   * Get shipping price for rate
    *
-   * @access private
-   * @param array $shipping_params
-   * @param float $cart_weight
-   * @return integer|boolean
+   * @access public
+   * @param array $method_prices
+   * @param array $cart_values
+   * @return mixed
    */
-  private function get_shipping_price($shipping_params, $cart_weight, $cart_items=array())
+  private function get_shipping_price( $method_prices, $cart_values )
   {
-    $cart_amount = $shipping_params['cart_amount'];
-    $price_shipping = $shipping_params['amount'];
-    $free_from = $shipping_params['free_from'];
-    $amount_values = (is_array($shipping_params['amount'])) ? $shipping_params['amount'] : array();
-    $price_shipping = (isset($amount_values['single'])) ? $amount_values['single'] : $price_shipping;
-    if (isset($amount_values['cb']) && isset($amount_values['weight'])) { // Compatibility with old versions
-      $prev_weight = -0.001;
-      foreach ($amount_values['weight'] as $key => $weight) {
-        if (empty($weight)) {
-          $weight = 1000000;
-        }
-        if ($cart_weight > $prev_weight && $cart_weight <= $weight) {
-          $price_shipping = (isset($amount_values['price'][$key])) ? $amount_values['price'][$key] : 0;
-        }
-        $prev_weight = $weight;
-      }
-    }
-    if (isset($amount_values['radio'])) {
-      if ($amount_values['radio'] == 'weight' && isset($amount_values['byWeight'])) {
-        $price_shipping = $this->getShippingPriceValueFromTable($amount_values['byWeight'], $cart_weight);
-      }
-      if ($amount_values['radio'] == 'price' && isset($amount_values['byPrice'])) {
-        $price_shipping = $this->getShippingPriceValueFromTable($amount_values['byPrice'], $cart_amount);
-      }
-    }
-    if (!empty($shipping_params['classes_amount'])) {
-      $classes_amount = $shipping_params['classes_amount'];
-      $use_shipclass = true;
-      $class_price = 0;
-      foreach ($cart_items as $item => $values) {
-        $shipping_class = $values['data']->get_shipping_class_id();
-        $found = false;
-        if (!empty($shipping_class)) {
-          foreach ($classes_amount as $class) {
-            if (isset($class->ship_class) && $class->ship_class == $shipping_class) {
-              $found = true;
-              if (!empty($class->price) && $class->price > $class_price) {
-                $class_price = $class->price;
-              }
-            }
-          }
-        }
-        if (!$found) {
-          $use_shipclass = false;
-        }
-      }
-      if (!empty($cart_items) && $use_shipclass) {
-        $price_shipping = $class_price;
-      }
-    }
-    if ($cart_amount > $free_from && $free_from > 0) {
-      $price_shipping = 0.0;
-    }
-    return $price_shipping;
-  }
-
-  /**
-   * Check if string is json code.
-   *
-   * @access private
-   * @param string $string
-   * @return boolean
-   */
-  private function if_this_json($string)
-  {
-    json_decode($string);
-     return (json_last_error() == JSON_ERROR_NONE);
-  }
-
-  /**
-   * Get pickup point output parameters
-   * 
-   * @param array $args
-   * @return array
-   */
-  private function get_pickup_params($args = array())
-  {
-    $country_code = isset($args['country_code']) ? strtolower($args['country_code']) : 'lt';
-    $cart_amount = isset($args['cart_amount']) ? $args['cart_amount'] : 0;
-
-    if ( ! in_array($country_code, $this->available_countries) ) {
-      $country_code = 'lt';
-    }
-
-    $amount = $this->settings['pickup_point_price_' . $country_code];
-    $amount = ($this->if_this_json($amount)) ? json_decode($amount, true) : $amount;
-    $free_from = floatval($this->settings['pickup_point_nocharge_amount_' . $country_code]);
-    $classes_amount = '';
-    if (isset($this->settings['pickup_point_classes_' . $country_code])) {
-      $classes_amount = $this->settings['pickup_point_classes_' . $country_code];
-      $classes_amount = ($this->if_this_json($classes_amount)) ? json_decode($classes_amount, true) : $classes_amount;
-    }
-    return array(
-      'show' => $this->check_rate_show($amount),
-      'amount' => $amount,
-      'classes_amount' => $classes_amount,
-      'cart_amount' => $cart_amount,
-      'free_from' => $free_from,
+    $cart = array(
+      'amount' => $cart_values['amount'] ?? 0,
+      'weight' => $cart_values['weight'] ?? 0,
+      'country' => ( ! in_array($cart_values['country'], $this->available_countries) ) ? $cart_values['country'] : 'LT',
+      'items' => $cart_values['items'] ?? array(),
     );
-  }
 
-  /**
-   * Get courier output parameters
-   * 
-   * @param array $args
-   * @return array
-   */
-  private function get_courier_params($args = array())
-  {
-    $country_code = isset($args['country_code']) ? strtolower($args['country_code']) : 'lt';
-    $cart_amount = isset($args['cart_amount']) ? $args['cart_amount'] : 0;
-
-    if ( ! in_array($country_code, $this->available_countries) ) {
-      $country_code = 'lt';
+    if ( empty($method_prices) ) {
+      $method_prices = array();
     }
 
-    $amount = $this->settings['courier_price_' . $country_code];
-    $amount = ($this->if_this_json($amount)) ? json_decode($amount, true) : $amount;
-    $free_from = floatval($this->settings['courier_nocharge_amount_' . $country_code]);
-    $classes_amount = '';
-    if (isset($this->settings['courier_classes_' . $country_code])) {
-      $classes_amount = $this->settings['courier_classes_' . $country_code];
-      $classes_amount = ($this->if_this_json($classes_amount)) ? json_decode($classes_amount, true) : $classes_amount;
-    }
-    return array(
-      'show' => $this->check_rate_show($amount),
-      'amount' => $amount,
-      'classes_amount' => $classes_amount,
-      'cart_amount' => $cart_amount,
-      'free_from' => $free_from,
+    $prices = array(
+      'single' => $method_prices['price']['single'] ?? 0,
+      'by_weight' => $method_prices['price']['by_weight'] ?? array(),
+      'by_amount' => $method_prices['price']['by_amount'] ?? array(),
+      'by_ship_class' => $method_prices['price']['by_ship_class'] ?? array(),
+      'free_from' => $method_prices['price']['free_from'] ?? 0,
     );
+    $price_type = $method_prices['price_type'] ?? 'single';
+
+    switch ( $price_type ) {
+      case 'weight':
+        $ship_price = $this->get_rate_amount_from_table($prices['by_weight'], $cart['weight']);
+        break;
+      case 'amount':
+        $ship_price = $this->get_rate_amount_from_table($prices['by_amount'], $cart['amount']);
+        break;
+      default:
+        $ship_price = $prices['single'];
+    }
+
+    if ( $ship_price === false ) {
+      return $ship_price;
+    }
+
+    $price_by_class = $this->get_rate_amount_by_class($prices['by_ship_class'], $cart['items']);
+    if ( $price_by_class !== false ) {
+      $ship_price = $price_by_class;
+    }
+
+    $free_from = floatval($prices['free_from']);
+    if ( $free_from > 0 && $free_from <= $cart['amount'] ) {
+      $ship_price = 0;
+    }
+
+    return $ship_price;
   }
 
   /**
-   * Get 'show' value for shipping rate.
+   * Get shipping price from rates table
    *
-   * @access private
-   * @param int|float|json $amount
-   * @return boolean
+   * @access public
+   * @param array $prices_values
+   * @param array $cart_values
+   * @return mixed
    */
-  private function check_rate_show($amount)
+  private function get_rate_amount_from_table( $prices_values, $cart_value )
   {
-    $show = true;
-    if (is_array($amount)) {
-      $show = false;
-      if (isset($amount['single'])) { // Compatibility with old versions
-        if ($amount['single'] === '') {
-          if (isset($amount['cb'])) {
-            $show = true;
-          }
-        } else {
-          $show = true;
-        }
-      }
-      if (isset($amount['radio'])) {
-        if ($amount['radio'] == 'disabled') {
-          $show = false;
-        } else {
-          $show = true;
-        }
-      } else {
-        $show = false;
-      }
-    } else {
-      if ($amount === '') {
-        $show = false;
-      }
-    }
-
-    return $show;
-  }
-
-  private function getShippingPriceValueFromTable($values, $cart_value) {
-    $price_shipping = false;
+    $rate_price = false;
     $prev_value = -0.001;
-    foreach ($values as $key => $value) {
-      if (empty($value['value'])) {
+    foreach ($prices_values as $key => $value) {
+      if (empty($value['value']) && $value['value'] !== 0 && $value['value'] !== '0') {
         $value['value'] = 1000000;
       }
+
       if ($cart_value > $prev_value && $cart_value <= $value['value']) {
-        $price_shipping = (isset($value['price'])) ? $value['price'] : 0;
+        $rate_price = (isset($value['price'])) ? $value['price'] : 0;
       }
+
       $prev_value = $value['value'];
     }
 
-    return $price_shipping;
+    return $rate_price;
+  }
+
+  /**
+   * Get shipping price from "Price by class" table
+   *
+   * @access public
+   * @param array $prices_values
+   * @param array $cart_items
+   * @return mixed
+   */
+  private function get_rate_amount_by_class( $prices_values, $cart_items )
+  {
+    $rate_price = false;
+
+    if ( ! is_array($cart_items) || empty($prices_values) ) {
+      return $rate_price;
+    }
+
+    foreach ( $prices_values as $class_price ) {
+      if ( empty($class_price['value']) ) {
+        continue;
+      }
+      $all_have_class = true;
+      foreach ( $cart_items as $item_id => $item ) {
+        $shipping_class = $item['data']->get_shipping_class_id();
+        if ( empty($shipping_class) || $class_price['value'] != $shipping_class ) {
+          $all_have_class = false;
+        }
+      }
+      if ( $all_have_class ) {
+        $rate_price = $class_price['price'];
+      }
+    }
+
+    return $rate_price;
   }
 
   /**
@@ -500,109 +460,38 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             'type' => 'email',
         ),
         'pickup_point_method' => array(
-            'title' => __('Enable Pickup Point', 'itella-shipping'),
-            'class' => 'pickup-point-method',
+            'title' => __('Enable Parcel locker', 'itella-shipping'),
+            'class' => 'method-cb-pickup_point',
             'type' => 'checkbox',
-            'description' => __('Show pickup point shipping method in checkout.', 'itella-shipping'),
+            'description' => __('Show parcel locker shipping method in checkout.', 'itella-shipping'),
             'default' => 'no'
         ),
         'courier_method' => array(
             'title' => __('Enable Courier', 'itella-shipping'),
             'type' => 'checkbox',
-            'class' => 'courier-method',
+            'class' => 'method-cb-courier',
             'description' => __('Show courier shipping method in checkout.', 'itella-shipping'),
             'default' => 'no'
         ),
         'checkout_show_style' => array(
-            'title' => __('Pickup point selection style', 'itella-shipping'),
+            'title' => __('Parcel locker selection style', 'itella-shipping'),
             'type'    => 'select',
-            'class' => 'checkout-style pickup-point',
+            'class' => 'checkout-style field-toggle-pickup_point',
             'options' => array(
                 'map'  => __('Map', 'itella-shipping'),
                 'dropdown' => __('Dropdown', 'itella-shipping'),
             ),
             'default' => 'map',
-            'description' => __('Choose what the pickup point selection in the checkout will look like.', 'itella-shipping'),
+            'description' => __('Choose what the parcel locker selection in the checkout will look like.', 'itella-shipping'),
         ),
     );
-    foreach ($this->available_countries as $country_code) {
-      $fields['hr_' . $country_code] = array(
-        'title' => strtoupper($country_code),
-        'type' => 'hr'
-      );
-      /*$fields['section_pickup_' . $country_code] = array(
-        'title' => __('Pickup Point', 'itella-shipping'),
-        'type' => 'section_name',
-        'class' => 'pickup-point'
-      );*/
-      $fields['pickup_point_price_' . $country_code] = array(
-        'title' => strtoupper($country_code) . '. ' . __('Pickup Point price', 'itella-shipping'),
-        'class' => 'pickup-point',
-        'type' => 'price_by_weight',
-        'default' => 2,
-      );
-      $fields['pickup_point_classes_' . $country_code] = array(
-        'title' => strtoupper($country_code) . '. ' . __('Pickup Point price by class', 'itella-shipping'),
-        'class' => 'pickup-point',
-        'type' => 'shipping_class',
-        'default' => '',
-        'description' => __('Set custom price for specific shipping class. Only works when all items in the cart belong to this class', 'itella-shipping'),
-      );
-      $fields['pickup_point_nocharge_amount_' . $country_code] = array(
-        'title' => strtoupper($country_code) . '. ' . __('Pickup Point free from', 'itella-shipping'),
-        'class' => 'pickup-point',
-        'type' => 'number',
-        'custom_attributes' => array(
-            'step' => 0.01,
-            'min' => 0.01,
-        ),
-        'default' => 100,
-        'description' => __('Disable pickup point fee if cart amount is greater or equal than this limit', 'itella-shipping'),
-      );
-      $fields['pickup_point_description_' . $country_code] = array(
-        'title' => strtoupper($country_code) . '. ' . __('Pickup Point description', 'itella-shipping'),
-        'class' => 'pickup-point',
-        'type' => 'textarea',
-        'default' => '',
-        'description' => __('Show shipping method description on Checkout page'),
-      );
-      /*$fields['section_courier_' . $country_code] = array(
-        'title' => __('Courier', 'itella-shipping'),
-        'type' => 'section_name',
-        'class' => 'courier'
-      );*/
-      $fields['courier_price_' . $country_code] = array(
-        'title' => strtoupper($country_code) . '. ' . __('Courier price', 'itella-shipping'),
-        'class' => 'courier',
-        'type' => 'price_by_weight',
-        'default' => 2,
-      );
-      $fields['courier_classes_' . $country_code] = array(
-        'title' => strtoupper($country_code) . '. ' . __('Courier price by class', 'itella-shipping'),
-        'class' => 'courier',
-        'type' => 'shipping_class',
-        'default' => '',
-        'description' => __('Set custom price for specific shipping class. Only works when all items in the cart belong to this class', 'itella-shipping'),
-      );
-      $fields['courier_nocharge_amount_' . $country_code] = array(
-        'title' => strtoupper($country_code) . '. ' . __('Courier free from', 'itella-shipping'),
-        'class' => 'courier',
-        'type' => 'number',
-        'custom_attributes' => array(
-            'step' => 0.01,
-            'min' => 0.01,
-        ),
-        'default' => 100,
-        'description' => __('Disable courier fee if cart amount is greater or equal than this limit', 'itella-shipping'),
-      );
-      $fields['courier_description_' . $country_code] = array(
-        'title' => strtoupper($country_code) . '. ' . __('Courier description', 'itella-shipping'),
-        'class' => 'courier',
-        'type' => 'textarea',
-        'default' => '',
-        'description' => __('Show shipping method description on Checkout page', 'itella-shipping'),
-      );
-    }
+
+    $fields['methods'] = array(
+        'title' => __('Methods', 'itella-shipping'),
+        'type' => 'methods',
+        'countries_methods' => $this->get_itella_shipping_methods(),
+    );
+
     $fields['hr_courier_mail'] = array(
       'type' => 'hr'
     );
@@ -612,7 +501,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       $comment_pp_desc .= '<br/><code>{' . $key . '}</code> - ' . $desc;
     }
     $fields['comment_pp'] = array(
-      'title' => __('Pickup point label comment', 'itella-shipping'),
+      'title' => __('Parcel locker label comment', 'itella-shipping'),
       'type' => 'text',
       'description' => $comment_pp_desc,
     );
@@ -627,11 +516,11 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       'description' => $comment_c_desc,
     );
 
-    foreach ($this->available_countries as $country_code) {
+    foreach ($this->sender_countries as $country_code) {
       $fields['call_courier_mail_' . $country_code] = array(
         'title' => sprintf(__('Smartpost %s email', 'itella-shipping'), strtoupper($country_code)),
         'type' => 'text',
-        'default' => sprintf('smartship.routing.%s@itella.com', $country_code),
+        'default' => sprintf('smartship.routing.%s@itella.com', strtolower($country_code)),
       );
     }
     $fields['call_courier_mail_subject'] = array(
@@ -641,6 +530,224 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       );
     $this->form_fields = $fields;
   }
+
+    public function generate_methods_html( $key, $value )
+    {
+        $field_key = $this->get_field_key($key);
+        $fields_values = $this->get_option($key);
+        if ( is_string($fields_values) ) {
+            $fields_values = json_decode($fields_values, true);
+        }
+        $weight_unit = get_option('woocommerce_weight_unit');
+
+        if ( empty($fields_values) ) {
+            $old_plugin_values = $this->methods_backward_compatibility();
+            $fields_values = (!empty($old_plugin_values)) ? $old_plugin_values : array();
+        }
+        $title_html = (isset($value['title'])) ? $this->helper->row_title_html($value['title']) : '';
+        $countries_methods = $value['countries_methods'] ?? array();
+        
+        $shipping_classes = WC()->shipping->get_shipping_classes();
+        $shipping_classes_options = array();
+        foreach ( $shipping_classes as $ship_class ) {
+            $shipping_classes_options[$ship_class->term_id] = $ship_class->name;
+        }
+
+        ob_start();
+        ?>
+        <tr valign="top">
+            <?php echo $title_html; ?>
+            <td class="forminp itella-methods" <?php if (empty($title_html)) echo 'colspan="2"'; ?>>
+                <?php foreach ( $countries_methods as $country => $methods ) : ?>
+                    <?php $country = strtolower($country); ?>
+                    <?php $field_key_country = $field_key . '[' . $country . ']'; ?>
+                    <?php $field_id_country = $field_key . '_' . $country; ?>
+                    <div class="itella-country itella-country-<?php echo $country; ?>">
+                        <div class="title">
+                            <img src="<?php echo $this->plugin_url . 'admin/assets/flags/' . $country . '.png'; ?>" alt="[<?php echo strtoupper($country); ?>]"/>
+                            <span><?php echo \WC()->countries->countries[strtoupper($country)]; ?></span>
+                        </div>
+                        <div class="content">
+                            <?php foreach ( $methods as $method_key => $method_title ) : ?>
+                                <?php $field_key_method = $field_key_country . '[' . $method_key . ']'; ?>
+                                <?php $field_id_method = $field_id_country . '_' . $method_key; ?>
+                                <?php $method_values = $fields_values[$country][$method_key] ?? array(); ?>
+                                <div class="itella-method itella-method-<?php echo $method_key; ?>">
+                                    <p class="method_title"><?php echo $method_title; ?></p>
+                                    <div class="method_params">
+                                        <?php
+                                        echo $this->helper->methods_select_field_html(array(
+                                            'label' => __('Price type', 'itella-shipping'),
+                                            'id' => $field_id_method . '_price_type',
+                                            'name' => $field_key_method . '[price_type]',
+                                            'value' => $method_values['price_type'] ?? '',
+                                            'options' => array(
+                                                'disabled' => __('Dont use this method', 'itella-shipping'),
+                                                'single' => __('Fixed price', 'itella-shipping'),
+                                                'weight' => __('Price by cart weight', 'itella-shipping'),
+                                                'amount' => __('Price by cart amount', 'itella-shipping'),
+                                            ),
+                                            'class' => 'row-price_type',
+                                        ));
+                                        echo $this->helper->methods_number_field_html(array(
+                                            'label' => __('Price', 'itella-shipping'),
+                                            'id' => $field_id_method . '_price_single',
+                                            'name' => $field_key_method . '[price][single]',
+                                            'value' => $method_values['price']['single'] ?? null,
+                                            'default' => 3,
+                                            'step' => 0.01,
+                                            'min' => 0,
+                                            'class' => 'row-price-single',
+                                        ));
+                                        echo $this->helper->methods_multirows_field_html(array(
+                                            'type' => 'weight',
+                                            'label' => __('Prices', 'itella-shipping'),
+                                            'id' => $field_id_method . '_price_weight',
+                                            'name' => $field_key_method . '[price][by_weight]',
+                                            'value' => $method_values['price']['by_weight'] ?? null,
+                                            'step' => 0.001,
+                                            'min' => 0,
+                                            'title_col_1' => sprintf(__('Weight (%s)', 'itella-shipping'), $weight_unit),
+                                            'title_col_2' => __('Price', 'itella-shipping'),
+                                            'class' => 'row-price-weight',
+                                        ));
+                                        echo $this->helper->methods_multirows_field_html(array(
+                                            'type' => 'amount',
+                                            'label' => __('Prices', 'itella-shipping'),
+                                            'id' => $field_id_method . '_price_amount',
+                                            'name' => $field_key_method . '[price][by_amount]',
+                                            'value' => $method_values['price']['by_amount'] ?? null,
+                                            'step' => 0.01,
+                                            'min' => 0,
+                                            'title_col_1' => __('Amount range', 'itella-shipping'),
+                                            'title_col_2' => __('Price', 'itella-shipping'),
+                                            'class' => 'row-price-amount',
+                                        ));
+                                        echo $this->helper->methods_multirows_field_html(array(
+                                            'type' => 'shipclass',
+                                            'field_type' => 'select',
+                                            'label' => __('Prices by class', 'itella-shipping'),
+                                            'id' => $field_id_method . '_price_shipclass',
+                                            'name' => $field_key_method . '[price][by_ship_class]',
+                                            'value' => $method_values['price']['by_ship_class'] ?? null,
+                                            'options' => $shipping_classes_options,
+                                            'description' => __('Set custom price for specific shipping class. Only works when all items in the cart belong to this class', 'itella-shipping')
+                                        ));
+                                        echo $this->helper->methods_number_field_html(array(
+                                            'label' => __('Free from', 'itella-shipping'),
+                                            'id' => $field_id_method . '_price_free_from',
+                                            'name' => $field_key_method . '[price][free_from]',
+                                            'value' => $method_values['price']['free_from'] ?? null,
+                                            'default' => '',
+                                            'step' => 0.01,
+                                            'min' => 0,
+                                            'description' => __('Disable shipping method fee if cart amount is greater or equal than this limit', 'itella-shipping'),
+                                        ));
+                                        echo $this->helper->methods_text_field_html(array(
+                                            'label' => __('Custom name', 'itella-shipping'),
+                                            'id' => $field_id_method . '_name',
+                                            'name' => $field_key_method . '[name]',
+                                            'value' => $method_values['name'] ?? null,
+                                            'default' => '',
+                                            'description' => __('A custom shipping method name that will display on the cart/checkout page. Many translation plugins do not translate this field value.', 'itella-shipping'),
+                                        ));
+                                        echo $this->helper->methods_textarea_field_html(array(
+                                            'label' => __('Description', 'itella-shipping'),
+                                            'id' => $field_id_method . '_description',
+                                            'name' => $field_key_method . '[description]',
+                                            'value' => $method_values['description'] ?? null,
+                                            'default' => '',
+                                            'rows' => 2,
+                                            'description' => __('A description next to shipping method that will display on the cart/checkout page. Many translation plugins do not translate this field value.', 'itella-shipping'),
+                                        ));
+                                        ?>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </td>
+        </tr>
+        <?php
+        $html = ob_get_contents();
+        ob_end_clean();
+        return $html;
+    }
+
+    private function methods_backward_compatibility()
+    {
+        $old_countries = array('lt', 'ee', 'lv', 'fi');
+        $old_keys = array(
+            'pickup_point_price',
+            'pickup_point_classes',
+            'pickup_point_nocharge_amount',
+            'pickup_point_description',
+            'courier_price',
+            'courier_classes',
+            'courier_nocharge_amount',
+            'courier_description'
+        );
+
+        $old_values = array();
+        foreach ( $old_keys as $key ) {
+            foreach ( $old_countries as $country ) {
+                $value = $this->get_option($key . '_' . $country);
+                $old_values[$country][$key] = ($this->helper->is_json($value)) ? json_decode($value, true) : $value;
+            }
+        }
+
+        $new_values = array();
+        foreach ( $old_countries as $country ) {
+            $price_type = $old_values[$country]['pickup_point_price']['radio'] ?? '';
+            $price_type = ($price_type == 'price') ? 'amount' : $price_type;
+            $pickup_point_values = array(
+                'price_type' => $price_type,
+                'price' => array(
+                    'single' => $old_values[$country]['pickup_point_price']['single'] ?? '',
+                    'by_weight' => $old_values[$country]['pickup_point_price']['byWeight'] ?? '',
+                    'by_amount' => $old_values[$country]['pickup_point_price']['byPrice'] ?? '',
+                    'by_ship_class' => array(
+                        array(
+                            'value' => $old_values[$country]['pickup_point_classes'][0]['ship_class'] ?? '',
+                            'price' => $old_values[$country]['pickup_point_classes'][0]['price'] ?? '',
+                        ),
+                    ),
+                    'free_from' => $old_values[$country]['pickup_point_nocharge_amount'] ?? '',
+                ),
+                'description' => $old_values[$country]['pickup_point_description'] ?? '',
+            );
+            $new_values[$country]['pickup_point'] = $pickup_point_values;
+
+            $price_type = $old_values[$country]['courier_price']['radio'] ?? '';
+            $price_type = ($price_type == 'price') ? 'amount' : $price_type;
+            $courier_values = array(
+                'price_type' => $price_type,
+                'price' => array(
+                    'single' => $old_values[$country]['courier_price']['single'] ?? '',
+                    'by_weight' => $old_values[$country]['courier_price']['byWeight'] ?? '',
+                    'by_amount' => $old_values[$country]['courier_price']['byPrice'] ?? '',
+                    'by_ship_class' => array(
+                        array(
+                            'value' => $old_values[$country]['courier_classes'][0]['ship_class'] ?? '',
+                            'price' => $old_values[$country]['courier_classes'][0]['price'] ?? '',
+                        ),
+                    ),
+                    'free_from' => $old_values[$country]['courier_nocharge_amount'] ?? '',
+                ),
+                'description' => $old_values[$country]['courier_description'] ?? '',
+            );
+            $new_values[$country]['courier'] = $courier_values;
+        }
+
+        return $new_values;
+    }
+
+    public function validate_methods_field( $key, $value )
+    {
+        $values = wp_json_encode($value);
+        return $values;
+    }
 
   public function generate_price_by_weight_html( $key, $value )
   {
@@ -718,9 +825,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     ob_start();
     ?>
     <tr valign="top">
-      <th scope="row" class="titledesc">
-        <label><?php echo esc_html($value['title']); ?></label>
-      </th>
+        <?php echo $this->helper->row_title_html($value['title']); ?>
       <td class="forminp itella-price_by_weight">
         <fieldset class="field-radio">
           <?php foreach ($radio_list as $radio_key => $radio_label) : ?>
@@ -1027,13 +1132,13 @@ class Itella_Shipping_Method extends WC_Shipping_Method
           <?php endif; ?>
             <p><strong><?= __('Shipping method:', 'itella-shipping') ?></strong>
               <?=
-              $is_itella_pp ? __('Pickup Point', 'itella-shipping') :
+              $is_itella_pp ? __('Parcel locker', 'itella-shipping') :
                   ($is_itella_c ? __('Courier', 'itella-shipping') :
                       __('No Smartpost Shipping method selected', 'itella-shipping'))
               ?>
             </p>
           <?php if ($is_itella_pp): ?>
-              <p><strong><?= __('Chosen Pickup Point', 'itella-shipping') ?></strong>
+              <p><strong><?= __('Chosen Parcel locker', 'itella-shipping') ?></strong>
                 <?=
                 $chosen_pickup_point->address->municipality . ' - ' .
                 $chosen_pickup_point->address->address . ', ' .
@@ -1113,7 +1218,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
               'label' => __('Carrier:', 'itella-shipping'),
               'value' => $is_itella_pp ? 'itella_pp' : 'itella_c',
               'options' => array(
-                  'itella_pp' => __('Pickup Point', 'itella-shipping'),
+                  'itella_pp' => __('Parcel locker', 'itella-shipping'),
                   'itella_c' => __('Courier', 'itella-shipping')
               ),
               'wrapper_class' => 'form-field-wide'
@@ -1121,7 +1226,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
           woocommerce_wp_select(array(
               'id' => '_pp_id',
-              'label' => __('Select Pickup Point:', 'itella-shipping'),
+              'label' => __('Select Parcel locker:', 'itella-shipping'),
               'value' => $chosen_pickup_point_id,
               'options' => $this->build_pickup_points_list(Itella_Manifest::order_getCountry($order)),
               'wrapper_class' => 'form-field-wide'
@@ -1208,6 +1313,10 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   public function get_pickup_points($shipping_country_id)
   {
+    if ( ! in_array($shipping_country_id, $this->grouped_countries['pickup_point']) ) {
+      return array();
+    }
+
     $pickup_points = file_get_contents(plugin_dir_path(__FILE__) . '../locations/locations' . $shipping_country_id . '.json');
 
     return json_decode($pickup_points);
@@ -1269,7 +1378,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 		$shipping_method = (isset($_POST['shipping_method']) && is_array($_POST['shipping_method'])) ? wc_clean($_POST['shipping_method']) : [];
     $isItellaPp = in_array('itella_pp',$shipping_method);
     if ($isItellaPp && empty($_POST['itella-chosen-point-id'])) {
-      wc_add_notice( __( "You must choose Smartpost Pickup Point", 'itella-shipping' ), 'error');
+      wc_add_notice( __( "You must choose Smartpost Parcel locker", 'itella-shipping' ), 'error');
     }
   }
 
@@ -1481,8 +1590,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   {
     if( is_cart() ) return; // Exit on cart page
 
-    $Itella_Shipping_Method = new Itella_Shipping_Method();
-    if ( ! isset($Itella_Shipping_Method->settings) ) {
+    if ( ! isset($this->settings) ) {
       return;
     }
 
@@ -1491,14 +1599,13 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       return;
     }
 
-    $pt_description_name = 'pickup_point_description_' . strtolower($customer['country']);
-    $c_description_name = 'courier_description_' . strtolower($customer['country']);
-
-    if ( ! empty($Itella_Shipping_Method->settings[$pt_description_name]) && $method->id === 'itella_pp' ) {
-      echo '<span class="itella-shipping-description">' . $Itella_Shipping_Method->settings[$pt_description_name] . '</span>';
-    }
-    if ( ! empty($Itella_Shipping_Method->settings[$c_description_name]) && $method->id === 'itella_c' ) {
-      echo '<span class="itella-shipping-description">' . $Itella_Shipping_Method->settings[$c_description_name] . '</span>';
+    $country = strtolower($customer['country']);
+    $methods_settings = (!empty($this->settings['methods'])) ? json_decode($this->settings['methods'], true) : $this->methods_backward_compatibility();
+    
+    foreach ( $methods_settings[$country] as $method_key => $method_data ) {
+      if ( ! empty($method_data['description']) && $method->id === 'itella_' . Itella_Shipping::get_instance()->get_method_short_key($method_key) ) {
+        echo '<span class="itella-shipping-description">' . $method_data['description'] . '</span>';
+      } 
     }
   }
 
@@ -1544,7 +1651,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       <# } #>
       <# if ( data.pp_address ) { #>
         <div class="quickview-row">
-          <strong>' . __('Pickup point', 'itella-shipping') . '</strong><br/>
+          <strong>' . __('Parcel locker', 'itella-shipping') . '</strong><br/>
           <span>{{data.pp_address}}</span>
         </div>
       <# } #>

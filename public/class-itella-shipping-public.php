@@ -48,10 +48,10 @@ class Itella_Shipping_Public
    * @since 1.0.0
    *
    */
-  public function __construct($plugin, $available_countries)
+  public function __construct($plugin)
   {
     $this->plugin = $plugin;
-    $this->available_countries = $available_countries;
+    $this->available_countries = $plugin->countries;
 
     $this->assets = (object) array(
       'css' => $plugin->url . 'public/assets/css/',
@@ -100,16 +100,16 @@ class Itella_Shipping_Public
             'locationsUrl' => $this->plugin->url . 'locations/',
             'translations' => array(
                 'nothing_found' => __('Nothing found', 'itella-shipping'),
-                'modal_header' => __('Pickup points', 'itella-shipping'),
-                'selector_header' => __('Pickup point', 'itella-shipping'),
+                'modal_header' => __('Parcel lockers', 'itella-shipping'),
+                'selector_header' => __('Parcel locker', 'itella-shipping'),
                 'workhours_header' => __('Workhours', 'itella-shipping'),
                 'contacts_header' => __('Contacts', 'itella-shipping'),
                 'search_placeholder' => __('Enter postcode/address', 'itella-shipping'),
-                'select_pickup_point' => __('Select a pickup point', 'itella-shipping'),
-                'no_pickup_points' => __('No points to select', 'itella-shipping'),
+                'select_pickup_point' => __('Select a parcel locker', 'itella-shipping'),
+                'no_pickup_points' => __('No locker to select', 'itella-shipping'),
                 'select_btn' => __('select', 'itella-shipping'),
                 'back_to_list_btn' => __('reset search', 'itella-shipping'),
-                'select_pickup_point_btn' => __('Select pickup point', 'itella-shipping'),
+                'select_pickup_point_btn' => __('Select parcel locker', 'itella-shipping'),
                 'no_information' => __('No information', 'itella-shipping'),
                 'error_leaflet' => __('Leaflet is required for Itella-Mapping', 'itella-shipping'),
                 'error_missing_mount_el' => __('No mount supplied to itellaShipping', 'itella-shipping')
@@ -198,6 +198,10 @@ class Itella_Shipping_Public
     $chosen_pickup_point_id = get_post_meta($order->get_id(), '_pp_id', true);
     $pickup_points = file_get_contents($this->plugin->path . 'locations/locations' . $shipping_country . '.json');
     $pickup_points = json_decode($pickup_points);
+
+    if ( empty($pickup_points) ) {
+        return '';
+    }
 
     foreach ($pickup_points as $pickup_point) {
       $chosen_pickup_point = $pickup_point->id === $chosen_pickup_point_id ? $pickup_point : null;

@@ -3,6 +3,13 @@
  * included in this file.
  */
 
+:root {
+  --itella-color-main: #391dc2;
+  --itella-color-opp: #fff;
+  --itella-bordercolor-default: #8c8f94;
+  --itella-bordercolor-disabled: #eee;
+}
+
 .d-none {
     display: none;
 }
@@ -72,4 +79,136 @@
 }
 .itella-settings .itella-shipping_class label {
   margin-left: 10px !important;
+}
+
+.itella-settings .itella-country {
+  padding: 5px 10px 10px;
+  background: #fff;
+  box-shadow: 0px 0px 1px 1px #ccc;
+  margin-bottom: 10px;
+}
+.itella-settings .itella-country:last-child {
+  margin-bottom: 0;
+}
+.itella-settings .itella-country > .title {
+  padding: 0px 0px 5px;
+}
+.itella-settings .itella-country > .title img {
+  height: 18px;
+  vertical-align: middle;
+}
+.itella-settings .itella-country > .title span {
+  font-weight: bold;
+  vertical-align: middle;
+}
+.itella-settings .itella-country > .content {
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+.itella-settings .itella-country .itella-method {
+  padding: 5px;
+  margin: 0 5px 5px 0;
+  border: 1px solid #ccc;
+  transition: all 0.3s ease;
+  position: relative;
+}
+.itella-settings .itella-country .itella-method.disabled {
+  box-shadow: inset 0 0 10px #ccc;
+}
+.itella-settings .itella-country .itella-method.disabled:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: #f0f0f1;
+  opacity: 0.5;
+  z-index: 99;
+}
+.itella-settings .itella-country .itella-method:nth-child(even) {
+  margin-right: 0;
+}
+.itella-settings .itella-country .itella-method:hover {
+  border-color: var(--itella-color-main);
+}
+.itella-settings .itella-country .itella-method.off .param_row:not(.row-price_type) {
+  display: none;
+}
+.itella-settings .itella-country .method_title {
+  margin: 0 0 10px;
+  font-style: italic;
+}
+.itella-settings .itella-country .itella-method:hover .method_title {
+  color: #391dc2;
+}
+.itella-settings .itella-country .method_params .param_row {
+  display: grid;
+  grid-template-columns: 25% 75%;
+  margin-bottom: 3px;
+}
+.itella-settings .itella-country .method_params .param_row:hover {
+  background: #391dc205;
+}
+.itella-settings .itella-country .method_params .param_row:last-child {
+  margin-bottom: 0;
+}
+.itella-settings .itella-country .method_params .param_row input,
+.itella-settings .itella-country .method_params .param_row select,
+.itella-settings .itella-country .method_params .param_row textarea {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  border-color: var(--itella-bordercolor-default);
+}
+.itella-settings .itella-country .method_params .param_title {
+  position: relative;
+  padding-right: 20px;
+}
+.itella-settings .itella-country .method_params .param_title label {
+  display: inline-block;
+}
+.itella-settings .itella-country .method_params .param_row:hover .param_title label {
+  color: var(--itella-color-main);
+}
+.itella-settings .itella-country .method_params .param_title .woocommerce-help-tip {
+  vertical-align: middle;
+  display: inline-block;
+  margin-top: 2px;
+  margin-left: 0px;
+}
+.itella-settings .itella-country .method_params .values_table {
+  padding: 2px 0 5px;
+  border: 1px solid var(--itella-bordercolor-default);
+  border-radius: 3px;
+}
+.itella-settings .itella-country .method_params .values_table table {
+    width: 100%;
+}
+.itella-settings .itella-country .method_params .values_table th,
+.itella-settings .itella-country .method_params .values_table td {
+  padding: 1px 3px;
+  text-align: center;
+}
+.itella-settings .itella-country .method_params .values_table .table_row-default input,
+.itella-settings .itella-country .method_params .values_table .table_row-default select {
+  border-color: var(--itella-bordercolor-disabled);
+}
+.itella-settings .itella-country .method_params .values_table td.table_col_0 {
+  width: 60px;
+  white-space: nowrap;
+  text-align: right;
+  color: #999;
+}
+.itella-settings .itella-country .method_params .values_table td.table_col_1 {
+  width: auto;
+}
+.itella-settings .itella-country .method_params .values_table .table_col_2 {
+  width: 90px;
+}
+.itella-settings .itella-country .method_params .values_table .table_col_3 {
+  width: 40px;
+}
+.itella-settings .itella-country .method_params .values_table .table_global_actions {
+  text-align: center;
 }
