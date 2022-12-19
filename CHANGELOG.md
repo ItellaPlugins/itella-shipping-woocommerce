@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.4.0] - 2022-12-19
 ### Fixed
 - added order weight conversion to kilograms if other weight units are used on the website
 - fixed error message, when get error on label generation
