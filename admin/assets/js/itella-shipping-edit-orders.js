@@ -115,7 +115,7 @@
                 const errorBox = document.createElement('div');
                 const errorMessage = document.createElement('p');
                 errorBox.classList.add('error');
-                errorMessage.textContent = 'Select Pickup Point field is required';
+                errorMessage.textContent = 'Select Parcel locker field is required';
                 errorBox.appendChild(errorMessage);
                 wcNotices.appendChild(errorBox);
             }

@@ -1,3 +1,8 @@
+:root {
+  --itella-color-main: #391dc2;
+  --itella-color-opp: #fff;
+}
+
 .itella-mapping-modal *,
 .itella-shipping-container * {
   box-sizing: border-box;
@@ -25,19 +30,22 @@
 }
 
 .itella-shipping-container .itella-modal-btn {
-  background: #0005cc;
-  color: #fff;
+  background: var(--itella-color-main);
+  color: var(--itella-color-opp);
   text-decoration: none;
   text-transform: uppercase;
   font-size: 12px;
   padding: 0 1em;
   line-height: 30px;
   border-radius: 4px;
+  border: 1px solid var(--itella-color-main);
+  cursor: pointer;
 }
 
-.itella-shipping-container .itella-modal-btn:hover {
-  color: #fff!important;
-  cursor: pointer;
+.itella-shipping-container .itella-modal-btn:hover,
+.itella-shipping-container .itella-modal-btn:focus {
+  background: var(--itella-color-opp);
+  color: var(--itella-color-main);
 }
 
 .itella-mapping-modal {
@@ -117,7 +125,7 @@
 
 .itella-card-header {
   padding: 12px 24px;
-  background-color: #0000CC;
+  background-color: var(--itella-color-main);
   color: #fff;
   display: flex;
   justify-content: space-between;
@@ -326,7 +334,7 @@
 }
 
 .itella-select ul li.active {
-  background-color: #0000CC;
+  background-color: var(--itella-color-main);
   color: #fff;
 }
 

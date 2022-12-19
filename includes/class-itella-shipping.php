@@ -31,6 +31,14 @@ class Itella_Shipping
 {
 
   /**
+   * The class is a singleton
+   * 
+   * @access  public
+   * @var     Itella_Shipping $instance This class
+   */
+  public static $instance;
+
+  /**
    * The loader that's responsible for maintaining and registering all hooks that power
    * the plugin.
    *
@@ -77,9 +85,9 @@ class Itella_Shipping
   protected $version;
 
   /**
-   * @var array $available_countries
+   * @var array $available_methods
    */
-  private $available_countries;
+  protected $available_methods;
 
   /**
    * Define the core functionality of the plugin.
@@ -94,7 +102,7 @@ class Itella_Shipping
   {
     $this->plugin_name = 'itella-shipping';
     $this->version = $plugin['version'];
-    $this->available_countries = array('LT', 'EE', 'LV', 'FI');
+    $this->available_methods = $this->get_available_methods();
     $this->plugin_basename = $plugin['basename'];
     $this->plugin_url = $plugin['url'];
     $this->plugin_path = $plugin['path'];
@@ -102,6 +110,108 @@ class Itella_Shipping
     add_action('plugins_loaded', array($this, 'run'));
     add_action('admin_notices', array($this, 'notify_on_activation'));
 
+    self::$instance = $this;
+  }
+
+  public static function get_instance() {
+    return self::$instance;
+  }
+
+  public function get_plugin_data()
+  {
+    return (object) array(
+      'name' => $this->get_plugin_name(),
+      'version' => $this->get_version(),
+      'url' => $this->get_plugin_url(),
+      'path' => $this->get_plugin_path(),
+      'methods' => $this->get_available_methods(),
+      'countries' => $this->get_available_methods('all'),
+      'countries_grouped' => $this->get_available_methods(true),
+      'sender_countries' => $this->get_sender_methods(true),
+    );
+  }
+
+  public function get_method_short_key( $method_key )
+  {
+    switch ($method_key) {
+      case 'pickup_point':
+        return 'pp';
+        break;
+      case 'courier':
+        return 'c';
+        break;
+      default:
+        return $method_key;
+        break;
+    }
+  }
+
+  /**
+   * Get available methods of dispatch and sender countries
+   * 
+   * @param boolean $get_countries - Get available sender countries list.
+   * @return array
+   */
+  private function get_sender_methods( $get_countries = false )
+  {
+    $sender_countries = array('LT', 'LV', 'EE', 'FI');
+
+    if ( $get_countries ) {
+      return $sender_countries;
+    }
+
+    return array();
+  }
+
+  /**
+   * Get available shipping methods and receiver countries
+   * 
+   * @param boolean|string $get_countries - Get available receiver countries list.
+   * @return array
+   */
+  private function get_available_methods( $get_countries = false )
+  {
+    $countries = array(
+      'courier' => array('LT', 'LV', 'EE', 'FI', 'AT', 'BE', 'BG', 'HR', 'CZ', 'DK', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT', 'LU', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE'),
+      'pickup_point' => array('LT', 'LV', 'EE', 'FI')
+    );
+
+    $methods_names = array(
+      'courier' => __('Courier', 'itella-shipping'),
+      'pickup_point' => __('Parcel locker', 'itella-shipping'),
+    );
+
+    // Return countries list
+    if ( $get_countries ) {
+      if ( $get_countries === true ) {
+        return $countries;
+      }
+
+      if ( isset($countries[$get_countries]) ) {
+        return $countries[$get_countries];
+      }
+
+      $all_countries = array();
+      foreach ( $countries as $type => $list ) {
+        foreach ( $list as $c ) {
+          if ( ! in_array($c, $all_countries) ) {
+            $all_countries[] = $c;
+          }
+        }
+      }
+      return $all_countries;
+    }
+    
+    // Return methods list
+    $methods = array();
+
+    foreach ( $countries as $type => $list ) {
+      foreach ( $list as $c ) {
+        $methods[$c][$type] = $methods_names[$type];
+      }
+    }
+
+    return $methods;
   }
 
   /**
@@ -144,6 +254,11 @@ class Itella_Shipping
      * The class responsible for defining all actions that occur in the Dashboard.
      */
     require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-itella-shipping-method.php';
+
+    /**
+     * The class is designed to reduce the size of the Itella_Shipping_Method class by moved out custom functions.
+     */
+    require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-itella-shipping-method-helper.php';
 
     /**
      * The class responsible for defining all actions that occur in the public-facing
@@ -200,8 +315,7 @@ class Itella_Shipping
    */
   private function define_admin_hooks()
   {
-
-    $plugin_admin = new Itella_Shipping_Method($this->get_version());
+    $plugin_admin = new Itella_Shipping_Method();
 
     $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
     $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
@@ -225,7 +339,8 @@ class Itella_Shipping
     $this->loader->add_filter('admin_post_itella_shipments', $plugin_admin, 'itella_post_shipment_actions', 20);
     $this->loader->add_filter('admin_post_itella_manifests', $plugin_admin, 'itella_post_manifest_actions', 20);
     $this->loader->add_filter('admin_post_itella-call-courier', $plugin_admin, 'itella_post_call_courier_actions', 20);
-//    $this->loader->add_filter('bulk_actions-edit-shop_order', $plugin_admin, 'itella_shipping_shop_order_bulk_actions', 20);
+    //$this->loader->add_filter('bulk_actions-edit-shop_order', $plugin_admin, 'itella_register_orders_bulk_actions', 20); //Disabled while handle filter not working
+    //$this->loader->add_filter('handle_bulk_actions-edit-shop_order', $plugin_admin, 'itella_handle_orders_bulk_actions', 20, 3); //Need to create
     $this->loader->add_filter('woocommerce_admin_order_preview_get_order_details', $plugin_admin, 'add_custom_admin_order_preview_meta', 10, 2);
 
   }
@@ -239,16 +354,7 @@ class Itella_Shipping
    */
   private function define_public_hooks()
   {
-
-    $plugin_public = new Itella_Shipping_Public(
-      (object) array(
-        'name' => $this->get_plugin_name(),
-        'version' => $this->get_version(),
-        'url' => $this->get_plugin_url(),
-        'path' => $this->get_plugin_path(),
-      ),
-      $this->available_countries
-    );
+    $plugin_public = new Itella_Shipping_Public($this->get_plugin_data());
 
     $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
     $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
@@ -263,7 +369,7 @@ class Itella_Shipping
 
   private function define_manifest_hooks()
   {
-    $plugin_manifest = new Itella_Manifest($this->get_plugin_name(), $this->get_version());
+    $plugin_manifest = new Itella_Manifest($this->get_plugin_data());
 
     $this->loader->add_action('admin_enqueue_scripts', $plugin_manifest, 'enqueue_styles');
     $this->loader->add_action('admin_enqueue_scripts', $plugin_manifest, 'enqueue_scripts');

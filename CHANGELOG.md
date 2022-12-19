@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.4.0] - 2022-12-19
+### Fixed
+- added order weight conversion to kilograms if other weight units are used on the website
+- fixed error message, when get error on label generation
+- fixed settings page values after settings save
+- added display of "Smartpost shipments" page for "Shop manager" user role
+
+### Improved
+- improved order registration ajax function
+- Woocommerce submenu element "Smartpost shipments" moved after "Orders" element
+- added courier delivery to almost all EU countries
+- added a ability to change the name of the shipping method visible in the cart to a custom one
+
+### Changed
+- changed "Pickup point" to "Parcel locker"
+
+### Updated
+- itella-api library to v2.3.7
+
 ## [1.3.8] - 2022-06-23
 ### Fixed
 - fixed error, when product in order is deleted
