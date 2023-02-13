@@ -1937,7 +1937,9 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $items = array();
 
     for ($i = 0; $i < intval($shipping_parameters['packet_count']); $i++) {
-      $items[] = new GoodsItem();
+      $item = new GoodsItem();
+      $item->setGrossWeight(floatval($shipping_parameters['weight'])); // kg
+      $items[] = $item;
     }
 
     // Create additional services
