@@ -1043,6 +1043,10 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
   public function add_shipping_details_to_order($order)
   {
+    if ( ! $this->check_itella_method($order) ) {
+      return;
+    }
+
     $order_id = $order->get_id();
 
     //check if shipping was previously updated
@@ -1139,12 +1143,16 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             </p>
           <?php if ($is_itella_pp): ?>
               <p><strong><?= __('Chosen Parcel locker', 'itella-shipping') ?></strong>
-                <?=
-                $chosen_pickup_point->address->municipality . ' - ' .
-                $chosen_pickup_point->address->address . ', ' .
-                $chosen_pickup_point->address->postalCode . ' (' .
-                $chosen_pickup_point->publicName . ')'
-                ?>
+                <?php if ( ! empty($chosen_pickup_point) ) : ?>
+                  <?=
+                  $chosen_pickup_point->address->municipality . ' - ' .
+                  $chosen_pickup_point->address->address . ', ' .
+                  $chosen_pickup_point->address->postalCode . ' (' .
+                  $chosen_pickup_point->publicName . ')'
+                  ?>
+                <?php else : ?>
+                  —
+                <?php endif; ?>
               </p>
           <?php endif; ?>
             <p><strong><?= __('Extra Services:', 'itella-shipping') ?></strong>
@@ -1243,7 +1251,35 @@ class Itella_Shipping_Method extends WC_Shipping_Method
               'wrapper_class' => 'form-field-wide'
           ));
           ?></div>
+    <?php } else {
+      $field_id = 'itella_add_manually';
+      ?>
+      <div class="edit_address">
+        <p class="form-field-wide">
+          <label for="<?php echo $field_id; ?>"><?php _e('Smartpost Shipping method', 'itella-shipping'); ?>:</label>
+          <select id="<?php echo $field_id; ?>" class="select short" name="<?php echo $field_id; ?>">
+            <option><?php _e('Not Smartpost', 'itella-shipping'); ?></option>
+            <option value="pp"><?php _e('Pickup point', 'itella-shipping'); ?></option>
+            <option value="c"><?php _e('Courier', 'itella-shipping'); ?></option>
+          </select>
+        </p>
+      </div>
     <?php }
+  }
+
+  private function check_itella_method($order)
+  {
+    $wc_order = wc_get_order((int) $order->get_id());
+    $send_method = "";
+    
+    foreach ( $wc_order->get_items('shipping') as $item_id => $shipping_item_obj ) {
+      $send_method = $shipping_item_obj->get_method_id();
+      if ( $send_method == 'itella-shipping' ) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   public static function getTrackingUrl($country_code = 'lt')
@@ -1389,13 +1425,19 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   public function save_shipping_settings($order_id)
   {
-    $post_fields = array('packet_count', 'weight_total', 'itella_cod_enabled', 'itella_cod_amount', 'itella_shipping_method', '_pp_id', 'itella_extra_services');
+    $post_fields = array('itella_add_manually', 'packet_count', 'weight_total', 'itella_cod_enabled', 'itella_cod_amount', 'itella_shipping_method', '_pp_id', 'itella_extra_services');
     
     foreach ( $post_fields as $field)  {
       if ( ! isset($_POST[$field]) ) continue;
 
       if ( $field == 'packet_count' && intval(wc_clean($_POST[$field]) > 1) ) {
         update_post_meta($order_id, 'itella_multi_parcel', 'true');
+      }
+
+      if ( $field == 'itella_add_manually' && isset($_POST[$field]) ) {
+        $method = 'itella_' . $_POST[$field];
+        update_post_meta($order_id, '_itella_method', $method);
+        continue;
       }
 
       update_post_meta($order_id, $field, wc_clean($_POST[$field]));

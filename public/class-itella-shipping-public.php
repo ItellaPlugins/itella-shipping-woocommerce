@@ -169,16 +169,45 @@ class Itella_Shipping_Public
    */
   public function add_pp_id_to_order($order_id)
   {
-    if (isset($_POST['itella-chosen-point-id']) && $order_id) {
+    $this->save_pp_id_to_order($order_id);
+    $this->save_method_to_order($order_id);
+  }
+
+  public function check_pp_id_in_order($order)
+  {
+    try {
+      $pp_in_order = get_post_meta($order->get_id(), '_pp_id', true);
+      $method_in_order = get_post_meta($order->get_id(), '_itella_method', true);
+
+      if ( empty($pp_in_order) && isset($_POST['itella-chosen-point-id']) ) {
+        $this->save_pp_id_to_order($order->get_id());
+      }
+      if ( empty($method_in_order) && $_POST['shipping_method'] ) {
+        $this->save_method_to_order($order->get_id());
+      }
+    } catch(\Exception $e) {
+      //Nothing
+    }
+  }
+
+  private function save_pp_id_to_order($order_id)
+  {
+    if ( isset($_POST['itella-chosen-point-id']) && $order_id ) {
       update_post_meta($order_id, '_pp_id', $_POST['itella-chosen-point-id']);
       $country = (!empty($_POST['shipping_country'])) ? $_POST['shipping_country'] : $_POST['billing_country'];
       $pickup_point = $this->itella_shipping->get_chosen_pickup_point($country, $_POST['itella-chosen-point-id']);
       update_post_meta($order_id, 'itella_pupCode', $pickup_point->pupCode);
     }
+  }
 
-    // set itella method todo refactor
-    if (isset($_POST['shipping_method'][0]) && ($_POST['shipping_method'][0] === "itella_pp" || $_POST['shipping_method'][0] === "itella_c")) {
-      update_post_meta($order_id, '_itella_method', $_POST['shipping_method'][0]);
+  private function save_method_to_order($order_id)
+  {
+    if ( isset($_POST['shipping_method']) && is_array($_POST['shipping_method']) ) {
+      foreach ( $_POST['shipping_method'] as $shipping_method ) {
+        if ( $shipping_method == 'itella_pp' || $shipping_method == 'itella_c' ) {
+          update_post_meta($order_id, '_itella_method', $shipping_method);
+        }
+      }
     }
   }
 
