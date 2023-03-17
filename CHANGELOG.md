@@ -4,6 +4,10 @@
 ### Fixed
 - added weight to courier shipments
 
+### Improved
+- added additional Smartpost meta data adding when creating an order, if it failed to add the first time
+- added a ability to manually set Smartpost shipping method, when Smartpost data is missing in order
+
 ## [1.4.0] - 2022-12-19
 ### Fixed
 - added order weight conversion to kilograms if other weight units are used on the website

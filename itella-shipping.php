@@ -25,7 +25,7 @@
  * Domain Path:       /languages
  *
  * Tested up to:      6.1.1
- * WC tested up to:   7.1.1
+ * WC tested up to:   7.5.0
  */
 
 // If this file is called directly, abort.
