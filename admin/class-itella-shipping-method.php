@@ -47,6 +47,15 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   private $helper;
 
   /**
+   * Class that generates all the HTML elements
+   * 
+   * @since    1.4.1
+   * @access   private
+   * @var      class $html Helper class
+   */
+  private $html;
+
+  /**
    * @var string
    */
   public $id;
@@ -90,9 +99,9 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $this->grouped_countries = $plugin->countries_grouped ?? array();
     $this->sender_countries = $plugin->sender_countries ?? array();
     $this->helper = new Itella_Shipping_Method_Helper();
+    $this->html = new Itella_Shipping_Admin_Display($this->id);
 
     $this->init();
-
   }
 
   public function plugin_links($links)
@@ -213,6 +222,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     global $woocommerce;
     $current_country = strtoupper($woocommerce->customer->get_shipping_country());
     $cart_amount = floatval($woocommerce->cart->cart_contents_total) + floatval($woocommerce->cart->tax_total);
+    $cart_weight = floatval($woocommerce->cart->cart_contents_weight);
     $items = $package['contents'] ?? $woocommerce->cart->get_cart();
 
     $all_methods = $this->get_itella_shipping_methods();
@@ -226,9 +236,13 @@ class Itella_Shipping_Method extends WC_Shipping_Method
           continue;
         }
 
+        if ( ! $this->check_size_restrictions($method, $cart_weight, $items) ) {
+          continue;
+        }
+
         $shipping_price = $this->get_shipping_price($prices, array(
           'amount' => $cart_amount,
-          'weight' => $woocommerce->cart->cart_contents_weight,
+          'weight' => $cart_weight,
           'country' => $current_country,
           'items' => $items,
         ));
@@ -368,6 +382,51 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     return $rate_price;
   }
 
+  private function check_size_restrictions( $method, $cart_weight, $cart_items )
+  {
+    $max_size = (! empty($this->settings[$method . '_max_size'])) ? json_decode($this->settings[$method . '_max_size'], true) : array();
+    if ( empty($max_size) ) {
+      return true;
+    }
+
+    if ( ! empty($max_size['weight']) ) {
+      if ( (float)$cart_weight > 0 && (float)$cart_weight > (float)$max_size['weight'] ) {
+        return false;
+      }
+    }
+
+    if ( ! empty($max_size['length']) && ! empty($max_size['width']) && ! empty($max_size['height']) ) {
+      try {
+        $products = array();
+        
+        foreach ( $cart_items as $item ) {
+          if ( empty($item['product_id']) ) {
+            return true;
+          }
+          $product = wc_get_product($item['product_id']);
+          for ( $i = 1; $i <= $item['quantity']; $i++ ) {
+            $products[] = array(
+              'id' => $product->get_id(),
+              'length' => (!empty($product->get_length())) ? $product->get_length() : 0,
+              'width' => (!empty($product->get_width())) ? $product->get_width() : 0,
+              'height' => (!empty($product->get_height())) ? $product->get_height() : 0,
+            );
+          }
+        }
+
+        $cart_dimmension = $this->helper->predict_cart_dimmension($products, $max_size);
+        if ( ! $cart_dimmension ) {
+          return false;
+        }
+      } catch(Exception $e) {
+        //echo $e->getMessage();
+        return true;
+      }
+    }
+
+    return true;
+  }
+
   /**
    * Initialise Itella shipping settings form
    */
@@ -496,14 +555,22 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       'type' => 'hr'
     );
 
-    $comment_pp_desc = __('Add custom comment to label', 'itella-shipping') . '.';
-    foreach ($allowed_comment_variables_pp as $key => $desc) {
-      $comment_pp_desc .= '<br/><code>{' . $key . '}</code> - ' . $desc;
-    }
-    $fields['comment_pp'] = array(
-      'title' => __('Parcel locker label comment', 'itella-shipping'),
-      'type' => 'text',
-      'description' => $comment_pp_desc,
+    $fields['courier_max_size'] = array(
+      'title' => __('Courier max size', 'itella-shipping'),
+      'type' => 'size',
+      'class' => 'field-toggle-courier',
+      'description' => __('The maximum size of the cart above which the delivery method will not be shown.', 'itella-shipping')
+        . ' ' . __('Leave all dimension fields or weight field empty to disable checking by that parameter.', 'itella-shipping')
+        . ' ' . __('Preliminary cart size is calculated by trying to fit all products by taking their dimensions (boxes) indicated in their settings.', 'itella-shipping')
+    );
+
+    $fields['pickup_point_max_size'] = array(
+      'title' => __('Parcel locker max size', 'itella-shipping'),
+      'type' => 'size',
+      'class' => 'field-toggle-pickup_point',
+      'description' => __('The maximum size of the cart above which the delivery method will not be shown.', 'itella-shipping')
+        . ' ' . __('Leave all dimension fields or weight field empty to disable checking by that parameter.', 'itella-shipping')
+        . ' ' . __('Preliminary cart size is calculated by trying to fit all products by taking their dimensions (boxes) indicated in their settings.', 'itella-shipping')
     );
 
     $comment_c_desc = __('Add custom comment to label', 'itella-shipping') . '.';
@@ -513,7 +580,19 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $fields['comment_c'] = array(
       'title' => __('Courier label comment', 'itella-shipping'),
       'type' => 'text',
+      'class' => 'field-toggle-courier',
       'description' => $comment_c_desc,
+    );
+
+    $comment_pp_desc = __('Add custom comment to label', 'itella-shipping') . '.';
+    foreach ($allowed_comment_variables_pp as $key => $desc) {
+      $comment_pp_desc .= '<br/><code>{' . $key . '}</code> - ' . $desc;
+    }
+    $fields['comment_pp'] = array(
+      'title' => __('Parcel locker label comment', 'itella-shipping'),
+      'type' => 'text',
+      'class' => 'field-toggle-pickup_point',
+      'description' => $comment_pp_desc,
     );
 
     foreach ($this->sender_countries as $country_code) {
@@ -544,7 +623,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             $old_plugin_values = $this->methods_backward_compatibility();
             $fields_values = (!empty($old_plugin_values)) ? $old_plugin_values : array();
         }
-        $title_html = (isset($value['title'])) ? $this->helper->row_title_html($value['title']) : '';
+        $title_html = (isset($value['title'])) ? $this->html->settings_row_title($value['title']) : '';
         $countries_methods = $value['countries_methods'] ?? array();
         
         $shipping_classes = WC()->shipping->get_shipping_classes();
@@ -825,7 +904,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     ob_start();
     ?>
     <tr valign="top">
-        <?php echo $this->helper->row_title_html($value['title']); ?>
+        <?php echo $this->html->settings_row_title($value['title']); ?>
       <td class="forminp itella-price_by_weight">
         <fieldset class="field-radio">
           <?php foreach ($radio_list as $radio_key => $radio_label) : ?>
@@ -986,15 +1065,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   {
     $field_key = $this->get_field_key($key);
     $shipping_classes = WC()->shipping->get_shipping_classes();
-
-    if ( $this->get_option($key) !== '' ) {
-      $values = $this->get_option($key);
-      if ( is_string($values) ) {
-        $values = json_decode($this->get_option($key), true);
-      }
-    } else {
-      $values = array();
-    }
+    $values = $this->get_field_array_values($key);
 
     ob_start();
     ?>
@@ -1036,6 +1107,37 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   }
 
   public function validate_shipping_class_field( $key, $value )
+  {
+    $values = wp_json_encode($value);
+    return $values;
+  }
+
+  private function get_field_array_values( $field_key )
+  {
+    $values = array();
+
+    if ( $this->get_option($field_key) !== '' ) {
+      $values = $this->get_option($field_key);
+      if ( is_string($values) ) {
+        $values = json_decode($this->get_option($field_key), true);
+      }
+    }
+
+    return $values;
+  }
+
+  public function generate_size_html( $key, $value )
+  {
+    return $this->html->settings_cart_size_row(array(
+      'title' => $value['title'],
+      'id_prefix' => $key,
+      'values' => $this->get_field_array_values($key),
+      'class' => $value['class'] ?? '',
+      'description' => $value['description'] ?? '',
+    ));
+  }
+
+  public function validate_size_field( $key, $value )
   {
     $values = wp_json_encode($value);
     return $values;
