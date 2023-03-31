@@ -26,6 +26,7 @@
  *
  * Tested up to:      6.1.1
  * WC tested up to:   7.5.0
+ * Requires PHP:      7.0
  */
 
 // If this file is called directly, abort.

@@ -21,24 +21,124 @@ class Itella_Shipping_Method_Helper
         return (json_last_error() == JSON_ERROR_NONE);
     }
 
-    /**
-     * Build HTML for row title
-     * 
-     * @access public
-     * @param string $title
-     * @return string
-     */
-    public function row_title_html( $title )
+    public function get_woo_dimmension_unit()
     {
-        ob_start();
-        ?>
-        <th scope="row" class="titledesc">
-            <label><?php echo esc_html($title); ?></label>
-        </th>
-        <?php
-        $html = ob_get_contents();
-        ob_end_clean();
-        return $html;
+        return get_option('woocommerce_dimension_unit');
+    }
+
+    public function get_dimmensions_names()
+    {
+        return array(
+            'length' => __('Length', 'itella-shipping'),
+            'width' => __('Width', 'itella-shipping'),
+            'height' => __('Height', 'itella-shipping'),
+        );
+    }
+
+    public function get_woo_weight_unit()
+    {
+        return get_option('woocommerce_weight_unit');
+    }
+
+    public function predict_cart_dimmension( $products, $max_dimension )
+    {
+        $cart_dimmensions = array(
+            'length' => 0,
+            'width' => 0,
+            'height' => 0,
+        );
+        $max_dimension = array(
+            'length' => $max_dimension['length'] ?? 999999,
+            'width' => $max_dimension['width'] ?? 999999,
+            'height' => $max_dimension['height'] ?? 999999,
+        );
+
+        foreach ( $products as $prod ) {
+            $rotated_prod = $this->rotate_product($prod);
+
+            // Add to length until max
+            if ( ($rotated_prod['length'] + $cart_dimmensions['length']) <= $max_dimension['length']
+                && $rotated_prod['width'] <= $max_dimension['width']
+                && $rotated_prod['height'] <= $max_dimension['height']
+            ) {
+                $cart_dimmensions['length'] = $this->increase_dimension($cart_dimmensions['length'], $rotated_prod['length']);
+                $cart_dimmensions['width'] = $this->renew_dimension($cart_dimmensions['width'], $rotated_prod['width']);
+                $cart_dimmensions['height'] = $this->renew_dimension($cart_dimmensions['height'], $rotated_prod['height']);
+            }
+            // Add to width until max
+            else if ( ($rotated_prod['width'] + $cart_dimmensions['width']) <= $max_dimension['width']
+                && $rotated_prod['length'] <= $max_dimension['length']
+                && $rotated_prod['height'] <= $max_dimension['height']
+            ) {
+                $cart_dimmensions['length'] = $this->renew_dimension($cart_dimmensions['length'], $rotated_prod['length']);
+                $cart_dimmensions['width'] = $this->increase_dimension($cart_dimmensions['width'], $rotated_prod['width']);
+                $cart_dimmensions['height'] = $this->renew_dimension($cart_dimmensions['height'], $rotated_prod['height']);
+            }
+            // Add to height until max
+            else if ( ($rotated_prod['height'] + $cart_dimmensions['height']) <= $max_dimension['height']
+                && $rotated_prod['length'] <= $max_dimension['length']
+                && $rotated_prod['width'] <= $max_dimension['width']
+            ) {
+                $cart_dimmensions['length'] = $this->renew_dimension($cart_dimmensions['length'], $rotated_prod['length']);
+                $cart_dimmensions['width'] = $this->renew_dimension($cart_dimmensions['width'], $rotated_prod['width']);
+                $cart_dimmensions['height'] = $this->increase_dimension($cart_dimmensions['height'], $rotated_prod['height']);
+            }
+            // If all fails
+            else {
+                return false;
+            }
+        }
+
+        return $cart_dimmensions;
+    }
+
+    private function rotate_product( $product_dimensions )
+    {
+        if ( ! is_array($product_dimensions) ) {
+            return $product_dimensions;
+        }
+
+        $edges = array('length', 'width', 'height');
+
+        $new_product_dims = array();
+        foreach ( $edges as $edge ) {
+            $new_product_dims[$edge] = $product_dimensions[$edge] ?? 0;
+        }
+
+        // Find lowest value and add to height
+        asort($new_product_dims);
+        $prod_order = array_keys($new_product_dims);
+        if ( $prod_order[0] != 'height' ) {
+            $value = $new_product_dims['height'];
+            $new_product_dims['height'] = $new_product_dims[$prod_order[0]];
+            $new_product_dims[$prod_order[0]] = $value;
+        }
+
+        // Find biggest value and add to length
+        asort($new_product_dims);
+        $prod_order = array_keys($new_product_dims);
+        if ( $prod_order[2] != 'length' ) {
+            $value = $new_product_dims['length'];
+            $new_product_dims['length'] = $new_product_dims[$prod_order[2]];
+            $new_product_dims[$prod_order[2]] = $value;
+        }
+
+        // Add rotated dimensions
+        foreach ( $edges as $edge ) {
+            $product_dimensions[$edge] = $new_product_dims[$edge];
+        }
+
+        return $product_dimensions;
+    }
+
+    private function increase_dimension( $cart_dimension, $product_dimmension )
+    {
+        return $cart_dimension + $product_dimmension;
+    }
+
+    private function renew_dimension( $cart_dimension, $product_dimmension )
+    {
+        return ($product_dimmension > $cart_dimension) ? $product_dimmension : $cart_dimension;
     }
 
     /**

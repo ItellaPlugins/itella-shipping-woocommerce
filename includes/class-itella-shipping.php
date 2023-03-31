@@ -261,6 +261,11 @@ class Itella_Shipping
     require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-itella-shipping-method-helper.php';
 
     /**
+     * The class that generates all the HTML elements of the admin area.
+     */
+    require_once plugin_dir_path(dirname(__FILE__)) . 'admin/partials/itella-shipping-admin-display.php';
+
+    /**
      * The class responsible for defining all actions that occur in the public-facing
      * side of the site.
      */
