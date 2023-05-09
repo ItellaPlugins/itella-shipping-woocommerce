@@ -3,6 +3,7 @@
 ## [Unreleased]
 ### Fixed
 - added weight to courier shipments
+- fixed messages when calling a courier
 
 ### Improved
 - added additional Smartpost meta data adding when creating an order, if it failed to add the first time
