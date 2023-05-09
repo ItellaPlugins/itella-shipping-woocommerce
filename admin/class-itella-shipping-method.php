@@ -2428,41 +2428,65 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
     try {
       $caller = new CallCourier($email);
-      $result = $caller
-          ->setSenderEmail($this->settings['shop_email'])
-          ->setSubject($email_subject)
-          ->setPickUpAddress(array(
-              'sender' => $this->settings['shop_name'],
-              'address_1' => $this->settings['shop_address'],
-              'postcode' => $this->settings['shop_postcode'],
-              'city' => $this->settings['shop_city'],
-              'country' => $this->settings['shop_countrycode'],
-              'pickup_time' => '8:00 - 17:00',
-              'contact_phone' => $this->settings['shop_phone'],
-          ))
-          ->setAttachment($manifest_string, true)
-          ->setItems($items)
-          ->callCourier();
+      $caller
+        ->setSenderEmail($this->settings['shop_email'])
+        ->setSubject($email_subject)
+        ->setPickUpAddress(array(
+            'sender' => $this->settings['shop_name'],
+            'address_1' => $this->settings['shop_address'],
+            'postcode' => $this->settings['shop_postcode'],
+            'city' => $this->settings['shop_city'],
+            'country' => $this->settings['shop_countrycode'],
+            'pickup_time' => '8:00 - 17:00',
+            'contact_phone' => $this->settings['shop_phone'],
+        ))
+        ->setAttachment($manifest_string, true)
+        ->setItems($items)
+        ->callCourier();
 
-      if ($result) {
-        // add notices
-        $this->add_msg(__('Email sent to courier', 'itella-shipping')
-            . ' (' . $email . ')', 'success');
-      }
-    } catch (ItellaException $e) {
+      $call_success_msg = array(
+        'api' => __('Smartpost courier successfully called via API', 'itella-shipping'),
+        'mail' => __('Email sent to Smartpost courier', 'itella-shipping') . ' (' . $email . ')',
+      );
+      $call_errors = array();
 
-      // add error message
-      $this->add_msg(__('Failed to send email.', 'itella-shipping')
-          . "<br>"
-          . __('Error:', 'itella-shipping')
-          . ' '
-          . $e->getMessage()
-          , 'error');
-
-      // log error
-      file_put_contents(plugin_dir_path(dirname(__FILE__)) . 'var/log/errors.log',
+      // Call via API
+      try {
+        if (!$caller->callApiCourier()) {
+          throw new ItellaException(__('Not received response', 'itella-shipping'));
+        }
+      } catch (ItellaException $e) {
+        $call_errors['api'] = __('Failed to call via API.', 'itella-shipping') . "<br>" . __('Error:', 'itella-shipping') . ' ' . $e->getMessage();
+        unset($call_success_msg['api']);
+        file_put_contents(plugin_dir_path(dirname(__FILE__)) . 'var/log/errors.log',
           "\n" . date('Y-m-d H:i:s') . ": ItellaException:\n" . $e->getMessage() . "\n"
           . $e->getTraceAsString(), FILE_APPEND);
+      }
+
+      // Call via mail
+      try {
+        $caller->callMailCourier();
+      } catch (ItellaException $e) {
+        $call_errors['mail'] = __('Failed to send email.', 'itella-shipping') . "<br>" . __('Error:', 'itella-shipping') . ' ' . $e->getMessage();
+        unset($call_success_msg['mail']);
+        file_put_contents(plugin_dir_path(dirname(__FILE__)) . 'var/log/errors.log',
+          "\n" . date('Y-m-d H:i:s') . ": ItellaException:\n" . $e->getMessage() . "\n"
+          . $e->getTraceAsString(), FILE_APPEND);
+      }
+
+      // Call messages
+      if (!empty($call_errors)) {
+        $error_prefix = '<b>' . __('Something failed while calling the Smartpost courier', 'itella-shipping') . ':</b><br/>';
+        $this->add_msg($error_prefix . implode('<br/><br/>', $call_errors), 'warning');
+      }
+
+      if (!empty($call_success_msg)) {
+        $this->add_msg(implode('<br>', $call_success_msg), 'success');
+      } else {
+        throw new ItellaException(implode('<br>', $call_errors));
+      }
+    } catch (ItellaException $e) {
+      $this->add_msg(__('Failed to call Smartpost courier', 'itella-shipping'), 'error');
     }
 
     // return to shipments
