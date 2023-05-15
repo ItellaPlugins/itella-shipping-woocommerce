@@ -10,6 +10,7 @@
 - added additional Smartpost meta data adding when creating an order, if it failed to add the first time
 - added a ability to manually set Smartpost shipping method, when Smartpost data is missing in order
 - added a ability to hide shipping methods if cart weight or size is to big
+- created use of order billing address when order shipping address is empty
 
 ## [1.4.0] - 2022-12-19
 ### Fixed

@@ -2243,12 +2243,27 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   private function create_receiver($order)
   {
+    $first_name = $order->get_shipping_first_name();
+    $last_name = $order->get_shipping_last_name();
+    if ( empty($first_name) && empty($last_name) ) {
+      $first_name = $order->get_billing_first_name();
+      $last_name = $order->get_billing_last_name();
+    }
+    $address = $order->get_shipping_address_1();
+    $postcode = $order->get_shipping_postcode();
+    $city = $order->get_shipping_city();
+    if ( empty($address) && empty($postcode) && empty($city) ) {
+      $address = $order->get_billing_address_1();
+      $postcode = $order->get_billing_postcode();
+      $city = $order->get_billing_city();
+    }
+
     $receiver = new Party(Party::ROLE_RECEIVER);
     $receiver
-        ->setName1($order->get_shipping_first_name() . ' ' . $order->get_shipping_last_name())
-        ->setStreet1($order->get_shipping_address_1())
-        ->setPostCode($order->get_shipping_postcode())
-        ->setCity($order->get_shipping_city())
+        ->setName1($first_name . ' ' . $last_name)
+        ->setStreet1($address)
+        ->setPostCode($postcode)
+        ->setCity($city)
         ->setCountryCode(Itella_Manifest::order_getCountry($order))
         ->setContactMobile($order->get_billing_phone())
         ->setContactEmail($order->get_billing_email());
