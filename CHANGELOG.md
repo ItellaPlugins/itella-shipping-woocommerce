@@ -4,6 +4,7 @@
 ### Fixed
 - added weight to courier shipments
 - fixed messages when calling a courier
+- fixed weight number format error
 
 ### Improved
 - added additional Smartpost meta data adding when creating an order, if it failed to add the first time

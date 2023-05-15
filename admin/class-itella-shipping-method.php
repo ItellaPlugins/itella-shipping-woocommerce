@@ -1224,7 +1224,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
                 <strong><?= __('Packets (total):', 'itella-shipping') ?></strong> <?= $packet_count ?>
             </p>
             <p>
-                <strong><?= sprintf(__('Weight (%s):', 'itella-shipping'), $weight_unit) ?></strong> <?= number_format($weight,3) ?>
+                <strong><?= sprintf(__('Weight (%s):', 'itella-shipping'), $weight_unit) ?></strong> <?= number_format((float)$weight,3) ?>
             </p>
             <p><strong><?= __('COD:', 'itella-shipping') ?></strong>
               <?=
