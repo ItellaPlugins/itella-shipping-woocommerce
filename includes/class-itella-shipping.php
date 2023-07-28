@@ -239,6 +239,11 @@ class Itella_Shipping
     }
 
     /**
+     * The class that is designed to interface with the Woocommerce plugin.
+     */
+    require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-itella-shipping-wc.php';
+
+    /**
      * The class responsible for orchestrating the actions and filters of the
      * core plugin.
      */
@@ -284,6 +289,7 @@ class Itella_Shipping
     $this->loader = new Itella_Shipping_Loader();
 
     $this->set_locale();
+    $this->loader->add_action('before_woocommerce_init', $this, 'woocommerce_compatibility');
     $this->define_admin_hooks();
     $this->loader->add_filter('woocommerce_shipping_methods', $this, 'add_itella_shipping_method');
     $this->define_public_hooks();
@@ -474,4 +480,10 @@ class Itella_Shipping
     return $methods;
   }
 
+  public function woocommerce_compatibility()
+  {
+    if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+      \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+    }
+  }
 }

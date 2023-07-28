@@ -8,6 +8,13 @@
  */
 class Itella_Shipping_Method_Helper
 {
+    private $wc;
+
+    public function __construct()
+    {
+        $this->wc = new Itella_Shipping_Wc();
+    }
+
     /**
      * Check if string is json code.
      *
@@ -21,7 +28,7 @@ class Itella_Shipping_Method_Helper
         return (json_last_error() == JSON_ERROR_NONE);
     }
 
-    public function get_woo_dimmension_unit()
+    public function get_woo_dimmension_unit() //TODO: Patikrint ar kur naudojama ir kur bus, pakeisti į WC klasės
     {
         return get_option('woocommerce_dimension_unit');
     }
@@ -35,7 +42,7 @@ class Itella_Shipping_Method_Helper
         );
     }
 
-    public function get_woo_weight_unit()
+    public function get_woo_weight_unit() //TODO: Patikrint ar kur naudojama ir kur bus, pakeisti į WC klasės
     {
         return get_option('woocommerce_weight_unit');
     }
@@ -493,7 +500,7 @@ class Itella_Shipping_Method_Helper
         ?>
         <div class="param_title">
             <label for="<?php echo esc_attr($for_id); ?>"><?php echo $label_text; ?></label>
-            <?php if ( ! empty($tip) ) echo wc_help_tip($tip, false); ?>
+            <?php if ( ! empty($tip) ) echo $this->wc->get_help_tip($tip); ?>
         </div>
         <?php
         $html = ob_get_contents();
