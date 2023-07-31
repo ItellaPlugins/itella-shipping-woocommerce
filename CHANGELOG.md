@@ -5,6 +5,7 @@
 - added weight to courier shipments
 - fixed messages when calling a courier
 - fixed weight number format error
+- fixed tracking code filter reset in manifest page
 
 ### Improved
 - added additional Smartpost meta data adding when creating an order, if it failed to add the first time
