@@ -11,6 +11,7 @@
 - added a ability to manually set Smartpost shipping method, when Smartpost data is missing in order
 - added a ability to hide shipping methods if cart weight or size is to big
 - created use of order billing address when order shipping address is empty
+- the display of order statuses is unified with the display of Woocommerce statuses in tables
 
 ## [1.4.0] - 2022-12-19
 ### Fixed

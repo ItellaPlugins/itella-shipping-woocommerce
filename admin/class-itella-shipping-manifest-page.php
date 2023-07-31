@@ -180,6 +180,7 @@ class Itella_Manifest
           ),
         ),
       ),
+      'itella_method' => ['itella_pp', 'itella_c', 'itella'], //Compatible without HPOS
     );
 
     // Handle query variables depending on selected tab
@@ -198,6 +199,7 @@ class Itella_Manifest
             'compare' => 'NOT EXISTS',
           ),
         );
+        $args['itella_manifest'] = false; //Compatible without HPOS
         break;
       case 'completed_orders':
         $page_title = $tab_strings[$action];
@@ -209,6 +211,7 @@ class Itella_Manifest
         $args['meta_key'] = '_itella_manifest_generation_date';
         $args['orderby'] = 'meta_value';
         $args['order'] = 'DESC';
+        $args['itella_manifest'] = true; //Compatible without HPOS
         break;
       case 'all_orders':
       default:
@@ -229,6 +232,7 @@ class Itella_Manifest
               'value' => $filter,
               'compare' => 'LIKE',
             );
+            $args['itella_tracking_code'] = $filter; //Compatible without HPOS
             break;
           case 'customer':
             $args['field_query'][] = array(
@@ -254,6 +258,7 @@ class Itella_Manifest
       $args = Itella_Manifest::get_custom_itella_meta_query($args, array(
         'itella_manifest_date' => array($filters['start_date'], $filters['end_date']),
       ));
+      $args['itella_manifest_date'] = array($filters['start_date'], $filters['end_date']); //Compatible without HPOS
     }
 
     // Searching by ID takes priority
@@ -359,7 +364,7 @@ class Itella_Manifest
               </form>
               <label class="itella-manifest-switch" title="<?php _e('Generate manifests for ...', 'itella-shipping') ?>">
                 <input id="itella-manifest-cb" type="checkbox" data-tab="<?php echo $action; ?>">
-                <span class="slider"><span class="on"><?php _ex('All', 'for', 'itella-shipping') ?></span><span class="off"><?php _ex('Visible', 'for', 'itella-shipping') ?></span></span>
+                <span class="slider"><span class="on"><?php _ex('All', 'for', 'itella-shipping') ?></span><span class="off"><?php _ex('Checked', 'for', 'itella-shipping') ?></span></span>
               </label>
               <button id="submit_manifest_items" title="<?php echo __('Generate manifests', 'itella-shipping'); ?>"
                       type="button" class="button action itella-bulk-button-manifest">
@@ -486,6 +491,24 @@ class Itella_Manifest
                               </td>
                           </tr>
                     <?php endif; ?>
+                    <?php if ( ! method_exists($order, 'get_order_number') ) : ?>
+                      <?php $this_order_data = $order->get_data(); ?>
+                      <tr class="data-row">
+                        <th scope="row" class="check-column"></th>
+                        <td class="manage-column">#<?php echo $order->get_id(); ?></td>
+                        <td class="column-order_number">
+                          <div class="data-grid-cell-content">
+                            <?php _e('Order not exists.', 'itella-shipping'); ?>
+                            <?php if ( ! empty($this_order_data['reason']) ) : ?>
+                              <br/>
+                              <?php echo $this_order_data['reason']; ?>
+                            <?php endif; ?>
+                          </div>
+                        </td>
+                        <td colspan="5"></td>
+                      </tr>
+                      <?php continue; ?>
+                    <?php endif; ?>
                       <tr class="data-row">
                           <th scope="row" class="check-column"><input type="checkbox" name="items[]"
                                                                       class="manifest-item"
@@ -500,7 +523,9 @@ class Itella_Manifest
                           </td>
                           <td class="column-order_status">
                               <div class="data-grid-cell-content">
-                                <?php echo $wc->get_order_status_name($order->get_status()); ?>
+                                <mark class="order-status status-<?php echo $order->get_status(); ?>">
+                                  <span><?php echo $wc->get_order_status_name($order->get_status()); ?></span>
+                                </mark>
                               </div>
                           </td>
                           <td class="manage-column">
