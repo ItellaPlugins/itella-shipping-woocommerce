@@ -28,11 +28,6 @@ class Itella_Shipping_Method_Helper
         return (json_last_error() == JSON_ERROR_NONE);
     }
 
-    public function get_woo_dimmension_unit() //TODO: Patikrint ar kur naudojama ir kur bus, pakeisti į WC klasės
-    {
-        return get_option('woocommerce_dimension_unit');
-    }
-
     public function get_dimmensions_names()
     {
         return array(
@@ -40,11 +35,6 @@ class Itella_Shipping_Method_Helper
             'width' => __('Width', 'itella-shipping'),
             'height' => __('Height', 'itella-shipping'),
         );
-    }
-
-    public function get_woo_weight_unit() //TODO: Patikrint ar kur naudojama ir kur bus, pakeisti į WC klasės
-    {
-        return get_option('woocommerce_weight_unit');
     }
 
     public function predict_cart_dimmension( $products, $max_dimension )

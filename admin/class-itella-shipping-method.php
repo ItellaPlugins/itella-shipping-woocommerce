@@ -118,7 +118,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   {
     array_unshift($links, '<a href="' .
       admin_url( 'admin.php?page=wc-settings&tab=shipping&section=' . $this->id ) .
-      '">' . __('Settings', 'itella-shipping') . '</a>'); //TODO: Neaisku ar tiks HPOS
+      '">' . __('Settings', 'itella-shipping') . '</a>');
     return $links;
   }
 
@@ -129,8 +129,9 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   public function enqueue_styles($hook)
   {
-    if ( ($hook == 'woocommerce_page_wc-settings' && isset($_GET['section']) && $_GET['section'] == 'itella-shipping')
-      || ($hook == 'edit.php' && isset($_GET['post_type']) && $_GET['post_type'] == 'shop_order') ) { //TODO: Pritaikyti HPOS
+    if ( ($hook == 'woocommerce_page_wc-settings' && isset($_GET['section']) && $_GET['section'] == $this->id)
+      || ($hook == 'edit.php' && isset($_GET['post_type']) && $_GET['post_type'] == 'shop_order')
+      || ($hook == 'woocommerce_page_wc-orders' && isset($_GET['action']) && $_GET['action'] == 'edit') ) {
       wp_enqueue_style($this->name, plugin_dir_url(__FILE__) . 'css/itella-shipping-admin.css', array(), $this->version, 'all');
     }
   }
@@ -142,10 +143,11 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   public function enqueue_scripts($hook)
   {
-    if ( $hook == 'woocommerce_page_wc-settings' && isset($_GET['section']) && $_GET['section'] == 'itella-shipping' ) { //TODO: Neaisku ar tiks HPOS
+    if ( $hook == 'woocommerce_page_wc-settings' && isset($_GET['section']) && $_GET['section'] == $this->id ) {
       wp_enqueue_script($this->name . 'itella-shipping-admin.js', plugin_dir_url(__FILE__) . 'assets/js/itella-shipping-admin.js', array('jquery'), $this->version, TRUE);
     }
-    if ( $hook == 'post.php') {
+    if ( $hook == 'post.php'
+      || ($hook == 'woocommerce_page_wc-orders' && isset($_GET['action']) && $_GET['action'] == 'edit') ) {
       wp_enqueue_script($this->name . 'itella-shipping-edit-orders.js', plugin_dir_url(__FILE__) . 'assets/js/itella-shipping-edit-orders.js', array('jquery'), $this->version, TRUE);
     }
   }
@@ -218,6 +220,22 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         }
       }
     }
+  }
+
+  public function all_additional_services_names()
+  {
+    return array(
+      'oversized' => __('Oversized', 'itella-shipping'),
+      'fragile' => __('Fragile', 'itella-shipping'),
+      'call_before_delivery' => __('Call before delivery', 'itella-shipping'),
+    );
+  }
+
+  public function get_additional_service_name( $service_key )
+  {
+    $all_names = $this->all_additional_services_names();
+
+    return $all_names[$service_key] ?? $service_key;
   }
 
   /**
@@ -1170,6 +1188,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     }
     $itella_data = $this->wc->get_order_itella_data($order);
 
+    $services_names = $this->all_additional_services_names();
+
     //check if shipping was previously updated
     $is_shipping_updated = (!empty($itella_data->shipping_method));
 
@@ -1188,9 +1208,9 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       $default_cod_amount = $order_data->total;
 
       $extra_services_options = array(
-          $oversized => __('Oversized', 'itella-shipping'),
-          $call_before_delivery => __('Call before delivery', 'itella-shipping'),
-          $fragile => __('Fragile', 'itella-shipping')
+          $oversized => $services_names['oversized'],
+          $call_before_delivery => $services_names['call_before_delivery'],
+          $fragile => $services_names['fragile'],
       );
 
       foreach ( $order_items as $item ) {
@@ -1275,17 +1295,16 @@ class Itella_Shipping_Method extends WC_Shipping_Method
               if (empty($extra_services)) {
                 echo __('No extra services selected', 'itella-shipping');
               } else {
-                if (in_array($oversized, $extra_services)) {
-                  echo __('Oversized', 'itella-shipping');
+                $services_html = '';
+                foreach ( $services_names as $service_key => $service_name ) {
+                  if ( in_array($service_key, $extra_services) ) {
+                    if ( ! empty($services_html) ) {
+                      $services_html .= '<br>';
+                    }
+                    $services_html .= $service_name;
+                  }
                 }
-                if (in_array($call_before_delivery, $extra_services)) {
-                  echo __('Call before delivery', 'itella-shipping');
-                  echo '<br>';
-                }
-                if (in_array($fragile, $extra_services)) {
-                  echo __('Fragile', 'itella-shipping');
-                  echo '<br>';
-                }
+                echo $services_html;
               }
               ?>
             </p>
@@ -1355,7 +1374,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
               'wrapper_class' => 'form-field-wide'
           ));
 
-          $this->woocommerce_wp_multi_checkbox(array(
+          $this->woocommerce_wp_multi_checkbox($order_data->id, array(
               'id' => 'itella_extra_services',
               'name' => 'itella_extra_services[]',
               'style' => 'width: 1rem',
@@ -1413,11 +1432,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   }
 
   // Multi Checkbox field for woocommerce backend
-  public function woocommerce_wp_multi_checkbox($field)
+  public function woocommerce_wp_multi_checkbox( $order_id, $field )
   {
-    global $thepostid, $post; //TODO: Neaisku ar tiks HPOS
-
-    $thepostid = empty($thepostid) ? $post->ID : $thepostid;
     $field['class'] = isset($field['class']) ? $field['class'] : 'select short';
     $field['style'] = isset($field['style']) ? $field['style'] : '';
     $field['wrapper_class'] = isset($field['wrapper_class']) ? $field['wrapper_class'] : '';
@@ -1428,8 +1444,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     echo '<fieldset class="form-field ' . esc_attr($field['id']) . '_field ' . esc_attr($field['wrapper_class']) . '">
     <legend>' . wp_kses_post($field['label']) . '</legend>';
 
-    if (!empty($field['description']) && false !== $field['desc_tip']) {
-      echo wc_help_tip($field['description']);
+    if (!empty($field['description']) && $field['desc_tip']) {
+      echo $this->wc->get_help_tip($field['description']);
     }
 
     echo '<ul class="wc-radios">';
@@ -2356,7 +2372,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
     foreach ($order_ids as $order_id) {
       $order = $this->wc->get_order($order_id);
-      $tracking_code = $this->wc->get_order_meta('_itella_tracking_code');
+      $tracking_code = $this->wc->get_order_meta($order_id, '_itella_tracking_code');
 
       if (!$tracking_code) {
         continue;
@@ -2574,8 +2590,12 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
 
     foreach ($order_ids as $order_id) {
-      $order = $this->wc->get_order($order_id);
       $shipping_parameters = Itella_Manifest::get_shipping_parameters($order_id);
+      if ( empty($shipping_parameters) ) {
+        continue;
+      }
+
+      $order = $this->wc->get_order($order_id);
       $shipping_method = $shipping_parameters['itella_shipping_method'];
       $shipping_country = Itella_Manifest::order_getCountry($order);
       $chosen_pickup_point = $this->get_chosen_pickup_point($shipping_country, $shipping_parameters['pickup_point_id']);
