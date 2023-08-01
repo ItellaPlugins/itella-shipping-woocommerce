@@ -29,7 +29,7 @@ jQuery('document').ready(function($) {
     // Filter cleanup and page reload
     $('#clear_filter_btn').on('click', function(e) {
         e.preventDefault();
-        $('#filter_id, #filter_customer, #filter_barcode, #datetimepicker1, #datetimepicker2').val('');
+        $('#filter_id, #filter_customer, #filter_tracking_code, #datetimepicker1, #datetimepicker2').val('');
         $('#filter_status').val('-1');
         document.getElementById('filter-form').submit();
     });

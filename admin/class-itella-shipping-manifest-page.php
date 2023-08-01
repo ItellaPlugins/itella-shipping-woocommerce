@@ -16,6 +16,8 @@ class Itella_Manifest
    */
   private $plugin;
 
+  private $wc;
+
   /**
    * Initialize the class and set its properties.
    *
@@ -26,6 +28,7 @@ class Itella_Manifest
   public function __construct($plugin)
   {
     $this->plugin = $plugin;
+    $this->wc = new Itella_Shipping_Wc();
   }
 
   /**
@@ -129,6 +132,9 @@ class Itella_Manifest
 
     // prep access to Itella shipping class
     $itella_shipping = new Itella_Shipping_Method();
+    $wc = new Itella_Shipping_Wc();
+
+    $extra_services_names = $itella_shipping->all_additional_services_names();
     ?>
       <div class="wrap">
       <h1><?php _e('Smartpost shipments', 'itella-shipping'); ?></h1>
@@ -152,29 +158,65 @@ class Itella_Manifest
       }
     }
 
+    $args = array(
+      'paginate' => true,
+      'limit' => $max_per_page,
+      'paged' => $paged,
+      'meta_query' => array(
+        'relation' => 'AND',
+        array(
+          'relation' => 'OR',
+          array(
+            'key' => '_itella_method',
+            'value' => 'itella_pp',
+          ),
+          array(
+            'key' => '_itella_method',
+            'value' => 'itella_c',
+          ),
+          array(
+            'key' => '_itella_method',
+            'value' => 'itella',
+          ),
+        ),
+      ),
+      'itella_method' => ['itella_pp', 'itella_c', 'itella'], //Compatible without HPOS
+    );
+
     // Handle query variables depending on selected tab
     switch ($action) {
       case 'new_orders':
         $page_title = $tab_strings[$action];
-        $args = array(
-            'itella_manifest' => false,
+        $args['meta_query'][] = array(
+          'relation' => 'OR',
+          array(
+            'key' => '_itella_manifest_generation_date',
+            'value' => '',
+            'compare' => '=',
+          ),
+          array(
+            'key' => '_itella_manifest_generation_date',
+            'compare' => 'NOT EXISTS',
+          ),
         );
+        $args['itella_manifest'] = false; //Compatible without HPOS
         break;
       case 'completed_orders':
         $page_title = $tab_strings[$action];
-        $args = array(
-            'itella_manifest' => true,
-          // latest manifest at the top
-            'meta_key' => '_itella_manifest_generation_date',
-            'orderby' => 'meta_value',
-            'order' => 'DESC'
+        $args['meta_query'][] = array(
+          'key' => '_itella_manifest_generation_date',
+          'value' => '',
+          'compare' => '!=',
         );
+        $args['meta_key'] = '_itella_manifest_generation_date';
+        $args['orderby'] = 'meta_value';
+        $args['order'] = 'DESC';
+        $args['itella_manifest'] = true; //Compatible without HPOS
         break;
       case 'all_orders':
       default:
         $action = 'all_orders';
         $page_title = $tab_strings['all_orders'];
-        $args = array();
         break;
     }
 
@@ -182,49 +224,47 @@ class Itella_Manifest
       if ($filter) {
         switch ($key) {
           case 'status':
-            $args = array_merge(
-                $args,
-                array('status' => $filter)
-            );
+            $args['status'] = $filter;
             break;
           case 'tracking_code':
-            $args = array_merge(
-                $args,
-                array('itella_tracking_code' => $filter)
+            $args['meta_query'][] = array(
+              'key' => '_itella_tracking_code',
+              'value' => $filter,
+              'compare' => 'LIKE',
             );
+            $args['itella_tracking_code'] = $filter; //Compatible without HPOS
             break;
           case 'customer':
-            $args = array_merge(
-                $args,
-                array('itella_customer' => $filter)
+            $args['field_query'][] = array(
+              'relation' => 'OR',
+              array(
+                'field' => 'billing_first_name',
+                'value' => $filter,
+                'compare' => 'LIKE'
+              ),
+              array(
+                'field' => 'billing_last_name',
+                'value' => $filter,
+                'compare' => 'LIKE'
+              ),
             );
+            $args['itella_customer'] = $filter; //Compatible without HPOS
             break;
         }
       }
     }
     // date filter is a special case
     if ($filters['start_date'] || $filters['end_date']) {
-      $args = array_merge(
-          $args,
-          array('itella_manifest_date' => array($filters['start_date'], $filters['end_date']))
-      );
+      $args = Itella_Manifest::get_custom_itella_meta_query($args, array(
+        'itella_manifest_date' => array($filters['start_date'], $filters['end_date']),
+      ));
+      $args['itella_manifest_date'] = array($filters['start_date'], $filters['end_date']); //Compatible without HPOS
     }
-
-    // Get orders with extra info about the results.
-    $args = array_merge(
-        $args,
-        array(
-            'itella_method' => ['itella_pp', 'itella_c', 'itella'],
-            'paginate' => true,
-            'limit' => $max_per_page,
-            'paged' => $paged,
-        )
-    );
 
     // Searching by ID takes priority
     $singleOrder = false;
     if ($filters['id']) {
-      $singleOrder = wc_get_order($filters['id']);
+      $singleOrder = $wc->get_order($filters['id']);
       if ($singleOrder) {
         $orders = array($singleOrder); // table printer expects array
         $paged = 1;
@@ -234,7 +274,7 @@ class Itella_Manifest
     // if there is no search by ID use to custom query
     $results = false;
     if (!$singleOrder) {
-      $results = wc_get_orders($args);
+      $results = $wc->get_orders($args);
       $orders = $results->orders;
     }
 
@@ -254,7 +294,7 @@ class Itella_Manifest
       ));
     }
 
-    $order_statuses = wc_get_order_statuses();
+    $order_statuses = $wc->get_all_order_statuses();
 
     if ($action !== 'completed_orders') : ?>
         <div class="call-courier-container">
@@ -324,7 +364,7 @@ class Itella_Manifest
               </form>
               <label class="itella-manifest-switch" title="<?php _e('Generate manifests for ...', 'itella-shipping') ?>">
                 <input id="itella-manifest-cb" type="checkbox" data-tab="<?php echo $action; ?>">
-                <span class="slider"><span class="on"><?php _ex('All', 'for', 'itella-shipping') ?></span><span class="off"><?php _ex('Visible', 'for', 'itella-shipping') ?></span></span>
+                <span class="slider"><span class="on"><?php _ex('All', 'for', 'itella-shipping') ?></span><span class="off"><?php _ex('Checked', 'for', 'itella-shipping') ?></span></span>
               </label>
               <button id="submit_manifest_items" title="<?php echo __('Generate manifests', 'itella-shipping'); ?>"
                       type="button" class="button action itella-bulk-button-manifest">
@@ -416,7 +456,8 @@ class Itella_Manifest
                   <?php $date_tracker = false; ?>
                   <?php foreach ($orders as $order) : ?>
                     <?php
-                    $manifest_date = $order->get_meta('_itella_manifest_generation_date');
+                    $itella_data = $wc->get_order_itella_data($order);
+                    $manifest_date = $itella_data->manifest->date;
                     $date = date('Y-m-d H:i', strtotime($manifest_date));
                     ?>
                     <?php if ($action == 'completed_orders' && $date_tracker !== $date) : ?>
@@ -450,6 +491,24 @@ class Itella_Manifest
                               </td>
                           </tr>
                     <?php endif; ?>
+                    <?php if ( ! method_exists($order, 'get_order_number') ) : ?>
+                      <?php $this_order_data = $order->get_data(); ?>
+                      <tr class="data-row">
+                        <th scope="row" class="check-column"></th>
+                        <td class="manage-column">#<?php echo $order->get_id(); ?></td>
+                        <td class="column-order_number">
+                          <div class="data-grid-cell-content">
+                            <?php _e('Order not exists.', 'itella-shipping'); ?>
+                            <?php if ( ! empty($this_order_data['reason']) ) : ?>
+                              <br/>
+                              <?php echo $this_order_data['reason']; ?>
+                            <?php endif; ?>
+                          </div>
+                        </td>
+                        <td colspan="5"></td>
+                      </tr>
+                      <?php continue; ?>
+                    <?php endif; ?>
                       <tr class="data-row">
                           <th scope="row" class="check-column"><input type="checkbox" name="items[]"
                                                                       class="manifest-item"
@@ -464,7 +523,9 @@ class Itella_Manifest
                           </td>
                           <td class="column-order_status">
                               <div class="data-grid-cell-content">
-                                <?php echo wc_get_order_status_name($order->get_status()); ?>
+                                <mark class="order-status status-<?php echo $order->get_status(); ?>">
+                                  <span><?php echo $wc->get_order_status_name($order->get_status()); ?></span>
+                                </mark>
                               </div>
                           </td>
                           <td class="manage-column">
@@ -493,23 +554,13 @@ class Itella_Manifest
                                     echo '<em>' . $shipping_parameters['packet_count'] . '</em>';
                                     echo '<br>' . __('Weight', 'itella-shipping') . ': ';
                                     echo '<em>' . $shipping_parameters['weight'] . '</em>';
-                                    if ($shipping_parameters['extra_services']) {
+                                    if ($shipping_parameters['extra_services'] || $shipping_parameters['multi_parcel']) {
                                       echo '<br>' . __('Extra services', 'itella-shipping') . ': ';
                                       if ($shipping_parameters['multi_parcel']) {
                                         echo '<br><em> - ' . $shipping_parameters['multi_parcel'] . '</em>';
-                                        foreach ($shipping_parameters['extra_services'] as $extra_service) {
-                                          echo '<br><em> - ';
-                                          if ($extra_service === 'oversized') {
-                                            echo __('Oversized', 'itella-shipping');
-                                          }
-                                          if ($extra_service === 'call_before_delivery') {
-                                            echo __('Call before delivery', 'itella-shipping');
-                                          }
-                                          if ($extra_service === 'fragile') {
-                                            echo __('Fragile', 'itella-shipping');
-                                          }
-                                        }
-                                        echo '</em>';
+                                      }
+                                      foreach ($shipping_parameters['extra_services'] as $extra_service) {
+                                        echo '<br><em> - ' . $itella_shipping->get_additional_service_name($extra_service) . '</em>';
                                       }
                                     }
                                   }
@@ -528,16 +579,16 @@ class Itella_Manifest
                           <td class="manage-column">
                               <div class="data-grid-cell-content">
                                 <?php
-                                $tracking_code = $order->get_meta('_itella_tracking_code');
-                                $tracking_url = $order->get_meta('_itella_tracking_url');
+                                $tracking_code = $itella_data->tracking->code;
+                                $tracking_url = $itella_data->tracking->url;
+                                $error = $itella_data->tracking->error;
                                 ?>
                                 <?php if ($tracking_code) : ?>
                                     <a href="<?= $tracking_url ? $tracking_url : '#' ?>" target="_blank">
                                       <?= $tracking_code; ?>
                                     </a>
-                                  <?php $error = $order->get_meta('_itella_tracking_code_error'); ?>
                                   <?php if ($error) : ?>
-                                        <br/>Error: <?php echo $error; ?>
+                                        <br/><?php echo __('Error', 'itella-shipping') . ': ' . $error; ?>
                                   <?php endif; ?>
                                 <?php endif; ?>
                               </div>
@@ -652,71 +703,69 @@ class Itella_Manifest
    */
   public static function get_shipping_parameters($order_id)
   {
+    $wc = new Itella_Shipping_Wc();
+
     $shipping_parameters = array();
-    $order = wc_get_order($order_id);
-    $is_shipping_updated = !empty(get_post_meta($order_id, 'itella_shipping_method', true));
+    $order_data = $wc->get_order_data($order_id);
+    $itella_data = $wc->get_order_itella_data($order_id);
+    $is_shipping_updated = !empty($itella_data->shipping_method);
+
+    $itella_method = $is_shipping_updated ? $itella_data->shipping_method : $itella_data->itella_method;
+    if ( ! $itella_method ) {
+      return $shipping_parameters;
+    }
 
     // defaults
     $default_extra_services = array();
     $default_packet_count = '1';
     $default_multi_parcel = false;
     $default_weight = 1;
-    $default_is_cod = $order->get_payment_method() === 'itella_cod';
-    $default_cod_amount = $order->get_total();
+    $default_is_cod = $order_data->payment_method === 'itella_cod';
+    $default_cod_amount = $order_data->total;
 
     $order_weight = 0;
-    $order_items = $order->get_items();
-    foreach ( $order_items as $item ) {
-      $product = $item->get_product();
-      if ( ! empty($product) ) {
-        $order_weight += floatval((float)$product->get_weight() * (int)$item->get_quantity());
-      }
+    foreach ( $wc->get_order_items($order_id) as $item ) {
+      $order_weight += floatval($item->weight * $item->quantity);
     }
 
-    $itella_method = $is_shipping_updated ?
-        get_post_meta($order_id, 'itella_shipping_method', true) :
-        get_post_meta($order_id, '_itella_method', true);
-
-    $packet_count = get_post_meta($order_id, 'packet_count', true);
+    $packet_count = $itella_data->packet_count;
     if (empty($packet_count)) {
       $packet_count = $default_packet_count;
     }
-    $multi_parcel = get_post_meta($order_id, 'itella_multi_parcel', true);
+    $multi_parcel = $itella_data->multi_parcel;
     if (empty($multi_parcel)) {
       $multi_parcel = $default_multi_parcel;
     }
 
-    $weight = get_post_meta($order_id, 'weight_total', true);
+    $weight = $wc->get_order_meta($order_id, 'weight_total');
     $weight = (empty($weight)) ? $order_weight : $weight;
-    $weight = wc_get_weight($weight, 'kg');
+    $weight = $wc->convert_weight($weight, 'kg');
     $weight = (empty($weight)) ? $default_weight : $weight;
     
-    $is_cod = get_post_meta($order_id, 'itella_cod_enabled', true) === 'yes';
+    $is_cod = $itella_data->cod->enabled === 'yes';
     if (!$is_cod) {
       $is_cod = $default_is_cod;
     }
-    $cod_amount = get_post_meta($order_id, 'itella_cod_amount', true);
+    $cod_amount = $itella_data->cod->amount;
     if (empty($cod_amount)) {
       $cod_amount = $default_cod_amount;
     }
-    $extra_services = get_post_meta($order_id, 'itella_extra_services', true);
+    $extra_services = $itella_data->extra_services;
     if (empty($extra_services)) {
       $extra_services = $default_extra_services;
     }
-    $pickup_point_id = get_post_meta($order_id, '_pp_id', true);
+    $pickup_point_id = $itella_data->pickup->id;
 
-    if ($itella_method) {
-      $shipping_parameters = array(
-          'itella_shipping_method' => $itella_method,
-          'packet_count' => $packet_count,
-          'multi_parcel' => $multi_parcel ? __('Multi Parcel', 'itella-shipping') : false,
-          'weight' => $weight,
-          'is_cod' => $is_cod,
-          'cod_amount' => $cod_amount,
-          'extra_services' => $extra_services,
-          'pickup_point_id' => $pickup_point_id
-      );
-    }
+    $shipping_parameters = array(
+        'itella_shipping_method' => $itella_method,
+        'packet_count' => $packet_count,
+        'multi_parcel' => $multi_parcel ? __('Multi Parcel', 'itella-shipping') : false,
+        'weight' => $weight,
+        'is_cod' => $is_cod,
+        'cod_amount' => $cod_amount,
+        'extra_services' => $extra_services,
+        'pickup_point_id' => $pickup_point_id
+    );
 
     return $shipping_parameters;
   }
@@ -782,10 +831,15 @@ class Itella_Manifest
       );
     }
 
+    return Itella_Manifest::get_custom_itella_meta_query($query, $query_vars);
+  }
+
+  public static function get_custom_itella_meta_query($query, $query_vars)
+  {
     if (isset($query_vars['itella_manifest_date'])) {
-      $filter_by_date = false;
       if ($query_vars['itella_manifest_date'][0] && $query_vars['itella_manifest_date'][1]) {
         $filter_by_date = array(
+
             'key' => '_itella_manifest_generation_date',
             'value' => $query_vars['itella_manifest_date'],
             'compare' => 'BETWEEN'

@@ -15,11 +15,13 @@ class Itella_Shipping_Admin_Display
 {
     private $settings_field_prefix;
     private $helper;
+    private $wc;
 
     public function __construct($method_id)
     {
         $this->settings_field_prefix = 'woocommerce_' . $method_id . '_';
         $this->helper = new Itella_Shipping_Method_Helper();
+        $this->wc = new Itella_Shipping_Wc();
     }
 
     public function settings_row_title( $title )
@@ -43,6 +45,7 @@ class Itella_Shipping_Admin_Display
         $field_values = $params['values'] ?? '';
         $field_class = $params['class'] ?? '';
         $desciption = $params['description'] ?? '';
+        $units = $this->wc->get_units();
 
         ob_start();
         ?>
@@ -65,7 +68,7 @@ class Itella_Shipping_Admin_Display
                     ));
                     $first = false;
                 }
-                echo ' ' . $this->helper->get_woo_dimmension_unit();
+                echo ' ' . $units->dimension;
                 ?>
             </fieldset>
             <fieldset class="field-weight">
@@ -79,7 +82,7 @@ class Itella_Shipping_Admin_Display
                     'min' => 0,
                     'step' => 0.001
                 ));
-                echo ' ' . $this->helper->get_woo_weight_unit();
+                echo ' ' . $units->weight;
                 ?>
             </fieldset>
             <?php if ( ! empty($desciption) ) : ?>

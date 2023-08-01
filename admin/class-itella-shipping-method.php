@@ -38,6 +38,15 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   private $version;
 
   /**
+   * Class to get and controll Woocommerce data
+   * 
+   * @since    1.4.0
+   * @access   private
+   * @var      class $helper Helper class
+   */
+  private $wc;
+
+  /**
    * Helper class of this class with custom functions
    * 
    * @since    1.4.0
@@ -98,6 +107,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $this->available_countries = $plugin->countries ?? array();
     $this->grouped_countries = $plugin->countries_grouped ?? array();
     $this->sender_countries = $plugin->sender_countries ?? array();
+    $this->wc = new Itella_Shipping_Wc();
     $this->helper = new Itella_Shipping_Method_Helper();
     $this->html = new Itella_Shipping_Admin_Display($this->id);
 
@@ -119,8 +129,9 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   public function enqueue_styles($hook)
   {
-    if ( ($hook == 'woocommerce_page_wc-settings' && isset($_GET['section']) && $_GET['section'] == 'itella-shipping')
-      || ($hook == 'edit.php' && isset($_GET['post_type']) && $_GET['post_type'] == 'shop_order') ) {
+    if ( ($hook == 'woocommerce_page_wc-settings' && isset($_GET['section']) && $_GET['section'] == $this->id)
+      || ($hook == 'edit.php' && isset($_GET['post_type']) && $_GET['post_type'] == 'shop_order')
+      || ($hook == 'woocommerce_page_wc-orders' && isset($_GET['action']) && $_GET['action'] == 'edit') ) {
       wp_enqueue_style($this->name, plugin_dir_url(__FILE__) . 'css/itella-shipping-admin.css', array(), $this->version, 'all');
     }
   }
@@ -132,10 +143,11 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   public function enqueue_scripts($hook)
   {
-    if ( $hook == 'woocommerce_page_wc-settings' && isset($_GET['section']) && $_GET['section'] == 'itella-shipping' ) {
+    if ( $hook == 'woocommerce_page_wc-settings' && isset($_GET['section']) && $_GET['section'] == $this->id ) {
       wp_enqueue_script($this->name . 'itella-shipping-admin.js', plugin_dir_url(__FILE__) . 'assets/js/itella-shipping-admin.js', array('jquery'), $this->version, TRUE);
     }
-    if ( $hook == 'post.php') {
+    if ( $hook == 'post.php'
+      || ($hook == 'woocommerce_page_wc-orders' && isset($_GET['action']) && $_GET['action'] == 'edit') ) {
       wp_enqueue_script($this->name . 'itella-shipping-edit-orders.js', plugin_dir_url(__FILE__) . 'assets/js/itella-shipping-edit-orders.js', array('jquery'), $this->version, TRUE);
     }
   }
@@ -188,7 +200,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
     foreach ( $this->available_countries as $country_code ) {
       $filename = plugin_dir_path(dirname(__FILE__))
-          . 'locations/locations' . wc_strtoupper($country_code) . '.json';
+          . 'locations/locations' . $this->wc->string_to_upper($country_code) . '.json';
       $update_file = false;
 
       if ( ! file_exists($filename) ) {
@@ -210,6 +222,22 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     }
   }
 
+  public function all_additional_services_names()
+  {
+    return array(
+      'oversized' => __('Oversized', 'itella-shipping'),
+      'fragile' => __('Fragile', 'itella-shipping'),
+      'call_before_delivery' => __('Call before delivery', 'itella-shipping'),
+    );
+  }
+
+  public function get_additional_service_name( $service_key )
+  {
+    $all_names = $this->all_additional_services_names();
+
+    return $all_names[$service_key] ?? $service_key;
+  }
+
   /**
    * Calculate_shipping function.
    *
@@ -219,11 +247,10 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   public function calculate_shipping($package = array())
   {
-    global $woocommerce;
-    $current_country = strtoupper($woocommerce->customer->get_shipping_country());
-    $cart_amount = floatval($woocommerce->cart->cart_contents_total) + floatval($woocommerce->cart->tax_total);
-    $cart_weight = floatval($woocommerce->cart->cart_contents_weight);
-    $items = $package['contents'] ?? $woocommerce->cart->get_cart();
+    $current_country = strtoupper($this->wc->get_customer_data()->get_shipping_country());
+    $cart_amount = floatval($this->wc->get_cart()->cart_contents_total) + floatval($this->wc->get_cart()->tax_total);
+    $cart_weight = floatval($this->wc->get_cart()->cart_contents_weight);
+    $items = $package['contents'] ?? $this->wc->get_cart_items();
 
     $all_methods = $this->get_itella_shipping_methods();
     $country_methods = $all_methods[strtoupper($current_country)] ?? array();
@@ -403,7 +430,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
           if ( empty($item['product_id']) ) {
             return true;
           }
-          $product = wc_get_product($item['product_id']);
+          $product = $this->wc->get_product($item['product_id']);
           for ( $i = 1; $i <= $item['quantity']; $i++ ) {
             $products[] = array(
               'id' => $product->get_id(),
@@ -438,6 +465,12 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $allowed_comment_variables_c = array(
       'order_id' => __('Order ID', 'itella-shipping'),
     );
+
+    $shop_countries = array('EE', 'FI', 'LV', 'LT');
+    $shop_countries_options = array();
+    foreach ( $shop_countries as $country ) {
+      $shop_countries_options[$country] = $country . ' - ' . $this->wc->get_country_name($country);
+    }
 
     $fields = array(
         'enabled' => array(
@@ -502,12 +535,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             'title' => __('Shop country code', 'itella-shipping'),
             'type'    => 'select',
             'class' => 'checkout-style pickup-point',
-            'options' => array(
-                'EE'  => 'EE - ' . __('Estonia', 'itella-shipping'),
-                'FI' => 'FI - ' . __('Finland', 'itella-shipping'),
-                'LV' => 'LV - ' . __('Latvia', 'itella-shipping'),
-                'LT' => 'LT - ' . __('Lithuania', 'itella-shipping'),
-            ),
+            'options' => $shop_countries_options,
             'default' => 'LT',
         ),
         'shop_phone' => array(
@@ -625,10 +653,9 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         }
         $title_html = (isset($value['title'])) ? $this->html->settings_row_title($value['title']) : '';
         $countries_methods = $value['countries_methods'] ?? array();
-        
-        $shipping_classes = WC()->shipping->get_shipping_classes();
+
         $shipping_classes_options = array();
-        foreach ( $shipping_classes as $ship_class ) {
+        foreach ( $this->wc->get_shipping_classes() as $ship_class ) {
             $shipping_classes_options[$ship_class->term_id] = $ship_class->name;
         }
 
@@ -644,7 +671,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
                     <div class="itella-country itella-country-<?php echo $country; ?>">
                         <div class="title">
                             <img src="<?php echo $this->plugin_url . 'admin/assets/flags/' . $country . '.png'; ?>" alt="[<?php echo strtoupper($country); ?>]"/>
-                            <span><?php echo \WC()->countries->countries[strtoupper($country)]; ?></span>
+                            <span><?php echo $this->wc->get_country_name(strtoupper($country)); ?></span>
                         </div>
                         <div class="content">
                             <?php foreach ( $methods as $method_key => $method_title ) : ?>
@@ -899,7 +926,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         $show_fieldset = 'table-weight';
       }
     }
-    $weight_unit = get_option('woocommerce_weight_unit');
+    $weight_unit = $this->wc->get_units()->weight;
+
 
     ob_start();
     ?>
@@ -1064,7 +1092,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   public function generate_shipping_class_html( $key, $value )
   {
     $field_key = $this->get_field_key($key);
-    $shipping_classes = WC()->shipping->get_shipping_classes();
+    $shipping_classes = $this->wc->get_shipping_classes();
     $values = $this->get_field_array_values($key);
 
     ob_start();
@@ -1145,18 +1173,27 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
   public function add_shipping_details_to_order($order)
   {
+    if ( ! $this->wc->get_order($order) ) {
+      return;
+    }
+
     if ( ! $this->check_itella_method($order) ) {
       return;
     }
 
-    $order_id = $order->get_id();
+    $order_items = $this->wc->get_order_items($order);
+    $order_data = $this->wc->get_order_data($order);
+    if ( empty($order_data) ) {
+      return;
+    }
+    $itella_data = $this->wc->get_order_itella_data($order);
+
+    $services_names = $this->all_additional_services_names();
 
     //check if shipping was previously updated
-    $is_shipping_updated = !empty(get_post_meta($order_id, 'itella_shipping_method', true));
+    $is_shipping_updated = (!empty($itella_data->shipping_method));
 
-    $itella_method = $is_shipping_updated ?
-        get_post_meta($order_id, 'itella_shipping_method', true) :
-        get_post_meta($order_id, '_itella_method', true);
+    $itella_method = $is_shipping_updated ? $itella_data->shipping_method : $itella_data->itella_method;
 
     if ($itella_method) {
 
@@ -1167,30 +1204,26 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       $default_packet_count = '1';
       $default_weight = 0;
       $extra_services = array();
-      $default_is_cod = $order->get_payment_method() === 'itella_cod';
-      $default_cod_amount = $order->get_total();
+      $default_is_cod = $order_data->payment_method === 'itella_cod';
+      $default_cod_amount = $order_data->total;
 
       $extra_services_options = array(
-          $oversized => __('Oversized', 'itella-shipping'),
-          $call_before_delivery => __('Call before delivery', 'itella-shipping'),
-          $fragile => __('Fragile', 'itella-shipping')
+          $oversized => $services_names['oversized'],
+          $call_before_delivery => $services_names['call_before_delivery'],
+          $fragile => $services_names['fragile'],
       );
 
-      $order_items = $order->get_items();
       foreach ( $order_items as $item ) {
-        $product = $item->get_product();
-        if ( ! empty($product) ) {
-          $default_weight += floatval((float)$product->get_weight() * (int)$item->get_quantity());
-        }
+        $default_weight += floatval($item->weight * $item->quantity);
       }
 
       // vars
       if ($is_shipping_updated) {
-        $packet_count = get_post_meta($order_id, 'packet_count', true);
-        $weight = get_post_meta($order_id, 'weight_total', true);
-        $is_cod = get_post_meta($order_id, 'itella_cod_enabled', true) === 'yes';
-        $cod_amount = get_post_meta($order_id, 'itella_cod_amount', true);
-        $extra_services = get_post_meta($order_id, 'itella_extra_services', true);
+        $packet_count = $itella_data->packet_count;
+        $weight = $this->wc->get_order_meta($order, 'weight_total');
+        $is_cod = $itella_data->cod->enabled === 'yes';
+        $cod_amount = $itella_data->cod->amount;
+        $extra_services = $itella_data->extra_services;
         if (!is_array($extra_services)) {
           $extra_services = array($extra_services);
         }
@@ -1204,10 +1237,10 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       $is_itella_pp = $itella_method === 'itella_pp';
       $is_itella_c = $itella_method === 'itella_c';
 
-      $chosen_pickup_point_id = get_post_meta($order_id, '_pp_id', true);
+      $chosen_pickup_point_id = $itella_data->pickup->id;
       $chosen_pickup_point = $this->get_chosen_pickup_point(Itella_Manifest::order_getCountry($order), $chosen_pickup_point_id);
 
-      $weight_unit = get_option('woocommerce_weight_unit');
+      $weight_unit = $this->wc->get_units()->weight;
 
       // packet html select element options
       $packets = array();
@@ -1233,7 +1266,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             </p>
           <?php if ($is_cod): ?>
               <p>
-                  <strong><?= sprintf(__('COD amount (%s):', 'itella-shipping'), $order->get_currency()) ?></strong> <?= $cod_amount ?>
+                  <strong><?= sprintf(__('COD amount (%s):', 'itella-shipping'), $order_data->currency) ?></strong> <?= $cod_amount ?>
               </p>
           <?php endif; ?>
             <p><strong><?= __('Shipping method:', 'itella-shipping') ?></strong>
@@ -1262,17 +1295,16 @@ class Itella_Shipping_Method extends WC_Shipping_Method
               if (empty($extra_services)) {
                 echo __('No extra services selected', 'itella-shipping');
               } else {
-                if (in_array($oversized, $extra_services)) {
-                  echo __('Oversized', 'itella-shipping');
+                $services_html = '';
+                foreach ( $services_names as $service_key => $service_name ) {
+                  if ( in_array($service_key, $extra_services) ) {
+                    if ( ! empty($services_html) ) {
+                      $services_html .= '<br>';
+                    }
+                    $services_html .= $service_name;
+                  }
                 }
-                if (in_array($call_before_delivery, $extra_services)) {
-                  echo __('Call before delivery', 'itella-shipping');
-                  echo '<br>';
-                }
-                if (in_array($fragile, $extra_services)) {
-                  echo __('Fragile', 'itella-shipping');
-                  echo '<br>';
-                }
+                echo $services_html;
               }
               ?>
             </p>
@@ -1318,7 +1350,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
           woocommerce_wp_text_input(array(
               'id' => 'itella_cod_amount',
-              'label' => sprintf(__('COD amount (%s):', 'itella-shipping'), $order->get_currency()),
+              'label' => sprintf(__('COD amount (%s):', 'itella-shipping'), $order_data->currency),
               'value' => $cod_amount,
               'wrapper_class' => 'form-field-wide'
           ));
@@ -1342,7 +1374,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
               'wrapper_class' => 'form-field-wide'
           ));
 
-          $this->woocommerce_wp_multi_checkbox(array(
+          $this->woocommerce_wp_multi_checkbox($order_data->id, array(
               'id' => 'itella_extra_services',
               'name' => 'itella_extra_services[]',
               'style' => 'width: 1rem',
@@ -1371,12 +1403,10 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
   private function check_itella_method($order)
   {
-    $wc_order = wc_get_order((int) $order->get_id());
-    $send_method = "";
-    
-    foreach ( $wc_order->get_items('shipping') as $item_id => $shipping_item_obj ) {
-      $send_method = $shipping_item_obj->get_method_id();
-      if ( $send_method == 'itella-shipping' ) {
+    $order_methods = $this->wc->get_order_shipping_methods($order);
+
+    foreach ( $order_methods as $method ) {
+      if ( $method->method_id == 'itella-shipping' ) {
         return true;
       }
     }
@@ -1390,6 +1420,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       'lt' => 'https://itella.lt/verslui/siuntos-sekimas/?trackingCode=',
       'lv' => 'https://itella.lv/private-customer/sutijuma-meklesana/?trackingCode=',
       'ee' => 'https://itella.ee/eraklient/saadetise-jalgimine/?trackingCode=',
+      'en' => 'https://itella.lt/en/business-customer/track-shipment/?trackingCode=',
     );
     $country_code = strtolower($country_code);
 
@@ -1401,11 +1432,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   }
 
   // Multi Checkbox field for woocommerce backend
-  function woocommerce_wp_multi_checkbox($field)
+  public function woocommerce_wp_multi_checkbox( $order_id, $field )
   {
-    global $thepostid, $post;
-
-    $thepostid = empty($thepostid) ? $post->ID : $thepostid;
     $field['class'] = isset($field['class']) ? $field['class'] : 'select short';
     $field['style'] = isset($field['style']) ? $field['style'] : '';
     $field['wrapper_class'] = isset($field['wrapper_class']) ? $field['wrapper_class'] : '';
@@ -1416,8 +1444,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     echo '<fieldset class="form-field ' . esc_attr($field['id']) . '_field ' . esc_attr($field['wrapper_class']) . '">
     <legend>' . wp_kses_post($field['label']) . '</legend>';
 
-    if (!empty($field['description']) && false !== $field['desc_tip']) {
-      echo wc_help_tip($field['description']);
+    if (!empty($field['description']) && $field['desc_tip']) {
+      echo $this->wc->get_help_tip($field['description']);
     }
 
     echo '<ul class="wc-radios">';
@@ -1513,10 +1541,10 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   public function validate_pickup_point()
   {
-		$shipping_method = (isset($_POST['shipping_method']) && is_array($_POST['shipping_method'])) ? wc_clean($_POST['shipping_method']) : [];
+		$shipping_method = (isset($_POST['shipping_method']) && is_array($_POST['shipping_method'])) ? $this->wc->clean($_POST['shipping_method']) : [];
     $isItellaPp = in_array('itella_pp',$shipping_method);
     if ($isItellaPp && empty($_POST['itella-chosen-point-id'])) {
-      wc_add_notice( __( "You must choose Smartpost Parcel locker", 'itella-shipping' ), 'error');
+      $this->wc->add_notice( __( "You must choose Smartpost Parcel locker", 'itella-shipping' ), 'error');
     }
   }
 
@@ -1533,16 +1561,16 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       if ( ! isset($_POST[$field]) ) continue;
 
       if ( $field == 'packet_count' && intval(wc_clean($_POST[$field]) > 1) ) {
-        update_post_meta($order_id, 'itella_multi_parcel', 'true');
+        $this->wc->update_order_meta($order_id, 'itella_multi_parcel', 'true');
       }
 
       if ( $field == 'itella_add_manually' && isset($_POST[$field]) ) {
-        $method = 'itella_' . $_POST[$field];
-        update_post_meta($order_id, '_itella_method', $method);
+        $method = 'itella_' . wc_clean($_POST[$field]);
+        $this->wc->update_order_meta($order_id, '_itella_method', $method);
         continue;
       }
 
-      update_post_meta($order_id, $field, wc_clean($_POST[$field]));
+      $this->wc->update_order_meta($order_id, $field, wc_clean($_POST[$field]));
     }
   }
 
@@ -1641,7 +1669,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         )
       );
       set_time_limit(0);
-      $order_ids = wc_get_orders($args);
+      $order_ids = $this->wc->get_orders($args);
     } else {
       $order_ids = $_REQUEST['post'];
     }
@@ -1672,10 +1700,10 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   }
   public function add_itella_shipping_info_to_email( $order, $sent_to_admin = '', $plain_text = '', $email = '' )
   {
-    $order_id = $order->get_id();
-    $chosen_pickup_point_id = get_post_meta($order_id, '_pp_id', true);
-    $tracking_number = $this->get_tracking_code($order_id);
-    $tracking_url = $order->get_meta('_itella_tracking_url');
+    $tracking_number = $this->get_tracking_code($order->get_id());
+    $itella_data = $this->wc->get_order_itella_data($order);
+    $chosen_pickup_point_id = $itella_data->pickup->id;
+    $tracking_url = $itella_data->tracking->url;
     
     if ( empty( $tracking_number ) && empty($chosen_pickup_point_id) ) {
       return;
@@ -1738,7 +1766,11 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       return;
     }
 
-    $customer = WC()->session->get('customer');
+    $session = $this->wc->get_global_wc_property('session');
+    if ( ! $session ) {
+      return;
+    }
+    $customer = $session->get('customer');
     if ( ! isset($customer['country']) ) {
       return;
     }
@@ -1758,10 +1790,10 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   public function add_custom_admin_order_preview_meta( $data, $order )
   {
-    $order_id = $order->get_id();
-    $tracking_number = $this->get_tracking_code($order_id);
-    $tracking_url = $order->get_meta('_itella_tracking_url');
-    $chosen_pickup_point_id = get_post_meta($order_id, '_pp_id', true);
+    $tracking_number = $this->get_tracking_code($order->get_id());
+    $itella_data = $this->wc->get_order_itella_data($order);
+    $tracking_url = $itella_data->tracking->url;
+    $chosen_pickup_point_id = $itella_data->pickup->id;
 
     if( ! empty($tracking_number) ) {
       $data['tracking_code'] = $tracking_number;
@@ -1807,7 +1839,6 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   private function build_pickup_address_for_display( $order, $chosen_pickup_point_id )
   {
-    $order_id = $order->get_id();
     $chosen_pickup_point = $this->get_chosen_pickup_point(Itella_Manifest::order_getCountry($order), $chosen_pickup_point_id);
     return $chosen_pickup_point->address->municipality . ' - ' .
            $chosen_pickup_point->address->address . ', ' .
@@ -1825,10 +1856,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $order_ids = is_array($order_ids) ? $order_ids : array($order_ids);;
     foreach ($order_ids as $order_id) {
       if ($this->get_tracking_code($order_id)) {
-        update_post_meta($order_id,
-            '_itella_manifest_generation_date',
-            date('Y-m-d H:i:s', $timestamp)
-        );
+        $this->wc->update_order_meta($order_id, '_itella_manifest_generation_date', date('Y-m-d H:i:s', $timestamp));
       }
     }
   }
@@ -1841,9 +1869,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   private function get_tracking_code($order_id)
   {
-    $order = wc_get_order($order_id);
-
-    return $order->get_meta('_itella_tracking_code');
+    return $this->wc->get_order_meta($order_id, '_itella_tracking_code');
   }
 
   /**
@@ -1860,7 +1886,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $order_ids = is_array($order_ids) ? $order_ids : array($order_ids);
 
     foreach ($order_ids as $order_id) {
-      $order = wc_get_order($order_id);
+      $order = $this->wc->get_order($order_id);
       $shipping_parameters = Itella_Manifest::get_shipping_parameters($order_id);
       $order_country = Itella_Manifest::order_getCountry($order);
       $shipping_method = $shipping_parameters['itella_shipping_method'];
@@ -1898,8 +1924,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         $result = $shipment->registerShipment();
 
         // set tracking number
-        update_post_meta($order_id, '_itella_tracking_code', $result->__toString());
-        update_post_meta($order_id, '_itella_tracking_url', self::getTrackingUrl($order_country) . $result->__toString());
+        $this->wc->update_order_meta($order_id, '_itella_tracking_code', $result->__toString());
+        $this->wc->update_order_meta($order_id, '_itella_tracking_url', self::getTrackingUrl($order_country) . $result->__toString());
 
         // add order note
         $note = sprintf(
@@ -1991,7 +2017,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     }
     if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
       $id = $_REQUEST['id'];
-      $check_code = get_post_meta($id, '_itella_tracking_code', true);
+      $check_code = $this->wc->get_order_meta($id, '_itella_tracking_code');
       if (empty($check_code)) {
         $_REQUEST['post'] = $id;
         $status = $this->itella_post_shipment_actions( array('return') );
@@ -2031,7 +2057,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     if (isset($_REQUEST['ids']) && is_array($_REQUEST['ids'])) {
       $failed = array();
       foreach($_REQUEST['ids'] as $id) {
-        $check_code = get_post_meta($id, '_itella_tracking_code');
+        $check_code = $this->wc->get_order_meta($id, '_itella_tracking_code');
         if (empty($check_code)) {
           $_REQUEST['post'] = $id;
           $status = $this->itella_post_shipment_actions( array('return') );
@@ -2149,7 +2175,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $p_user = htmlspecialchars_decode($this->settings['api_user_2317']);
     $p_secret = htmlspecialchars_decode($this->settings['api_pass_2317']);
     $is_test = true;
-    $shipping_country = Itella_Manifest::order_getCountry(wc_get_order($order_id));
+    $shipping_country = Itella_Manifest::order_getCountry($this->wc->get_order($order_id));
     $chosen_pickup_point = $this->get_chosen_pickup_point($shipping_country, $shipping_parameters['pickup_point_id']);
 
     // Create GoodsItem (parcel)
@@ -2345,8 +2371,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $tracking_codes = array();
 
     foreach ($order_ids as $order_id) {
-      $order = wc_get_order($order_id);
-      $tracking_code = $order->get_meta('_itella_tracking_code');
+      $order = $this->wc->get_order($order_id);
+      $tracking_code = $this->wc->get_order_meta($order_id, '_itella_tracking_code');
 
       if (!$tracking_code) {
         continue;
@@ -2564,10 +2590,14 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
 
     foreach ($order_ids as $order_id) {
-      $order = wc_get_order($order_id);
       $shipping_parameters = Itella_Manifest::get_shipping_parameters($order_id);
+      if ( empty($shipping_parameters) ) {
+        continue;
+      }
+
+      $order = $this->wc->get_order($order_id);
       $shipping_method = $shipping_parameters['itella_shipping_method'];
-      $shipping_country = Itella_Manifest::order_getCountry(wc_get_order($order_id));
+      $shipping_country = Itella_Manifest::order_getCountry($order);
       $chosen_pickup_point = $this->get_chosen_pickup_point($shipping_country, $shipping_parameters['pickup_point_id']);
 
       $tracking_code = $this->get_tracking_code($order_id);
