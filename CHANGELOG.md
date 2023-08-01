@@ -13,6 +13,7 @@
 - added a ability to hide shipping methods if cart weight or size is to big
 - created use of order billing address when order shipping address is empty
 - the display of order statuses is unified with the display of Woocommerce statuses in tables
+- the plugin is adapted to work with Woocommerce HPOS (prepared for Woocommerce 8)
 
 ## [1.4.0] - 2022-12-19
 ### Fixed
