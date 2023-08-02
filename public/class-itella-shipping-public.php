@@ -21,6 +21,7 @@ class Itella_Shipping_Public
    * @var      object $plugin
    */
   private $plugin;
+  private $wc;
 
   /**
    * URL's for every assets group.
@@ -60,6 +61,7 @@ class Itella_Shipping_Public
     );
 
     $this->itella_shipping = new Itella_Shipping_Method();
+    $this->wc = new Itella_Shipping_Wc();
   }
 
   /**
@@ -128,9 +130,10 @@ class Itella_Shipping_Public
    */
   public function show_pp_details($order)
   {
-    $chosen_itella_method = $order->get_meta('_itella_method');
-    $tracking_code = $order->get_meta('_itella_tracking_code');
-    $tracking_url = $order->get_meta('_itella_tracking_url');
+    $itella_data = $this->wc->get_order_itella_data($order);
+    $chosen_itella_method = $itella_data->itella_method;
+    $tracking_code = $itella_data->tracking->code;
+    $tracking_url = $itella_data->tracking->url;
     $shipping_method = $order->get_shipping_method();
     $pickup_point_name = $this->get_pickup_point_public_name($order);
 
@@ -169,16 +172,44 @@ class Itella_Shipping_Public
    */
   public function add_pp_id_to_order($order_id)
   {
-    if (isset($_POST['itella-chosen-point-id']) && $order_id) {
-      update_post_meta($order_id, '_pp_id', $_POST['itella-chosen-point-id']);
+    $this->save_pp_id_to_order($order_id);
+    $this->save_method_to_order($order_id);
+  }
+
+  public function check_pp_id_in_order($order)
+  {
+    try {
+      $itella_data = $this->wc->get_order_itella_data($order);
+
+      if ( empty($itella_data->pickup->id) && isset($_POST['itella-chosen-point-id']) ) {
+        $this->save_pp_id_to_order($order->get_id());
+      }
+      if ( empty($itella_data->itella_method) && $_POST['shipping_method'] ) {
+        $this->save_method_to_order($order->get_id());
+      }
+    } catch(\Exception $e) {
+      //Nothing
+    }
+  }
+
+  private function save_pp_id_to_order($order_id)
+  {
+    if ( isset($_POST['itella-chosen-point-id']) && $order_id ) {
+      $this->wc->update_order_meta($order_id, '_pp_id', $_POST['itella-chosen-point-id']);
       $country = (!empty($_POST['shipping_country'])) ? $_POST['shipping_country'] : $_POST['billing_country'];
       $pickup_point = $this->itella_shipping->get_chosen_pickup_point($country, $_POST['itella-chosen-point-id']);
-      update_post_meta($order_id, 'itella_pupCode', $pickup_point->pupCode);
+      $this->wc->update_order_meta($order_id, 'itella_pupCode', $pickup_point->pupCode);
     }
+  }
 
-    // set itella method todo refactor
-    if (isset($_POST['shipping_method'][0]) && ($_POST['shipping_method'][0] === "itella_pp" || $_POST['shipping_method'][0] === "itella_c")) {
-      update_post_meta($order_id, '_itella_method', $_POST['shipping_method'][0]);
+  private function save_method_to_order($order_id)
+  {
+    if ( isset($_POST['shipping_method']) && is_array($_POST['shipping_method']) ) {
+      foreach ( $_POST['shipping_method'] as $shipping_method ) {
+        if ( $shipping_method == 'itella_pp' || $shipping_method == 'itella_c' ) {
+          $this->wc->update_order_meta($order_id, '_itella_method', $shipping_method);
+        }
+      }
     }
   }
 
@@ -195,7 +226,7 @@ class Itella_Shipping_Public
     $pickup_point_public_name = null;
 
     $shipping_country = $woocommerce->customer->get_shipping_country();
-    $chosen_pickup_point_id = get_post_meta($order->get_id(), '_pp_id', true);
+    $chosen_pickup_point_id = $this->wc->get_order_meta($order, '_pp_id');
     $pickup_points = file_get_contents($this->plugin->path . 'locations/locations' . $shipping_country . '.json');
     $pickup_points = json_decode($pickup_points);
 
@@ -225,8 +256,8 @@ class Itella_Shipping_Public
    */
   public function show_itella_shipping_methods($methods)
   {
-    global $woocommerce;
-    $current_country = $woocommerce->customer->get_shipping_country();
+    $customer = $this->wc->get_customer_data();
+    $current_country = $customer->get_shipping_country();
 
     if (!in_array($current_country, $this->available_countries)) {
       unset($methods['itella_pp']);
@@ -242,7 +273,8 @@ class Itella_Shipping_Public
   public function itella_checkout_hidden_fields()
   {
     // fix for Paypal Checkout page
-    $ship_country = WC()->customer->get_shipping_country();
+    $customer = $this->wc->get_customer_data();
+    $ship_country = $customer->get_shipping_country();
     if ( function_exists('wc_gateway_ppec') && isset($_GET['token']) ) {
       $token = $_GET['token'];
       $client   = wc_gateway_ppec()->client;

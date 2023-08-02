@@ -212,3 +212,7 @@
 .itella-settings .itella-country .method_params .values_table .table_global_actions {
   text-align: center;
 }
+.woocommerce table.form-table.itella-settings .itella-size input[type="number"] {
+  width: 90px;
+  vertical-align: middle;
+}

@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.4.1] - 2023-08-02
+### Fixed
+- added weight to courier shipments
+- fixed messages when calling a courier
+- fixed weight number format error
+- fixed tracking code filter reset in manifest page
+
+### Improved
+- added additional Smartpost meta data adding when creating an order, if it failed to add the first time
+- added a ability to manually set Smartpost shipping method, when Smartpost data is missing in order
+- added a ability to hide shipping methods if cart weight or size is to big
+- created use of order billing address when order shipping address is empty
+- the display of order statuses is unified with the display of Woocommerce statuses in tables
+- the plugin is adapted to work with Woocommerce HPOS (prepared for Woocommerce 8)
+
 ## [1.4.0] - 2022-12-19
 ### Fixed
 - added order weight conversion to kilograms if other weight units are used on the website
