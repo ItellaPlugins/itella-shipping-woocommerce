@@ -40,9 +40,9 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   /**
    * Class to get and controll Woocommerce data
    * 
-   * @since    1.4.0
+   * @since    1.4.1
    * @access   private
-   * @var      class $helper Helper class
+   * @var      class $wc Itella_Shipping_Wc class
    */
   private $wc;
 
@@ -51,7 +51,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    * 
    * @since    1.4.0
    * @access   private
-   * @var      class $helper Helper class
+   * @var      class $helper Itella_Shipping_Method_Helper class
    */
   private $helper;
 
@@ -60,7 +60,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    * 
    * @since    1.4.1
    * @access   private
-   * @var      class $html Helper class
+   * @var      class $html Itella_Shipping_Admin_Display class
    */
   private $html;
 
