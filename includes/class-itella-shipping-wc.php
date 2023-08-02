@@ -4,7 +4,7 @@
  * Register all actions and filters for the plugin
  *
  * @link       http://example.com
- * @since      1.5.0
+ * @since      1.4.1
  *
  * @package    Itella_Shipping
  * @subpackage Itella_Shipping/includes
@@ -20,6 +20,7 @@
  * @package    Itella_Shipping
  * @subpackage Itella_Shipping/includes
  * @author     UAB Mijora <support@mijora.lt>
+ * @author     Marijus Kundelis
  */
 
 class Itella_Shipping_Wc {

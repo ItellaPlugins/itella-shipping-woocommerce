@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.4.1] - 2023-08-02
 ### Fixed
 - added weight to courier shipments
 - fixed messages when calling a courier
