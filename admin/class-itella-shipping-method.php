@@ -2482,8 +2482,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             'contact_phone' => $this->settings['shop_phone'],
         ))
         ->setAttachment($manifest_string, true)
-        ->setItems($items)
-        ->callCourier();
+        ->setItems($items);
 
       $call_success_msg = array(
         'api' => __('Smartpost courier successfully called via API', 'itella-shipping'),
