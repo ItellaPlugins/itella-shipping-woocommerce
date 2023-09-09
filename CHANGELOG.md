@@ -3,6 +3,10 @@
 ## [Unreleased]
 ### Fixed
 - removed old courier call element
+- fixed a error when an item in an order is deleted
+
+### Changed
+- changed Locations API URL
 
 ## [1.4.1] - 2023-08-02
 ### Fixed

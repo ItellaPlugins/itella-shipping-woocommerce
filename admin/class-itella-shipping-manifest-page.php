@@ -536,7 +536,8 @@ class Itella_Manifest
                                   if ($shipping_parameters['itella_shipping_method'] === 'itella_pp') {
                                     $chosen_pickup_point = $itella_shipping->get_chosen_pickup_point(
                                       Itella_Manifest::order_getCountry($order),
-                                      $shipping_parameters['pickup_point_id']
+                                      $shipping_parameters['pickup_point_id'],
+                                      $shipping_parameters['pickup_point_pupcode']
                                     );
                                     echo '<strong>' . __('Smartpost Parcel locker', 'itella-shipping') . ':</strong>';
                                     echo '<br>' . __('City', 'itella-shipping') . ': ';
@@ -755,6 +756,7 @@ class Itella_Manifest
       $extra_services = $default_extra_services;
     }
     $pickup_point_id = $itella_data->pickup->id;
+    $pickup_point_pupcode = (isset($itella_data->pickup->pupcode)) ? $itella_data->pickup->pupcode : '';
 
     $shipping_parameters = array(
         'itella_shipping_method' => $itella_method,
@@ -764,7 +766,8 @@ class Itella_Manifest
         'is_cod' => $is_cod,
         'cod_amount' => $cod_amount,
         'extra_services' => $extra_services,
-        'pickup_point_id' => $pickup_point_id
+        'pickup_point_id' => $pickup_point_id,
+        'pickup_point_pupcode' => $pickup_point_pupcode
     );
 
     return $shipping_parameters;
