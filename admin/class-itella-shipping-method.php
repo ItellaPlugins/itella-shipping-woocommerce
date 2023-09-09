@@ -196,7 +196,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   public function update_locations()
   {
-    $itella_pickup_points_obj = new PickupPoints('https://locationservice.posti.com/api/2/location');
+    $itella_pickup_points_obj = new PickupPoints('https://delivery.plugins.itella.com/api/locations');
 
     foreach ( $this->available_countries as $country_code ) {
       $filename = plugin_dir_path(dirname(__FILE__))
@@ -1495,15 +1495,18 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    * @param $pickup_point_id
    * @return object|null
    */
-  public function get_chosen_pickup_point($shipping_country_id, $pickup_point_id)
+  public function get_chosen_pickup_point($shipping_country_id, $pickup_point_id, $pickup_point_pupcode = '')
   {
     $pickup_points = $this->get_pickup_points($shipping_country_id);
     $chosen_pickup_point = null;
 
-    foreach ($pickup_points as $pickup_point) {
-      $chosen_pickup_point = $pickup_point->id === $pickup_point_id ? $pickup_point : null;
-      if ($chosen_pickup_point) {
-
+    foreach ( $pickup_points as $pickup_point ) {
+      $chosen_pickup_point = $pickup_point->id == $pickup_point_id ? $pickup_point : null;
+      if ( $chosen_pickup_point ) {
+        break;
+      }
+      if ( ! empty($pickup_point_pupcode) && $pickup_point->pupCode == $pickup_point_pupcode ) {
+        $chosen_pickup_point = $pickup_point;
         break;
       }
     }
