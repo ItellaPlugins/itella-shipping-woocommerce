@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.4.2] - 2023-10-10
 ### Fixed
 - removed old courier call element
 - fixed a error when an item in an order is deleted
