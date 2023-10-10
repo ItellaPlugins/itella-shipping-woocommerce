@@ -5,6 +5,9 @@
 - removed old courier call element
 - fixed a error when an item in an order is deleted
 
+### Improved
+- it has been made possible to enable the COD service for the order with the parcel locker shipping method on the order editing page
+
 ### Changed
 - changed Locations API URL
 

@@ -30,12 +30,12 @@
 
         // toggle active/disabled fields when selected pickup point or courier
         if (itellaShippingMethod.value === 'itella_pp') {
-            disableElements(itellaPacketCount, itellaCodEnable, itellaCodAmount);
+            disableElements(itellaPacketCount);
             disableElements(...itellaExtraServices);
 
             // disable cod
-            itellaCodEnable.value = 'no';
-            itellaCodAmount.value = '-';
+            /*itellaCodEnable.value = 'no';
+            itellaCodAmount.value = '-';*/
 
             // pp method doesnt allow more than one packet
             itellaPacketCount.value = '1';
@@ -47,10 +47,10 @@
             itellaMultiParcelCb.checked = itellaPacketCount.value > 1;
 
             // check cod
-            if (itellaCodEnable.value === 'no') {
+            /*if (itellaCodEnable.value === 'no') {
                 itellaCodAmount.value = '-';
                 disableElements(itellaCodAmount);
-            }
+            }*/
 
             // deselect pp and disable pp field
             itellaPickupPoints.value = '-';
@@ -69,23 +69,23 @@
                 itellaMultiParcelCb.checked = false;
                 // itellaMultiParcelField.classList.toggle('d-none');
 
-                itellaCodEnable.value = 'no';
-                itellaCodAmount.value = '-';
+                /*itellaCodEnable.value = 'no';
+                itellaCodAmount.value = '-';*/
 
                 // set previously selected pp
                 itellaPickupPoints.value = itellaPickupPointsTempValue;
 
-                disableElements(itellaPacketCount, itellaCodEnable, itellaCodAmount);
+                disableElements(itellaPacketCount);
                 disableElements(...itellaExtraServices);
                 enableElements(itellaPickupPoints);
             }
             if (itellaShippingMethod.value === 'itella_c') {
-                itellaCodEnable.value = itellaCodEnableTempValue;
-                itellaCodAmount.value = itellaCodAmountTempValue;
+                /*itellaCodEnable.value = itellaCodEnableTempValue;
+                itellaCodAmount.value = itellaCodAmountTempValue;*/
 
                 itellaPickupPoints.value = '-';
 
-                enableElements(itellaPacketCount, itellaCodEnable, itellaCodAmount);
+                enableElements(itellaPacketCount);
                 enableElements(...itellaExtraServices);
                 disableElements(itellaPickupPoints);
             }
