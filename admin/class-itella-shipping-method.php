@@ -2460,12 +2460,13 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         ->setBase64(true)
         ->printManifest('manifest.pdf');
 
-    $shop_country_code = strtolower($this->settings['shop_countrycode']);
-    if ( in_array($shop_country_code, $this->available_countries) && $this->settings['call_courier_mail_' . $shop_country_code] ) {
+    $shop_country_code = strtoupper($this->settings['shop_countrycode']);
+    if ( in_array(strtoupper($shop_country_code), $this->available_countries) && $this->settings['call_courier_mail_' . $shop_country_code] ) {
       $email = $this->settings['call_courier_mail_' . $shop_country_code];
     } else {
       $email = 'smartship.routing.lt@itella.com';
     }
+
     $email_subject = __('E-com order booking', 'itella-shipping');
     if (!empty($this->settings['call_courier_mail_subject'])) {
       $email_subject = $this->settings['call_courier_mail_subject'];
