@@ -214,6 +214,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
       if ( $update_file ) {
         $locations = $itella_pickup_points_obj->getLocationsByCountry($country_code);
+
         if ( ! empty($locations) ) {
           $itella_pickup_points_obj->saveLocationsToJSONFile($filename, json_encode($locations));
         } else {
@@ -2461,7 +2462,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         ->printManifest('manifest.pdf');
 
     $shop_country_code = strtoupper($this->settings['shop_countrycode']);
-    if ( in_array(strtoupper($shop_country_code), $this->available_countries) && $this->settings['call_courier_mail_' . $shop_country_code] ) {
+    if ( in_array($shop_country_code, $this->available_countries) && $this->settings['call_courier_mail_' . $shop_country_code] ) {
       $email = $this->settings['call_courier_mail_' . $shop_country_code];
     } else {
       $email = 'smartship.routing.lt@itella.com';
