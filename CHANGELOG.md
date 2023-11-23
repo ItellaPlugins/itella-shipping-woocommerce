@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.4.3] - 2023-11-23
 ### Fixed
 - fixed error in "Smartpost shipments" page when parcel locker is not selected for the Order
 - fixed not constantly trying to update location files for countries that don't have a parcel lockers
