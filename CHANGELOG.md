@@ -1,5 +1,10 @@
 # Changelog
 
+## [Unreleased]
+### Fixed
+- fixed error in "Smartpost shipments" page when parcel locker is not selected for the Order
+- fixed not constantly trying to update location files for countries that don't have a parcel lockers
+
 ## [1.4.2] - 2023-10-10
 ### Fixed
 - removed old courier call element

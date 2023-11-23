@@ -214,9 +214,10 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
       if ( $update_file ) {
         $locations = $itella_pickup_points_obj->getLocationsByCountry($country_code);
-        
         if ( ! empty($locations) ) {
           $itella_pickup_points_obj->saveLocationsToJSONFile($filename, json_encode($locations));
+        } else {
+          file_put_contents($filename, '');
         }
       }
     }

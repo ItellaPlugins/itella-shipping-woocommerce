@@ -540,14 +540,18 @@ class Itella_Manifest
                                       $shipping_parameters['pickup_point_pupcode']
                                     );
                                     echo '<strong>' . __('Smartpost Parcel locker', 'itella-shipping') . ':</strong>';
-                                    echo '<br>' . __('City', 'itella-shipping') . ': ';
-                                    echo '<em>' . $chosen_pickup_point->address->municipality . '</em>';
-                                    echo '<br>' . __('Public Name', 'itella-shipping') . ': ';
-                                    echo '<em>' . $chosen_pickup_point->publicName . '</em>';
-                                    echo '<br>' . __('Address', 'itella-shipping') . ': ';
-                                    echo '<em>' . $chosen_pickup_point->address->address . '</em>';
-                                    echo '<br>' . __('Postal Code', 'itella-shipping') . ': ';
-                                    echo '<em>' . $chosen_pickup_point->address->postalCode . '</em>';
+                                    if ( isset($chosen_pickup_point->address) ) {
+                                      echo '<br>' . __('City', 'itella-shipping') . ': ';
+                                      echo '<em>' . $chosen_pickup_point->address->municipality . '</em>';
+                                      echo '<br>' . __('Public Name', 'itella-shipping') . ': ';
+                                      echo '<em>' . $chosen_pickup_point->publicName . '</em>';
+                                      echo '<br>' . __('Address', 'itella-shipping') . ': ';
+                                      echo '<em>' . $chosen_pickup_point->address->address . '</em>';
+                                      echo '<br>' . __('Postal Code', 'itella-shipping') . ': ';
+                                      echo '<em>' . $chosen_pickup_point->address->postalCode . '</em>';
+                                    } else {
+                                      echo '<br>' . '—';
+                                    }
                                   }
                                   if ($shipping_parameters['itella_shipping_method'] === 'itella_c') {
                                     echo '<strong>' . __('Smartpost Courier', 'itella-shipping') . ':</strong>';
