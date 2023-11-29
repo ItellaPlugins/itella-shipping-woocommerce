@@ -1,5 +1,9 @@
 # Changelog
 
+## [Unreleased]
+### Fixed
+- fixed that the Itella plugin's front scripts would be loaded only on the Cart and Checkout pages
+
 ## [1.4.3] - 2023-11-23
 ### Fixed
 - fixed error in "Smartpost shipments" page when parcel locker is not selected for the Order
