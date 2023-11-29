@@ -71,6 +71,9 @@ class Itella_Shipping_Public
    */
   public function enqueue_styles()
   {
+    if ( ! is_cart() && ! is_checkout() ) {
+      return;
+    }
     $css_files = array(
       'itella-shipping-public' => $this->assets->css . 'itella-shipping-public.css',
       'leaflet' => "https://unpkg.com/leaflet@1.5.1/dist/leaflet.css",
@@ -91,6 +94,9 @@ class Itella_Shipping_Public
    */
   public function enqueue_scripts()
   {
+    if ( ! is_cart() && ! is_checkout() ) {
+      return;
+    }
     wp_enqueue_script($this->plugin->name . 'leaflet.js', $this->assets->js . 'leaflet.min.js', array(), $this->plugin->version, TRUE);
 //    wp_enqueue_script($this->plugin->name . 'leaflet.markercluster.js', "https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js", array($this->plugin->name . 'leaflet.js'), $this->plugin->version, TRUE);
     wp_enqueue_script($this->plugin->name . 'itella-mapping.js', $this->assets->js . 'itella-mapping.js', array($this->plugin->name . 'leaflet.js'), $this->plugin->version, TRUE);
