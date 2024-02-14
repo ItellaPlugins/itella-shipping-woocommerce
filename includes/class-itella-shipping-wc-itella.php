@@ -4,7 +4,7 @@
  * Functions for working with Itella data for the extension of Woocommerce functions
  *
  * @link       https://itella.lt
- * @since      1.4.3
+ * @since      1.4.4
  *
  * @package    Itella_Shipping
  * @subpackage Itella_Shipping/includes
