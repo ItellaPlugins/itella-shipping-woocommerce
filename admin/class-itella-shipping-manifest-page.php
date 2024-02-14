@@ -832,10 +832,30 @@ class Itella_Manifest
     }
 
     if (isset($query_vars['itella_manifest'])) {
-      $query['meta_query'][] = array(
-          'key' => 'itella_manifest_generation_date',
-          'compare' => ($query_vars['itella_manifest'] ? 'EXISTS' : 'NOT EXISTS'),
-      );
+      if ( $query_vars['itella_manifest'] ) {
+        $query['meta_query'][] = array(
+            'key' => 'itella_manifest_generation_date',
+            'compare' => 'EXISTS',
+        );
+        $query['meta_query'][] = array(
+            'key' => 'itella_manifest_generation_date',
+            'value' => '',
+            'compare' => '!=',
+        );
+      } else {
+        $query['meta_query'][] = array(
+          'relation' => 'OR',
+          array(
+            'key' => 'itella_manifest_generation_date',
+            'compare' => 'NOT EXISTS',
+          ),
+          array(
+            'key' => 'itella_manifest_generation_date',
+            'value' => '',
+            'compare' => '=',
+          ),
+        );
+      }
     }
 
     return Itella_Manifest::get_custom_itella_meta_query($query, $query_vars);

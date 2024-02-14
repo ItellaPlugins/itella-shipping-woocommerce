@@ -423,7 +423,7 @@ class Itella_Shipping
         $itella_data = $wc->get_itella_data($order);
 
         $wc->save_itella_method($order, $itella_data->itella_method);
-        $wc->delete_order_meta($order, '_itella_method');
+        //$wc->delete_order_meta($order, '_itella_method');
         $wc->save_itella_pp_id($order, $itella_data->pickup->id);
         //$wc->delete_order_meta($order, '_pp_id');
         $wc->save_itella_pp_code($order, $itella_data->pickup->pupcode);
