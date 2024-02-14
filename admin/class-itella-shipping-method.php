@@ -107,7 +107,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $this->available_countries = $plugin->countries ?? array();
     $this->grouped_countries = $plugin->countries_grouped ?? array();
     $this->sender_countries = $plugin->sender_countries ?? array();
-    $this->wc = new Itella_Shipping_Wc();
+    $this->wc = new Itella_Shipping_Wc_Itella();
     $this->helper = new Itella_Shipping_Method_Helper();
     $this->html = new Itella_Shipping_Admin_Display($this->id);
 
@@ -1188,7 +1188,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     if ( empty($order_data) ) {
       return;
     }
-    $itella_data = $this->wc->get_order_itella_data($order);
+    $itella_data = $this->wc->get_itella_data($order);
 
     $services_names = $this->all_additional_services_names();
 
@@ -1240,7 +1240,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       $is_itella_c = $itella_method === 'itella_c';
 
       $chosen_pickup_point_id = $itella_data->pickup->id;
-      $chosen_pickup_point = $this->get_chosen_pickup_point(Itella_Manifest::order_getCountry($order), $chosen_pickup_point_id);
+      $chosen_pickup_point_pupcode = $itella_data->pickup->pupcode;
+      $chosen_pickup_point = $this->get_chosen_pickup_point(Itella_Manifest::order_getCountry($order), $chosen_pickup_point_id, $chosen_pickup_point_pupcode);
 
       $weight_unit = $this->wc->get_units()->weight;
 
@@ -1369,9 +1370,9 @@ class Itella_Shipping_Method extends WC_Shipping_Method
           ));
 
           woocommerce_wp_select(array(
-              'id' => '_pp_id',
+              'id' => 'itella_pp_id',
               'label' => __('Select Parcel locker:', 'itella-shipping'),
-              'value' => $chosen_pickup_point_id,
+              'value' => $chosen_pickup_point_pupcode,
               'options' => $this->build_pickup_points_list(Itella_Manifest::order_getCountry($order)),
               'wrapper_class' => 'form-field-wide'
           ));
@@ -1528,7 +1529,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $pickup_points = $this->get_pickup_points($shipping_country_id);
 
     foreach ($pickup_points as $pickup_point) {
-      $pickup_points_list[$pickup_point->id] =
+      $pickup_points_list[$pickup_point->pupCode] =
           $pickup_point->address->municipality . ' - ' .
           $pickup_point->address->address . ', ' .
           $pickup_point->address->postalCode . ' (' .
@@ -1560,18 +1561,18 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   public function save_shipping_settings($order_id)
   {
-    $post_fields = array('itella_add_manually', 'packet_count', 'weight_total', 'itella_cod_enabled', 'itella_cod_amount', 'itella_shipping_method', '_pp_id', 'itella_extra_services');
+    $post_fields = array('itella_add_manually', 'packet_count', 'weight_total', 'itella_cod_enabled', 'itella_cod_amount', 'itella_shipping_method', 'itella_pp_id', 'itella_extra_services');
     
     foreach ( $post_fields as $field)  {
       if ( ! isset($_POST[$field]) ) continue;
 
       if ( $field == 'packet_count' && intval(wc_clean($_POST[$field]) > 1) ) {
-        $this->wc->update_order_meta($order_id, 'itella_multi_parcel', 'true');
+        $this->wc->save_itella_multi_parcel($order_id, 'true');
       }
 
       if ( $field == 'itella_add_manually' && isset($_POST[$field]) ) {
         $method = 'itella_' . wc_clean($_POST[$field]);
-        $this->wc->update_order_meta($order_id, '_itella_method', $method);
+        $this->wc->save_itella_method($order_id, $method);
         continue;
       }
 
@@ -1656,7 +1657,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         case 'completed_orders':
           $args = array(
             'itella_manifest' => true,
-            'meta_key' => '_itella_manifest_generation_date',
+            'meta_key' => 'itella_manifest_generation_date',
             'orderby' => 'meta_value',
             'order' => 'DESC'
           );
@@ -1705,8 +1706,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   }
   public function add_itella_shipping_info_to_email( $order, $sent_to_admin = '', $plain_text = '', $email = '' )
   {
-    $tracking_number = $this->get_tracking_code($order->get_id());
-    $itella_data = $this->wc->get_order_itella_data($order);
+    $itella_data = $this->wc->get_itella_data($order);
+    $tracking_number = $itella_data->tracking->code;
     $chosen_pickup_point_id = $itella_data->pickup->id;
     $tracking_url = $itella_data->tracking->url;
     
@@ -1796,7 +1797,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   public function add_custom_admin_order_preview_meta( $data, $order )
   {
     $tracking_number = $this->get_tracking_code($order->get_id());
-    $itella_data = $this->wc->get_order_itella_data($order);
+    $itella_data = $this->wc->get_itella_data($order);
     $tracking_url = $itella_data->tracking->url;
     $chosen_pickup_point_id = $itella_data->pickup->id;
 
@@ -1860,21 +1861,10 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   {
     $order_ids = is_array($order_ids) ? $order_ids : array($order_ids);;
     foreach ($order_ids as $order_id) {
-      if ($this->get_tracking_code($order_id)) {
-        $this->wc->update_order_meta($order_id, '_itella_manifest_generation_date', date('Y-m-d H:i:s', $timestamp));
+      if ( $this->wc->get_itella_tracking_code($order_id) ) {
+        $this->wc->save_itella_manifest_generation_date($order_id, date('Y-m-d H:i:s', $timestamp));
       }
     }
-  }
-
-  /**
-   * Get order tracking code
-   *
-   * @param $order_id
-   * @return array|mixed|string
-   */
-  private function get_tracking_code($order_id)
-  {
-    return $this->wc->get_order_meta($order_id, '_itella_tracking_code');
   }
 
   /**
@@ -1929,8 +1919,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         $result = $shipment->registerShipment();
 
         // set tracking number
-        $this->wc->update_order_meta($order_id, '_itella_tracking_code', $result->__toString());
-        $this->wc->update_order_meta($order_id, '_itella_tracking_url', self::getTrackingUrl($order_country) . $result->__toString());
+        $this->wc->save_itella_tracking_code($order, $result->__toString());
+        $this->wc->save_itella_tracking_url($order, self::getTrackingUrl($order_country) . $result->__toString());
 
         // add order note
         $note = sprintf(
@@ -2022,7 +2012,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     }
     if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
       $id = $_REQUEST['id'];
-      $check_code = $this->wc->get_order_meta($id, '_itella_tracking_code');
+      $check_code = $this->wc->get_itella_data($id)->tracking->code;
       if (empty($check_code)) {
         $_REQUEST['post'] = $id;
         $status = $this->itella_post_shipment_actions( array('return') );
@@ -2062,7 +2052,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     if (isset($_REQUEST['ids']) && is_array($_REQUEST['ids'])) {
       $failed = array();
       foreach($_REQUEST['ids'] as $id) {
-        $check_code = $this->wc->get_order_meta($id, '_itella_tracking_code');
+        $check_code = $this->wc->get_itella_data($id)->tracking->code;
         if (empty($check_code)) {
           $_REQUEST['post'] = $id;
           $status = $this->itella_post_shipment_actions( array('return') );
@@ -2181,7 +2171,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $p_secret = htmlspecialchars_decode($this->settings['api_pass_2317']);
     $is_test = true;
     $shipping_country = Itella_Manifest::order_getCountry($this->wc->get_order($order_id));
-    $chosen_pickup_point = $this->get_chosen_pickup_point($shipping_country, $shipping_parameters['pickup_point_id']);
+    $chosen_pickup_point = $this->get_chosen_pickup_point($shipping_country, $shipping_parameters['pickup_point_id'], $shipping_parameters['pickup_point_pupcode']);
 
     // Create GoodsItem (parcel)
     $item = new GoodsItem();
@@ -2377,7 +2367,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
     foreach ($order_ids as $order_id) {
       $order = $this->wc->get_order($order_id);
-      $tracking_code = $this->wc->get_order_meta($order_id, '_itella_tracking_code');
+      $tracking_code = $this->wc->get_itella_data($order_id)->tracking->code;
 
       if (!$tracking_code) {
         continue;
@@ -2603,9 +2593,9 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       $order = $this->wc->get_order($order_id);
       $shipping_method = $shipping_parameters['itella_shipping_method'];
       $shipping_country = Itella_Manifest::order_getCountry($order);
-      $chosen_pickup_point = $this->get_chosen_pickup_point($shipping_country, $shipping_parameters['pickup_point_id']);
+      $chosen_pickup_point = $this->get_chosen_pickup_point($shipping_country, $shipping_parameters['pickup_point_id'], $shipping_parameters['pickup_point_pupcode']);
 
-      $tracking_code = $this->get_tracking_code($order_id);
+      $tracking_code = $this->wc->get_itella_tracking_code($order);
 
       // manifest is only for registered shipments (that have tracking code)
       if ($tracking_code) {

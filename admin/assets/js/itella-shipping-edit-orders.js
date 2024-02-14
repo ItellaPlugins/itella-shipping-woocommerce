@@ -12,7 +12,7 @@
         const itellaPacketCount = document.getElementById('packet_count');
         const itellaCodEnable = document.getElementById('itella_cod_enabled');
         const itellaCodAmount = document.getElementById('itella_cod_amount');
-        const itellaPickupPoints = document.getElementById('_pp_id');
+        const itellaPickupPoints = document.getElementById('itella_pp_id');
         const itellaExtraServices = document.querySelectorAll('.itella_extra_services_cb');
         const itellaMultiParcelCb = document.getElementById('itella_multi_parcel');
         // const itellaMultiParcelField = document.querySelector('.itella_multi_parcel_field');

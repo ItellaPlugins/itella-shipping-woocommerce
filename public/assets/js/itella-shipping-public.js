@@ -77,6 +77,7 @@ function itella_init() {
                 'id': this.selectedPoint.id,
             }));
             updateHiddenPpIdInput(this.selectedPoint.id);
+            updateHiddenPpCodeInput(this.selectedPoint.pupCode);
         });
 
     // set ppID as hidden input
@@ -119,15 +120,26 @@ function setHiddenPpIdInput() {
     ppIdElement.setAttribute('name', 'itella-chosen-point-id');
     ppIdElement.setAttribute('id', 'itella-chosen-point-id');
     radio[0].parentElement.appendChild(ppIdElement);
+    const ppCodeElement = document.createElement('input');
+    ppCodeElement.setAttribute('type', 'hidden');
+    ppCodeElement.setAttribute('name', 'itella-chosen-point-code');
+    ppCodeElement.setAttribute('id', 'itella-chosen-point-code');
+    radio[0].parentElement.appendChild(ppCodeElement);
     if (localStorage.getItem('pickupPoint')) {
         const pickupPoint = JSON.parse(localStorage.getItem('pickupPoint'));
         ppIdElement.value = pickupPoint.id;
+        ppCodeElement.value = pickupPoint.pupCode;
     }
 }
 
 function updateHiddenPpIdInput(ppId) {
     const ppIdElement = document.getElementById('itella-chosen-point-id');
     ppIdElement.value = ppId;
+}
+
+function updateHiddenPpCodeInput(ppCode) {
+    const ppCodeElement = document.getElementById('itella-chosen-point-code');
+    ppCodeElement.value = ppCode;
 }
 
 function updateDropdown() {

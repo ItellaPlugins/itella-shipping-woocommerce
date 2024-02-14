@@ -4,6 +4,13 @@
 ### Fixed
 - fixed that the Itella plugin's front scripts would be loaded only on the Cart and Checkout pages
 
+### Changed
+- made it so that pupCode is used everywhere instead of the ID of the pick-up point
+- unified Itella meta keys for Order meta data
+
+### Improved
+- created a separate class for working with WC Order Itella meta data
+
 ## [1.4.3] - 2023-11-23
 ### Fixed
 - fixed error in "Smartpost shipments" page when parcel locker is not selected for the Order
