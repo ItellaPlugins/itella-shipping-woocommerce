@@ -61,7 +61,7 @@ class Itella_Shipping_Public
     );
 
     $this->itella_shipping = new Itella_Shipping_Method();
-    $this->wc = new Itella_Shipping_Wc();
+    $this->wc = new Itella_Shipping_Wc_Itella();
   }
 
   /**
@@ -136,7 +136,7 @@ class Itella_Shipping_Public
    */
   public function show_pp_details($order)
   {
-    $itella_data = $this->wc->get_order_itella_data($order);
+    $itella_data = $this->wc->get_itella_data($order);
     $chosen_itella_method = $itella_data->itella_method;
     $tracking_code = $itella_data->tracking->code;
     $tracking_url = $itella_data->tracking->url;
@@ -185,7 +185,7 @@ class Itella_Shipping_Public
   public function check_pp_id_in_order($order)
   {
     try {
-      $itella_data = $this->wc->get_order_itella_data($order);
+      $itella_data = $this->wc->get_itella_data($order);
 
       if ( empty($itella_data->pickup->id) && isset($_POST['itella-chosen-point-id']) ) {
         $this->save_pp_id_to_order($order->get_id());
@@ -201,10 +201,14 @@ class Itella_Shipping_Public
   private function save_pp_id_to_order($order_id)
   {
     if ( isset($_POST['itella-chosen-point-id']) && $order_id ) {
-      $this->wc->update_order_meta($order_id, '_pp_id', $_POST['itella-chosen-point-id']);
-      $country = (!empty($_POST['shipping_country'])) ? $_POST['shipping_country'] : $_POST['billing_country'];
-      $pickup_point = $this->itella_shipping->get_chosen_pickup_point($country, $_POST['itella-chosen-point-id']);
-      $this->wc->update_order_meta($order_id, 'itella_pupCode', $pickup_point->pupCode);
+      $this->wc->update_order_meta($order_id, 'itella_pp_id', esc_attr($_POST['itella-chosen-point-id']));
+      if ( ! empty($_POST['itella-chosen-point-code']) ) {
+        $this->wc->update_order_meta($order_id, 'itella_pupCode', esc_attr($_POST['itella-chosen-point-code']));
+      } else {
+        $country = (!empty($_POST['shipping_country'])) ? $_POST['shipping_country'] : $_POST['billing_country'];
+        $pickup_point = $this->itella_shipping->get_chosen_pickup_point($country, $_POST['itella-chosen-point-id']);
+        $this->wc->update_order_meta($order_id, 'itella_pupCode', $pickup_point->pupCode);
+      }
     }
   }
 
@@ -213,7 +217,7 @@ class Itella_Shipping_Public
     if ( isset($_POST['shipping_method']) && is_array($_POST['shipping_method']) ) {
       foreach ( $_POST['shipping_method'] as $shipping_method ) {
         if ( $shipping_method == 'itella_pp' || $shipping_method == 'itella_c' ) {
-          $this->wc->update_order_meta($order_id, '_itella_method', $shipping_method);
+          $this->wc->update_order_meta($order_id, 'itella_method', $shipping_method);
         }
       }
     }
@@ -232,7 +236,7 @@ class Itella_Shipping_Public
     $pickup_point_public_name = null;
 
     $shipping_country = $woocommerce->customer->get_shipping_country();
-    $chosen_pickup_point_id = $this->wc->get_order_meta($order, '_pp_id');
+    $chosen_pickup_point_id = $this->wc->get_itella_data($order)->pickup->id;
     $pickup_points = file_get_contents($this->plugin->path . 'locations/locations' . $shipping_country . '.json');
     $pickup_points = json_decode($pickup_points);
 

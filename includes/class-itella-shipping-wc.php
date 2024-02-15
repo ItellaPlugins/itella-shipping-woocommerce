@@ -1,21 +1,10 @@
 <?php
 
 /**
- * Register all actions and filters for the plugin
+ * All the functions which need to communicate with WooCommerce
  *
- * @link       http://example.com
+ * @link       https://itella.lt
  * @since      1.4.1
- *
- * @package    Itella_Shipping
- * @subpackage Itella_Shipping/includes
- */
-
-/**
- * Register all actions and filters for the plugin.
- *
- * Maintain a list of all hooks that are registered throughout
- * the plugin, and register them with the WordPress API. Call the
- * run function to execute the list of actions and filters.
  *
  * @package    Itella_Shipping
  * @subpackage Itella_Shipping/includes
@@ -43,7 +32,7 @@ class Itella_Shipping_Wc {
         return wc_get_orders($args);
     }
 
-    private function check_and_get_order( $order )
+    protected function check_and_get_order( $order )
     {
         if ( ! is_object($order) && (int)$order > 0 ) {
             $order = $this->get_order($order);
@@ -74,38 +63,6 @@ class Itella_Shipping_Wc {
         );
 
         return ($get_data !== '' && isset($order_data[$get_data])) ? $order_data[$get_data] : (object) $order_data;
-    }
-
-    public function get_order_itella_data( $order )
-    {
-        $order = $this->check_and_get_order($order);
-        if ( ! $order ) {
-            return '';
-        }
-
-        return (object) array(
-            'shipping_method' => $order->get_meta('itella_shipping_method', true),
-            'itella_method' => $order->get_meta('_itella_method', true),
-            'packet_count' => $order->get_meta('packet_count', true),
-            'multi_parcel' => $order->get_meta('itella_multi_parcel', true),
-            'extra_services' => $order->get_meta('itella_extra_services', true),
-            'cod' => (object) array(
-                'enabled' => $order->get_meta('itella_cod_enabled', true),
-                'amount' => $order->get_meta('itella_cod_amount', true),
-            ),
-            'pickup' => (object) array(
-                'id' => $order->get_meta('_pp_id', true),
-                'pupcode' => $order->get_meta('itella_pupCode', true),
-            ),
-            'tracking' => (object) array(
-                'code' => $order->get_meta('_itella_tracking_code', true),
-                'url' => $order->get_meta('_itella_tracking_url', true),
-                'error' => $order->get_meta('_itella_tracking_code_error', true),
-            ),
-            'manifest' => (object) array(
-                'date' => $order->get_meta('_itella_manifest_generation_date', true),
-            ),
-        );
     }
 
     public function get_order_meta( $order, $meta_key )

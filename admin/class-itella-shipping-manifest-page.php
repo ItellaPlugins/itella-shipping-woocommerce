@@ -28,7 +28,7 @@ class Itella_Manifest
   public function __construct($plugin)
   {
     $this->plugin = $plugin;
-    $this->wc = new Itella_Shipping_Wc();
+    $this->wc = new Itella_Shipping_Wc_Itella();
   }
 
   /**
@@ -132,7 +132,7 @@ class Itella_Manifest
 
     // prep access to Itella shipping class
     $itella_shipping = new Itella_Shipping_Method();
-    $wc = new Itella_Shipping_Wc();
+    $wc = new Itella_Shipping_Wc_Itella();
 
     $extra_services_names = $itella_shipping->all_additional_services_names();
     ?>
@@ -167,15 +167,15 @@ class Itella_Manifest
         array(
           'relation' => 'OR',
           array(
-            'key' => '_itella_method',
+            'key' => 'itella_method',
             'value' => 'itella_pp',
           ),
           array(
-            'key' => '_itella_method',
+            'key' => 'itella_method',
             'value' => 'itella_c',
           ),
           array(
-            'key' => '_itella_method',
+            'key' => 'itella_method',
             'value' => 'itella',
           ),
         ),
@@ -190,12 +190,12 @@ class Itella_Manifest
         $args['meta_query'][] = array(
           'relation' => 'OR',
           array(
-            'key' => '_itella_manifest_generation_date',
+            'key' => 'itella_manifest_generation_date',
             'value' => '',
             'compare' => '=',
           ),
           array(
-            'key' => '_itella_manifest_generation_date',
+            'key' => 'itella_manifest_generation_date',
             'compare' => 'NOT EXISTS',
           ),
         );
@@ -204,11 +204,11 @@ class Itella_Manifest
       case 'completed_orders':
         $page_title = $tab_strings[$action];
         $args['meta_query'][] = array(
-          'key' => '_itella_manifest_generation_date',
+          'key' => 'itella_manifest_generation_date',
           'value' => '',
           'compare' => '!=',
         );
-        $args['meta_key'] = '_itella_manifest_generation_date';
+        $args['meta_key'] = 'itella_manifest_generation_date';
         $args['orderby'] = 'meta_value';
         $args['order'] = 'DESC';
         $args['itella_manifest'] = true; //Compatible without HPOS
@@ -228,7 +228,7 @@ class Itella_Manifest
             break;
           case 'tracking_code':
             $args['meta_query'][] = array(
-              'key' => '_itella_tracking_code',
+              'key' => 'itella_tracking_code',
               'value' => $filter,
               'compare' => 'LIKE',
             );
@@ -456,7 +456,7 @@ class Itella_Manifest
                   <?php $date_tracker = false; ?>
                   <?php foreach ($orders as $order) : ?>
                     <?php
-                    $itella_data = $wc->get_order_itella_data($order);
+                    $itella_data = $wc->get_itella_data($order);
                     $manifest_date = $itella_data->manifest->date;
                     $date = date('Y-m-d H:i', strtotime($manifest_date));
                     ?>
@@ -708,11 +708,11 @@ class Itella_Manifest
    */
   public static function get_shipping_parameters($order_id)
   {
-    $wc = new Itella_Shipping_Wc();
+    $wc = new Itella_Shipping_Wc_Itella();
 
     $shipping_parameters = array();
     $order_data = $wc->get_order_data($order_id);
-    $itella_data = $wc->get_order_itella_data($order_id);
+    $itella_data = $wc->get_itella_data($order_id);
     $is_shipping_updated = !empty($itella_data->shipping_method);
 
     $itella_method = $is_shipping_updated ? $itella_data->shipping_method : $itella_data->itella_method;
@@ -802,14 +802,14 @@ class Itella_Manifest
   {
     if (!empty($query_vars['itella_method'])) {
       $query['meta_query'][] = array(
-          'key' => '_itella_method',
+          'key' => 'itella_method',
           'value' => $query_vars['itella_method']//esc_attr( $query_vars['itella_method'] ),
       );
     }
 
     if (isset($query_vars['itella_tracking_code'])) {
       $query['meta_query'][] = array(
-          'key' => '_itella_tracking_code',
+          'key' => 'itella_tracking_code',
           'value' => $query_vars['itella_tracking_code'],
           'compare' => 'LIKE'
       );
@@ -832,10 +832,30 @@ class Itella_Manifest
     }
 
     if (isset($query_vars['itella_manifest'])) {
-      $query['meta_query'][] = array(
-          'key' => '_itella_manifest_generation_date',
-          'compare' => ($query_vars['itella_manifest'] ? 'EXISTS' : 'NOT EXISTS'),
-      );
+      if ( $query_vars['itella_manifest'] ) {
+        $query['meta_query'][] = array(
+            'key' => 'itella_manifest_generation_date',
+            'compare' => 'EXISTS',
+        );
+        $query['meta_query'][] = array(
+            'key' => 'itella_manifest_generation_date',
+            'value' => '',
+            'compare' => '!=',
+        );
+      } else {
+        $query['meta_query'][] = array(
+          'relation' => 'OR',
+          array(
+            'key' => 'itella_manifest_generation_date',
+            'compare' => 'NOT EXISTS',
+          ),
+          array(
+            'key' => 'itella_manifest_generation_date',
+            'value' => '',
+            'compare' => '=',
+          ),
+        );
+      }
     }
 
     return Itella_Manifest::get_custom_itella_meta_query($query, $query_vars);
@@ -847,19 +867,19 @@ class Itella_Manifest
       if ($query_vars['itella_manifest_date'][0] && $query_vars['itella_manifest_date'][1]) {
         $filter_by_date = array(
 
-            'key' => '_itella_manifest_generation_date',
+            'key' => 'itella_manifest_generation_date',
             'value' => $query_vars['itella_manifest_date'],
             'compare' => 'BETWEEN'
         );
       } elseif ($query_vars['itella_manifest_date'][0] && !$query_vars['itella_manifest_date'][1]) {
         $filter_by_date = array(
-            'key' => '_itella_manifest_generation_date',
+            'key' => 'itella_manifest_generation_date',
             'value' => $query_vars['itella_manifest_date'][0],
             'compare' => '>='
         );
       } elseif (!$query_vars['itella_manifest_date'][0] && $query_vars['itella_manifest_date'][1]) {
         $filter_by_date = array(
-            'key' => '_itella_manifest_generation_date',
+            'key' => 'itella_manifest_generation_date',
             'value' => $query_vars['itella_manifest_date'][1],
             'compare' => '<='
         );
