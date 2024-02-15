@@ -109,6 +109,7 @@ class Itella_Shipping
 
     add_action('plugins_loaded', array($this, 'run'));
     add_action('admin_notices', array($this, 'notify_on_activation'));
+    add_action('woocommerce_after_register_post_type', array($this, 'update_database'));
 
     self::$instance = $this;
   }
@@ -242,6 +243,11 @@ class Itella_Shipping
      * The class that is designed to interface with the Woocommerce plugin.
      */
     require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-itella-shipping-wc.php';
+
+    /**
+     * The class is designed to extend the WC class with Itella functions.
+     */
+    require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-itella-shipping-wc-itella.php';
 
     /**
      * The class responsible for orchestrating the actions and filters of the
@@ -400,6 +406,37 @@ class Itella_Shipping
   public function run()
   {
     $this->load_dependencies();
+  }
+
+  public function update_database()
+  {
+    $updated = get_option('itella_updated');
+    if ( empty($updated) || version_compare($this->version, '1.4.4', '<') ) {
+      $orders = wc_get_orders(array(
+        'limit' => -1,
+        'meta_key' => '_itella_method',
+        'meta_compare' => 'EXISTS'
+      ));
+
+      $wc = new Itella_Shipping_Wc_Itella();
+      foreach ( $orders as $order ) {
+        $itella_data = $wc->get_itella_data($order);
+
+        $wc->save_itella_method($order, $itella_data->itella_method);
+        //$wc->delete_order_meta($order, '_itella_method');
+        $wc->save_itella_pp_id($order, $itella_data->pickup->id);
+        //$wc->delete_order_meta($order, '_pp_id');
+        $wc->save_itella_pp_code($order, $itella_data->pickup->pupcode);
+        //$wc->delete_order_meta($order, 'itella_pupCode');
+        $wc->save_itella_tracking_code($order, $itella_data->tracking->code);
+        //$wc->delete_order_meta($order, '_itella_tracking_code');
+        $wc->save_itella_tracking_url($order, $itella_data->tracking->url);
+        //$wc->delete_order_meta($order, '_itella_tracking_url');
+        $wc->save_itella_manifest_generation_date($order, $itella_data->manifest->date);
+        //$wc->delete_order_meta($order, '_itella_manifest_generation_date');
+      }
+      update_option('itella_updated', $this->version, false);
+    }
   }
 
   /**

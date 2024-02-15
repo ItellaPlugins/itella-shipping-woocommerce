@@ -889,6 +889,7 @@ var itellaMapping = /*#__PURE__*/function () {
         }
 
         li.dataset.id = loc.id;
+        li.dataset.code = loc.pupCode;
         listHTML.push(li);
         loc._li = li;
       });

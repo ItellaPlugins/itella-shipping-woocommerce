@@ -10,6 +10,7 @@
 *~
 *.sass-cache
 /var/*/*.pdf
+/locations/*.json
 
 # OS or Editor folders
 .DS_Store
