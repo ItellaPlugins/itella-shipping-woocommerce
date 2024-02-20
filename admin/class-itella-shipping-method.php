@@ -1796,8 +1796,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   public function add_custom_admin_order_preview_meta( $data, $order )
   {
-    $tracking_number = $this->get_tracking_code($order->get_id());
     $itella_data = $this->wc->get_itella_data($order);
+    $tracking_number = $itella_data->tracking->code;
     $tracking_url = $itella_data->tracking->url;
     $chosen_pickup_point_id = $itella_data->pickup->id;
 
