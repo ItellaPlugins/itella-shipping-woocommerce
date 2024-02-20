@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.4.4.1] - 2024-02-20
+### Fixed
+- fixed bug from last update in order preview
+
 ## [1.4.4] - 2024-02-15
 ### Fixed
 - fixed that the Itella plugin's front scripts would be loaded only on the Cart and Checkout pages
