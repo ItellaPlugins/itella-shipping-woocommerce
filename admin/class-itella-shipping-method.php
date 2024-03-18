@@ -1242,6 +1242,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       $chosen_pickup_point_id = $itella_data->pickup->id;
       $chosen_pickup_point_pupcode = $itella_data->pickup->pupcode;
       $chosen_pickup_point = $this->get_chosen_pickup_point(Itella_Manifest::order_getCountry($order), $chosen_pickup_point_id, $chosen_pickup_point_pupcode);
+      $chosen_pickup_point_pupcode = $this->fix_pupcode($chosen_pickup_point_pupcode, $chosen_pickup_point);
 
       $weight_unit = $this->wc->get_units()->weight;
 
@@ -1370,7 +1371,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
           ));
 
           woocommerce_wp_select(array(
-              'id' => 'itella_pp_id',
+              'id' => 'itella_pupCode',
               'label' => __('Select Parcel locker:', 'itella-shipping'),
               'value' => $chosen_pickup_point_pupcode,
               'options' => $this->build_pickup_points_list(Itella_Manifest::order_getCountry($order)),
@@ -1402,6 +1403,18 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         </p>
       </div>
     <?php }
+  }
+
+  private function fix_pupcode($pupcode, $pickup_point_data)
+  {
+    if ( $pupcode == 'undefined') {
+      $pupcode = '';
+    }
+    if ( empty($pupcode) && ! empty($pickup_point_data->pupCode) ) {
+      return $pickup_point_data->pupCode;
+    }
+
+    return $pupcode;
   }
 
   private function check_itella_method($order)
@@ -1561,7 +1574,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   public function save_shipping_settings($order_id)
   {
-    $post_fields = array('itella_add_manually', 'packet_count', 'weight_total', 'itella_cod_enabled', 'itella_cod_amount', 'itella_shipping_method', 'itella_pp_id', 'itella_extra_services');
+    $post_fields = array('itella_add_manually', 'packet_count', 'weight_total', 'itella_cod_enabled', 'itella_cod_amount', 'itella_shipping_method', 'itella_pupCode', 'itella_extra_services');
     
     foreach ( $post_fields as $field)  {
       if ( ! isset($_POST[$field]) ) continue;
@@ -1574,6 +1587,12 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         $method = 'itella_' . wc_clean($_POST[$field]);
         $this->wc->save_itella_method($order_id, $method);
         continue;
+      }
+
+      if ( $field == 'itella_pupCode' ) {
+        $order = $this->wc->get_order($order_id);
+        $choosen_pickup_point = $this->get_chosen_pickup_point(Itella_Manifest::order_getCountry($order), wc_clean($_POST[$field]));
+        $this->wc->update_order_meta($order_id, 'itella_pp_id', wc_clean($choosen_pickup_point->pupCode));
       }
 
       $this->wc->update_order_meta($order_id, $field, wc_clean($_POST[$field]));
