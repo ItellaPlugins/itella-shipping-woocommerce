@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.4.4.2] - 2024-03-18
+### Fixed
+- fixed bug from last update in Checkout pickup selection
+- fixed pickup saving in order edit page
+
 ## [1.4.4.1] - 2024-02-20
 ### Fixed
 - fixed bug from last update in order preview
