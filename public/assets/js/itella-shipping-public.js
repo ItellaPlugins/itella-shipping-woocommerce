@@ -110,6 +110,10 @@ function setHiddenPpIdInput() {
     if (chosenPpIdElement) {
         chosenPpIdElement.remove();
     }
+    const chosenPpCodeElement = document.querySelector('#itella-chosen-point-code');
+    if (chosenPpCodeElement) {
+        chosenPpCodeElement.remove();
+    }
 
     var radio = jQuery('input[value="itella_pp"]');
     if (!radio.length) {
