@@ -69,20 +69,42 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   public $id;
 
-    /**
-     * @var array
-     */
-    private $itella_methods;
+  /**
+   * @var array
+   */
+  private $itella_methods;
 
-    /**
-     * @var array
-     */
-    private $plugin_url;
+  /**
+   * @var array
+   */
+  private $plugin_url;
 
-    /**
-     * @var array
-     */
-    private $sender_countries;
+  /**
+   * Available sender countries
+   * 
+   * @since 1.4.0
+   * @access private
+   * @var array
+   */
+  private $sender_countries;
+
+  /**
+   * Available receiver countries
+   * 
+   * @since 1.4.0
+   * @access private
+   * @var array
+   */
+  private $available_countries;
+
+  /**
+   * Available receiver countries for each method
+   * 
+   * @since 1.4.0
+   * @access private
+   * @var array
+   */
+  private $grouped_countries;
 
   /**
    * Initialize the class and set its properties.

@@ -21,7 +21,24 @@ class Itella_Shipping_Public
    * @var      object $plugin
    */
   private $plugin;
+
+  /**
+   * This plugin Itella_Shipping_Wc_Itella class.
+   *
+   * @since    1.4.1
+   * @access   private
+   * @var      object $wc
+   */
   private $wc;
+
+  /**
+   * This plugin Itella_Shipping_Method class.
+   *
+   * @since    1.3.7
+   * @access   private
+   * @var      object $itella_shipping
+   */
+  private $itella_shipping;
 
   /**
    * URL's for every assets group.

@@ -58,6 +58,15 @@ class Itella_Shipping
   protected $plugin_name;
 
   /**
+   * Main plugin file basename.
+   *
+   * @since    1.3.7
+   * @access   protected
+   * @var      string $plugin_basename Main plugin file basename (directory and file name).
+   */
+  protected $plugin_basename;
+
+  /**
    * URL of this plugin directory.
    *
    * @since    1.0.0
