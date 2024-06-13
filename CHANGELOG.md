@@ -4,6 +4,9 @@
 ### Fixed
 - added descriptions of variables in classes that were not added
 
+### Improved
+- improved "Smartpost shipments" page SQL query to reduce execution time
+
 ## [1.4.4.2] - 2024-03-18
 ### Fixed
 - fixed bug from last update in Checkout pickup selection
