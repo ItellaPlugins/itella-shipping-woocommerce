@@ -96,13 +96,33 @@ function itella_init() {
 
 function loadJson() {
     let json = JSON.parse(this.responseText);
-    this.itella.setLocations(json, true);
+    let locations = itellaFilterLocations(json);
+
+    this.itella.setLocations(locations, true);
 
     // select from list by pickup point ID
     if (localStorage.getItem('pickupPoint')) {
         const pickupPoint = JSON.parse(localStorage.getItem('pickupPoint'));
         itella.setSelection(pickupPoint.id, false);
     }
+}
+
+function itellaFilterLocations(locations_json) {
+    let locations = Array.isArray(locations_json) ? JSON.parse(JSON.stringify(locations_json)) : [];
+
+    let i = locations.length;
+    while (i--) {
+        if (! Object.hasOwn(locations[i], 'capabilities')) {
+            continue;
+        }
+        for (let j = 0; j < locations[i].capabilities.length; j++) {
+            if (variables.locationsFilter.exclude_outdoors == 'yes' && locations[i].capabilities[j].name == 'outdoors' && locations[i].capabilities[j].value == 'OUTDOORS') {
+                locations.splice(i, 1);
+            }
+        }
+    }
+
+    return locations;
 }
 
 function setHiddenPpIdInput() {

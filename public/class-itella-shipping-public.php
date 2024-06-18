@@ -123,6 +123,9 @@ class Itella_Shipping_Public
             'show_style' => $this->itella_shipping->settings['checkout_show_style'],
             'imagesUrl' => $this->assets->img,
             'locationsUrl' => $this->plugin->url . 'locations/',
+            'locationsFilter' => array(
+                'exclude_outdoors' => $this->itella_shipping->settings['disable_outdoors_pickup_points'] ?? 'no'
+            ),
             'translations' => array(
                 'nothing_found' => __('Nothing found', 'itella-shipping'),
                 'modal_header' => __('Parcel lockers', 'itella-shipping'),

@@ -6,6 +6,7 @@
 
 ### Improved
 - improved "Smartpost shipments" page SQL query to reduce execution time
+- added option to disable display of parcel lockers that have "Outdoors" parameter on Cart and Checkout pages
 
 ## [1.4.4.2] - 2024-03-18
 ### Fixed
