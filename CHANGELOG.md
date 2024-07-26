@@ -3,6 +3,7 @@
 ## [Unreleased]
 ### Fixed
 - added descriptions of variables in classes that were not added
+- fixed display of terminals by shipping country on Checkout page
 
 ### Improved
 - improved "Smartpost shipments" page SQL query to reduce execution time
