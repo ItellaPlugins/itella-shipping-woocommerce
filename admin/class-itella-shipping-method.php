@@ -69,20 +69,42 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   public $id;
 
-    /**
-     * @var array
-     */
-    private $itella_methods;
+  /**
+   * @var array
+   */
+  private $itella_methods;
 
-    /**
-     * @var array
-     */
-    private $plugin_url;
+  /**
+   * @var array
+   */
+  private $plugin_url;
 
-    /**
-     * @var array
-     */
-    private $sender_countries;
+  /**
+   * Available sender countries
+   * 
+   * @since 1.4.0
+   * @access private
+   * @var array
+   */
+  private $sender_countries;
+
+  /**
+   * Available receiver countries
+   * 
+   * @since 1.4.0
+   * @access private
+   * @var array
+   */
+  private $available_countries;
+
+  /**
+   * Available receiver countries for each method
+   * 
+   * @since 1.4.0
+   * @access private
+   * @var array
+   */
+  private $grouped_countries;
 
   /**
    * Initialize the class and set its properties.
@@ -481,6 +503,9 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             'description' => __('Enable this shipping.', 'itella-shipping'),
             'default' => 'yes'
         ),
+        'hr_api' => array(
+            'type' => 'hr'
+        ),
         'api_user_2711' => array(
             'title' => __('API user (Product 2711)', 'itella-shipping'),
             'type' => 'text',
@@ -504,6 +529,9 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         'api_contract_2317' => array(
             'title' => __('Api contract number (Product 2317)', 'itella-shipping'),
             'type' => 'text',
+        ),
+        'hr_sender' => array(
+            'type' => 'hr'
         ),
         'company' => array(
             'title' => __('Company name', 'itella-shipping'),
@@ -548,6 +576,9 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             'title' => __('Shop email', 'itella-shipping'),
             'type' => 'email',
         ),
+        'hr_methods' => array(
+            'type' => 'hr'
+        ),
         'pickup_point_method' => array(
             'title' => __('Enable Parcel locker', 'itella-shipping'),
             'class' => 'method-cb-pickup_point',
@@ -562,17 +593,6 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             'description' => __('Show courier shipping method in checkout.', 'itella-shipping'),
             'default' => 'no'
         ),
-        'checkout_show_style' => array(
-            'title' => __('Parcel locker selection style', 'itella-shipping'),
-            'type'    => 'select',
-            'class' => 'checkout-style field-toggle-pickup_point',
-            'options' => array(
-                'map'  => __('Map', 'itella-shipping'),
-                'dropdown' => __('Dropdown', 'itella-shipping'),
-            ),
-            'default' => 'map',
-            'description' => __('Choose what the parcel locker selection in the checkout will look like.', 'itella-shipping'),
-        ),
     );
 
     $fields['methods'] = array(
@@ -581,8 +601,27 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         'countries_methods' => $this->get_itella_shipping_methods(),
     );
 
-    $fields['hr_courier_mail'] = array(
-      'type' => 'hr'
+    $fields['hr_front'] = array(
+        'type' => 'hr'
+    );
+
+    $fields['checkout_show_style'] = array(
+        'title' => __('Parcel locker selection style', 'itella-shipping'),
+        'type'    => 'select',
+        'class' => 'checkout-style field-toggle-pickup_point',
+        'options' => array(
+            'map'  => __('Map', 'itella-shipping'),
+            'dropdown' => __('Dropdown', 'itella-shipping'),
+        ),
+        'default' => 'map',
+        'description' => __('Choose what the parcel locker selection in the checkout will look like.', 'itella-shipping'),
+    );
+
+    $fields['disable_outdoors_pickup_points'] = array(
+        'title' => __('Exclude outdoors parcel lockers', 'itella-shipping'),
+        'type' => 'checkbox',
+        'class' => 'field-toggle-pickup_point',
+        'description' => __('In the Checkout page dont show parcel lockers that have "Outdoors" parameter', 'itella-shipping'),
     );
 
     $fields['courier_max_size'] = array(
@@ -601,6 +640,10 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       'description' => __('The maximum size of the cart above which the delivery method will not be shown.', 'itella-shipping')
         . ' ' . __('Leave all dimension fields or weight field empty to disable checking by that parameter.', 'itella-shipping')
         . ' ' . __('Preliminary cart size is calculated by trying to fit all products by taking their dimensions (boxes) indicated in their settings.', 'itella-shipping')
+    );
+
+    $fields['hr_labels'] = array(
+        'type' => 'hr'
     );
 
     $comment_c_desc = __('Add custom comment to label', 'itella-shipping') . '.';
@@ -623,6 +666,10 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       'type' => 'text',
       'class' => 'field-toggle-pickup_point',
       'description' => $comment_pp_desc,
+    );
+
+    $fields['hr_courier_call'] = array(
+        'type' => 'hr'
     );
 
     foreach ($this->sender_countries as $country_code) {

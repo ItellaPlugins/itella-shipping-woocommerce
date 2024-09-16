@@ -165,19 +165,9 @@ class Itella_Manifest
       'meta_query' => array(
         'relation' => 'AND',
         array(
-          'relation' => 'OR',
-          array(
-            'key' => 'itella_method',
-            'value' => 'itella_pp',
-          ),
-          array(
-            'key' => 'itella_method',
-            'value' => 'itella_c',
-          ),
-          array(
-            'key' => 'itella_method',
-            'value' => 'itella',
-          ),
+          'key' => 'itella_method',
+          'value' => array('itella_pp', 'itella_c', 'itella'),
+          'compare' => 'IN',
         ),
       ),
       'itella_method' => ['itella_pp', 'itella_c', 'itella'], //Compatible without HPOS

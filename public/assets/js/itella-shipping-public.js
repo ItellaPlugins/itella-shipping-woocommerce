@@ -63,13 +63,7 @@ function itella_init() {
             error_missing_mount_el: variables.translations.error_missing_mount_el
         })
         .init(show_map)
-        .setCountry(
-            document.querySelector('#billing_country') ?
-            document.querySelector('#billing_country').value :
-            ( document.querySelector('#calc_shipping_country') ?
-              document.querySelector('#calc_shipping_country').value :
-              document.querySelector('#itella_shipping_country').value )
-        )
+        .setCountry(itellaGetCountry())
         .setLocations(terminals, true)
         .registerCallback(function (manual) {
             // access itella class
@@ -94,15 +88,46 @@ function itella_init() {
     updateDropdown();
 }
 
+function itellaGetCountry() {
+    let useShippingAddress = document.getElementById('ship-to-different-address-checkbox');
+    if ( typeof(useShippingAddress) != 'undefined' && useShippingAddress != null && useShippingAddress.checked ) {
+        if ( document.querySelector('#shipping_country') ) return document.querySelector('#shipping_country').value;
+    }
+    if ( document.querySelector('#billing_country') ) return document.querySelector('#billing_country').value;
+    if ( document.querySelector('#calc_shipping_country') ) return document.querySelector('#calc_shipping_country').value;
+
+    return document.querySelector('#itella_shipping_country').value;
+}
+
 function loadJson() {
     let json = JSON.parse(this.responseText);
-    this.itella.setLocations(json, true);
+    let locations = itellaFilterLocations(json);
+
+    this.itella.setLocations(locations, true);
 
     // select from list by pickup point ID
     if (localStorage.getItem('pickupPoint')) {
         const pickupPoint = JSON.parse(localStorage.getItem('pickupPoint'));
         itella.setSelection(pickupPoint.id, false);
     }
+}
+
+function itellaFilterLocations(locations_json) {
+    let locations = Array.isArray(locations_json) ? JSON.parse(JSON.stringify(locations_json)) : [];
+
+    let i = locations.length;
+    while (i--) {
+        if (! Object.hasOwn(locations[i], 'capabilities')) {
+            continue;
+        }
+        for (let j = 0; j < locations[i].capabilities.length; j++) {
+            if (variables.locationsFilter.exclude_outdoors == 'yes' && locations[i].capabilities[j].name == 'outdoors' && locations[i].capabilities[j].value == 'OUTDOORS') {
+                locations.splice(i, 1);
+            }
+        }
+    }
+
+    return locations;
 }
 
 function setHiddenPpIdInput() {

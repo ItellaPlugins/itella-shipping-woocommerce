@@ -21,7 +21,24 @@ class Itella_Shipping_Public
    * @var      object $plugin
    */
   private $plugin;
+
+  /**
+   * This plugin Itella_Shipping_Wc_Itella class.
+   *
+   * @since    1.4.1
+   * @access   private
+   * @var      object $wc
+   */
   private $wc;
+
+  /**
+   * This plugin Itella_Shipping_Method class.
+   *
+   * @since    1.3.7
+   * @access   private
+   * @var      object $itella_shipping
+   */
+  private $itella_shipping;
 
   /**
    * URL's for every assets group.
@@ -106,6 +123,9 @@ class Itella_Shipping_Public
             'show_style' => $this->itella_shipping->settings['checkout_show_style'],
             'imagesUrl' => $this->assets->img,
             'locationsUrl' => $this->plugin->url . 'locations/',
+            'locationsFilter' => array(
+                'exclude_outdoors' => $this->itella_shipping->settings['disable_outdoors_pickup_points'] ?? 'no'
+            ),
             'translations' => array(
                 'nothing_found' => __('Nothing found', 'itella-shipping'),
                 'modal_header' => __('Parcel lockers', 'itella-shipping'),
