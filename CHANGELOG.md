@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.4.5] - 2024-09-16
 ### Fixed
 - added descriptions of variables in classes that were not added
 - fixed display of terminals by shipping country on Checkout page
