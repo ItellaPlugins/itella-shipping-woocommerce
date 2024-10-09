@@ -624,6 +624,13 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         'description' => __('In the Checkout page dont show parcel lockers that have "Outdoors" parameter', 'itella-shipping'),
     );
 
+    $fields['show_checkout_logo'] = array(
+        'title' => __('Show logo in Checkout', 'itella-shipping'),
+        'type' => 'checkbox',
+        'class' => 'field-toggle-pickup_point',
+        'description' => __('On the checkout page, display the logo next to the shipping method', 'itella-shipping'),
+    );
+
     $fields['courier_max_size'] = array(
       'title' => __('Courier max size', 'itella-shipping'),
       'type' => 'size',

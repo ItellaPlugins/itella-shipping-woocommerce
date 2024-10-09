@@ -20,3 +20,10 @@ Shipping plugin for Woocommerce to use with Smartpost Itella shipping methods
  *Plugins* -> *Add New* -> *Upload plugin* -> *Choose file* (Select file and press open) -> *Install Now*
 3. In *Plugins* section locate “Smartpost Itella Shipping”
 4. Click on *Activate*
+
+## Plugin hooks
+
+```php
+/* Adding a logo to Itella methods on the Checkout page if the "Show logo in Checkout" parameter is activated in the plugin settings */
+add_filter('itella_checkout_method_label_add_logo', function($label, $image_url, $method_id, $org_label) { return $label; }, 10, 4);
+```
