@@ -392,6 +392,8 @@ class Itella_Shipping
     $this->loader->add_action('woocommerce_cart_totals_before_shipping', $plugin_public, 'itella_checkout_hidden_fields');
 
     $this->loader->add_filter('woocommerce_package_rates', $plugin_public, 'show_itella_shipping_methods', 10, 1);
+    $this->loader->add_filter('woocommerce_cart_shipping_method_full_label', $plugin_public, 'change_method_label', 10, 2);
+    $this->loader->add_filter('itella_checkout_method_label_add_logo', $plugin_public, 'add_logo_to_method', 1, 4);
   }
 
   private function define_manifest_hooks()

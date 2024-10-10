@@ -316,4 +316,27 @@ class Itella_Shipping_Public
     echo '<input type="hidden" id="itella_shipping_country" value="' . $ship_country . '">';
   }
 
+  /**
+   * Show logo
+   */
+  public function change_method_label($label, $method)
+  {
+    if ( $method->method_id != 'itella-shipping' ) {
+      return $label;
+    }
+    
+    $show_logo = (isset($this->itella_shipping->settings['show_checkout_logo']) && $this->itella_shipping->settings['show_checkout_logo'] == 'yes') ? true : false;
+    if ( $show_logo ) {
+      $label = apply_filters('itella_checkout_method_label_add_logo', $label, $this->assets->img . 'logo.png', $method->id, $label);
+    }
+    
+    return $label;
+  }
+
+  public function add_logo_to_method($label, $image_url, $method_id, $org_label)
+  {
+    $image = '<img class="itella-logo" src="' . $image_url . '" alt="Itella"/>';
+
+    return $image . $label;
+  }
 }
