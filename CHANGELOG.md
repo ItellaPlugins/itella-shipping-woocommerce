@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.4.6] - 2024-10-16
 ### Improved
 - added the ability to display the logo next to the Itella shipping method label on the Cart/Checkout page
 
