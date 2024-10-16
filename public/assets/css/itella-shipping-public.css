@@ -7,3 +7,8 @@
     font-size: 80%;
     color: #999;
 }
+
+img.itella-logo {
+    max-height: 30px;
+    vertical-align: middle;
+}
