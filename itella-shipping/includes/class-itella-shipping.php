@@ -292,6 +292,12 @@ class Itella_Shipping
     require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-itella-shipping-public.php';
 
     /**
+     * The class is responsible for adding elements in public blocks
+     */
+    require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-itella-wc-blocks.php';
+    require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-itella-wc-blocks-integration.php';
+
+    /**
      * Load Itella API
      */
     require_once plugin_dir_path(dirname(__FILE__)) . 'libs/itella-api/vendor/autoload.php';
@@ -381,6 +387,7 @@ class Itella_Shipping
   private function define_public_hooks()
   {
     $plugin_public = new Itella_Shipping_Public($this->get_plugin_data());
+    $plugin_blocks = new Itella_Wc_blocks($this->get_plugin_data());
 
     $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
     $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
@@ -390,6 +397,7 @@ class Itella_Shipping
     //$this->loader->add_action('woocommerce_order_status_completed', $plugin_public, 'show_pp');
     $this->loader->add_action('woocommerce_checkout_before_order_review', $plugin_public, 'itella_checkout_hidden_fields');
     $this->loader->add_action('woocommerce_cart_totals_before_shipping', $plugin_public, 'itella_checkout_hidden_fields');
+    $this->loader->add_action('woocommerce_blocks_loaded', $plugin_blocks, 'init');
 
     $this->loader->add_filter('woocommerce_package_rates', $plugin_public, 'show_itella_shipping_methods', 10, 1);
     $this->loader->add_filter('woocommerce_cart_shipping_method_full_label', $plugin_public, 'change_method_label', 10, 2);
@@ -532,6 +540,10 @@ class Itella_Shipping
   {
     if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
       \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', WP_PLUGIN_DIR . '/' . $this->plugin_basename, true );
+    }
+
+    if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+      \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', WP_PLUGIN_DIR . '/' . $this->plugin_basename, true );
     }
   }
 }
