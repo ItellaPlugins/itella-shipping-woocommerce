@@ -9,8 +9,8 @@
 *.vi
 *~
 *.sass-cache
-/var/*/*.pdf
-/locations/*.json
+itella-shipping/var/*/*.pdf
+itella-shipping/locations/*.json
 
 # OS or Editor folders
 .DS_Store
