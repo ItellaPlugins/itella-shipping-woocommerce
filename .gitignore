@@ -9,8 +9,8 @@
 *.vi
 *~
 *.sass-cache
-itella-shipping/var/*/*.pdf
-itella-shipping/locations/*.json
+/itella-shipping/var/*/*.pdf
+/itella-shipping/locations/*.json
 
 # OS or Editor folders
 .DS_Store
@@ -23,6 +23,8 @@ Thumbs.db
 nbproject
 *.sublime-project
 *.sublime-workspace
+/blocks-builder/node_modules/
+/blocks-builder/package-lock.json
 
 # Dreamweaver added files
 _notes
