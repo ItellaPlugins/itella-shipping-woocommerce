@@ -11,6 +11,7 @@
 *.sass-cache
 /itella-shipping/var/*/*.pdf
 /itella-shipping/locations/*.json
+/itella-shipping/libs/itella-api/.gitignore
 
 # OS or Editor folders
 .DS_Store
