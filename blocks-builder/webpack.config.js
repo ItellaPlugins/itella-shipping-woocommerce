@@ -14,6 +14,8 @@ module.exports = {
         index: path.resolve(process.cwd(), 'src', 'index.js'),
         'pickup-point-selection/checkout/index': path.resolve(process.cwd(), 'src', 'pickup-point-selection', 'checkout', 'index.js'),
         'pickup-point-selection/checkout/front': path.resolve(process.cwd(), 'src', 'pickup-point-selection', 'checkout', 'front-index.js'),
+        'pickup-point-selection/cart/index': path.resolve(process.cwd(), 'src', 'pickup-point-selection', 'cart', 'index.js'),
+        'pickup-point-selection/cart/front': path.resolve(process.cwd(), 'src', 'pickup-point-selection', 'cart', 'front-index.js'),
     },
     output: {
         path: path.resolve(process.cwd(), '../itella-shipping/public/assets/blocks'),
