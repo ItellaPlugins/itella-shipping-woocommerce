@@ -1,7 +1,7 @@
 import { useEffect, useState } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
 
-import { txt } from '../global/text';
+import { getTxt } from '../global/text';
 import { getActiveShippingRates } from '../global/wc';
 import { isItellaMethod } from '../global/params';
 
@@ -59,7 +59,7 @@ export const Block = ({ className }) => {
 
     return (
         <div className={'wc-block-components-totals-wrapper'}>
-            <span className={'wc-block-components-totals-item'}>{txt.cart_pickup_info}</span>
+            <span className={'wc-block-components-totals-item'}>{getTxt('cart_pickup_info')}</span>
         </div>
     );
 };

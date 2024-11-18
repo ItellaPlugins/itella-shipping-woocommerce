@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from '@wordpress/element';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { SelectControl } from '@wordpress/components';
 
-import { txt } from '../global/text';
+import { getTxt } from '../global/text';
 import { itellaParams, isItellaMethod, getItellaStaticData } from '../global/params';
 import { getActiveShippingRates } from '../global/wc';
 import { compareObjects, useDebounce } from '../global/utils';
@@ -118,7 +118,7 @@ export const Block = ({ checkoutExtensionData, extension }) => {
 
         let groupedPickupOptions = {};
         groupedPickupOptions["-"] = [{
-            label: txt.pickup_select_field_default,
+            label: getTxt('pickup_select_field_default'),
             value: ''
         }];
         for ( let city in groupedPickupList ) {
@@ -185,7 +185,7 @@ export const Block = ({ checkoutExtensionData, extension }) => {
         if ( selectedPickupPoint === "" ) {
             setValidationErrors({
                 [pickupValidationErrorId]: {
-                    message: txt.pickup_error,
+                    message: getTxt('pickup_error'),
                     hidden: false
                 }
             });
@@ -206,8 +206,8 @@ export const Block = ({ checkoutExtensionData, extension }) => {
         <div className="itella-shipping-block">
             <SelectControl
                 id="itella-pickup-points-list"
-                label={txt.pickup_block_title}
-                //help={txt.checkout_pickup_info}
+                label={getTxt('pickup_block_title')}
+                //help={getTxt('checkout_pickup_info')}
                 value={selectedPickupPoint}
                 onChange={(value) => setSelectedPickupPoint(value)}
                 ref={pickupSelectRef}

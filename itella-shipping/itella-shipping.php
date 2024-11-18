@@ -13,7 +13,7 @@
  * @package           Itella_Shipping
  *
  * @wordpress-plugin
- * Plugin Name:       Smartpost Itella Shipping - Checkout blocks
+ * Plugin Name:       Smartpost Itella Shipping
  * Plugin URI:
  * Description:       Smartpost Itella shipping plugin for Woocommerce
  * Version:           1.4.6
