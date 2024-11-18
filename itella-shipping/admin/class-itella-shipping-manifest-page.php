@@ -531,26 +531,28 @@ class Itella_Manifest
                                     );
                                     echo '<strong>' . __('Smartpost Parcel locker', 'itella-shipping') . ':</strong>';
                                     if ( isset($chosen_pickup_point->address) ) {
-                                      echo '<br>' . __('City', 'itella-shipping') . ': ';
+                                      echo '<br><span class="param-title">' . __('City', 'itella-shipping') . ':</span> ';
                                       echo '<em>' . $chosen_pickup_point->address->municipality . '</em>';
-                                      echo '<br>' . __('Public Name', 'itella-shipping') . ': ';
+                                      echo '<br><span class="param-title">' . __('Public Name', 'itella-shipping') . ':</span> ';
                                       echo '<em>' . $chosen_pickup_point->publicName . '</em>';
-                                      echo '<br>' . __('Address', 'itella-shipping') . ': ';
+                                      echo '<br><span class="param-title">' . __('Address', 'itella-shipping') . ':</span> ';
                                       echo '<em>' . $chosen_pickup_point->address->address . '</em>';
-                                      echo '<br>' . __('Postal Code', 'itella-shipping') . ': ';
+                                      echo '<br><span class="param-title">' . __('Postal Code', 'itella-shipping') . ':</span> ';
                                       echo '<em>' . $chosen_pickup_point->address->postalCode . '</em>';
+                                      echo '<br><span class="param-title">' . __('Country', 'itella-shipping') . ':</span> ';
+                                      echo '<em>' . $wc->get_country_name($order->get_shipping_country()) . '</em>';
                                     } else {
                                       echo '<br>' . '—';
                                     }
                                   }
                                   if ($shipping_parameters['itella_shipping_method'] === 'itella_c') {
                                     echo '<strong>' . __('Smartpost Courier', 'itella-shipping') . ':</strong>';
-                                    echo '<br>' . __('Packet Count', 'itella-shipping') . ': ';
+                                    echo '<br><span class="param-title">' . __('Packet Count', 'itella-shipping') . ':</span> ';
                                     echo '<em>' . $shipping_parameters['packet_count'] . '</em>';
-                                    echo '<br>' . __('Weight', 'itella-shipping') . ': ';
+                                    echo '<br><span class="param-title">' . __('Weight', 'itella-shipping') . ':</span> ';
                                     echo '<em>' . $shipping_parameters['weight'] . '</em>';
                                     if ($shipping_parameters['extra_services'] || $shipping_parameters['multi_parcel']) {
-                                      echo '<br>' . __('Extra services', 'itella-shipping') . ': ';
+                                      echo '<br><span class="param-title">' . __('Extra services', 'itella-shipping') . ':</span> ';
                                       if ($shipping_parameters['multi_parcel']) {
                                         echo '<br><em> - ' . $shipping_parameters['multi_parcel'] . '</em>';
                                       }
@@ -559,10 +561,10 @@ class Itella_Manifest
                                       }
                                     }
                                   }
-                                  echo '<br>' . __('COD', 'itella-shipping') . ': ';
+                                  echo '<br><span class="param-title">' . __('COD', 'itella-shipping') . ':</span> ';
                                   if ($shipping_parameters['is_cod']) {
                                     echo '<em>' . __('Yes', 'woocommerce') . '</em>';
-                                    echo '<br>' . __('COD amount', 'itella-shipping') . ': ';
+                                    echo '<br><span class="param-title">' . __('COD amount', 'itella-shipping') . ':</span> ';
                                     echo '<em>' . $shipping_parameters['cod_amount'] . '</em>';
                                   } else {
                                     echo '<em>' . __('No', 'woocommerce') . '</em>';

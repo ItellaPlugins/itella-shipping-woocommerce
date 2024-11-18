@@ -134,6 +134,7 @@ class Itella_Shipping
       'version' => $this->get_version(),
       'url' => $this->get_plugin_url(),
       'path' => $this->get_plugin_path(),
+      'methods_keys' => $this->get_available_methods_keys(),
       'methods' => $this->get_available_methods(),
       'countries' => $this->get_available_methods('all'),
       'countries_grouped' => $this->get_available_methods(true),
@@ -154,6 +155,19 @@ class Itella_Shipping
         return $method_key;
         break;
     }
+  }
+
+  public function get_available_methods_keys()
+  {
+    $available_methods = $this->get_available_methods();
+    $methods_keys = array();
+    foreach ( $available_methods as $country => $country_methods ) {
+      foreach ( $country_methods as $method_key => $method_title ) {
+        $methods_keys[$method_key] = 'itella_' . $this->get_method_short_key($method_key);
+      }
+    }
+
+    return $methods_keys;
   }
 
   /**

@@ -4,12 +4,12 @@ export const getLocations = async ( country ) => {
     try {
         const pluginData = getItellaStaticData();
 
-        const headResponse = await fetch(`${pluginData.locations_url}/locations${country}.json`, { method: 'HEAD' });
+        const headResponse = await fetch(`${pluginData.locations_url}locations${country}.json`, { method: 'HEAD' });
         if ( ! headResponse.ok ) {
             throw new Error(`File not found: ${headResponse.status}`);
         }
 
-        const response = await fetch(`${pluginData.locations_url}/locations${country}.json`);
+        const response = await fetch(`${pluginData.locations_url}locations${country}.json`);
         if ( ! response.ok ) {
             throw new Error(`Error: ${response.status}`);
         }

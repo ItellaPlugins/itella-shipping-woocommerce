@@ -288,6 +288,10 @@
   width: 48px !important;
 }
 
+.wp-list-table td .param-title {
+  color: #aaa;
+}
+
 .itella-filter input:not([type="checkbox"]) {
   height: 28px;
   border-radius: 3px;

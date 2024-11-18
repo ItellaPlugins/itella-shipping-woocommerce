@@ -5,25 +5,34 @@ class Itella_Wc_blocks
     /**
      * This plugin information.
      *
-     * @since    1.x.x
+     * @since    1.5.0
      * @access   private
      * @var      object $plugin
      */
     private $plugin;
 
     /**
+     * This plugin Itella_Shipping_Wc_Itella class.
+     *
+     * @since    1.5.0
+     * @access   private
+     * @var      object $wc
+     */
+    private $wc;
+
+    /**
      * Initialize the class and set its properties.
      *
      * @param object $plugin
      * @param array $available_countries
-     * @since 1.x.x
+     * @since 1.5.0
      *
      */
     public function __construct($plugin)
     {
         $this->plugin = $plugin;
 
-        //$this->wc = new Itella_Shipping_Wc_Itella();
+        $this->wc = new Itella_Shipping_Wc_Itella();
     }
 
     public function init()
@@ -44,7 +53,7 @@ class Itella_Wc_blocks
                 'schema_type' => ARRAY_A,
             ));
         }
-        //add_action('woocommerce_store_api_checkout_update_order_from_request', array($this, 'update_block_order_meta'), 10, 2);
+        add_action('woocommerce_store_api_checkout_update_order_from_request', array($this, 'save_block_order_meta'), 10, 2);
         
         add_filter('__experimental_woocommerce_blocks_add_data_attributes_to_namespace', function ( $allowed_namespaces ) {
             $allowed_namespaces[] = $this->plugin->name;
@@ -54,11 +63,50 @@ class Itella_Wc_blocks
 
     public function itella_data_callback()
     {
-        return array();
+        return array(
+            'selected_pickup_id' => '',
+            'selected_rate_id' => '',
+        );
     }
 
     public function itella_schema_callback()
     {
-        return array();
+        return array(
+            'selected_pickup_id' => array(
+                'description' => __('Selected pickup point', 'itella-shipping'),
+                'type'        => array('string', 'null'),
+                'readonly'    => true,
+            ),
+            'selected_rate_id' => array(
+                'description' => __('Selected method', 'itella-shipping'),
+                'type'        => array('string', 'null'),
+                'readonly'    => true,
+            ),
+        );
+    }
+
+    public function save_block_order_meta($order, $request)
+    {
+        $data = $request['extensions']['itella-shipping'] ?? array();
+
+        $selected_pickup_point_id = wc_clean($data['selected_pickup_id'] ?? '');
+        $selected_rate_id = wc_clean($data['selected_rate_id'] ?? '');
+
+        if ( ! empty($selected_rate_id) ) {
+            $this->wc->update_order_meta($order->get_id(), 'itella_method', esc_attr($selected_rate_id));
+        }
+        
+        if ( empty($selected_pickup_point_id) ) {
+            return;
+        }
+
+
+        $country = $order->get_shipping_country();
+        $selected_pickup_point = Itella_Shipping_Method::getInstance()->get_chosen_pickup_point($country, (int)$selected_pickup_point_id);
+        if ( ! $selected_pickup_point ) {
+            return;
+        }
+        $this->wc->update_order_meta($order->get_id(), 'itella_pp_id', esc_attr($selected_pickup_point->id));
+        $this->wc->update_order_meta($order->get_id(), 'itella_pupCode', esc_attr($selected_pickup_point->pupCode));
     }
 }

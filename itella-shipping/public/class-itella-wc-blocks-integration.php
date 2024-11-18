@@ -3,14 +3,22 @@ use \Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
 
 class Itella_Wc_blocks_Integration implements IntegrationInterface
 {
-    private $version = '0.0.1';
+    private $version;
     private $plugin;
     private $prefix;
+    private $assets;
 
     public function __construct( $plugin )
     {
         $this->plugin = $plugin;
+        $this->version = $this->plugin->version;
         $this->prefix = $this->plugin->name . '-';
+        $this->assets = (object) array(
+            'css' => $this->plugin->url . 'public/assets/css/',
+            'js' => $this->plugin->url . 'public/assets/js/',
+            'img' => $this->plugin->url . 'public/assets/images/',
+        );
+        $this->itella_shipping = new Itella_Shipping_Method();
     }
 
     /**
@@ -28,8 +36,10 @@ class Itella_Wc_blocks_Integration implements IntegrationInterface
      */
     public function initialize()
     {
+        $this->register_external_scripts();
         $this->register_editor_scripts();
         $this->register_frontend_scripts();
+        $this->register_additional_actions();
     }
 
     /**
@@ -40,8 +50,8 @@ class Itella_Wc_blocks_Integration implements IntegrationInterface
     public function get_script_handles()
     {
         return array(
-            //$this->prefix . 'pickup-point-selection-front-checkout',
-            //$this->prefix . 'pickup-point-selection-front-cart',
+            $this->prefix . 'pickup-point-selection-front-checkout',
+            $this->prefix . 'pickup-point-selection-front-cart',
         );
     }
 
@@ -54,7 +64,7 @@ class Itella_Wc_blocks_Integration implements IntegrationInterface
     {
         return array(
             $this->prefix . 'pickup-point-selection-edit-checkout',
-            //$this->prefix . 'pickup-point-selection-edit-cart'
+            $this->prefix . 'pickup-point-selection-edit-cart'
         );
     }
 
@@ -65,8 +75,17 @@ class Itella_Wc_blocks_Integration implements IntegrationInterface
      */
     public function get_script_data()
     {
+        $settings = Itella_Shipping_Method::getSettings();
+
         return array(
             'ajax_url' => admin_url('admin-ajax.php'),
+            'images_url' => $this->assets->img,
+            'locations_url' => $this->plugin->url . 'locations/',
+            'locations_filter' => array(
+                'exclude_outdoors' => $settings['disable_outdoors_pickup_points'] ?? 'no'
+            ),
+            'methods' => $this->plugin->methods_keys,
+            'selection_style' => $settings['checkout_show_style'] ?? 'map',
             'txt' => array(),
         );
     }
@@ -110,15 +129,15 @@ class Itella_Wc_blocks_Integration implements IntegrationInterface
     private function register_frontend_scripts()
     {
         $scripts = array(
-            /*'pickup-point-selection-front-checkout' => array(
+            'pickup-point-selection-front-checkout' => array(
                 'js' => 'pickup-point-selection/checkout/front.js',
                 'asset' => 'pickup-point-selection/checkout/front.asset.php',
                 'css' => 'pickup-point-selection/checkout/front.css'
-            ),*/
-            /*'pickup-point-selection-front-cart' => array(
+            ),
+            'pickup-point-selection-front-cart' => array(
                 'js' => 'pickup-point-selection/cart/front.js',
                 'asset' => 'pickup-point-selection/cart/front.asset.php',
-            ),*/
+            ),
         );
 
         $this->register_scripts($scripts);
@@ -134,10 +153,10 @@ class Itella_Wc_blocks_Integration implements IntegrationInterface
                 'js' => 'pickup-point-selection/checkout/index.js',
                 'asset' => 'pickup-point-selection/checkout/index.asset.php',
             ),
-            /*'pickup-point-selection-edit-cart' => array(
+            'pickup-point-selection-edit-cart' => array(
                 'js' => 'pickup-point-selection/cart/index.js',
                 'asset' => 'pickup-point-selection/cart/index.asset.php',
-            ),*/
+            ),
         );
 
         $this->register_scripts($scripts);
@@ -189,5 +208,51 @@ class Itella_Wc_blocks_Integration implements IntegrationInterface
                 );
             }
         }
+    }
+
+    /**
+     * Register external scripts
+     */
+    private function register_external_scripts()
+    {
+        $scripts = array(
+            'itella-library-mapping' => array(
+                'js' => 'itella-mapping.js',
+                'css' => 'itella-mapping.css'
+            ),
+            'itella-library-leaflet' => array(
+                'js' => 'leaflet.min.js',
+                'external_css' => 'https://unpkg.com/leaflet@1.5.1/dist/leaflet.css'
+            ),
+            'itella-library-markercluster' => array(
+                'external_css' => 'https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css'
+            ),
+            'itella-library-markercluster-default' => array(
+                'external_css' => 'https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css'
+            ),
+        );
+
+        foreach ( $scripts as $script_id => $script_files ) {
+            if ( ! empty($script_files['js']) ) {
+                wp_enqueue_script($script_id, $this->assets->js . $script_files['js'], array('jquery'), null, true);
+            }
+            if ( ! empty($script_files['css']) ) {
+                wp_enqueue_style($script_id, $this->assets->css . $script_files['css']);
+            }
+            if ( ! empty($script_files['external_js']) ) {
+                wp_enqueue_script($script_id . '-external', $script_files['external_js'], array(), null, true);
+            }
+            if ( ! empty($script_files['external_css']) ) {
+                wp_enqueue_style($script_id . '-external', $script_files['external_css']);
+            }
+        }
+    }
+
+    /**
+     * Actions used by blocks
+     */
+    private function register_additional_actions()
+    {
+        // Empty
     }
 }

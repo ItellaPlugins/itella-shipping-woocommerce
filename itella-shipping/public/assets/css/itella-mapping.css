@@ -48,6 +48,10 @@
   color: var(--itella-color-main);
 }
 
+.itella-shipping-block .itella-shipping-container {
+  align-items: flex-start;
+}
+
 .itella-mapping-modal {
   position: fixed;
   top: 0;

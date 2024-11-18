@@ -106,6 +106,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   private $grouped_countries;
 
+  private static $instance = null;
+
   /**
    * Initialize the class and set its properties.
    *
@@ -134,6 +136,17 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $this->html = new Itella_Shipping_Admin_Display($this->id);
 
     $this->init();
+  }
+
+  public static function getInstance() {
+    if ( self::$instance === null ) {
+      self::$instance = new self();
+    }
+    return self::$instance;
+  }
+
+  public static function getSettings() {
+    return self::getInstance()->settings;
   }
 
   public function plugin_links($links)

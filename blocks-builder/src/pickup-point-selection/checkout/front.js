@@ -3,10 +3,11 @@ import { useDispatch, useSelect } from '@wordpress/data';
 import { SelectControl } from '@wordpress/components';
 
 import { txt } from '../global/text';
-import { itellaParams, isItellaMethod } from '../global/params';
+import { itellaParams, isItellaMethod, getItellaStaticData } from '../global/params';
 import { getActiveShippingRates } from '../global/wc';
 import { compareObjects, useDebounce } from '../global/utils';
 import { getLocations, filterLocations, getLocationInfo, getGroupedLocationsList } from '../global/locations';
+import { itellaCustomSelection } from './front-custom-selection';
 
 export const Block = ({ checkoutExtensionData, extension }) => {
     const pickupValidationErrorId = 'itella_pickup_point';
@@ -22,10 +23,12 @@ export const Block = ({ checkoutExtensionData, extension }) => {
     );
     const [ selectedRateId, setSelectedRateId ] = useState('');
     const [ pickupList, setPickupList ] = useState([]);
-    const [ pickupOptions, setPickupOptions ] = useState([]);
+    const [ pickupOptions, setPickupOptions ] = useState({});
     const [ selectedRateHavePickups, setSelectedRateHavePickups ] = useState(false);
     const [ selectedPickupPoint, setSelectedPickupPoint ] = useState('');
-    //const pickupSelectRef = useRef(null); //Not using
+    const pickupSelectRef = useRef(null);
+    const customSelectContainerRef = useRef(null);
+    const itellaSelection = itellaCustomSelection();
 
     /* Get data from WC */
     const { setValidationErrors, clearValidationError } = useDispatch(
@@ -113,7 +116,7 @@ export const Block = ({ checkoutExtensionData, extension }) => {
     useEffect(() => {
         let groupedPickupList = getGroupedLocationsList(pickupList, destination.country);
 
-        let groupedPickupOptions = [];
+        let groupedPickupOptions = {};
         groupedPickupOptions["-"] = [{
             label: txt.pickup_select_field_default,
             value: ''
@@ -133,6 +136,28 @@ export const Block = ({ checkoutExtensionData, extension }) => {
         setPickupOptions(groupedPickupOptions);
     }, [
         pickupList
+    ]);
+
+    /* Load custom selection */
+    useEffect(() => {
+        if ( ! Object.values(pickupOptions).length || ! customSelectContainerRef.current ) {
+            return;
+        }
+
+        customSelectContainerRef.current.innerHTML = '';
+
+        let staticData = getItellaStaticData();
+
+        itellaSelection.load_data({
+            org_field: pickupSelectRef.current,
+            container: customSelectContainerRef.current,
+            selection_style: staticData.selection_style,
+            images_url: staticData.images_url,
+            country: destination.country,
+            postcode: destination.postcode
+        }).init(pickupList);
+    }, [
+        pickupOptions
     ]);
 
     /* Save selected pickup point and show error message if not selected */
@@ -171,20 +196,21 @@ export const Block = ({ checkoutExtensionData, extension }) => {
         selectedPickupPoint
     ]);
 
+
     /* Render this block */
     if ( ! selectedRateHavePickups ) {
         return <></>
     }
 
     return (
-        <div className="itella-shipping-container">
+        <div className="itella-shipping-block">
             <SelectControl
                 id="itella-pickup-points-list"
                 label={txt.pickup_block_title}
                 //help={txt.checkout_pickup_info}
                 value={selectedPickupPoint}
                 onChange={(value) => setSelectedPickupPoint(value)}
-                //ref={pickupSelectRef}
+                ref={pickupSelectRef}
             >
                 {Object.keys(pickupOptions).map((city) => 
                     city === "-" ? (
@@ -201,6 +227,7 @@ export const Block = ({ checkoutExtensionData, extension }) => {
                     </optgroup>
                 ))}
             </SelectControl>
+            <div id="itella-pickup-points-selection" ref={customSelectContainerRef}></div>
             {(validationError?.hidden || selectedPickupPoint !== "") ? null : (
                 <div className="wc-block-components-validation-error">
                     <span>{validationError?.message}</span>
