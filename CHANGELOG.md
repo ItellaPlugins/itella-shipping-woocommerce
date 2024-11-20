@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.5.0] - 2024-11-20
+### Improved
+- added to make the plugin work on a block-based Checkout page
+
+### Changed
+- plugin files moved to separate folder in plugin Github repository
+- created Changelog file is for plugin releases
+
 ## [1.4.6] - 2024-10-16
 ### Improved
 - added the ability to display the logo next to the Itella shipping method label on the Cart/Checkout page
