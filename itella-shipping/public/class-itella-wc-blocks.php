@@ -23,9 +23,9 @@ class Itella_Wc_blocks
     /**
      * Initialize the class and set its properties.
      *
+     * @since 1.5.0
      * @param object $plugin
      * @param array $available_countries
-     * @since 1.5.0
      *
      */
     public function __construct($plugin)
@@ -35,6 +35,11 @@ class Itella_Wc_blocks
         $this->wc = new Itella_Shipping_Wc_Itella();
     }
 
+    /**
+     * Initializes the integration of the plugin with WooCommerce Blocks
+     * 
+     * @since 1.5.0
+     */
     public function init()
     {
         add_action('woocommerce_blocks_checkout_block_registration', function( $integration_registry ) {
@@ -61,6 +66,11 @@ class Itella_Wc_blocks
         }, 10, 1);
     }
 
+    /**
+     * Registered the data elements, which will be transmitted with requests
+     * 
+     * @since 1.5.0
+     */
     public function itella_data_callback()
     {
         return array(
@@ -69,6 +79,11 @@ class Itella_Wc_blocks
         );
     }
 
+    /**
+     * Description of registered data elements
+     * 
+     * @since 1.5.0
+     */
     public function itella_schema_callback()
     {
         return array(
@@ -85,6 +100,13 @@ class Itella_Wc_blocks
         );
     }
 
+    /**
+     * When creating an order, get Itella meta data and save it to the Order
+     * 
+     * @since 1.5.0
+     * @param WC_Order $order - Created Order
+     * @param array $request - Data from Checkout page
+     */
     public function save_block_order_meta($order, $request)
     {
         $data = $request['extensions']['itella-shipping'] ?? array();
