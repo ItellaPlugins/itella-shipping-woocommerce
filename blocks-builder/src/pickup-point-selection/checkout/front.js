@@ -166,7 +166,17 @@ export const Block = ({ checkoutExtensionData, extension }) => {
             clearValidationError(pickupValidationErrorId);
         }
 
-        if ( selectedRateId.trim() == "" || ! isItellaMethod(selectedRateId, true) ) {
+        if ( selectedRateId.trim() == "" || ! isItellaMethod(selectedRateId) ) {
+            return;
+        }
+
+        setExtensionData(
+            itellaParams.id,
+            'selected_rate_id',
+            selectedRateId
+        );
+
+        if ( ! isItellaMethod(selectedRateId, true) ) {
             return;
         }
 
@@ -174,12 +184,6 @@ export const Block = ({ checkoutExtensionData, extension }) => {
             itellaParams.id,
             'selected_pickup_id',
             selectedPickupPoint
-        );
-
-        setExtensionData(
-            itellaParams.id,
-            'selected_rate_id',
-            selectedRateId
         );
 
         if ( selectedPickupPoint === "" ) {
