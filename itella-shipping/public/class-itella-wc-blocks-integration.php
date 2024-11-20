@@ -3,11 +3,48 @@ use \Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
 
 class Itella_Wc_blocks_Integration implements IntegrationInterface
 {
+    /**
+     * The version of the plugin's Javascript files
+     *
+     * @since    1.5.0
+     * @access   private
+     * @var      string $version
+     */
     private $version;
+
+    /**
+     * This plugin information
+     *
+     * @since    1.5.0
+     * @access   private
+     * @var      object $plugin
+     */
     private $plugin;
+
+    /**
+     * Prefix is used to identify scripts
+     *
+     * @since    1.5.0
+     * @access   private
+     * @var      string $prefix
+     */
     private $prefix;
+
+    /**
+     * Assets folder links for the plugin
+     *
+     * @since    1.5.0
+     * @access   private
+     * @var      object $assets
+     */
     private $assets;
 
+    /**
+     * Initialize the class and set its properties.
+     *
+     * @since 1.5.0
+     * @param object $plugin
+     */
     public function __construct( $plugin )
     {
         $this->plugin = $plugin;
@@ -22,8 +59,9 @@ class Itella_Wc_blocks_Integration implements IntegrationInterface
     }
 
     /**
-     * The name of the integration.
+     * The name of the integration
      *
+     * @since 1.5.0
      * @return string
      */
     public function get_name()
@@ -32,7 +70,9 @@ class Itella_Wc_blocks_Integration implements IntegrationInterface
     }
 
     /**
-     * When called invokes any initialization/setup for the integration.
+     * When called invokes any initialization/setup for the integration
+     * 
+     * @since 1.5.0
      */
     public function initialize()
     {
@@ -45,6 +85,7 @@ class Itella_Wc_blocks_Integration implements IntegrationInterface
     /**
      * Array of script handles to enqueue in the frontend context
      * 
+     * @since 1.5.0
      * @return array
      */
     public function get_script_handles()
@@ -58,7 +99,8 @@ class Itella_Wc_blocks_Integration implements IntegrationInterface
     /**
      * Returns an array of script handles to enqueue in the editor context.
      *
-     * @return string[]
+     * @since 1.5.0
+     * @return array
      */
     public function get_editor_script_handles()
     {
@@ -71,6 +113,7 @@ class Itella_Wc_blocks_Integration implements IntegrationInterface
     /**
      * An array of key, value pairs of data made available to the block on the client side.
      *
+     * @since 1.5.0
      * @return array
      */
     public function get_script_data()
@@ -116,6 +159,7 @@ class Itella_Wc_blocks_Integration implements IntegrationInterface
     /**
      * Get the file modified time as a cache buster if we're in dev mode.
      *
+     * @since 1.5.0
      * @param string $file Local path to the file.
      * @return string The cache buster value to use for the given file.
      */
@@ -131,6 +175,7 @@ class Itella_Wc_blocks_Integration implements IntegrationInterface
     /**
      * Get URL of the scripts folder
      * 
+     * @since 1.5.0
      * @return string
      */
     private function get_scripts_url() {
@@ -140,6 +185,7 @@ class Itella_Wc_blocks_Integration implements IntegrationInterface
     /**
      * Get path to the scripts folder
      * 
+     * @since 1.5.0
      * @return string
      */
     private function get_scripts_dir() {
@@ -148,6 +194,8 @@ class Itella_Wc_blocks_Integration implements IntegrationInterface
 
     /**
      * List of frontend scripts
+     * 
+     * @since 1.5.0
      */
     private function register_frontend_scripts()
     {
@@ -168,6 +216,8 @@ class Itella_Wc_blocks_Integration implements IntegrationInterface
 
     /**
      * List of admin area page edit scripts
+     * 
+     * @since 1.5.0
      */
     private function register_editor_scripts()
     {
@@ -188,6 +238,7 @@ class Itella_Wc_blocks_Integration implements IntegrationInterface
     /**
      * Register received scripts
      * 
+     * @since 1.5.0
      * @param array $scripts_list - List of scripts
      */
     private function register_scripts( $scripts_list )
@@ -235,6 +286,8 @@ class Itella_Wc_blocks_Integration implements IntegrationInterface
 
     /**
      * Register external scripts
+     * 
+     * @since 1.5.0
      */
     private function register_external_scripts()
     {
@@ -273,6 +326,8 @@ class Itella_Wc_blocks_Integration implements IntegrationInterface
 
     /**
      * Actions used by blocks
+     * 
+     * @since 1.5.0
      */
     private function register_additional_actions()
     {
