@@ -12,6 +12,7 @@
 /itella-shipping/var/*/*.pdf
 /itella-shipping/locations/*.json
 /itella-shipping/libs/itella-api/.gitignore
+/itella-shipping.zip 
 
 # OS or Editor folders
 .DS_Store
