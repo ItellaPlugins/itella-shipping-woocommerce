@@ -1,0 +1,165 @@
+*** Smartpost Itella shipping Changelog ***
+
+2024-10-16 - version 1.4.6
+* Added - The ability to display the logo next to the Itella shipping method label on the Cart/Checkout page
+
+2024-09-16 - version 1.4.5
+* Changed - "Smartpost shipments" page SQL query to reduce execution time
+* Added - Descriptions of variables in classes that were not added
+* Added - Option to disable display of parcel lockers that have "Outdoors" parameter on Cart and Checkout pages
+* Fixed - Display of terminals by shipping country on Checkout page
+
+2024-03-18 - version 1.4.4.2
+* Fixed - Bug from last update in Checkout pickup selection
+* Fixed - Pickup saving in order edit page
+
+2024-02-20 - version 1.4.4.1
+* Fixed - Bug from last update in order preview
+
+2024-02-15 - version 1.4.4
+* Changed - Made it so that pupCode is used everywhere instead of the ID of the pick-up point
+* Changed - Unified Itella meta keys for Order meta data
+* Added - Created a separate class for working with WC Order Itella meta data
+* Fixed - The Itella plugin's front scripts would be loaded only on the Cart and Checkout pages
+
+2023-11-23 - version 1.4.3
+* Fixed - Error in "Smartpost shipments" page when parcel locker is not selected for the Order
+* Fixed - Constant updating of location files for countries without parcel lockers
+* Fixed - Courier invitation email address retrieval
+
+2023-10-10 - version 1.4.2
+* Removed - Old courier call element
+* Changed - Locations API URL
+* Added - Possibility to enable COD service for orders with the parcel locker shipping method on the order edit page
+* Fixed - Error when an item in an order is deleted
+
+2023-08-02 - version 1.4.1
+* Changed - The display of order statuses is unified with the display of Woocommerce statuses in tables
+* Added - Additional Smartpost meta data when creating an order if initial attempt fails
+* Added - Ability to manually set Smartpost shipping method when Smartpost data is missing in an order
+* Added - Option to hide shipping methods if cart weight or size is too large
+* Added - Use order billing address if the shipping address is empty
+* Added - Adapted for WooCommerce HPOS (prepared for WooCommerce 8)
+* Fixed - Added weight to courier shipments
+* Fixed - Messages when calling a courier
+* Fixed - Weight number format error
+* Fixed - Tracking code filter reset in the manifest page
+
+2022-12-19 - version 1.4.0
+* Updated - itella-api library to v2.3.7
+* Changed - Optimized order registration via AJAX
+* Changed - Moved WooCommerce submenu "Smartpost shipments" below "Orders"
+* Changed - "Pickup point" terminology to "Parcel locker"
+* Added - Order weight conversion to kilograms if other weight units are used
+* Added - "Smartpost shipments" page display for "Shop manager" user role
+* Added - Courier delivery to allmost all EU countries
+* Added - Custom name for the shipping method displayed in the cart
+* Fixed - Error message when label generation fails
+* Fixed - Settings page values after settings save
+
+2022-06-23 - version 1.3.8
+* Fixed - Error when a product in an order is deleted
+* Fixed - Error when all products in cart are virtual
+* Fixed - Removed shipping method display when cart weight is outside the "price by weight" interval
+
+2022-04-19 - version 1.3.7
+* Changed - Plugin file handling on frontend pages
+* Fixed - Order weight adding to shipment
+* Fixed - Parameters updating on order edit page
+* Fixed - Pickup points file getting
+
+2022-02-23 - version 1.3.6
+* Updated - itella-api library to v2.3.5
+* Added - Adapted for PHP 8.x
+* Fixed - Pickup point selection visibility issue in non-standard themes
+
+2021-10-29 - version 1.3.5
+* Added - Pickup point code saving in Order meta
+
+2021-09-30 - version 1.3.4
+* Updated - itella-api library to v2.3.4
+* Added - COD service support to Pickup Point delivery method
+
+2021-09-22 - version 1.3.3
+* Updated - itella-api library to v2.3.3
+* Added - The ability to add comments to labels
+* Fixed - Removed non-existing function action for bulk status change to complete
+* Fixed - Added POST field checks before saving values
+
+2021-07-13 - version 1.3.2
+* Changed - file_get_contents() PHP function to equivalent WordPress function
+* Added - The ability to set shipping method description
+* Fixed - Cart amount total calculation
+* Fixed - Minimum value for the price table first input field
+
+2021-06-29 - version 1.3.1
+* Added - The ability to set shipping price by cart amount
+* Added - Tracking code URL based on order country
+
+2021-05-13 - version 1.3.0
+* Changed - Customized map marker animation to avoid conflicts
+* Added - The option to specify courier email address
+* Added - Use of billing_country if shipping_country is missing
+* Added - Detailed error display when label generation fails
+* Fixed - Added hidden fields to cart page
+* Fixed - Removed "important" attribute from hidden class
+* Fixed - Notice message in shipping class function
+
+2021-02-19 - version 1.2.7
+* Changed - Country code input field to a select field
+* Fixed - Shipping methods display on cart/checkout pages
+
+2021-02-17 - version 1.2.6.1
+* Fixed - Shipping price calculation
+
+2021-01-22 - version 1.2.6
+* Updated - itella-api library to v2.3.1
+* Changed - Applied updates according to the new library version
+
+2021-01-20 - version 1.2.5
+* Updated - itella-api library to v2.3.0
+* Added - The option to set shipping price for a specific shipping class
+
+2021-01-12 - version 1.2.4
+* Changed - Renamed "Itella" to "Smartpost"
+* Changed - Updated all translations
+
+2020-12-23 - version 1.2.3
+* Added - "Settings" link for the Itella plugin in the plugins list
+* Added - Enhanced plugin description with more information
+* Fixed - JavaScript error on checkout page
+* Fixed - Display of shipping method settings based on checkbox selection
+
+2020-11-20 - version 1.2.2
+* Changed - Modified "Register shipment" button behavior via AJAX in "Itella shipments" admin page
+* Added - Bulk action for registering shipments
+* Added - Display of pickup point selection field when dropdown is used for shipping method selection
+* Added - Display of shipping price based on cart weight
+* Added - Latvian, Estonian, and Russian frontend translations
+* Fixed - Plugin deletion error
+
+2020-11-18 - version 1.2.1
+* Updated - itella-api library to v2.2.5
+* Fixed - Notice error in WooCommerce settings pages
+
+2020-10-30 - version 1.2.0
+* Updated - itella-mapping.js to v1.3.1
+* Added - Display of tracking number in order and emails
+* Added - Option to choose the appearance of pickup selection field on checkout page
+* Added - The ability to choose how many posts will be displayed per page in manifest generation page
+* Added - Option to generate a manifest for all orders in the current tab
+* Added - Finnish translation
+* Fixed - Scripts loading only in designated locations
+
+2020-10-08 - version 1.1.9
+* Changed - More robust price settings
+* Changed - Enhanced code quality in some parts
+* Fixed - Consistent "Enable" checkbox display
+* Fixed - Pickup point selection when using PayPal checkout
+* Fixed - Missing API libraries in release package
+
+2020-09-09 - version 1.1.8
+* Changed - String for order shipping details from "Carrier" to "Shipping method"
+
+2020-09-09 - version 1.1.7
+* Updated - itella-mapping.js to v1.2.3

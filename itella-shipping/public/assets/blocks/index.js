@@ -1,0 +1,1 @@
+(()=>{"use strict";(0,window.wp.plugins.registerPlugin)("itella-shipping",{render:()=>{},scope:"woocommerce-checkout"})})();
