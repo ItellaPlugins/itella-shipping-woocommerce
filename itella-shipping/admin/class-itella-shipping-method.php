@@ -2364,6 +2364,10 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       $postcode = $order->get_billing_postcode();
       $city = $order->get_billing_city();
     }
+    $phone = $order->get_shipping_phone();
+    if ( empty($phone) ) {
+      $phone = $order->get_billing_phone();
+    }
 
     $receiver = new Party(Party::ROLE_RECEIVER);
     $receiver
@@ -2372,7 +2376,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         ->setPostCode($postcode)
         ->setCity($city)
         ->setCountryCode(Itella_Manifest::order_getCountry($order))
-        ->setContactMobile($order->get_billing_phone())
+        ->setContactMobile($phone)
         ->setContactEmail($order->get_billing_email());
 
     return $receiver;
