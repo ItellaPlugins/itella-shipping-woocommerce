@@ -1,5 +1,9 @@
 # Changelog
 
+## [Unreleased]
+### Fixed
+- fixed that when registering a shipment, first take the shipping address phone number and if it is not available, then take the billing address phone number
+
 ## [1.5.0] - 2024-11-20
 ### Improved
 - added to make the plugin work on a block-based Checkout page
