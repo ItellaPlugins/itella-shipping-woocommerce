@@ -4,6 +4,9 @@
 ### Fixed
 - fixed that when registering a shipment, first take the shipping address phone number and if it is not available, then take the billing address phone number
 
+### Updated
+- itella-api library to v2.3.8
+
 ## [1.5.0] - 2024-11-20
 ### Improved
 - added to make the plugin work on a block-based Checkout page
