@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.3.8.1] - Fix last update bug
+### Fixed
+- fixed courier call bug after last update
+
 ## [2.3.8] - Use Locations API v3
 ### Removed
 - removed the Auth class as it is no longer used

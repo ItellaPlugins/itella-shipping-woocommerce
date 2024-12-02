@@ -7,7 +7,7 @@ class ItellaPickupsApi
 {
   private $api_url = 'https://itellapickups.com/api/v1/';
 
-  public function __construct($api_url)
+  public function __construct($api_url = false)
   {
     if ( ! empty($api_url) ) {
       $this->api_url = $api_url;
