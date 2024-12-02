@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.3.8.1] - Fix last update bug
+### Fixed
+- fixed courier call bug after last update
+
+## [2.3.8] - Use Locations API v3
+### Removed
+- removed the Auth class as it is no longer used
+
+### Changed
+- moved location API url from class Shipment to class PickupPoints
+- changed locations API url to v3
+
+### Added
+- added request error return
+- added support for Lithuanian phone number prefix "0"
+
 ## [2.3.7] - Logo & PDF lib
 ### Updated
 - updated logo used for manifest

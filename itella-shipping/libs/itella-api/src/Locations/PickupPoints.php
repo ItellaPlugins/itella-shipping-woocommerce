@@ -4,12 +4,15 @@ namespace Mijora\Itella\Locations;
 
 class PickupPoints
 {
-  private $api_url;
+  public $api_url = 'https://delivery.plugins.itella.com/api/locations';
   private $lang;
+  private $error_msg = '';
 
-  public function __construct($api_url, $lang = null)
+  public function __construct($api_url = false, $lang = null)
   {
-    $this->api_url = $api_url;
+    if ( ! empty($api_url) ) {
+      $this->api_url = $api_url;
+    }
     $this->lang = $lang;
   }
 
@@ -62,12 +65,23 @@ class PickupPoints
     $url = $this->api_url . ($query ? '?' . $query : '');
 
     $result = CurlRequest::doCurlRequest($url);
+    if (isset($result['error'])) {
+      $this->error_msg = $result['error'];
+      return false;
+    }
+
     $locations = CurlRequest::getLocations($result, $this->lang);
 
     if (isset($locations['error'])) {
+      $this->error_msg = $locations['error'];
       return false;
     }
 
     return $locations;
+  }
+
+  public function getErrorMsg()
+  {
+    return $this->error_msg;
   }
 }

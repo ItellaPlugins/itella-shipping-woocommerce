@@ -2,7 +2,7 @@
     "name": "mijora/itella-api",
     "description": "Itella API wrapper",
     "type": "library",
-    "version": "2.3.7",
+    "version": "2.3.8.1",
     "authors": [
         {
             "name": "Rimvydas",

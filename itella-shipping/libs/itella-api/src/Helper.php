@@ -58,9 +58,8 @@ class Helper
           $phone = '370' . $phone;
         }
 
-        $pos = strpos($phone, '86');
-        if ($pos === 0) {
-          $phone = substr_replace($phone, '3706', $pos, strlen('86'));
+        if (strpos($phone, '86') === 0 || strpos($phone, '06') === 0) {
+          $phone = '3706' . substr($phone, 2);
         }
         break;
       case 'LV':

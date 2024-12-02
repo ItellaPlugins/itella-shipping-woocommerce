@@ -354,7 +354,7 @@ When using Pickup Point option it is important to have correct list of pickup po
 ```php
 use Mijora\Itella\Locations\PickupPoints;
 
-$pickup = new PickupPoints('https://locationservice.posti.com/api/2/location');
+$pickup = new PickupPoints('https://delivery.plugins.itella.com/api/locations');
 // it is advised to download locations for each country separately
 // this will return filtered pickup points list as array
 $itella_loc = $pickup->getLocationsByCountry('LT');
