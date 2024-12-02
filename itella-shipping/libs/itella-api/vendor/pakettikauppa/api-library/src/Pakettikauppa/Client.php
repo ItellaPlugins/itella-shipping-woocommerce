@@ -47,6 +47,11 @@ class Client
      */
     private $access_token       = null;
 
+    /**
+     * @var string max of 14 chars
+     */
+    private $sender_system_name = null;
+
     public $http_response_code;
     public $http_error;
     public $http_response;
@@ -195,6 +200,10 @@ class Client
 
         $shipment_xml->{"ROUTING"}->{"Routing.Id"}          = $id;
 
+        if ($this->sender_system_name !== null) {
+            $shipment_xml->{"ROUTING"}->{"Routing.Client"} = $this->sender_system_name;
+        }
+
         if($this->use_posti_auth === true)
         {
             if(empty($this->access_token)) {
@@ -278,6 +287,9 @@ class Client
         $routing = $xml->addChild('ROUTING');
 
         $routing->addChild('Routing.Id', $id);
+        if ($this->sender_system_name !== null) {
+            $routing->{"Routing.Client"} = $this->sender_system_name;
+        }
 
         if($this->use_posti_auth === true) {
             if(empty($this->access_token)) {
@@ -595,7 +607,7 @@ class Client
           json_encode($headers),
           json_encode($post_data)
         ));
-        
+
         $ch = curl_init();
         curl_setopt_array($ch, $options);
         $response = curl_exec($ch);
@@ -655,6 +667,10 @@ class Client
 
         $response                   = curl_exec($ch);
 
+        $this->http_response_code   = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $this->http_error           = (curl_errno($ch)) ? curl_error($ch) : '';
+        $this->http_response        = $response;
+
         $this->log(sprintf("Response: %s\nData\n%s\n",
           $requestId,
           json_encode($response)
@@ -673,7 +689,23 @@ class Client
     return $this->logClosure;
   }
 
-  /**
+    /**
+     * @param string $sender_system_name
+     */
+    public function setSenderSystemName($sender_system_name)
+    {
+        $this->sender_system_name = $sender_system_name;
+    }
+
+    /**
+     * return string sender_system_name
+     */
+    public function getSenderSystemName()
+    {
+        return $this->sender_system_name;
+    }
+
+    /**
    * @param ?\Closure $logClosure
    * @return static
    * @throws \ReflectionException

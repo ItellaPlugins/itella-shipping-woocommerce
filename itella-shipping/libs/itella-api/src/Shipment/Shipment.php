@@ -25,15 +25,9 @@ class Shipment
   const LABEL_SIZE_A5 = 'A5';
   const LABEL_SIZE_107X225 = '107x225';
 
-  // Locations API endpoint
-  const LOCATIONS_API_URL = 'https://locationservice.posti.com/api/2/location';
-
   public $valid_product_codes;
 
   public $isTest;
-  // Auth object
-  /** @var \Mijora\Itella\Auth */
-  public $auth;
 
   /** @var string */
   private $user;
@@ -231,7 +225,7 @@ class Shipment
     }
 
     // Retrieve location information from locations api
-    $pickup_points = new PickupPoints(self::LOCATIONS_API_URL);
+    $pickup_points = new PickupPoints();
     $location = $pickup_points->getLocations([
       'countryCode' => $this->receiverParty->countryCode,
       'pupCode' => $this->pickup_point_id

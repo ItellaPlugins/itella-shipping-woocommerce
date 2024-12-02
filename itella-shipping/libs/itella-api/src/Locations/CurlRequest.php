@@ -18,11 +18,14 @@ class CurlRequest
     $response = curl_exec($curl);
 
     $http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-    if ($http_code != 200) {
-      echo $http_code;
-    }
+    $error_no = curl_errno($curl);
+    $error_msg = ($error_no) ? curl_error($curl) : '';
 
     curl_close($curl);
+
+    if ($http_code != 200) {
+      return array('error' => 'Request returned an error with HTTP code ' . $http_code . ': ' . $error_msg);
+    }
 
     // response is a nested array
     $response = json_decode($response, true);

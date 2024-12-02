@@ -5,11 +5,13 @@ use Mijora\Itella\ItellaException;
 
 class ItellaPickupsApi
 {
-  private $api_url;
+  private $api_url = 'https://itellapickups.com/api/v1/';
 
-  public function __construct()
+  public function __construct($api_url = false)
   {
-    $this->api_url = 'https://itellapickups.com/api/v1/';
+    if ( ! empty($api_url) ) {
+      $this->api_url = $api_url;
+    }
   }
 
   public function request($url_action, $post_data)
