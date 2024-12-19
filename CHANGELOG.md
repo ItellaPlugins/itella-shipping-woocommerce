@@ -1,5 +1,9 @@
 # Changelog
 
+## [Unreleased]
+### Fixed
+- fixed the pickup point displayed in emails
+
 ## [1.5.1] - 2024-12-02
 ### Fixed
 - fixed that when registering a shipment, first take the shipping address phone number and if it is not available, then take the billing address phone number
