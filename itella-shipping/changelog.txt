@@ -1,5 +1,8 @@
 *** Smartpost Itella shipping Changelog ***
 
+2024-12-20 - version 1.5.2
+* Fixed - the pickup point display in emails
+
 2024-12-02 - version 1.5.1
 * Updated - itella-api library to v2.3.8.1
 * Fixed - that when registering a shipment, first take the shipping address phone number and if it is not available, then take the billing address phone number

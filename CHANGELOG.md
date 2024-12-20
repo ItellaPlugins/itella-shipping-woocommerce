@@ -1,8 +1,8 @@
 # Changelog
 
-## [Unreleased]
+## [1.5.2] - 2024-12-20
 ### Fixed
-- fixed the pickup point displayed in emails
+- fixed the pickup point display in emails
 
 ## [1.5.1] - 2024-12-02
 ### Fixed
