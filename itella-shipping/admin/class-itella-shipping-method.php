@@ -1795,9 +1795,10 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $itella_data = $this->wc->get_itella_data($order);
     $tracking_number = $itella_data->tracking->code;
     $chosen_pickup_point_id = $itella_data->pickup->id;
+    $chosen_pickup_point_pupcode = $itella_data->pickup->pupcode;
     $tracking_url = $itella_data->tracking->url;
     
-    if ( empty( $tracking_number ) && empty($chosen_pickup_point_id) ) {
+    if ( empty( $tracking_number ) && empty($chosen_pickup_point_id) && empty($chosen_pickup_point_pupcode) ) {
       return;
     }
 
@@ -1811,8 +1812,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       printf( __('Your order has been shipped with %s.', 'itella-shipping') . "\n", $tracking_provider );
     }
 
-    if ( ! empty($chosen_pickup_point_id) && $chosen_pickup_point_id != '-' ) {
-      $pp_address = $this->build_pickup_address_for_display( $order, $chosen_pickup_point_id );
+    if ( (! empty($chosen_pickup_point_id) || ! empty($chosen_pickup_point_pupcode)) && $chosen_pickup_point_id != '-' ) {
+      $pp_address = $this->build_pickup_address_for_display($order, $chosen_pickup_point_id, $chosen_pickup_point_pupcode);
 
       if ( $plain_text ) {
         printf( __('The order will be delivered to %s.', 'itella-shipping') . "\n", $pp_address );
@@ -1929,9 +1930,9 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   /**
    * Build formated pickup address string
    */
-  private function build_pickup_address_for_display( $order, $chosen_pickup_point_id )
+  private function build_pickup_address_for_display( $order, $chosen_pickup_point_id, $chosen_pickup_point_pupcode = '' )
   {
-    $chosen_pickup_point = $this->get_chosen_pickup_point(Itella_Manifest::order_getCountry($order), $chosen_pickup_point_id);
+    $chosen_pickup_point = $this->get_chosen_pickup_point(Itella_Manifest::order_getCountry($order), $chosen_pickup_point_id, $chosen_pickup_point_pupcode);
     return $chosen_pickup_point->address->municipality . ' - ' .
            $chosen_pickup_point->address->address . ', ' .
            $chosen_pickup_point->address->postalCode . ' (' .
