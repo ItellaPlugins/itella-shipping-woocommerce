@@ -717,7 +717,7 @@ class Itella_Manifest
     $default_packet_count = '1';
     $default_multi_parcel = false;
     $default_weight = 1;
-    $default_is_cod = $order_data->payment_method === 'itella_cod';
+    $default_is_cod = self::is_cod_payment($order_data->payment_method);
     $default_cod_amount = $order_data->total;
 
     $order_weight = 0;
@@ -767,6 +767,13 @@ class Itella_Manifest
     );
 
     return $shipping_parameters;
+  }
+
+  public static function is_cod_payment($payment_method)
+  {
+    $cod_payments = array('itella_cod', 'cod');
+
+    return in_array($payment_method, $cod_payments);
   }
 
   /**
