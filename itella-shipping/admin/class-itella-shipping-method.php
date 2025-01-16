@@ -1273,7 +1273,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       $default_packet_count = '1';
       $default_weight = 0;
       $extra_services = array();
-      $default_is_cod = $order_data->payment_method === 'itella_cod';
+      $default_is_cod = Itella_Manifest::is_cod_payment($order_data->payment_method);
       $default_cod_amount = $order_data->total;
 
       $extra_services_options = array(

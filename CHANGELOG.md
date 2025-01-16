@@ -1,5 +1,9 @@
 # Changelog
 
+## [Unreleased]
+### Improved
+- added to automatically recognize Woocommerce COD payment method
+
 ## [1.5.2] - 2024-12-20
 ### Fixed
 - fixed the pickup point display in emails
