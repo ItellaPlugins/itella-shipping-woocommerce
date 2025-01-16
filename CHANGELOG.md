@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.5.3] - 2025-01-16
 ### Improved
 - added to automatically recognize Woocommerce COD payment method
 
