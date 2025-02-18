@@ -2357,11 +2357,11 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       $first_name = $order->get_billing_first_name();
       $last_name = $order->get_billing_last_name();
     }
-    $address = $order->get_shipping_address_1();
+    $address = $this->build_address($order->get_shipping_address_1(), $order->get_shipping_address_2());
     $postcode = $order->get_shipping_postcode();
     $city = $order->get_shipping_city();
     if ( empty($address) && empty($postcode) && empty($city) ) {
-      $address = $order->get_billing_address_1();
+      $address = $this->build_address($order->get_billing_address_1(), $order->get_billing_address_1());
       $postcode = $order->get_billing_postcode();
       $city = $order->get_billing_city();
     }
@@ -2381,6 +2381,19 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         ->setContactEmail($order->get_billing_email());
 
     return $receiver;
+  }
+
+  private function build_address($address_1, $address_2 = '', $separator = ' - ')
+  {
+    $full_address = $address_1;
+    if ( ! empty($address_2) ) {
+      if ( ! empty($full_address) ) {
+        $full_address .= $separator;
+      }
+      $full_address .= $address_2;
+    }
+
+    return $full_address;
   }
 
   /**
