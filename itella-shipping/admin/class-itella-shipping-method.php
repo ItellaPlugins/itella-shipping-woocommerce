@@ -2709,7 +2709,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
                   'weight' => !empty($shipping_parameters['weight']) ? $shipping_parameters['weight'] : 0,
                   'delivery_address' => $order->get_shipping_first_name() . ' '
                       . $order->get_shipping_last_name() . ', '
-                      . $order->get_shipping_address_1() . ', '
+                      . $this->build_address($order->get_shipping_address_1(), $order->get_shipping_address_2()) . ', '
                       . $order->get_shipping_postcode() . ' '
                       . $order->get_shipping_city() . ', '
                       . Itella_Manifest::order_getCountry($order)
