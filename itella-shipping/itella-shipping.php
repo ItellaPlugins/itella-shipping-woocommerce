@@ -24,8 +24,8 @@
  * Text Domain:       itella-shipping
  * Domain Path:       /languages
  *
- * Tested up to:      6.7.1
- * WC tested up to:   8.3.1
+ * Tested up to:      6.7.2
+ * WC tested up to:   9.7.0
  * Requires PHP:      7.2
  */
 
