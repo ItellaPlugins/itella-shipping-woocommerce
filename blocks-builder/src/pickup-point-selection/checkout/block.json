@@ -1,10 +1,10 @@
 {
     "apiVersion": 2,
     "name": "itella-shipping/pickup-point-selection-checkout",
-    "version": "1.0.0",
-    "title": "Smartpost parcel locker selection",
+    "version": "1.0.1",
+    "title": "Smartposti parcel locker selection",
     "category": "woocommerce",
-    "description": "Allow to add components for Smartpost shipping method on Checkout page",
+    "description": "Allow to add components for Smartposti shipping method on Checkout page",
     "parent": ["woocommerce/checkout-shipping-methods-block"],
     "supports": {
         "html": false,

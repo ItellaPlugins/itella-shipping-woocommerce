@@ -1,10 +1,10 @@
 {
   "apiVersion": 2,
   "name": "itella-shipping/pickup-point-selection-cart",
-  "version": "1.0.0",
-  "title": "Smartpost parcel locker information",
+  "version": "1.0.1",
+  "title": "Smartposti parcel locker information",
   "category": "woocommerce",
-  "description": "Allow to add components for Smartpost shipping method on Cart page",
+  "description": "Allow to add components for Smartposti shipping method on Cart page",
   "parent": [
     "woocommerce/cart-order-summary-block"
   ],
