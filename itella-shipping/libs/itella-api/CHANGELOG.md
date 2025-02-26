@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.9]
+### Fixed
+- fixed deprecated function message when generating manifest
+
+### Changed
+- changed logo to Smartposti
+
 ## [2.3.8.1] - Fix last update bug
 ### Fixed
 - fixed courier call bug after last update

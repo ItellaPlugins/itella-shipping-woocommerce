@@ -90,8 +90,8 @@ class Itella_Manifest
   {
     add_submenu_page(
         'woocommerce',
-        __('Smartpost shipments', 'itella-shipping'),
-        __('Smartpost shipments', 'itella-shipping'),
+        __('Smartposti shipments', 'itella-shipping'),
+        __('Smartposti shipments', 'itella-shipping'),
         'manage_woocommerce',
         'itella-manifest',
         'itella_manifest_page',
@@ -137,7 +137,7 @@ class Itella_Manifest
     $extra_services_names = $itella_shipping->all_additional_services_names();
     ?>
       <div class="wrap">
-      <h1><?php _e('Smartpost shipments', 'itella-shipping'); ?></h1>
+      <h1><?php _e('Smartposti shipments', 'itella-shipping'); ?></h1>
     <?php
 
     $paged = 1;
@@ -293,7 +293,7 @@ class Itella_Manifest
               <?php wp_nonce_field('itella-call-courier', 'itella-call-courier_nonce'); ?>
             </form>
             <button id="itella-call-btn" class="button action">
-              <?php _e('Call Smartpost courier', 'itella-shipping') ?>
+              <?php _e('Call Smartposti courier', 'itella-shipping') ?>
             </button>
         </div>
     <?php endif; ?>
@@ -529,7 +529,7 @@ class Itella_Manifest
                                       $shipping_parameters['pickup_point_id'],
                                       $shipping_parameters['pickup_point_pupcode']
                                     );
-                                    echo '<strong>' . __('Smartpost Parcel locker', 'itella-shipping') . ':</strong>';
+                                    echo '<strong>' . __('Smartposti Parcel locker', 'itella-shipping') . ':</strong>';
                                     if ( isset($chosen_pickup_point->address) ) {
                                       echo '<br><span class="param-title">' . __('City', 'itella-shipping') . ':</span> ';
                                       echo '<em>' . $chosen_pickup_point->address->municipality . '</em>';
@@ -546,7 +546,7 @@ class Itella_Manifest
                                     }
                                   }
                                   if ($shipping_parameters['itella_shipping_method'] === 'itella_c') {
-                                    echo '<strong>' . __('Smartpost Courier', 'itella-shipping') . ':</strong>';
+                                    echo '<strong>' . __('Smartposti Courier', 'itella-shipping') . ':</strong>';
                                     echo '<br><span class="param-title">' . __('Packet Count', 'itella-shipping') . ':</span> ';
                                     echo '<em>' . $shipping_parameters['packet_count'] . '</em>';
                                     echo '<br><span class="param-title">' . __('Weight', 'itella-shipping') . ':</span> ';
@@ -650,7 +650,7 @@ class Itella_Manifest
                   <p>
                       <span><?php _e('Important!', 'itella-shipping') ?></span> <?php _e('Check your credentials.', 'itella-shipping') ?>
                   </p>
-                  <p><?php _e('Address and contact information can be changed in Smartpost settings.', 'itella-shipping') ?></p>
+                  <p><?php _e('Address and contact information can be changed in Smartposti settings.', 'itella-shipping') ?></p>
               </div>
               <form id="itella-call" action="admin-post.php" method="GET">
                   <input type="hidden" name="action" value="itella_call_courier"/>
@@ -669,7 +669,7 @@ class Itella_Manifest
                   </div>
                   <div class="modal-footer">
                       <button type="submit" id="itella-call-btn"
-                              class="button action"><?php _e('Call Smartpost courier', 'itella-shipping') ?></button>
+                              class="button action"><?php _e('Call Smartposti courier', 'itella-shipping') ?></button>
                       <button type="button" id="itella-call-cancel-btn"
                               class="button action"><?php _e('Cancel') ?></button>
                   </div>
