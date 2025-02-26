@@ -29,6 +29,7 @@ class Manifest
     'name_lastname_signature' => 'name, lastname, signature',
   );
 
+  private $pdf_string;
   private $out_base64 = false;
   private $out_string = false;
 

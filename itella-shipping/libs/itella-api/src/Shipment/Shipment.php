@@ -171,7 +171,7 @@ class Shipment
   private function validateProductCode()
   {
     if (!$this->product_code) {
-      throw new ItellaException('Shippment must have product code');
+      throw new ItellaException('Shipment must have product code');
     }
 
     return true;
