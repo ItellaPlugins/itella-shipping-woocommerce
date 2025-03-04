@@ -530,12 +530,17 @@ class Itella_Shipping
 
   public function notify_on_activation()
   {
+    $msg = sprintf(
+      /* translators: %1$s - plugin name, %2$s - word "here" with link to settings page */
+      __('Setup %1$s %2$s', 'itella-shipping'),
+      '<i>' . __('Smartposti Shipping', 'itella-shipping') . '</i>',
+      '<a href="' . admin_url('admin.php?page=wc-settings&tab=shipping&section=itella-shipping') . '">' . __('here', 'itella-shipping') . '</a>'
+    );
+
 
     if (get_transient('itella-shipping-activated')) : ?>
         <div class="updated notice is-dismissible">
-            <p>Setup Itella Shipping
-                <a href="<?php echo admin_url('admin.php?page=wc-settings&tab=shipping&section=itella-shipping'); ?>">here</a>.
-            </p>
+            <p><?php echo $msg; ?></p>
         </div>
       <?php
       delete_transient('itella-shipping-activated');
