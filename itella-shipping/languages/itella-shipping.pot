@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: itella_shipping\n"
 "Report-Msgid-Bugs-To: mantas tarutis\n"
-"POT-Creation-Date: 2025-02-25 12:23+0000\n"
+"POT-Creation-Date: 2025-03-04 08:02+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -152,6 +152,10 @@ msgstr ""
 
 #: admin/class-itella-shipping-method-helper.php:36
 msgid "Height"
+msgstr ""
+
+#: includes/class-itella-shipping.php:537
+msgid "here"
 msgstr ""
 
 #. Author URI of the plugin
@@ -314,6 +318,12 @@ msgstr ""
 msgid "Service"
 msgstr ""
 
+#. %1$s - plugin name, %2$s - word "here" with link to settings page
+#: includes/class-itella-shipping.php:535
+#, php-format
+msgid "Setup %1$s %2$s"
+msgstr ""
+
 #: public/class-itella-shipping-public.php:171
 msgid "Shipping information"
 msgstr ""
@@ -341,6 +351,7 @@ msgid "Smartposti shipments"
 msgstr ""
 
 #. Name of the plugin
+#: includes/class-itella-shipping.php:536
 msgid "Smartposti Shipping"
 msgstr ""
 
