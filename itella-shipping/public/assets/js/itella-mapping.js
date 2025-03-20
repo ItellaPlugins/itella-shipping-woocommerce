@@ -17,7 +17,7 @@ var itellaMapping = /*#__PURE__*/function () {
     _classCallCheck(this, itellaMapping);
 
     /* Itella Mapping version */
-    this.version = '1.3.1';
+    this.version = '1.3.2';
     this._isDebug = false;
     /* default map center Lithuania Kaunas */
 
@@ -47,17 +47,17 @@ var itellaMapping = /*#__PURE__*/function () {
     this.UI.modal = null;
     this.images_url = '';
     this.strings = {
-      modal_header: 'Parcel lockers',
-      selector_header: 'Parcel locker',
+      modal_header: 'Pickup points',
+      selector_header: 'Pickup point',
       workhours_header: 'Workhours',
       contacts_header: 'Contacts',
       search_placeholder: 'Enter postcode/address',
-      select_pickup_point: 'Select a parcel locker',
-      no_pickup_points: 'No locker to select',
+      select_pickup_point: 'Select a pickup point',
+      no_pickup_points: 'No points to select',
       select_btn: 'select',
       back_to_list_btn: 'reset search',
       nothing_found: 'Nothing found',
-      select_pickup_point_btn: 'Select parcel locker',
+      select_pickup_point_btn: 'Select pickup point',
       no_information: 'No information',
       error_leaflet: 'Leaflet is required for Itella-Mapping',
       error_missing_mount_el: 'No mount supplied to itellaShipping'
@@ -168,7 +168,7 @@ var itellaMapping = /*#__PURE__*/function () {
   }, {
     key: "buildModal",
     value: function buildModal() {
-      var template = "\n    <div class=\"itella-container\">\n      <div class=\"close-modal\">\n        <img src=\"".concat(this.images_url, "x-symbol.svg\" alt=\"Close map\">\n      </div>\n      <div class=\"itella-map\"></div>\n      <div class=\"itella-card\">\n        <div class=\"itella-card-header\">\n          <h2>").concat(this.strings.modal_header, "</h2>\n          <img src=\"").concat(this.images_url, "logo_white.svg\" alt=\"Itella logo\">\n        </div>\n        <div class=\"itella-card-content\">\n          <h3>").concat(this.strings.selector_header, "</h3>\n          <div class=\"itella-select\">\n            <div class=\"dropdown\">").concat(this.strings.select_pickup_point, "</div>\n            <div class=\"dropdown-inner\">\n              <div class=\"search-bar\">\n                <input type=\"text\" placeholder=\"").concat(this.strings.search_placeholder, "\" class=\"search-input\">\n                <img src=\"").concat(this.images_url, "search.png\" alt=\"Search\">\n              </div>\n              <span class=\"search-by\"></span>\n              <ul>\n                <li class=\"city\">").concat(this.strings.no_pickup_points, "</li>\n              </ul>\n            </div>\n          </div>\n\n          <div class=\"point-info\">\n            <div class=\"workhours\">\n              <h4 class=\"title\">").concat(this.strings.workhours_header, "</h4>\n              <div class=\"workhours-info\">\n                <ol>\n                </ol>\n              </div>\n            </div>\n            <div class=\"contacts\">\n              <h4 class=\"title\">").concat(this.strings.contacts_header, "</h4>\n              <div class=\"contacts-info\">\n                <ul>\n                </ul>\n              </div>\n            </div>\n          </div>\n        </div>\n        <div class=\"itella-card-footer\">\n          <button class=\"itella-btn itella-back hidden\">").concat(this.strings.back_to_list_btn, "</button>\n          <button class=\"itella-btn itella-submit\">").concat(this.strings.select_btn, "</button>\n        </div>\n      </div>\n    </div>\n    ");
+      var template = "\n    <div class=\"itella-container\">\n      <div class=\"close-modal\">\n        <img src=\"".concat(this.images_url, "x-symbol.svg\" alt=\"Close map\">\n      </div>\n      <div class=\"itella-map\"></div>\n      <div class=\"itella-card\">\n        <div class=\"itella-card-header\">\n          <h2>").concat(this.strings.modal_header, "</h2>\n          <img src=\"").concat(this.images_url, "logo_small_white.png\" alt=\"Itella logo\">\n        </div>\n        <div class=\"itella-card-content\">\n          <h3>").concat(this.strings.selector_header, "</h3>\n          <div class=\"itella-select\">\n            <div class=\"dropdown\">").concat(this.strings.select_pickup_point, "</div>\n            <div class=\"dropdown-inner\">\n              <div class=\"search-bar\">\n                <input type=\"text\" placeholder=\"").concat(this.strings.search_placeholder, "\" class=\"search-input\">\n                <img src=\"").concat(this.images_url, "search.png\" alt=\"Search\">\n              </div>\n              <span class=\"search-by\"></span>\n              <ul>\n                <li class=\"city\">").concat(this.strings.no_pickup_points, "</li>\n              </ul>\n            </div>\n          </div>\n\n          <div class=\"point-info\">\n            <div class=\"workhours\">\n              <h4 class=\"title\">").concat(this.strings.workhours_header, "</h4>\n              <div class=\"workhours-info\">\n                <ol>\n                </ol>\n              </div>\n            </div>\n            <div class=\"contacts\">\n              <h4 class=\"title\">").concat(this.strings.contacts_header, "</h4>\n              <div class=\"contacts-info\">\n                <ul>\n                </ul>\n              </div>\n            </div>\n          </div>\n        </div>\n        <div class=\"itella-card-footer\">\n          <button class=\"itella-btn itella-back hidden\">").concat(this.strings.back_to_list_btn, "</button>\n          <button class=\"itella-btn itella-submit\">").concat(this.strings.select_btn, "</button>\n        </div>\n      </div>\n    </div>\n    ");
 
       if (typeof this.mount === 'undefined') {
         console.info(this.strings.error_missing_mount_el);
@@ -720,8 +720,8 @@ var itellaMapping = /*#__PURE__*/function () {
       }).addTo(this._map);
       var Icon = L.Icon.extend({
         options: {
-          iconSize: [29, 34],
-          iconAnchor: [15, 34],
+          iconSize: [30, 44],
+          iconAnchor: [15, 44],
           popupAnchor: [-3, -76]
         }
       });
@@ -889,7 +889,6 @@ var itellaMapping = /*#__PURE__*/function () {
         }
 
         li.dataset.id = loc.id;
-        li.dataset.code = loc.pupCode;
         listHTML.push(li);
         loc._li = li;
       });

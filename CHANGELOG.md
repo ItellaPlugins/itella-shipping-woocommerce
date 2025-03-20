@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.5.4] 2025-03-20
+### Improved
+- added use of "Address 2" field value when registering a shipment
+
+### Changed
+- changed name "Itella Smartpost" to "Smartposti"
+- changed logo
+- changed map colors
+
 ## [1.5.3] - 2025-01-16
 ### Improved
 - added to automatically recognize Woocommerce COD payment method

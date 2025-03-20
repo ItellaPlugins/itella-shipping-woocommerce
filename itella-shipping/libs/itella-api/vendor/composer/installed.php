@@ -1,8 +1,8 @@
 <?php return array(
     'root' => array(
         'name' => 'mijora/itella-api',
-        'pretty_version' => '2.3.8',
-        'version' => '2.3.8.0',
+        'pretty_version' => '2.3.9',
+        'version' => '2.3.9.0',
         'reference' => null,
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
@@ -11,8 +11,8 @@
     ),
     'versions' => array(
         'mijora/itella-api' => array(
-            'pretty_version' => '2.3.8',
-            'version' => '2.3.8.0',
+            'pretty_version' => '2.3.9',
+            'version' => '2.3.9.0',
             'reference' => null,
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
@@ -29,18 +29,18 @@
             'dev_requirement' => false,
         ),
         'setasign/fpdi' => array(
-            'pretty_version' => 'v2.6.1',
-            'version' => '2.6.1.0',
-            'reference' => '09a816004fcee9ed3405bd164147e3fdbb79a56f',
+            'pretty_version' => 'v2.6.3',
+            'version' => '2.6.3.0',
+            'reference' => '67c31f5e50c93c20579ca9e23035d8c540b51941',
             'type' => 'library',
             'install_path' => __DIR__ . '/../setasign/fpdi',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
         'tecnickcom/tcpdf' => array(
-            'pretty_version' => '6.7.7',
-            'version' => '6.7.7.0',
-            'reference' => 'cfbc0028cc23f057f2baf9e73bdc238153c22086',
+            'pretty_version' => '6.8.2',
+            'version' => '6.8.2.0',
+            'reference' => 'f7a781073e1645062f163e058139e2f89355d420',
             'type' => 'library',
             'install_path' => __DIR__ . '/../tecnickcom/tcpdf',
             'aliases' => array(),
