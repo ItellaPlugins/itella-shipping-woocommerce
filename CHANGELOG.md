@@ -1,11 +1,11 @@
 # Changelog
 
-## [Unreleased]
+## [1.5.4] 2025-03-20
 ### Improved
 - added use of "Address 2" field value when registering a shipment
 
 ### Changed
-- changed name "Smartpost" to "Smartposti"
+- changed name "Itella Smartpost" to "Smartposti"
 - changed logo
 - changed map colors
 
