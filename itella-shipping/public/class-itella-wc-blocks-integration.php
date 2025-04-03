@@ -56,6 +56,7 @@ class Itella_Wc_blocks_Integration implements IntegrationInterface
             'img' => $this->plugin->url . 'public/assets/images/',
         );
         $this->itella_shipping = new Itella_Shipping_Method();
+        $this->wc = new Itella_Shipping_Wc_Itella();
     }
 
     /**
@@ -291,37 +292,43 @@ class Itella_Wc_blocks_Integration implements IntegrationInterface
      */
     private function register_external_scripts()
     {
-        $scripts = array(
-            'itella-library-mapping' => array(
-                'js' => 'itella-mapping.js',
-                'css' => 'itella-mapping.css'
-            ),
-            'itella-library-leaflet' => array(
-                'js' => 'leaflet.min.js',
-                'external_css' => 'https://unpkg.com/leaflet@1.5.1/dist/leaflet.css'
-            ),
-            'itella-library-markercluster' => array(
-                'external_css' => 'https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css'
-            ),
-            'itella-library-markercluster-default' => array(
-                'external_css' => 'https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css'
-            ),
-        );
+        add_action('wp_enqueue_scripts', function() {
+            if ( ! is_checkout() && ! $this->wc->is_wc_block_checkout() ) {
+                return;
+            }
 
-        foreach ( $scripts as $script_id => $script_files ) {
-            if ( ! empty($script_files['js']) ) {
-                wp_enqueue_script($script_id, $this->assets->js . $script_files['js'], array('jquery'), null, true);
+            $scripts = array(
+                'itella-library-mapping' => array(
+                    'js' => 'itella-mapping.js',
+                    'css' => 'itella-mapping.css'
+                ),
+                'itella-library-leaflet' => array(
+                    'js' => 'leaflet.min.js',
+                    'external_css' => 'https://unpkg.com/leaflet@1.5.1/dist/leaflet.css'
+                ),
+                'itella-library-markercluster' => array(
+                    'external_css' => 'https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css'
+                ),
+                'itella-library-markercluster-default' => array(
+                    'external_css' => 'https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css'
+                ),
+            );
+
+            foreach ( $scripts as $script_id => $script_files ) {
+                if ( ! empty($script_files['js']) ) {
+                    wp_enqueue_script($script_id, $this->assets->js . $script_files['js'], array('jquery'), null, true);
+                }
+                if ( ! empty($script_files['css']) ) {
+                    wp_enqueue_style($script_id, $this->assets->css . $script_files['css']);
+                }
+                if ( ! empty($script_files['external_js']) ) {
+                    wp_enqueue_script($script_id . '-external', $script_files['external_js'], array(), null, true);
+                }
+                if ( ! empty($script_files['external_css']) ) {
+                    wp_enqueue_style($script_id . '-external', $script_files['external_css']);
+                }
             }
-            if ( ! empty($script_files['css']) ) {
-                wp_enqueue_style($script_id, $this->assets->css . $script_files['css']);
-            }
-            if ( ! empty($script_files['external_js']) ) {
-                wp_enqueue_script($script_id . '-external', $script_files['external_js'], array(), null, true);
-            }
-            if ( ! empty($script_files['external_css']) ) {
-                wp_enqueue_style($script_id . '-external', $script_files['external_css']);
-            }
-        }
+        });
     }
 
     /**
