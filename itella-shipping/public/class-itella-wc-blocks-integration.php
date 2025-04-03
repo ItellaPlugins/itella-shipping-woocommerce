@@ -40,6 +40,12 @@ class Itella_Wc_blocks_Integration implements IntegrationInterface
     private $assets;
 
     /**
+     * Plugin classes
+     */
+    private $itella_shipping;
+    private $itella_wc;
+
+    /**
      * Initialize the class and set its properties.
      *
      * @since 1.5.0
@@ -56,7 +62,7 @@ class Itella_Wc_blocks_Integration implements IntegrationInterface
             'img' => $this->plugin->url . 'public/assets/images/',
         );
         $this->itella_shipping = new Itella_Shipping_Method();
-        $this->wc = new Itella_Shipping_Wc_Itella();
+        $this->itella_wc = new Itella_Shipping_Wc_Itella();
     }
 
     /**
@@ -293,7 +299,7 @@ class Itella_Wc_blocks_Integration implements IntegrationInterface
     private function register_external_scripts()
     {
         add_action('wp_enqueue_scripts', function() {
-            if ( ! is_checkout() && ! $this->wc->is_wc_block_checkout() ) {
+            if ( ! is_checkout() && ! $this->itella_wc->is_wc_block_checkout() ) {
                 return;
             }
 
