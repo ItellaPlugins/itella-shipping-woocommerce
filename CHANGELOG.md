@@ -1,6 +1,10 @@
 # Changelog
 
-## [1.5.4] 2025-03-20
+## [1.5.5] - 2025-04-03
+### Fixed
+- fixed loading of external scripts on the Checkout page so that they are loaded only on this page
+
+## [1.5.4] - 2025-03-20
 ### Improved
 - added use of "Address 2" field value when registering a shipment
 

@@ -290,4 +290,9 @@ class Itella_Shipping_Wc {
     {
         return wc_get_weight($weight, $to_unit, $from_unit);
     }
+
+    public function is_wc_block_checkout() {
+        global $post;
+        return has_blocks($post->post_content) && has_block('woocommerce/checkout');
+    }
 }
