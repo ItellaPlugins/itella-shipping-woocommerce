@@ -1,5 +1,8 @@
 *** Smartpost Itella shipping Changelog ***
 
+2025-04-03 - version 1.5.5
+* Fixed - Loading of external scripts on the Checkout page so that they are loaded only on this page
+
 2025-03-20 - version 1.5.4
 * Added - Use of "Address 2" field value when registering a shipment
 * Changed - Name "Itella Smartpost" to "Smartposti"
