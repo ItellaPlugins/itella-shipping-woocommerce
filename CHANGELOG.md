@@ -1,5 +1,9 @@
 # Changelog
 
+## [Unreleased]
+### Fixed
+- disabled test parameter
+
 ## [1.5.5] - 2025-04-03
 ### Fixed
 - fixed loading of external scripts on the Checkout page so that they are loaded only on this page
