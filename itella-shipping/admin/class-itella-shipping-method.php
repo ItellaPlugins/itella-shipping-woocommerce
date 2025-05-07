@@ -2183,7 +2183,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   {
     $p_user = htmlspecialchars_decode($this->settings['api_user_2317']);
     $p_secret = htmlspecialchars_decode($this->settings['api_pass_2317']);
-    $is_test = true;
+    $is_test = false;
 
     // Create GoodsItem (parcel)
     $items = array();
@@ -2256,7 +2256,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   {
     $p_user = htmlspecialchars_decode($this->settings['api_user_2317']);
     $p_secret = htmlspecialchars_decode($this->settings['api_pass_2317']);
-    $is_test = true;
+    $is_test = false;
     $shipping_country = Itella_Manifest::order_getCountry($this->wc->get_order($order_id));
     $chosen_pickup_point = $this->get_chosen_pickup_point($shipping_country, $shipping_parameters['pickup_point_id'], $shipping_parameters['pickup_point_pupcode']);
 
