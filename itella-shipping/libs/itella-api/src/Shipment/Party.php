@@ -228,13 +228,13 @@ class Party
 
   public function disablePhoneCheck()
   {
-    $this->phoneCheck = false;
+    $this->checkPhone = false;
     return $this;
   }
 
   public function enablePhoneCheck()
   {
-    $this->phoneCheck = true;
+    $this->checkPhone = true;
     return $this;
   }
 }

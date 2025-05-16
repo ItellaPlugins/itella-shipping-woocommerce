@@ -1,4 +1,12 @@
 jQuery('document').ready(function($) {
+    // Modal date picker
+    $('#modaldatetimepicker').datetimepicker({
+        minDate: new Date(),
+        defaultDate: new Date(),
+        pickTime: false,
+        useCurrent: false,
+        closeOnDateSelect:true
+    });
     // "From" date picker
     $('#datetimepicker1').datetimepicker({
         pickTime: false,
@@ -49,11 +57,13 @@ jQuery('document').ready(function($) {
         e.preventDefault();
         let ids = "";
         $('#call-courier-form .post_id').remove();
+        $('#call-courier-form').find('input[type="hidden"].copied-hidden').remove();
         $('.manifest-item:checked').each(function () {
             ids += $(this).val() + ";";
             let id = $(this).val();
             $('#call-courier-form').append('<input type="hidden" class = "post_id" name="post[]" value = "' + id + '" />');
         });
+        itellaCopyInputsToForm('#itella-courier-modal', '#call-courier-form');
         $('#item_ids').val(ids);
         if (ids == "") {
             alert(translations.select_orders);
@@ -240,3 +250,38 @@ function add_param_to_url( paramName, paramValue, removeParams = [] ) {
     }
     return url;
 }
+
+function itellaCopyInputsToForm( sourceSelector, targetFormSelector ) {
+  const source = document.querySelector(sourceSelector);
+  const targetForm = document.querySelector(targetFormSelector);
+
+  targetForm.querySelectorAll('input.copied-hidden').forEach(el => el.remove());
+
+  const fields = source.querySelectorAll('input, select, textarea');
+
+  fields.forEach(field => {
+    const name = field.name;
+    if (!name) return;
+
+    let value;
+
+    if ((field.type === 'checkbox' || field.type === 'radio')) {
+      if (field.checked) {
+        value = field.value;
+      } else {
+        return;
+      }
+    } else {
+      value = field.value;
+    }
+
+    const hiddenInput = document.createElement('input');
+    hiddenInput.type = 'hidden';
+    hiddenInput.name = name;
+    hiddenInput.value = value;
+    hiddenInput.classList.add('copied-hidden');
+
+    targetForm.appendChild(hiddenInput);
+  });
+}
+

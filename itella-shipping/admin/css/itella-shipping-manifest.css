@@ -144,6 +144,17 @@
       font-weight: 900;
   }
 
+  .modal-content .field-block {
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .modal-content .field-block .w-full {
+    flex: 1;
+  }
+
   .modal-footer {
       display: flex;
       justify-content: space-between;
