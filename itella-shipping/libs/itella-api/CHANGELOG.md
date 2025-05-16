@@ -1,5 +1,45 @@
 # Changelog
 
+## [2.4.3]
+### Fixed
+- fixed a bug in the POSTRA method where user logins are passed through separate functions, instead of directly to the calling function
+
+### Added
+- added a message about invalid logins when the courier is called via POSTRA
+
+### Changed
+- removed the ability to specify logins in a courier invitation by passing them directly to the invitation function. The `setUsername()` and `setPassword()` functions must be used.
+- changed that when calling a courier in LT and LV, the API method will not be used
+
+## [2.4.2]
+### Fixed
+- fixed POSTRA query error
+
+### Added
+- added phone number to POSTRA request
+
+## [2.4.1]
+### Fixed
+- fixed the courier invitation Email method not trying to add new header if headers have already been sent
+
+### Added
+- new functions setUsername() and setPassword() added to the CallCourier class
+
+### Changed
+- The courier invitation POSTRA method is used only if the country indicated in the sender's address is LT or LV.
+
+## [2.4.0]
+### Fixed
+- fixed disablePhoneCheck() and enablePhoneCheck() functions in Shipment\Party class
+
+### Added
+- added the ability to call a courier via the POSTRA system
+- added a separate Client class
+
+### Changed
+- unified response for all courier call methods
+- changed so that instead of a simple courier call result, an array with errors and success messages would be returned
+
 ## [2.3.9]
 ### Fixed
 - fixed deprecated function message when generating manifest

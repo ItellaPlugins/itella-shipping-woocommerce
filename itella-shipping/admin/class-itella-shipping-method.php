@@ -216,6 +216,28 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     <?php
   }
 
+  public function get_translated_weekday($weekday)
+  {
+    switch ($weekday) {
+      case 'Monday':
+        return __('Monday', 'default'); // Use WP translations domain
+      case 'Tuesday':
+        return __('Tuesday', 'default');
+      case 'Wednesday':
+        return __('Wednesday', 'default');
+      case 'Thursday':
+        return __('Thursday', 'default');
+      case 'Friday':
+        return __('Friday', 'default');
+      case 'Saturday':
+        return __('Saturday', 'default');
+      case 'Sunday':
+        return __('Sunday', 'default');
+      default:
+        return $weekday;
+    }
+  }
+
     /**
      * Get available itella shipping methods list
      */
@@ -550,6 +572,10 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             'title' => __('Company name', 'itella-shipping'),
             'type' => 'text',
         ),
+        'company_code' => array(
+            'title' => __('Company code', 'itella-shipping'),
+            'type' => 'text',
+        ),
         'bank_account' => array(
             'title' => __('Bank account', 'itella-shipping'),
             'type' => 'text',
@@ -692,6 +718,11 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         'type' => 'hr'
     );
 
+    $fields['call_courier_message'] = array(
+        'title' => __('Pickup note', 'itella-shipping'),
+        'type' => 'text',
+        'description' => __('A message related to the pickup of shipments is sent to the courier when the courier is called', 'itella-shipping'),
+    );
     foreach ($this->sender_countries as $country_code) {
       $fields['call_courier_mail_' . $country_code] = array(
         'title' => sprintf(__('Smartposti %s email', 'itella-shipping'), strtoupper($country_code)),
@@ -703,7 +734,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         'title' => __('Smartposti email subject', 'itella-shipping'),
         'type' => 'text',
         'default' => 'E-com order booking',
-      );
+    );
     $this->form_fields = $fields;
   }
 
@@ -2544,7 +2575,20 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   public function itella_post_call_courier_actions()
   {
+    if ( ! isset($_REQUEST['itella-call-courier_nonce']) || ! wp_verify_nonce($_REQUEST['itella-call-courier_nonce'], 'itella-call-courier') ) {
+      $this->add_msg(__('Incorrect request nonce', 'itella-shipping'), 'error');
+      wp_safe_redirect(wp_get_referer());
+      return;
+    }
+
     $order_ids = $_REQUEST['post']; // no post
+    $call_date = (isset($_REQUEST['itella_call_courier_date'])) ? $_REQUEST['itella_call_courier_date'] : date('Y-m-d', strtotime('+1 day'));
+    $call_time_from = (isset($_REQUEST['itella_call_courier_time_from'])) ? $_REQUEST['itella_call_courier_time_from'] : '08:00';
+    $call_time_to = (isset($_REQUEST['itella_call_courier_time_to'])) ? $_REQUEST['itella_call_courier_time_to'] : '17:00';
+    $call_info = (isset($_REQUEST['itella_call_courier_info'])) ? $_REQUEST['itella_call_courier_info'] : '';
+
+    $username = (!empty($this->settings['api_user_2317'])) ? $this->settings['api_user_2317'] : $this->settings['api_user_2711'];
+    $password = (!empty($this->settings['api_pass_2317'])) ? $this->settings['api_pass_2317'] : $this->settings['api_pass_2711'];
 
     $translation = $this->get_manifest_translation();
     $items = $this->prepare_items_for_manifest($order_ids);
@@ -2562,7 +2606,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       $email = 'smartship.routing.lt@itella.com';
     }
 
-    $email_subject = __('E-com order booking', 'itella-shipping');
+    $email_subject = 'E-com order booking';
     if (!empty($this->settings['call_courier_mail_subject'])) {
       $email_subject = $this->settings['call_courier_mail_subject'];
     }
@@ -2570,6 +2614,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     try {
       $caller = new CallCourier($email);
       $caller
+        ->setUsername($username)
+        ->setPassword($password)
         ->setSenderEmail($this->settings['shop_email'])
         ->setSubject($email_subject)
         ->setPickUpAddress(array(
@@ -2578,52 +2624,30 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             'postcode' => $this->settings['shop_postcode'],
             'city' => $this->settings['shop_city'],
             'country' => $this->settings['shop_countrycode'],
-            'pickup_time' => '8:00 - 17:00',
             'contact_phone' => $this->settings['shop_phone'],
         ))
+        ->setPickUpParams(array(
+          'date' => $call_date,
+          'time_from' => $call_time_from,
+          'time_to' => $call_time_to,
+          'info_general' => $call_info,
+          'id_sender' => $this->settings['company_code'],
+        ))
         ->setAttachment($manifest_string, true)
-        ->setItems($items);
+        ->setItems($items)
+        ->showMessagesPrefix(true);
 
-      $call_success_msg = array(
-        'api' => __('Smartposti courier successfully called via API', 'itella-shipping'),
-        'mail' => __('Email sent to Smartposti courier', 'itella-shipping') . ' (' . $email . ')',
-      );
-      $call_errors = array();
-
-      // Call via API
-      try {
-        if (!$caller->callApiCourier()) {
-          throw new ItellaException(__('Not received response', 'itella-shipping'));
-        }
-      } catch (ItellaException $e) {
-        $call_errors['api'] = __('Failed to call via API.', 'itella-shipping') . "<br>" . __('Error:', 'itella-shipping') . ' ' . $e->getMessage();
-        unset($call_success_msg['api']);
-        file_put_contents(plugin_dir_path(dirname(__FILE__)) . 'var/log/errors.log',
-          "\n" . date('Y-m-d H:i:s') . ": ItellaException:\n" . $e->getMessage() . "\n"
-          . $e->getTraceAsString(), FILE_APPEND);
-      }
-
-      // Call via mail
-      try {
-        $caller->callMailCourier();
-      } catch (ItellaException $e) {
-        $call_errors['mail'] = __('Failed to send email.', 'itella-shipping') . "<br>" . __('Error:', 'itella-shipping') . ' ' . $e->getMessage();
-        unset($call_success_msg['mail']);
-        file_put_contents(plugin_dir_path(dirname(__FILE__)) . 'var/log/errors.log',
-          "\n" . date('Y-m-d H:i:s') . ": ItellaException:\n" . $e->getMessage() . "\n"
-          . $e->getTraceAsString(), FILE_APPEND);
-      }
-
-      // Call messages
-      if (!empty($call_errors)) {
-        $error_prefix = '<b>' . __('Something failed while calling the Smartposti courier', 'itella-shipping') . ':</b><br/>';
-        $this->add_msg($error_prefix . implode('<br/><br/>', $call_errors), 'warning');
-      }
-
-      if (!empty($call_success_msg)) {
-        $this->add_msg(implode('<br>', $call_success_msg), 'success');
+      $result = $caller->callCourier();
+      if (!is_array($result) || (!isset($result['errors']) && !isset($result['success']))) {
+        $this->add_msg(__('An unknown result was received from the call', 'itella-shipping').': '.print_r($result, true), 'error');
       } else {
-        throw new ItellaException(implode('<br>', $call_errors));
+        if (!empty($result['errors'])) {
+          $this->add_msg(implode('<br>', $result['errors']), 'error');
+        }
+        if (!empty($result['success'])) {
+          $result['success'][] = '<br/>' . sprintf(__('The courier should arrive %s', 'itella-shipping'), $call_date . ' ' . $call_time_from . ' - ' . $call_time_to);
+          $this->add_msg(implode('<br>', $result['success']), 'success');
+        }
       }
     } catch (ItellaException $e) {
       $this->add_msg(__('Failed to call Smartposti courier', 'itella-shipping'), 'error');

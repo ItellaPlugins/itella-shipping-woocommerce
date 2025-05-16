@@ -290,7 +290,6 @@ class Itella_Manifest
         <div class="call-courier-container">
             <form id="call-courier-form" action="admin-post.php" method="GET">
                 <input type="hidden" name="action" value="itella-call-courier"/>
-              <?php wp_nonce_field('itella-call-courier', 'itella-call-courier_nonce'); ?>
             </form>
             <button id="itella-call-btn" class="button action">
               <?php _e('Call Smartposti courier', 'itella-shipping') ?>
@@ -471,7 +470,6 @@ class Itella_Manifest
                                           </button>
                                           <form id="call-courier-form" action="admin-post.php" method="GET">
                                               <input type="hidden" name="action" value="itella-call-courier"/>
-                                            <?php wp_nonce_field('itella-call-courier', 'itella-call-courier_nonce'); ?>
                                           </form>
                                           <button id="itella-call-btn" class="button action button-itella">
                                             <?php _e('Call Itella courier', 'itella-shipping') ?>
@@ -653,8 +651,7 @@ class Itella_Manifest
                   <p><?php _e('Address and contact information can be changed in Smartposti settings.', 'itella-shipping') ?></p>
               </div>
               <form id="itella-call" action="admin-post.php" method="GET">
-                  <input type="hidden" name="action" value="itella_call_courier"/>
-                <?php wp_nonce_field('itella_call_courier', 'itella_call_courier_nonce'); ?>
+                <?php wp_nonce_field('itella-call-courier', 'itella-call-courier_nonce'); ?>
                   <div>
                       <span><?php echo __("Shop name", 'itella_shipping'); ?>:</span> <?php echo $itella_shipping->settings['shop_name']; ?>
                   </div>
@@ -667,6 +664,37 @@ class Itella_Manifest
                   <div>
                       <span><?php echo __("Shop address", 'itella_shipping'); ?>:</span> <?php echo $itella_shipping->settings['shop_address'] . ', ' . $itella_shipping->settings['shop_city']; ?>
                   </div>
+                  <div class="field-block">
+                    <span><?php echo __("Pickup time", 'itella_shipping'); ?>:</span>
+                    <input id="modaldatetimepicker" name="itella_call_courier_date" type="text" data-date-format="YYYY-MM-DD" value="" autocomplete="off"/>
+                    <select id="itella_call_courier_time_from" name="itella_call_courier_time_from">
+                      <?php
+                      for ($h = 0; $h < 24; $h++) {
+                        for ($m = 0; $m < 60; $m += 30) {
+                          $disabled = ($h === 23 && $m === 30) ? 'disabled' : '';
+                          $time = sprintf('%02d:%02d', $h, $m);
+                          echo "<option value=\"$time\" $disabled>$time</option>";
+                        }
+                      }
+                      ?>
+                    </select>
+                    -
+                    <select id="itella_call_courier_time_to" name="itella_call_courier_time_to">
+                      <?php
+                      for ($h = 0; $h < 24; $h++) {
+                        for ($m = 0; $m < 60; $m += 30) {
+                          $time = sprintf('%02d:%02d', $h, $m);
+                          echo "<option value=\"$time\">$time</option>";
+                        }
+                      }
+                      ?>
+                    </select>
+                  </div>
+                  <div class="field-block">
+                    <?php $pickup_note = (isset($itella_shipping->settings['call_courier_message'])) ? $itella_shipping->settings['call_courier_message'] : ''; ?>
+                    <span><?php echo __("Pickup note", 'itella_shipping'); ?>:</span>
+                    <input type="text" name="itella_call_courier_info" value="<?php echo $pickup_note; ?>" class="w-full"/>
+                  </div>
                   <div class="modal-footer">
                       <button type="submit" id="itella-call-btn"
                               class="button action"><?php _e('Call Smartposti courier', 'itella-shipping') ?></button>
@@ -675,6 +703,72 @@ class Itella_Manifest
                   </div>
               </form>
           </div>
+          <script type="text/javascript">
+            document.addEventListener('DOMContentLoaded', function () {
+              const itellaDateSelect = document.getElementById('modaldatetimepicker');
+              const itellaFromSelect = document.getElementById('itella_call_courier_time_from');
+              const itellaToSelect = document.getElementById('itella_call_courier_time_to');
+
+              function itellaDisablePastTimes() {
+                const today = new Date();
+                const todayDate = today.toISOString().split('T')[0];
+                const selectedDate = itellaDateSelect.value || todayDate;
+                const nowHours = today.getHours();
+                const nowMinutes = today.getMinutes();
+                const delay = 2 * 60; //If want the call time to start not immediately from now, but after a certain time in minutes
+                const currentTotalMinutes = nowHours * 60 + nowMinutes + delay;
+
+                //Change time_from field
+                Array.from(itellaFromSelect.options).forEach(option => {
+                  const [h, m] = option.value.split(':').map(Number);
+                  const optionMinutes = h * 60 + m;
+                  const isLastSlot = option.value === '23:30';
+                  option.disabled = (selectedDate === today.toISOString().split('T')[0] && optionMinutes <= currentTotalMinutes) || isLastSlot;
+                });
+
+                //Change time_to field
+                Array.from(itellaToSelect.options).forEach(option => {
+                  const [h, m] = option.value.split(':').map(Number);
+                  const optionMinutes = h * 60 + m;
+                  option.disabled = optionMinutes <= currentTotalMinutes;
+                });
+
+                //Fix options if incorrect
+                [itellaFromSelect, itellaToSelect].forEach(select => {
+                  if (select.selectedOptions.length && select.selectedOptions[0].disabled) {
+                    const firstValid = Array.from(select.options).find(opt => !opt.disabled);
+                    if (firstValid) {
+                      select.value = firstValid.value;
+                    }
+                  }
+                });
+
+                itellaUpdateToOptions();
+              }
+
+              function itellaUpdateToOptions() {
+                const fromValue = itellaFromSelect.value;
+
+                Array.from(itellaToSelect.options).forEach(option => {
+                  option.disabled = option.value <= fromValue;
+                });
+
+                if (itellaToSelect.selectedOptions.length && itellaToSelect.selectedOptions[0].disabled) {
+                  const firstValid = Array.from(itellaToSelect.options).find(opt => !opt.disabled);
+                  if (firstValid) {
+                    itellaToSelect.value = firstValid.value;
+                  }
+                }
+              }
+
+              jQuery('#modaldatetimepicker').on('change, dp.change', function (e) {
+                itellaDisablePastTimes();
+              });
+              itellaFromSelect.addEventListener('change', itellaUpdateToOptions);
+
+              itellaDisablePastTimes();
+            });
+          </script>
       </div>
       <!--/ Modal Carier call-->
     <?php

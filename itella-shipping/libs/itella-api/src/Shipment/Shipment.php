@@ -5,9 +5,9 @@ namespace Mijora\Itella\Shipment;
 use Mijora\Itella\ItellaException;
 use Mijora\Itella\Shipment\AdditionalService;
 use Mijora\Itella\Helper;
+use Mijora\Itella\Client;
 use Mijora\Itella\Locations\PickupPoints;
 
-use Pakettikauppa\Client as _Client;
 use Pakettikauppa\Shipment as _Shipment;
 use Pakettikauppa\Shipment\AdditionalService as _AdditionalService;
 use Pakettikauppa\Shipment\Info as _Info;
@@ -89,47 +89,7 @@ class Shipment
       self::PRODUCT_PICKUP
     );
 
-    $this->_client = new _Client(
-      array(
-        'pakettikauppa_config' => array(
-          'api_key' => $this->user,
-          'secret' => $this->pass,
-          'base_uri' => 'https://nextshipping.posti.fi',
-          'use_posti_auth' => true,
-          'posti_auth_url' => 'https://oauth2.posti.com',
-        ),
-      ),
-      'pakettikauppa_config'
-    );
-
-    $this->initAuth();
-  }
-
-  private function initAuth()
-  {
-    // get token from cache
-    // if token is not in cache, then:
-    $token = $this->_client->getToken();
-
-    // Check authorization was succesfull
-    if (!isset($token->access_token)) {
-      $error = [];
-      if (isset($token->status)) {
-        $error[] = 'Status: ' . $token->status;
-      }
-
-      if (isset($token->error)) {
-        $error[] = 'Error: ' . $token->error;
-      }
-
-      if (isset($token->message)) {
-        $error[] = 'Message: ' . $token->message;
-      }
-
-      throw new ItellaException(implode("\n ", $error));
-    }
-    // save token to cache
-    $this->_client->setAccessToken($token->access_token);
+    $this->_client = (new Client($this->user, $this->pass, $this->isTest))->getAuthenticatedClient();
   }
 
   public function asXML()
