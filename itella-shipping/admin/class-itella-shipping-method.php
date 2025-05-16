@@ -2073,8 +2073,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         if (in_array('msg',$exit_modes)) {
           $this->add_msg($order_id . ' - ' . __('Shipment is not registered.', 'itella-shipping')
             . "<br>"
-            . __('An error occurred. ', 'itella-shipping')
-            . $th->getMessage()
+            . __('An error occurred.', 'itella-shipping')
+            . ' ' . $th->getMessage()
             , 'error');
         }
 
@@ -2084,7 +2084,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             . $th->getTraceAsString(), FILE_APPEND);
 
         if (in_array('return',$exit_modes)) {
-          return array('status' => 'error', 'msg' => __('An error occurred. ', 'itella-shipping') . $th->getMessage());
+          return array('status' => 'error', 'msg' => __('An error occurred.', 'itella-shipping') . ' ' . $th->getMessage());
         }
       }
 
@@ -2094,8 +2094,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
           if (in_array('msg',$exit_modes)) {
             $this->add_msg($order_id . ' - ' . __('Shipment is not registered.', 'itella-shipping')
               . "<br>"
-              . __('An error occurred. ', 'itella-shipping')
-              . $e->getMessage()
+              . __('An error occurred.', 'itella-shipping')
+              . ' ' . $e->getMessage()
               , 'error');
           }
 
@@ -2105,7 +2105,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
               . $e->getTraceAsString(), FILE_APPEND);
 
           if (in_array('return',$exit_modes)) {
-            return array('status' => 'error', 'msg' => __('An error occurred. ', 'itella-shipping') . $e->getMessage());
+            return array('status' => 'error', 'msg' => __('An error occurred.', 'itella-shipping') . ' ' . $e->getMessage());
           }
       }
     }
