@@ -7,6 +7,7 @@
 ### Improved
 - added the ability to specify an information message for the courier who arrives to pickup the shipments
 - added the ability to specify the arrival date and time when calling a courier
+- on the Woocommerce orders page, added the possibility to register shipments and download shipment labels via bulk action
 
 ### Changed
 - updated the courier invitation function according to changes in the API library
