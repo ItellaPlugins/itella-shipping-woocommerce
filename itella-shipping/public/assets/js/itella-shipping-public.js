@@ -67,9 +67,7 @@ function itella_init() {
         .setLocations(terminals, true)
         .registerCallback(function (manual) {
             // access itella class
-            localStorage.setItem('pickupPoint', JSON.stringify({
-                'id': this.selectedPoint.id,
-            }));
+            itellaSetPpStorageValues(this.selectedPoint.id, this.selectedPoint.pupCode);
             updateHiddenPpIdInput(this.selectedPoint.id);
             updateHiddenPpCodeInput(this.selectedPoint.pupCode);
         });
@@ -86,6 +84,39 @@ function itella_init() {
     oReq.send();
 
     updateDropdown();
+}
+
+function itellaGetPpStorageValues() {
+    const storedPickupPoint = localStorage.getItem('pickupPoint');
+
+    if (storedPickupPoint) {
+        try {
+            const pickupPoint = JSON.parse(storedPickupPoint);
+            if (
+                pickupPoint.timestamp &&
+                pickupPoint.id &&
+                pickupPoint.pupCode &&
+                (Date.now() - parseInt(pickupPoint.timestamp, 10) <= 1000 * 60 * 60 * 24) //Use values only if not older than 24 h
+            ) {
+                return pickupPoint;
+            }
+        } catch (e) {
+            // Do nothing - wrong JSON
+        }
+    }
+
+    return itellaSetPpStorageValues('', '');
+}
+
+function itellaSetPpStorageValues(id, pupCode) {
+    const pickupPoint = {
+        timestamp: Date.now(),
+        id: id,
+        pupCode: pupCode
+    };
+
+    localStorage.setItem('pickupPoint', JSON.stringify(pickupPoint));
+    return pickupPoint;
 }
 
 function itellaGetCountry() {
@@ -106,10 +137,8 @@ function loadJson() {
     this.itella.setLocations(locations, true);
 
     // select from list by pickup point ID
-    if (localStorage.getItem('pickupPoint')) {
-        const pickupPoint = JSON.parse(localStorage.getItem('pickupPoint'));
-        itella.setSelection(pickupPoint.id, false);
-    }
+    const pickupPoint = itellaGetPpStorageValues();
+    itella.setSelection(pickupPoint.id, false);
 }
 
 function itellaFilterLocations(locations_json) {
@@ -148,17 +177,17 @@ function setHiddenPpIdInput() {
     ppIdElement.setAttribute('type', 'hidden');
     ppIdElement.setAttribute('name', 'itella-chosen-point-id');
     ppIdElement.setAttribute('id', 'itella-chosen-point-id');
+    ppIdElement.setAttribute('autocomplete', 'off');
     radio[0].parentElement.appendChild(ppIdElement);
     const ppCodeElement = document.createElement('input');
     ppCodeElement.setAttribute('type', 'hidden');
     ppCodeElement.setAttribute('name', 'itella-chosen-point-code');
     ppCodeElement.setAttribute('id', 'itella-chosen-point-code');
+    ppCodeElement.setAttribute('autocomplete', 'off');
     radio[0].parentElement.appendChild(ppCodeElement);
-    if (localStorage.getItem('pickupPoint')) {
-        const pickupPoint = JSON.parse(localStorage.getItem('pickupPoint'));
-        ppIdElement.value = pickupPoint.id;
-        ppCodeElement.value = pickupPoint.pupCode;
-    }
+    const storageValues = itellaGetPpStorageValues();
+    ppIdElement.value = storageValues.id;
+    ppCodeElement.value = storageValues.pupCode;
 }
 
 function updateHiddenPpIdInput(ppId) {

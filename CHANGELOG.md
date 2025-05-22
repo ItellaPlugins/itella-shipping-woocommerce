@@ -3,6 +3,8 @@
 ## [Unreleased]
 ### Fixed
 - disabled test parameter
+- fixed pupCode value saved to order
+- fixed not using a pickup point selected more than 24 hours ago
 
 ### Improved
 - added the ability to specify an information message for the courier who arrives to pickup the shipments
