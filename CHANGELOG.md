@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.6.0] - 2025-06-09
 ### Fixed
 - disabled test parameter
 - fixed pupCode value saved to order
