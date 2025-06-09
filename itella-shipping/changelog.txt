@@ -1,5 +1,15 @@
 *** Smartpost Itella shipping Changelog ***
 
+2025-06-09 - version 1.6.0
+* Updated - itella-api library to v2.4.3
+* Fixed - Disabled test parameter
+* Fixed - pupCode value saved to order
+* Fixed - Not using a pickup point selected more than 24 hours ago
+* Added - The ability to specify an information message for the courier who arrives to pickup the shipments
+* Added - The ability to specify the arrival date and time when calling a courier
+* Added - The possibility to register shipments and download shipment labels via bulk action, on the Woocommerce orders page
+* Changed - Updated the courier invitation function according to changes in the API library
+
 2025-04-03 - version 1.5.5
 * Fixed - Loading of external scripts on the Checkout page so that they are loaded only on this page
 
