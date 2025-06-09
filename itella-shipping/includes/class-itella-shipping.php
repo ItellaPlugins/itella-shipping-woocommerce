@@ -385,8 +385,10 @@ class Itella_Shipping
     $this->loader->add_filter('admin_post_itella_shipments', $plugin_admin, 'itella_post_shipment_actions', 20);
     $this->loader->add_filter('admin_post_itella_manifests', $plugin_admin, 'itella_post_manifest_actions', 20);
     $this->loader->add_filter('admin_post_itella-call-courier', $plugin_admin, 'itella_post_call_courier_actions', 20);
-    //$this->loader->add_filter('bulk_actions-edit-shop_order', $plugin_admin, 'itella_register_orders_bulk_actions', 20); //Disabled while handle filter not working
-    //$this->loader->add_filter('handle_bulk_actions-edit-shop_order', $plugin_admin, 'itella_handle_orders_bulk_actions', 20, 3); //Need to create
+    $this->loader->add_filter('bulk_actions-edit-shop_order', $plugin_admin, 'itella_register_orders_bulk_actions', 20);
+    $this->loader->add_filter('handle_bulk_actions-edit-shop_order', $plugin_admin, 'itella_handle_orders_bulk_actions', 20, 3);
+    $this->loader->add_filter('bulk_actions-woocommerce_page_wc-orders', $plugin_admin, 'itella_register_orders_bulk_actions', 20); //HPOS
+    $this->loader->add_filter('handle_bulk_actions-woocommerce_page_wc-orders', $plugin_admin, 'itella_handle_orders_bulk_actions', 20, 3); //HPOS
     $this->loader->add_filter('woocommerce_admin_order_preview_get_order_details', $plugin_admin, 'add_custom_admin_order_preview_meta', 10, 2);
 
   }

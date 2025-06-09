@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.6.0] - 2025-06-09
+### Fixed
+- disabled test parameter
+- fixed pupCode value saved to order
+- fixed not using a pickup point selected more than 24 hours ago
+
+### Improved
+- added the ability to specify an information message for the courier who arrives to pickup the shipments
+- added the ability to specify the arrival date and time when calling a courier
+- on the Woocommerce orders page, added the possibility to register shipments and download shipment labels via bulk action
+
+### Changed
+- updated the courier invitation function according to changes in the API library
+
+### Updated
+- itella-api library to v2.4.3
+
 ## [1.5.5] - 2025-04-03
 ### Fixed
 - fixed loading of external scripts on the Checkout page so that they are loaded only on this page

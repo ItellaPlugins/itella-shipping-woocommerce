@@ -3,11 +3,13 @@
 Its a wrapper library for Pakettikauppa API library.
 
 ## Installing Itella-API using composer
+
 ```
 composer require mijora/itella-api
 ```
 
 ## Using Itella-API library
+
 - `__PATH_TO_LIB__` is path to where itella-api is placed. This will load Mijora\Itella namespace
 ```php
 require __PATH_TO_LIB__ . 'itella-api/vendor/autoload.php';
@@ -25,12 +27,12 @@ try {
 Any function starting with `add` or `set` returns its class so functions can be chained.
 
 ## Authentication
----
+
 Uses supplied `user` and `secret`. It is called during Shipment creation.
 
 
 ## Creating Sender
----
+
 `Party::ROLE_SENDER` is used to identify sender.
 
 Minimum required setup:
@@ -58,7 +60,7 @@ try {
 
 
 ## Creating Receiver
----
+
 `Party::ROLE_RECEIVER` is used to identify sender.
 
 Minimum required setup:
@@ -83,7 +85,7 @@ try {
 ```
 
 ## Disabling phone checking / fixing
----
+
 By default Party class checks that supplied phone matches set country format (if country is Lithuania it exxpects to see Lithuanian phone number) and tries to fix phone number to conform to international standart if needed.
 In case where such check / fixing is not desired (phone number is of different country than the one set) it can be disabled using disablePhoneCheck function on Party class. 
 
@@ -113,7 +115,7 @@ Notice how country code is set as LT (Lithuania) while contact mobile number is 
 
 
 ## Creating Order Items
----
+
 - If using multiparcel additional service simply create multiple GoodsItem and register them to Shipment.
 ```php
 use Mijora\Itella\Shipment\GoodsItem;
@@ -131,7 +133,7 @@ try {
 ```
 
 ## Creating Additional Services
----
+
 **Shipment::PRODUCT_COURIER** available additional services:
 - Must be set manualy
   - 3101 - Cash On Delivery (only by credit card). 
@@ -199,7 +201,7 @@ try {
 
 
 ## Create Shipment
----
+
 Available product codes:
 * Shipment::PRODUCT_COURIER = 2317
 * Shipment::PRODUCT_PICKUP  = 2711
@@ -292,7 +294,7 @@ try {
 ```
 
 ## Printing Label
----
+
 Available label sizes:
 * Shipment::LABEL_SIZE_A5 = A5
 * Shipment::LABEL_SIZE_107X225 = 107x225
@@ -349,7 +351,7 @@ Above example checks that response isnt empty (if tracking number is wrong it st
 
 
 ## Locations API
----
+
 When using Pickup Point option it is important to have correct list of pickup points. Also when creating Shipment to send to pickup point it will require that pickup point ID.
 ```php
 use Mijora\Itella\Locations\PickupPoints;
@@ -363,7 +365,7 @@ $pickup->saveLocationsToJSONFile('itella_locations_lt.json', json_encode($itella
 ```
 
 ## Manifest generating
----
+
 When generating manifest by default it uses english strings - it is possible to pass translation.
 
 Manifest constructor accepts additional arguments
@@ -416,8 +418,12 @@ $manifest
 ```
 
 ## Call Courier
----
-To call courrier manifest must be generated (works well with base64 encoded pdf). CallCourier is using mail() php function. That means - even if mail reports success on sending email, it is not guaranteed to be sent.
+
+Courier invitation has 3 methods:
+  - Email - a courier invitation is sent to the specified Smartposti email address. To call a courier, manifest must be generated (works well with base64 encoded PDF). This method using `mail()` PHP function. That means - even if mail reports success on sending email, it is not guaranteed to be sent.
+  - POSTRA - a courier invitation is sent to the Smartposti API server. This method is only used when calling a courier in Lithuania or Latvia.
+  - API - a courier invitation is sent to the Smartposti API server. This method is used in all countries except Lithuania and Latvia.
+
 ```php
 use Mijora\Itella\CallCourier;
 use Mijora\Itella\ItellaException;
@@ -433,86 +439,53 @@ $manifest_string = $manifest
   ->printManifest('manifest.pdf')
 ;
 
+$user = 'API_USER';     // API user
+$secret = 'API_SECRET'; // API secret / password
 $sendTo = 'test@test.com'; // email to send courier call to
-try {
-  $caller = new CallCourier($sendTo);
-  $result = $caller
-    ->setSenderEmail('shop@shop.lt') // sender email
-    ->setSubject('E-com order booking') // currently it must be 'E-com order booking'
-    ->setPickUpAddress(array( // strings to show in email message
-      'sender' => 'Name / Company name',
-      'address' => 'Street, Postcode City, Country',
-      'contact_phone' => '860000000',
-    ))
-    ->setAttachment($manifest_string, true) // attachment is previously generated manifest, true - means we are passing base64 encoded string
-    ->callCourier() // send email
-  ;
-  if ($result) {
-    echo 'Email sent to: <br>' . $sendTo;
-  }
-} catch (ItellaException $e) { // catch if something goes wrong
-  echo 'Failed to send email, reason: ' . $e->getMessage();
-}
-```
-
-## Call Courier - in development
----
-To call courrier manifest must be generated (works well with base64 encoded pdf). CallCourier is using mail() php function. That means - even if mail reports success on sending email, it is not guaranteed to be sent.
-```php
-use Mijora\Itella\CallCourier;
-use Mijora\Itella\ItellaException;
-use Mijora\Itella\Pdf\Manifest;
-
-$manifest = new Manifest();
-$manifest_string = $manifest
-  /*
-  See previous examples on how to create manifest, here only show last couple settings to get base64 string
-  */
-  ->setToString(true)
-  ->setBase64(true)
-  ->printManifest('manifest.pdf')
-;
-
-$items = array( // selected orders array
+$items = array( // shipments information
   array(
-    'tracking_number' => 'JJFItestnr00000000015',
-    'weight' => 1,
-    'amount' => 1,
-    'delivery_address' => 'Test Tester, Example str. 6, 44320 City, LT',
+    'track_num' => '01234567890123456789',
+    'weight' => 1.005, // kg
+    'amount' => 1, // shipments quantity
+    'delivery_address' => 'Name / Company name. Street, Postcode City, Country',
   ),
 );
 
-$translates = array( // translate text in email, recommend use english
-  'mail_title' => 'Pickup information',
-  'mail_sender' => 'Sender',
-  'mail_address' => 'Address (pickup from)',
-  'mail_phone' => 'Contact Phone',
-  'mail_pickup_time' => 'Pickup time',
-  'mail_attachment' => 'See attachment for manifest PDF.',
-);
-
-$sendTo = 'test@test.com'; // email to send courier call to
 try {
   $caller = new CallCourier($sendTo);
   $result = $caller
+    ->setUsername($user)
+    ->setPassword($secret)
     ->setSenderEmail('shop@shop.lt') // sender email
     ->setSubject('E-com order booking') // currently it must be 'E-com order booking'
     ->setPickUpAddress(array( // strings to show in email message
       'sender' => 'Name / Company name',
       'address_1' => 'Street str. 1',
       'postcode' => '12345',
-      'city' => 'City name',
-      'country' => 'LT', // Country code
-      'pickup_time' => '8:00 - 17:00',
+      'city' => 'City',
+      'country' => 'LT',
       'contact_phone' => '+37060000000',
     ))
+    ->setPickUpParams(array(
+      'date' => '2001-12-20',
+      'time_from' => '08:00',
+      'time_to' => '17:00',
+      'info_general' => 'Message to courier',
+      'id_sender' => 'LT100000000000', // sender company code or VAT code
+    ))
     ->setAttachment($manifest_string, true) // attachment is previously generated manifest, true - means we are passing base64 encoded string
-    ->setItems($items) // add orders
-    ->setTranslates($translates) // add translated email text
-    ->callCourier() // send email
+    ->setItems($items)
+    ->showMessagesPrefix(true) // specify if a prefix (e.g. name of the call method) should be displayed at the beginning of returned messages
+    ->callCourier() // send call
   ;
-  if ($result) {
-    echo 'Email sent to: <br>' . $sendTo;
+  if (!empty($result['errors'])) {
+    echo '<b>Errors:</b><br/>';
+    echo implode('<br/>', $result['errors']);
+    echo '<br/><br/>';
+  }
+  if (!empty($result['success'])) {
+    echo '<b>Success:</b><br/>';
+    echo implode('<br/>', $result['success']);
   }
 } catch (ItellaException $e) { // catch if something goes wrong
   echo 'Failed to send email, reason: ' . $e->getMessage();
