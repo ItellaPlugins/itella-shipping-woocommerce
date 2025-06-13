@@ -37,6 +37,15 @@ class Itella_Shipping_Method_Helper
         );
     }
 
+    public function convert_seconds_to_hms_array( $seconds )
+    {
+        $h = floor($seconds / 3600);
+        $m = floor(($seconds / 60) % 60);
+        $s = $seconds % 60;
+
+        return array('h' => $h, 'm' => $m, 's' => $s);
+    }
+
     public function predict_cart_dimmension( $products, $max_dimension )
     {
         $cart_dimmensions = array(

@@ -100,23 +100,45 @@ jQuery('document').ready(function($) {
                     nonce : nonce
                 },
                 success: function(response){
-                    if (response.status == 'error') {
-                        alert(response.msg);
-                    }
-                    if (response.status == 'notice') {
-                        var output = response.msg + ':\n';
-                        response.values.forEach(function(entry) {
-                            output += '#' + entry.id + ': ' + entry.msg + '\n';
-                        })
-                        alert(output);
+                    const showAlertAndReload = (message) => {
+                        alert(message);
                         location.reload();
+                    };
+
+                    const enableButton = () => {
+                        $(button).find('.spinner-holder').removeClass('active');
+                        $(button).prop('disabled', false);
+                    };
+
+                    const buildMessage = (baseMsg, values) => {
+                        let output = baseMsg;
+                        if (Array.isArray(values)) {
+                            output += ':\n';
+                            values.forEach(entry => {
+                                output += `#${entry.id}: ${entry.msg}\n`;
+                            });
+                        }
+                        return output;
+                    };
+
+                    let output = response.msg;
+
+                    if (response.status === "notice" && response.hasOwnProperty("values")) {
+                        output = buildMessage(output, response.values);
                     }
-                    $(button).find('.spinner-holder').removeClass('active');
-                    $(button).prop('disabled', false);
-                    if (response.status == 'success') {
-                        alert(response.msg);
-                        location.reload();
+
+                    if (response.hasOwnProperty("confirm_url")) {
+                        const confirm_result = confirm(output);
+                        if (confirm_result) {
+                            window.location.href = response.confirm_url;
+                        } else {
+                            location.reload();
+                        }
+                    } else {
+                        showAlertAndReload(output);
                     }
+
+                    enableButton();
                 },
                 error: function(xhr, status, error){
                     var errorMessage = xhr.status + ': ' + xhr.statusText;

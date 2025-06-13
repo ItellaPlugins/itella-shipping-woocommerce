@@ -116,6 +116,8 @@ class Itella_Shipping
     $this->plugin_url = $plugin['url'];
     $this->plugin_path = $plugin['path'];
 
+    $this->load_cron();
+
     add_action('plugins_loaded', array($this, 'run'));
     add_action('admin_notices', array($this, 'notify_on_activation'));
     add_action('woocommerce_after_register_post_type', array($this, 'update_database'));
@@ -344,12 +346,24 @@ class Itella_Shipping
    */
   private function set_locale()
   {
-
     $plugin_i18n = new Itella_Shipping_i18n();
     $plugin_i18n->set_domain($this->get_plugin_name());
 
     $this->loader->add_action('init', $plugin_i18n, 'load_plugin_textdomain');
+  }
 
+  /**
+   * Load plugin cronjob functions
+   * 
+   * @since    1.6.1
+   * @access   private
+   */
+  private function load_cron()
+  {
+    require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-itella-shipping-cron.php';
+
+    $plugin_cron = new Itella_Shipping_Cron($this->plugin_basename);
+    $plugin_cron->init();
   }
 
   /**
