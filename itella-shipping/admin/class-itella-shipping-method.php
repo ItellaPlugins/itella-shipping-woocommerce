@@ -2057,7 +2057,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     }
   }
 
-  private function register_shipments( $order_ids )
+  public function register_shipments( $order_ids )
   {
     if ( ! is_array($order_ids) || empty($order_ids) ) {
       return array('status' => 'error', 'msg' => __('No order ids received', 'itella-shipping'));
@@ -2500,45 +2500,46 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     return $bulk_actions;
   }
 
+  public static function is_itella_method($itella_data)
+  {
+    $is_shipping_updated = !empty($itella_data->shipping_method);
+    $itella_method = $is_shipping_updated ? $itella_data->shipping_method : $itella_data->itella_method;
+
+    return (bool) $itella_method;
+  }
+
   public function itella_handle_orders_bulk_actions($redirect_to, $action, $ids)
   {
     if ( $action == 'itella_register_shipments' ) {
-      $result = $this->register_shipments($ids);
-      if ( ! is_array($result) ) {
-        file_put_contents(plugin_dir_path(dirname(__FILE__)) . 'var/log/errors.log',
-          '[' . date('Y-m-d H:i:s') . "] Bulk action result:\n" . print_r($result, true) . PHP_EOL,
-          FILE_APPEND
+      $counter = 0;
+      foreach ( $ids as $id ) {
+        $itella_data = $this->wc->get_itella_data($id);
+        if ( ! self::is_itella_method($itella_data) ) {
+          continue;
+        }
+        if ( ! empty($itella_data->tracking->code) ) {
+          continue;
+        }
+
+        $counter++;
+        $execute_after_sec = $counter * 3;
+        $args = array(
+          'order' => $id,
+          'total' => count($ids),
+          'current' => $counter
         );
-        $result = array('status' => 'error', 'msg' => __('Shipments registration returned an unknown result. Please check the plugin log.', 'itella-shipping'));
-      }
-      $message_type = 'notice';
-      $success_messages = array();
-      $failed_messages = array();
-      foreach ( $result as $order_id => $result_data ) {
-        if ( $result_data['status'] == 'error' ) {
-          $failed_messages[] = '<b>' . $result_data['number'] . ':</b> ' . $result_data['msg'];
-        }
-        if ( $result_data['status'] == 'success' ) {
-          $success_messages[] = '<b>' . $result_data['number'] . ':</b> ' . $result_data['msg'];
-        }
+        as_schedule_single_action(time() + $execute_after_sec, 'itella_cronjob_register_shipment', array($args));
       }
 
-      if ( ! empty($success_messages) && ! empty($failed_messages) ) {
-        $this->add_msg(
-          '<span style="color:green;">' . implode('<br/>', $success_messages) . '</span>'
-          . '<br/><span style="color:#d63638;">' . implode('<br/>', $failed_messages) . '</span>',
-          'warning'
-        );
-      } else if ( ! empty($success_messages) ) {
-        $this->add_msg(__('Shipments registered successfully', 'itella-shipping'), 'success');
-      } else if ( ! empty($failed_messages) ) {
-        $this->add_msg(__('Could not register any shipment', 'itella-shipping') . ':<br/><span style="color:#d63638;">' . implode('<br/>', $failed_messages), 'error') . '</span>';
+      if ( ! $counter ) {
+        $this->add_msg(__('No shipment can be registered for any order', 'itella-shipping'), 'error');
       } else {
-        file_put_contents(plugin_dir_path(dirname(__FILE__)) . 'var/log/errors.log',
-          '[' . date('Y-m-d H:i:s') . "] Bulk action result:\n" . print_r($result, true) . PHP_EOL,
-          FILE_APPEND
-        );
-        $this->add_msg(__('Shipment registration did not return any status. Please check the plugin log.', 'itella-shipping'), 'error');
+        $url = add_query_arg(array(
+          'page' => 'action-scheduler',
+          'status' => 'pending',
+          's' => 'itella_cronjob_register_shipment',
+        ), admin_url('tools.php'));
+        $this->add_msg(sprintf(__('Registration of shipments has begun. You can see the queue for shipments registration on the %s page.', 'itella-shipping'), '<a href="' . $url . '">' . __('Scheduled Actions', 'woocommerce') . '</a>'), 'warning');
       }
     }
 
