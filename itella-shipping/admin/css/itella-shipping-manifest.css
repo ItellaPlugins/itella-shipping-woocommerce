@@ -498,3 +498,6 @@
 .itella-manifest-switch input:checked + .slider .off {
   display: none;
 }
+.column-tracking_number .error {
+  color: #d63638;
+}

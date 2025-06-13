@@ -37,7 +37,7 @@ class Itella_Shipping_Wc_Itella extends Itella_Shipping_Wc {
             'tracking' => (object) array(
                 'code' => $this->get_itella_tracking_code($order),
                 'url' => $this->get_itella_tracking_url($order),
-                'error' => $order->get_meta('itella_tracking_code_error', true),
+                'error' => $this->get_itella_tracking_code_error($order),
             ),
             'manifest' => (object) array(
                 'date' => $this->get_itella_manifest_generation_date($order),
@@ -182,7 +182,7 @@ class Itella_Shipping_Wc_Itella extends Itella_Shipping_Wc {
 
     public function save_itella_tracking_code_error( $order, $value )
     {
-        // Not using
+        return $this->update_order_meta($order, 'itella_tracking_code_error', sanitize_text_field($value));
     }
 
     public function get_itella_tracking_code_error( $order )

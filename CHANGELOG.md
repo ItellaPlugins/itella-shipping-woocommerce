@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 ### Improved
-- it has been made that the shipments registration takes place via cronjob, when the shipments is registered via bulk action on the Woocommerce order page
+- it has been made that the shipments registration takes place via cronjob, when the shipments is registered via bulk action
 
 ## [1.6.0] - 2025-06-09
 ### Fixed

@@ -2124,6 +2124,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
           . $e->getTraceAsString() . PHP_EOL, FILE_APPEND
         );
         $result_data['msg'] = $e->getMessage();
+        $this->wc->save_itella_tracking_code_error($order, $e->getMessage());
         $orders_result[$order_id] = $result_data;
         continue;
       }
@@ -2184,27 +2185,38 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       die();
     }
     if (isset($_REQUEST['ids']) && is_array($_REQUEST['ids'])) {
-      $failed = array();
+      $counter = 0;
       foreach($_REQUEST['ids'] as $id) {
-        $check_code = $this->wc->get_itella_data($id)->tracking->code;
-        if (empty($check_code)) {
-          $_REQUEST['post'] = $id;
-          $status = $this->itella_post_shipment_actions( array('return') );
-          if ($status['status'] === 'error') {
-            array_push($failed, array('id' => $id, 'msg' => $status['msg']));
-          }
+        $itella_data = $this->wc->get_itella_data($id);
+        if ( ! self::is_itella_method($itella_data) ) {
+          continue;
         }
+        if ( ! empty($itella_data->tracking->code) ) {
+          continue;
+        }
+
+        $counter++;
+        $execute_after_sec = $counter * 3;
+        $args = array(
+          'order' => $id,
+        );
+        as_schedule_single_action(time() + $execute_after_sec, 'itella_cronjob_register_shipment', array($args));
       }
-      if (empty($failed)) {
+      if ( ! $counter ) {
         echo json_encode(array(
-          'status' => 'success',
-          'msg' => __("Shipments successfully registered", 'itella-shipping')
+          'status' => 'error',
+          'msg' => __('No shipment can be registered for any order', 'itella-shipping')
         ));
       } else {
+        $url = add_query_arg(array(
+          'page' => 'action-scheduler',
+          'status' => 'pending',
+          's' => 'itella_cronjob_register_shipment',
+        ), admin_url('tools.php'));
         echo json_encode(array(
           'status' => 'notice',
-          'msg' => __("Some orders failed to register the shipment", 'itella-shipping'),
-          'values' => $failed
+          'msg' => sprintf(__('Registration of shipments has begun. You can see the queue for shipments registration on the %s page.', 'itella-shipping'), '"' . __('Scheduled Actions', 'woocommerce') . '"') . "\n" . __('Do you want to open this page now?', 'itella-shipping'),
+          'confirm_url' => $url
         ));
       }
     } else {
@@ -2525,8 +2537,6 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         $execute_after_sec = $counter * 3;
         $args = array(
           'order' => $id,
-          'total' => count($ids),
-          'current' => $counter
         );
         as_schedule_single_action(time() + $execute_after_sec, 'itella_cronjob_register_shipment', array($args));
       }
