@@ -40,12 +40,22 @@ class CallCourier
     'mail_pickup_time' => 'Pickup time',
     'mail_attachment' => 'See attachment for manifest PDF.',
   );
+  private $all_methods = array(
+    'api',
+    'postra',
+    'email'
+  );
+  private $enabled_methods = array();
   private $show_prefix = false;
 
   public function __construct($itella_email = '', $isTest = false)
   {
     $this->itella_email = $itella_email;
     $this->isTest = $isTest;
+
+    foreach ($this->all_methods as $method) {
+      $this->enableMethod($method);
+    }
   }
 
   /***************************************
@@ -54,19 +64,13 @@ class CallCourier
 
   public function callCourier()
   {
-    $active_methods = array(
-      'api',
-      'postra',
-      'email'
-    );
-
     $messages = array(
       'errors' => array(),
       'success' => array()
     );
     
     try {
-      foreach ($active_methods as $method) {
+      foreach ($this->enabled_methods as $method) {
         switch ($method) {
           case 'api':
             if (!$this->isApiMethodAvailable()) {
@@ -147,7 +151,8 @@ class CallCourier
 
   private function getCallError($result, $prefix = '')
   {
-    if ($this->show_prefix && !empty($prefix)) {
+    $prefix = ($this->show_prefix) ? $prefix : '';
+    if (!empty($prefix)) {
       $prefix .= ': ';
     }
     if (!is_array($result)) {
@@ -167,6 +172,7 @@ class CallCourier
 
   private function getCallSuccess($result, $prefix = '')
   {
+    $prefix = ($this->show_prefix) ? $prefix : '';
     if (!empty($prefix)) {
       $prefix .= ': ';
     }
@@ -237,6 +243,8 @@ class CallCourier
 
   public function buildMailBody()
   {
+    $this->checkPickupTime();
+
     $body = '<h2>' . $this->translates['mail_title'] . '</h2><br/>' . PHP_EOL;
     $body .= '<table>' . PHP_EOL;
     if (!empty($this->pickupAddress['sender'])) {
@@ -276,6 +284,8 @@ class CallCourier
 
   public function buildApiRequest()
   {
+    $this->checkPickupTime();
+    
     $data = array();
     
     $data['sender']['name'] = (!empty($this->pickupAddress['sender'])) ? $this->pickupAddress['sender'] : '';
@@ -415,6 +425,13 @@ class CallCourier
    * Helpers
    **************************************/
 
+  private function checkPickupTime()
+  {
+    if (empty($this->pickupAddress['pickup_time'])) {
+      $this->pickupAddress['pickup_time'] = $this->pickupParams['date'] . ' ' . $this->pickupParams['time_from'] . ' - ' . $this->pickupParams['time_to'];
+    }
+  }
+
   private function getPickupAddressValue( $value_key, $empty_value = '' )
   {
     if (isset($this->pickupAddress[$value_key])) {
@@ -472,16 +489,13 @@ class CallCourier
    *  'postcode' => '12345',
    *  'city' => 'City name',
    *  'country' => 'LT',
-   *  'pickup_time' => '8:00 - 17:00',
+   *  'pickup_time' => '2025-05-15 8:00 - 17:00',
    *  'contact_phone' => '+37060000000',
    * );
    */
   public function setPickUpAddress($pickupAddress)
   {
     $this->pickupAddress = array_merge($this->pickupAddress, $pickupAddress);
-    if (empty($this->pickupAddress['pickup_time'])) {
-      $this->pickupAddress['pickup_time'] = $this->pickupParams['time_from'] . ' - ' . $this->pickupParams['time_to'];
-    }
     return $this;
   }
 
@@ -543,6 +557,22 @@ class CallCourier
   public function showMessagesPrefix($show)
   {
     $this->show_prefix = (bool)$show;
+    return $this;
+  }
+
+  public function enableMethod($method)
+  {
+    $this->enabled_methods[] = $method;
+    return $this;
+  }
+
+  public function disableMethod($method)
+  {
+    foreach ($this->enabled_methods as $key => $enabled_method) {
+      if ($enabled_method == $method) {
+        unset($this->enabled_methods[$key]);
+      }
+    }
     return $this;
   }
 }

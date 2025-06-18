@@ -11,7 +11,7 @@ class SimpleXMLElement extends \SimpleXMLElement
    * @param string|null
    * @param string|null
    */
-  public function addChild(string $qualifiedName, ?string $value = null, ?string $namespace = null): ?SimpleXMLElement
+  public function addChild($qualifiedName, $value = null, $namespace = null)
   {
     if ( $value != null )
     {
