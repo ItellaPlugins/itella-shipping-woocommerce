@@ -1,5 +1,9 @@
 *** Smartpost Itella shipping Changelog ***
 
+2025-06-18 - version 1.6.1
+* Updated - itella-api library to v2.4.5
+* Changed - It has been made that shipment registration execute via a cronjob when shipments are registered during a mass action
+
 2025-06-09 - version 1.6.0
 * Updated - itella-api library to v2.4.3
 * Fixed - Disabled test parameter

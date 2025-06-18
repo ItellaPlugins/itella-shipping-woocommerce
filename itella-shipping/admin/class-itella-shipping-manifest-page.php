@@ -571,7 +571,7 @@ class Itella_Manifest
                                 ?>
                               </div>
                           </td>
-                          <td class="manage-column">
+                          <td class="column-tracking_number">
                               <div class="data-grid-cell-content">
                                 <?php
                                 $tracking_code = $itella_data->tracking->code;
@@ -582,9 +582,9 @@ class Itella_Manifest
                                     <a href="<?= $tracking_url ? $tracking_url : '#' ?>" target="_blank">
                                       <?= $tracking_code; ?>
                                     </a>
-                                  <?php if ($error) : ?>
-                                        <br/><?php echo __('Error', 'itella-shipping') . ': ' . $error; ?>
-                                  <?php endif; ?>
+                                <?php endif; ?>
+                                <?php if ($error) : ?>
+                                    <span class="error"><?php echo '<b>' . __('Error', 'itella-shipping') . ':</b> ' . $error; ?></span>
                                 <?php endif; ?>
                               </div>
                           </td>

@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.4.5]
+### Added
+- added the ability to add fixes to used third-party libraries (it uses the patching library cweagans/composer-patches)
+- added a patch for the SimpleXMLElement class of the Pakettikauppa library
+
+## [2.4.4]
+### Fixed
+- fixed prefix control
+- fixed pickup time automatic generation
+
+### Added
+- added `enableMethod()` and `disableMethod()` functions to make it easier to manage methods
+
 ## [2.4.3]
 ### Fixed
 - fixed a bug in the POSTRA method where user logins are passed through separate functions, instead of directly to the calling function

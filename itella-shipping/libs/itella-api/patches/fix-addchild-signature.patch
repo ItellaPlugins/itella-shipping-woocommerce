@@ -1,0 +1,11 @@
+--- a/src/Pakettikauppa/SimpleXMLElement.php
++++ b/src/Pakettikauppa/SimpleXMLElement.php
+@@ -11,7 +11,7 @@
+    * @param string|null
+    * @param string|null
+    */
+-  public function addChild(string $qualifiedName, ?string $value = null, ?string $namespace = null): ?SimpleXMLElement
++  public function addChild($qualifiedName, $value = null, $namespace = null)
+   {
+     if ( $value != null )
+     {

@@ -2,7 +2,7 @@
     "name": "mijora/itella-api",
     "description": "Itella API wrapper",
     "type": "library",
-    "version": "2.4.3",
+    "version": "2.4.5",
     "authors": [
         {
             "name": "Rimvydas",
@@ -17,11 +17,24 @@
     "require": {
         "pakettikauppa/api-library": "^2.0",
         "setasign/fpdi": "^2.3",
-        "tecnickcom/tcpdf": "^6.4"
+        "tecnickcom/tcpdf": "^6.4",
+        "cweagans/composer-patches": "^1.7"
     },
     "autoload": {
         "psr-4": {
             "Mijora\\Itella\\": "src/"
+        }
+    },
+    "extra": {
+        "patches": {
+            "pakettikauppa/api-library": {
+                "Fix PHP compatibility in addChild method": "patches/fix-addchild-signature.patch"
+            }
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "cweagans/composer-patches": true
         }
     }
 }
