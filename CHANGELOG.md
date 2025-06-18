@@ -1,8 +1,8 @@
 # Changelog
 
-## [Unreleased]
+## [1.6.1] - 2025-06-18
 ### Improved
-- it has been made that the shipments registration takes place via cronjob, when the shipments is registered via bulk action
+- it has been made that shipment registration execute via a cronjob when shipments are registered during a mass action
 
 ### Updated
 - itella-api library to v2.4.5
