@@ -1,8 +1,8 @@
 <?php return array(
     'root' => array(
         'name' => 'mijora/itella-api',
-        'pretty_version' => '2.4.3',
-        'version' => '2.4.3.0',
+        'pretty_version' => '2.4.5',
+        'version' => '2.4.5.0',
         'reference' => null,
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
@@ -10,9 +10,18 @@
         'dev' => true,
     ),
     'versions' => array(
+        'cweagans/composer-patches' => array(
+            'pretty_version' => '1.7.3',
+            'version' => '1.7.3.0',
+            'reference' => 'e190d4466fe2b103a55467dfa83fc2fecfcaf2db',
+            'type' => 'composer-plugin',
+            'install_path' => __DIR__ . '/../cweagans/composer-patches',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'mijora/itella-api' => array(
-            'pretty_version' => '2.4.3',
-            'version' => '2.4.3.0',
+            'pretty_version' => '2.4.5',
+            'version' => '2.4.5.0',
             'reference' => null,
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
@@ -38,9 +47,9 @@
             'dev_requirement' => false,
         ),
         'tecnickcom/tcpdf' => array(
-            'pretty_version' => '6.9.4',
-            'version' => '6.9.4.0',
-            'reference' => 'c838d7f7babb0d35763acfb9ecf78c3f45966f83',
+            'pretty_version' => '6.10.0',
+            'version' => '6.10.0.0',
+            'reference' => 'ca5b6de294512145db96bcbc94e61696599c391d',
             'type' => 'library',
             'install_path' => __DIR__ . '/../tecnickcom/tcpdf',
             'aliases' => array(),

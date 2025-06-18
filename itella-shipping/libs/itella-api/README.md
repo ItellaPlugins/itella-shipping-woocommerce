@@ -476,6 +476,8 @@ try {
     ->setAttachment($manifest_string, true) // attachment is previously generated manifest, true - means we are passing base64 encoded string
     ->setItems($items)
     ->showMessagesPrefix(true) // specify if a prefix (e.g. name of the call method) should be displayed at the beginning of returned messages
+    ->disableMethod('email') // disable use of the specified method in the "callCourier()" function
+    ->enableMethod('email') // enable use of the specified method in the "callCourier()" function
     ->callCourier() // send call
   ;
   if (!empty($result['errors'])) {
