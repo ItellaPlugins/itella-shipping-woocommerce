@@ -545,9 +545,9 @@ class Itella_Manifest
                                   }
                                   if ($shipping_parameters['itella_shipping_method'] === 'itella_c') {
                                     echo '<strong>' . __('Smartposti Courier', 'itella-shipping') . ':</strong>';
-                                    echo '<br><span class="param-title">' . __('Packet Count', 'itella-shipping') . ':</span> ';
+                                    echo '<br><span class="param-title">' . __('Packages count', 'itella-shipping') . ':</span> ';
                                     echo '<em>' . $shipping_parameters['packet_count'] . '</em>';
-                                    echo '<br><span class="param-title">' . __('Packet Weight', 'itella-shipping') . ':</span> ';
+                                    echo '<br><span class="param-title">' . __('Package weight', 'itella-shipping') . ':</span> ';
                                     echo '<em>' . $shipping_parameters['weight'] . ' kg</em>';
                                     if ($shipping_parameters['extra_services'] || $shipping_parameters['multi_parcel']) {
                                       echo '<br><span class="param-title">' . __('Extra services', 'itella-shipping') . ':</span> ';
