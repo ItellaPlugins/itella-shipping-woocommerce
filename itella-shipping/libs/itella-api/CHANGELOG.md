@@ -1,5 +1,10 @@
 # Changelog
 
+## [2.4.6]
+### Fixed
+- fixed to display an error message when a timeout occurs while trying to get a Access Token
+- fixed to display an error message when an Exception occurs in Pakettikauppa library while trying to register a shipment
+
 ## [2.4.5]
 ### Added
 - added the ability to add fixes to used third-party libraries (it uses the patching library cweagans/composer-patches)
