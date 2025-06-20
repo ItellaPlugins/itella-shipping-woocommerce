@@ -1,5 +1,10 @@
 # Changelog
 
+### [Unreleased]
+### Fixed
+- fixed to remove error message after successful shipment registration
+- fixed so that when registering multi-parcel shipments, the order weight would be divided by the number of packages
+
 ## [1.6.1] - 2025-06-18
 ### Improved
 - it has been made that shipment registration execute via a cronjob when shipments are registered during a mass action

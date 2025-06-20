@@ -1359,7 +1359,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
                 <strong><?= __('Packets (total):', 'itella-shipping') ?></strong> <?= $packet_count ?>
             </p>
             <p>
-                <strong><?= sprintf(__('Weight (%s):', 'itella-shipping'), $weight_unit) ?></strong> <?= number_format((float)$weight,3) ?>
+                <strong><?= sprintf(__('Total weight (%s):', 'itella-shipping'), $weight_unit) ?></strong> <?= number_format((float)$weight,3) ?>
             </p>
             <p><strong><?= __('COD:', 'itella-shipping') ?></strong>
               <?=
@@ -1434,7 +1434,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
           woocommerce_wp_text_input(array(
               'id' => 'weight_total',
-              'label' => sprintf(__('Weight (%s)', 'itella-shipping'), $weight_unit),
+              'label' => sprintf(__('Total weight (%s)', 'itella-shipping'), $weight_unit),
               'value' => $weight,
               'wrapper_class' => 'form-field-wide'
           ));
@@ -2107,6 +2107,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         // save result
         $this->wc->save_itella_tracking_code($order, $result->__toString());
         $this->wc->save_itella_tracking_url($order, self::getTrackingUrl($order_country) . $result->__toString());
+        $this->wc->save_itella_tracking_code_error($order, '');
 
         // add order note
         $note = sprintf(
