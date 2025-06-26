@@ -1,6 +1,6 @@
 # Changelog
 
-### [Unreleased]
+### [1.6.2] - 2025-06-26
 ### Fixed
 - fixed to remove error message after successful shipment registration
 - fixed so that when registering multi-parcel shipments, the order weight would be divided by the number of packages
