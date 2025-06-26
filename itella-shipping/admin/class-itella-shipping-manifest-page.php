@@ -545,10 +545,10 @@ class Itella_Manifest
                                   }
                                   if ($shipping_parameters['itella_shipping_method'] === 'itella_c') {
                                     echo '<strong>' . __('Smartposti Courier', 'itella-shipping') . ':</strong>';
-                                    echo '<br><span class="param-title">' . __('Packet Count', 'itella-shipping') . ':</span> ';
+                                    echo '<br><span class="param-title">' . __('Packages count', 'itella-shipping') . ':</span> ';
                                     echo '<em>' . $shipping_parameters['packet_count'] . '</em>';
-                                    echo '<br><span class="param-title">' . __('Weight', 'itella-shipping') . ':</span> ';
-                                    echo '<em>' . $shipping_parameters['weight'] . '</em>';
+                                    echo '<br><span class="param-title">' . __('Package weight', 'itella-shipping') . ':</span> ';
+                                    echo '<em>' . $shipping_parameters['weight'] . ' kg</em>';
                                     if ($shipping_parameters['extra_services'] || $shipping_parameters['multi_parcel']) {
                                       echo '<br><span class="param-title">' . __('Extra services', 'itella-shipping') . ':</span> ';
                                       if ($shipping_parameters['multi_parcel']) {
@@ -832,6 +832,8 @@ class Itella_Manifest
     $weight = (empty($weight)) ? $order_weight : $weight;
     $weight = $wc->convert_weight($weight, 'kg');
     $weight = (empty($weight)) ? $default_weight : $weight;
+    $weight = (float) $weight / (int) $packet_count;
+    $weight = round($weight, 3);
     
     $is_cod = $itella_data->cod->enabled === 'yes';
     if (!$is_cod) {

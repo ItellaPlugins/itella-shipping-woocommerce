@@ -100,10 +100,14 @@ class Shipment
 
   public function registerShipment()
   {
-    $shipment = $this->createPakettikauppaShipment();
+    try {
+      $shipment = $this->createPakettikauppaShipment();
 
-    $this->_client->createTrackingCode($shipment, 'en');
-    $track = $shipment->getTrackingCode();
+      $this->_client->createTrackingCode($shipment, 'en');
+      $track = $shipment->getTrackingCode();
+    } catch (\Exception $e) {
+      throw new ItellaException($e->getMessage());
+    }
 
     return $track;
   }

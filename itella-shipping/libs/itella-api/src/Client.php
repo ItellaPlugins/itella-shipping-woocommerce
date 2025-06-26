@@ -46,22 +46,27 @@ class Client
     public function getAccessToken()
     {
         $token = $this->_client->getToken();
+        $errors = [];
 
+        if (empty($token) && !empty($this->_client->http_error)) {
+            $errors[] = 'Error: ' . $this->_client->http_error;
+        }
         if (!isset($token->access_token)) {
-            $error = [];
             if (isset($token->status)) {
-                $error[] = 'Status: ' . $token->status;
+                $errors[] = 'Status: ' . $token->status;
             }
 
             if (isset($token->error)) {
-                $error[] = 'Error: ' . $token->error;
+                $errors[] = 'Error: ' . $token->error;
             }
 
             if (isset($token->message)) {
-                $error[] = 'Message: ' . $token->message;
+                $errors[] = 'Message: ' . $token->message;
             }
+        }
 
-            throw new ItellaException(implode("\n ", $error));
+        if (!empty($errors)) {
+            throw new ItellaException(implode("\n ", $errors));
         }
 
         $this->_client->setAccessToken($token->access_token);
