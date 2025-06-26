@@ -1,4 +1,9 @@
-*** Smartpost Itella shipping Changelog ***
+*** Smartposti shipping Changelog ***
+
+2025-06-26 - version 1.6.2
+* Updated - itella-api library to v2.4.6
+* Fixed - Remove error message after successful shipment registration
+* Fixed - When registering multi-parcel shipments, the order weight would be divided by the number of packages
 
 2025-06-18 - version 1.6.1
 * Updated - itella-api library to v2.4.5
