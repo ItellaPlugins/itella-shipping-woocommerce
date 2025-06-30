@@ -2089,6 +2089,17 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         continue;
       }
 
+      if ( $shipping_parameters['total_weight'] > 150 ) {
+        $result_data['msg'] = sprintf(__('The total weight of shipment exceeds %s kg', 'itella-shipping'), 150);
+        $orders_result[$order_id] = $result_data;
+        continue;
+      }
+      if ( $shipping_parameters['packet_weight'] > 35 ) {
+        $result_data['msg'] = sprintf(__('The weight of package exceeds %s kg', 'itella-shipping'), 35);
+        $orders_result[$order_id] = $result_data;
+        continue;
+      }
+
       $contract_number = ($shipping_method === 'itella_pp')
         ? $this->settings['api_contract_2711']
         : $this->settings['api_contract_2317'];
@@ -2250,7 +2261,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
     for ($i = 0; $i < intval($shipping_parameters['packet_count']); $i++) {
       $item = new GoodsItem();
-      $item->setGrossWeight(floatval($shipping_parameters['weight'])); // kg
+      $item->setGrossWeight(floatval($shipping_parameters['packet_weight'])); // kg
       $items[] = $item;
     }
 
@@ -2322,7 +2333,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
     // Create GoodsItem (parcel)
     $item = new GoodsItem();
-    $item->setGrossWeight(floatval($shipping_parameters['weight'])); // kg
+    $item->setGrossWeight(floatval($shipping_parameters['total_weight'])); // kg
 
     // Create additional services
     $additional_services = array();
