@@ -1,5 +1,9 @@
 # Changelog
 
+### [1.6.3] - 2025-06-30
+### Improved
+- added error messages if the weight of a parcel exceeds 35 kg or the weight of all parcels of the shipment exceeds 150 kg
+
 ### [1.6.2] - 2025-06-26
 ### Fixed
 - fixed to remove error message after successful shipment registration

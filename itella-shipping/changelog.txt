@@ -1,5 +1,8 @@
 *** Smartposti shipping Changelog ***
 
+2025-06-30 - version 1.6.3
+* Added - Error messages if the weight of a parcel exceeds 35 kg or the weight of all parcels of the shipment exceeds 150 kg
+
 2025-06-26 - version 1.6.2
 * Updated - itella-api library to v2.4.6
 * Fixed - Remove error message after successful shipment registration
