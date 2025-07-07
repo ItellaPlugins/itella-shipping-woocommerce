@@ -1,5 +1,9 @@
 # Changelog
 
+### [Unreleased]
+### Fixed
+- fixed the Sender ID of the courier invitation to use the plugin developer ID instead of the sender's company code
+
 ### [1.6.3] - 2025-06-30
 ### Improved
 - added error messages if the weight of a parcel exceeds 35 kg or the weight of all parcels of the shipment exceeds 150 kg

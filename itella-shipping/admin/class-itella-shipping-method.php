@@ -2716,7 +2716,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
           'time_from' => $call_time_from,
           'time_to' => $call_time_to,
           'info_general' => $call_info,
-          'id_sender' => $this->settings['company_code'],
+          'id_sender' => 'LT100011522813',
         ))
         ->setAttachment($manifest_string, true)
         ->setItems($items)
