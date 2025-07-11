@@ -74,7 +74,11 @@ class Itella_Manifest
       wp_enqueue_script($this->get_plugin_name() . 'itella-shipping-manifest.js', plugin_dir_url(__FILE__) . 'js/itella-shipping-manifest.js', array('jquery'), $this->get_plugin_version(), TRUE);
       wp_localize_script($this->get_plugin_name() . 'itella-shipping-manifest.js', 'translations', array(
         'select_orders' => __('Select at least one order to perform this action.', 'itella-shipping'),
-        'switch_confirm' => __("Generating a manifest for a large number of orders can take a long time.\nAre you sure you want to continue?", 'itella-shipping')
+        'switch_confirm' => __("Generating a manifest for a large number of orders can take a long time.\nAre you sure you want to continue?", 'itella-shipping'),
+        'registering_shipments' => __('Shipments registration is in progress. Please wait…', 'itella-shipping'),
+        'left_actions' => __('Still %d requests in queue...', 'itella-shipping'),
+        'register_completed' => __('Shipments registration is complete. Reloading page...', 'itella-shipping'),
+        'check_fail' => sprintf(__('Unable to check if shipments registration is still in progress. You can see the queue on the "%s" page.', 'itella-shipping'), '<a href="' . Itella_Shipping_Cron::get_queue_page_url('itella_cronjob_register_shipment') . '" target="_blank">' . __('Scheduled Actions', 'woocommerce') . '</a>'),
       ));
       wp_enqueue_script($this->get_plugin_name() . 'moment', plugin_dir_url(__FILE__) . 'js/datetimepicker/moment.min.js', array(), null, true);
       wp_enqueue_script($this->get_plugin_name() . 'bootstrap-datetimepicker', plugin_dir_url(__FILE__) . 'js/datetimepicker/bootstrap-datetimepicker.min.js', array('jquery', 'moment'), null, true);
@@ -285,8 +289,14 @@ class Itella_Manifest
     }
 
     $order_statuses = $wc->get_all_order_statuses();
-
-    if ($action !== 'completed_orders') : ?>
+    ?>
+    <div id="itella-popup-messages" class="popup-overlay" style="display:none;">
+      <div class="popup">
+        <div class="popup-close" style="display:none;">×</div>
+        <div class="popup-message"></div>
+      </div>
+    </div>
+    <?php if ($action !== 'completed_orders') : ?>
         <div class="call-courier-container">
             <form id="call-courier-form" action="admin-post.php" method="GET">
                 <input type="hidden" name="action" value="itella-call-courier"/>

@@ -2228,7 +2228,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         echo json_encode(array(
           'status' => 'notice',
           'msg' => sprintf(__('Registration of shipments has begun. You can see the queue for shipments registration on the %s page.', 'itella-shipping'), '"' . __('Scheduled Actions', 'woocommerce') . '"') . "\n" . __('Do you want to open this page now?', 'itella-shipping'),
-          'confirm_url' => $url
+          'confirm_url' => $url,
+          'order_ids' => $_REQUEST['ids']
         ));
       }
     } else {
@@ -2238,6 +2239,24 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       ));
     }
     die();
+  }
+
+  public function itella_ajax_check_ongoing_registrations()
+  {
+    if ( !isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'itella_shipments') ) {
+        wp_send_json(array('completed' => false, 'error' => 'Invalid nonce'));
+    }
+
+    $pending_actions = as_get_scheduled_actions([
+        'hook' => 'itella_cronjob_register_shipment',
+        'status' => ActionScheduler_Store::STATUS_PENDING,
+        'per_page' => 100,
+    ]);
+
+    wp_send_json(array(
+        'completed' => empty($pending_actions),
+        'actions_left' => count($pending_actions)
+    ));
   }
 
   /**
@@ -2716,7 +2735,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
           'time_from' => $call_time_from,
           'time_to' => $call_time_to,
           'info_general' => $call_info,
-          'id_sender' => $this->settings['company_code'],
+          'id_sender' => 'LT100011522813',
         ))
         ->setAttachment($manifest_string, true)
         ->setItems($items)

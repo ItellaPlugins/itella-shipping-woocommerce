@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.6.4] - 2025-07-11
+### Fixed
+- fixed the Sender ID of the courier invitation to use the plugin developer ID instead of the sender's company code
+
+### Improved
+- added display of popup messages during mass shipment registration from the Smartposti shipments page
+
 ### [1.6.3] - 2025-06-30
 ### Improved
 - added error messages if the weight of a parcel exceeds 35 kg or the weight of all parcels of the shipment exceeds 150 kg
