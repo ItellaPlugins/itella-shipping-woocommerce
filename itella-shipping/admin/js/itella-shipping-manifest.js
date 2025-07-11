@@ -77,78 +77,178 @@ jQuery('document').ready(function($) {
         $('#itella-courier-modal').removeClass('open');
     });
 
+    function itellaShowPopupMessage(msg, type = 'info', hide_after = 0, allow_close =  true) {
+        const popupContainer = $('#itella-popup-messages');
+        const closeButton = popupContainer.find('.popup-close');
+        const messageContainer = popupContainer.find('.popup-message');
+        let className = '';
+        switch (type) {
+            case 'success':
+                className = 'notice-success';
+                break;
+            case 'error':
+                className = 'notice-error';
+                break;
+            case 'warning':
+                className = 'notice-warning';
+                break;
+            case 'info':
+                className = 'notice-info';
+                break;
+            default:
+                className = '';
+        }
+
+        if (allow_close) {
+            closeButton.show();
+            popupContainer.removeClass('force-display');
+        } else {
+            closeButton.hide();
+            popupContainer.addClass('force-display');
+        }
+
+        messageContainer.removeClass('notice-success notice-error notice-warning notice-info')
+            .addClass(className)
+            .html('<p>' + msg.replace(/\n/g, '<br>') + '</p>');
+        popupContainer.fadeIn();
+
+        if (hide_after) {
+            setTimeout(itellaHidePopupMessage, hide_after);
+        }
+    }
+
+    function itellaHidePopupMessage() {
+        const popupContainer = $('#itella-popup-messages');
+        popupContainer.fadeOut();
+    }
+
+    function itellaCheckCrons(args) {
+        $.post(manifest_ajax.ajax_url, {
+            action: 'itella_check_ongoing_registrations',
+            nonce: $('#itella_shipments_nonce').val()
+        }, function(response) {
+            if (response.completed) {
+                if (args.hasOwnProperty("success_message")) {
+                    itellaShowPopupMessage(args.success_message, 'success');
+                }
+                if (args.hasOwnProperty("enable_bulk_buttons") && args.enable_bulk_buttons) {
+                    itellaDisableAllBulkButtons(false);
+                }
+                if (args.hasOwnProperty("remove_spinner")) {
+                    args.remove_spinner.find('.spinner-holder').removeClass('active');
+                }
+                if (args.hasOwnProperty("reload_after") && args.reload_after > 0) {
+                    setTimeout(() => location.reload(), args.reload_after);
+                }
+            } else {
+                if (response.actions_left && args.actions_left_message) {
+                    let msg = args.actions_left_message.replace('%d', response.actions_left);
+                    itellaShowPopupMessage(msg, 'warning', 0, false);
+                }
+                setTimeout(() => itellaCheckCrons(args), 3000);
+            }
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            if (args.hasOwnProperty("error_message")) {
+                itellaShowPopupMessage(args.error_message, 'error');
+            }
+            if (args.hasOwnProperty("enable_bulk_buttons") && args.enable_bulk_buttons) {
+                itellaDisableAllBulkButtons(false);
+            }
+            if (args.hasOwnProperty("remove_spinner")) {
+                args.remove_spinner.find('.spinner-holder').removeClass('active');
+            }
+        });
+    }
+
+    function itellaDisableAllBulkButtons(disable) {
+        const buttons_selector = [
+            '#submit_shipments_register',
+            '#submit_manifest_labels',
+            '#submit_manifest_items'
+        ];
+
+        buttons_selector.forEach(selector => {
+            const btn = document.querySelector(selector);
+            if (btn) {
+                btn.disabled = disable;
+            }
+        });
+    }
+
+    $('.popup-overlay').on('click', function(e) {
+        if (e.target !== this) return;
+        if ($(this).hasClass('force-display')) return;
+
+        $(this).fadeOut();
+    });
+
+    $('.popup-close').on('click', function(e) {
+        $(this).closest('.popup-overlay').trigger('click');
+    });
+
     $('#submit_shipments_register').on('click', function(e) {
         var ids = [];
         $('#register-print-form .post_id').remove();
-        $('.manifest-item:checked').each(function() {
+        $('.manifest-item:checked').each(function () {
             ids.push($(this).val());
         });
+
         if (ids.length === 0) {
-            alert(translations.select_orders);
-        } else {
-            var nonce = $('#itella_shipments_nonce').val();
-            $(this).prop('disabled', true);
-            $(this).find('.spinner-holder').addClass('active');
-            var button = $(this);
-            $.ajax({
-                type: "post",
-                dataType: "json",
-                url: manifest_ajax.ajax_url,
-                data: {
-                    action : "bulk_register_shipments",
-                    ids : ids,
-                    nonce : nonce
-                },
-                success: function(response){
-                    const showAlertAndReload = (message) => {
-                        alert(message);
-                        location.reload();
-                    };
-
-                    const enableButton = () => {
-                        $(button).find('.spinner-holder').removeClass('active');
-                        $(button).prop('disabled', false);
-                    };
-
-                    const buildMessage = (baseMsg, values) => {
-                        let output = baseMsg;
-                        if (Array.isArray(values)) {
-                            output += ':\n';
-                            values.forEach(entry => {
-                                output += `#${entry.id}: ${entry.msg}\n`;
-                            });
-                        }
-                        return output;
-                    };
-
-                    let output = response.msg;
-
-                    if (response.status === "notice" && response.hasOwnProperty("values")) {
-                        output = buildMessage(output, response.values);
-                    }
-
-                    if (response.hasOwnProperty("confirm_url")) {
-                        const confirm_result = confirm(output);
-                        if (confirm_result) {
-                            window.location.href = response.confirm_url;
-                        } else {
-                            location.reload();
-                        }
-                    } else {
-                        showAlertAndReload(output);
-                    }
-
-                    enableButton();
-                },
-                error: function(xhr, status, error){
-                    var errorMessage = xhr.status + ': ' + xhr.statusText;
-                    alert('Error - ' + errorMessage);
-                    $(button).find('.spinner-holder').removeClass('active');
-                    $(button).prop('disabled', false);
-                }
-            });
+            itellaShowPopupMessage(translations.select_orders, 'error');
+            return;
         }
+
+        var nonce = $('#itella_shipments_nonce').val();
+        itellaDisableAllBulkButtons(true);
+        var button = $(this);
+        button.find('.spinner-holder').addClass('active');
+
+        $.ajax({
+            type: "post",
+            dataType: "json",
+            url: manifest_ajax.ajax_url,
+            data: {
+                action: "bulk_register_shipments",
+                ids: ids,
+                nonce: nonce
+            },
+            success: function (response) {
+                const buildMessage = (baseMsg, values) => {
+                    let output = baseMsg;
+                    if (Array.isArray(values)) {
+                        output += ':\n';
+                        values.forEach(entry => {
+                            output += `#${entry.id}: ${entry.msg}\n`;
+                        });
+                    }
+                    return output;
+                };
+
+                if (response.status === "notice" && response.hasOwnProperty("values")) {
+                    itellaShowPopupMessage(buildMessage(output, response.values), 'warning');
+                }
+
+                if (response.status === "notice" && response.order_ids) {
+                    itellaShowPopupMessage(translations.registering_shipments, 'warning', 0, false);
+                    itellaCheckCrons({
+                        success_message: translations.register_completed,
+                        error_message: translations.check_fail,
+                        actions_left_message: translations.registering_shipments + '<br/>' + translations.left_actions,
+                        enable_bulk_buttons: true,
+                        remove_spinner: button,
+                        reload_after: 2000
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                itellaShowPopupMessage('Error - ' + xhr.status + ': ' + xhr.statusText, 'error');
+                button.find('.spinner-holder').removeClass('active');
+                itellaDisableAllBulkButtons(false);
+            }
+        });
     });
+
+
 
     $('.itella-register-shipment').on('click', function(e) {
         $(this).prop('disabled', true);

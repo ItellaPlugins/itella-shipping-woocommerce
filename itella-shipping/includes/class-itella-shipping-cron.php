@@ -102,6 +102,15 @@ class Itella_Shipping_Cron {
         return 2592000;
     }
 
+    public static function get_queue_page_url( $action_name )
+    {
+        return add_query_arg(array(
+          'page' => 'action-scheduler',
+          'status' => 'pending',
+          's' => $action_name,
+        ), admin_url('tools.php'));
+    }
+
     public function cronjob_test()
     {
         file_put_contents(__DIR__.'/test.log', 'Working'.PHP_EOL, FILE_APPEND);
