@@ -1,5 +1,9 @@
 # Changelog
 
+### [Unreleased]
+### Improved
+- added display of popup messages during shipments registration via bulk action in the WC orders page
+
 ### [1.6.4] - 2025-07-11
 ### Fixed
 - fixed the Sender ID of the courier invitation to use the plugin developer ID instead of the sender's company code
