@@ -14,11 +14,11 @@
  *
  * @wordpress-plugin
  * Plugin Name:       Smartposti Shipping
- * Plugin URI:
+ * Plugin URI:        https://www.smartposti.lt/en/for-businesses/client-service/download-modules
  * Description:       Smartposti shipping plugin for Woocommerce
  * Version:           1.6.4
- * Author:            Itella Team
- * Author URI:        https://itella.lt/en/
+ * Author:            Smartposti Team
+ * Author URI:        https://www.smartposti.lt/en
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       itella-shipping
