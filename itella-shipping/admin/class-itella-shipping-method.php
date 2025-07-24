@@ -164,6 +164,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   public function enqueue_styles($hook)
   {
+    wp_enqueue_style($this->name, plugin_dir_url(__FILE__) . 'js/itella-shipping-popup/itella-shipping-popup.css', array(), $this->version, 'all');
+
     if ( ($hook == 'woocommerce_page_wc-settings' && isset($_GET['section']) && $_GET['section'] == $this->id)
       || ($hook == 'edit.php' && isset($_GET['post_type']) && $_GET['post_type'] == 'shop_order')
       || ($hook == 'woocommerce_page_wc-orders' && isset($_GET['action']) && $_GET['action'] == 'edit') ) {
@@ -178,12 +180,30 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   public function enqueue_scripts($hook)
   {
+    wp_enqueue_script($this->name . 'itella-shipping-popup.js', plugin_dir_url(__FILE__) . 'js/itella-shipping-popup/itella-shipping-popup.js', array('jquery'), $this->version, TRUE);
+
     if ( $hook == 'woocommerce_page_wc-settings' && isset($_GET['section']) && $_GET['section'] == $this->id ) {
       wp_enqueue_script($this->name . 'itella-shipping-admin.js', plugin_dir_url(__FILE__) . 'assets/js/itella-shipping-admin.js', array('jquery'), $this->version, TRUE);
     }
     if ( $hook == 'post.php'
       || ($hook == 'woocommerce_page_wc-orders' && isset($_GET['action']) && $_GET['action'] == 'edit') ) {
       wp_enqueue_script($this->name . 'itella-shipping-edit-orders.js', plugin_dir_url(__FILE__) . 'assets/js/itella-shipping-edit-orders.js', array('jquery'), $this->version, TRUE);
+    } else if ( $hook == 'woocommerce_page_wc-orders' && isset($_GET['page']) && $_GET['page'] == 'wc-orders' ) {
+      wp_enqueue_script($this->name . 'itella-shipping-orders-list.js', plugin_dir_url(__FILE__) . 'assets/js/itella-shipping-orders-list.js', array('jquery'), $this->version, TRUE);
+      wp_localize_script($this->name . 'itella-shipping-orders-list.js', 'itellaParams', array(
+        'ajax_url' => admin_url('admin-ajax.php'),
+        'nonce_register' => wp_create_nonce('itella_shipments'),
+        //'nonce_check' => wp_create_nonce('itella_cron_check'), //TODO: Use only if separated
+      ));
+      wp_localize_script($this->name . 'itella-shipping-orders-list.js', 'itellaTranslations', array(
+        'registering_shipments' => __('Shipments registration is in progress. Please wait...', 'itella-shipping'),
+        'left_actions' => __('Still %d requests in queue...', 'itella-shipping'),
+        'register_completed' => __('Shipments registration is complete', 'itella-shipping'),
+        'reloading_page' => __('Reloading page...', 'itella-shipping'),
+        'check_fail' => sprintf(__('Unable to check if shipments registration is still in progress. You can see the queue on the "%s" page.', 'itella-shipping'), '<a href="' . Itella_Shipping_Cron::get_queue_page_url('itella_cronjob_register_shipment') . '" target="_blank">' . __('Scheduled Actions', 'woocommerce') . '</a>'),
+        'error' => __('Error', 'itella-shipping'),
+        'error_unknown' => __('Unknown error', 'itella-shipping')
+      ));
     }
   }
 
@@ -2541,6 +2561,14 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     }
     
     return $bulk_actions;
+  }
+
+  public function woo_orders_custom_bulk_control()
+  {
+    \culog(get_current_screen(), 'itella');
+    if ( get_current_screen()->id !== 'edit-shop_order' ) {
+      return;
+    }
   }
 
   public static function is_itella_method($itella_data)
