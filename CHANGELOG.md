@@ -1,6 +1,6 @@
 # Changelog
 
-### [Unreleased]
+### [1.6.5] - 2025-07-29
 ### Improved
 - added display of popup messages during shipments registration via bulk action in the WC orders page
 
