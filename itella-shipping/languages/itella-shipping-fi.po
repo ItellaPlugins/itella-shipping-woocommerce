@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: itella_shipping\n"
 "Report-Msgid-Bugs-To: mantas tarutis\n"
 "POT-Creation-Date: 2020-10-13 10:45+0000\n"
-"PO-Revision-Date: 2025-07-10 08:34+0000\n"
+"PO-Revision-Date: 2025-07-24 06:49+0000\n"
 "Last-Translator: \n"
 "Language-Team: Finnish\n"
 "Language: fi\n"
@@ -18,19 +18,19 @@ msgstr ""
 "X-Loco-Api-Version: 1.0.24 20200414-1\n"
 "X-Loco-Version: 2.6.14; wp-6.7.2"
 
-#: admin/class-itella-shipping-method.php:858
+#: admin/class-itella-shipping-method.php:878
 msgid ""
 "A custom shipping method name that will display on the cart/checkout page. "
 "Many translation plugins do not translate this field value."
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:867
+#: admin/class-itella-shipping-method.php:887
 msgid ""
 "A description next to shipping method that will display on the cart/checkout "
 "page. Many translation plugins do not translate this field value."
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:724
+#: admin/class-itella-shipping-method.php:744
 msgid ""
 "A message related to the pickup of shipments is sent to the courier when the "
 "courier is called"
@@ -40,12 +40,12 @@ msgstr ""
 msgid "Actions"
 msgstr "Toiminnot"
 
-#: admin/class-itella-shipping-method.php:695
-#: admin/class-itella-shipping-method.php:706
+#: admin/class-itella-shipping-method.php:715
+#: admin/class-itella-shipping-method.php:726
 msgid "Add custom comment to label"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1141
+#: admin/class-itella-shipping-method.php:1161
 #: admin/class-itella-shipping-method-helper.php:426
 msgid "Add row"
 msgstr ""
@@ -65,53 +65,53 @@ msgstr "Osoite ja yhteistiedot voidaan muuttaa Smartposti asetuksissa."
 msgid "All orders"
 msgstr "Kaikki tilaukset"
 
-#: admin/class-itella-shipping-method.php:828
-#: admin/class-itella-shipping-method.php:1076
+#: admin/class-itella-shipping-method.php:848
+#: admin/class-itella-shipping-method.php:1096
 msgid "Amount range"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:2776
+#: admin/class-itella-shipping-method.php:2804
 msgid "Amount:"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1743
-#: admin/class-itella-shipping-method.php:1753
+#: admin/class-itella-shipping-method.php:1763
+#: admin/class-itella-shipping-method.php:1773
 msgid "An error occurred"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:2746
+#: admin/class-itella-shipping-method.php:2774
 msgid "An unknown result was received from the call"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:565
+#: admin/class-itella-shipping-method.php:585
 msgid "Api contract number (Product 2317)"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:553
+#: admin/class-itella-shipping-method.php:573
 msgid "Api contract number (Product 2711)"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:561
+#: admin/class-itella-shipping-method.php:581
 msgid "Api password (Product 2317)"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:549
+#: admin/class-itella-shipping-method.php:569
 msgid "Api password (Product 2711)"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:557
+#: admin/class-itella-shipping-method.php:577
 msgid "API user (Product 2317)"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:545
+#: admin/class-itella-shipping-method.php:565
 msgid "API user (Product 2711)"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:580
+#: admin/class-itella-shipping-method.php:600
 msgid "Bank account"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:584
+#: admin/class-itella-shipping-method.php:604
 msgid "BIC"
 msgstr ""
 
@@ -119,15 +119,15 @@ msgstr ""
 msgid "Block options"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1006
+#: admin/class-itella-shipping-method.php:1026
 msgid "By amount"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1005
+#: admin/class-itella-shipping-method.php:1025
 msgid "By weight"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:289
+#: admin/class-itella-shipping-method.php:309
 msgid "Call before delivery"
 msgstr ""
 
@@ -141,7 +141,7 @@ msgstr "Soita Itellan kuriirille"
 msgid "Call Smartposti courier"
 msgstr "Soita Smartposti kuriirille"
 
-#: admin/class-itella-shipping-method.php:1462
+#: admin/class-itella-shipping-method.php:1482
 msgid "Carrier:"
 msgstr ""
 
@@ -153,11 +153,11 @@ msgstr "Tarkista tietosi."
 msgid "Choose one of parcel lockers close to the address you entered"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:656
+#: admin/class-itella-shipping-method.php:676
 msgid "Choose what the parcel locker selection in the checkout will look like."
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1382
+#: admin/class-itella-shipping-method.php:1402
 msgid "Chosen Parcel locker"
 msgstr ""
 
@@ -176,22 +176,22 @@ msgstr "Maksu toimittaessa"
 msgid "COD amount"
 msgstr "Maksu toimittaessa määrä"
 
-#: admin/class-itella-shipping-method.php:1371
-#: admin/class-itella-shipping-method.php:1455
+#: admin/class-itella-shipping-method.php:1391
+#: admin/class-itella-shipping-method.php:1475
 #, php-format
 msgid "COD amount (%s):"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1364
-#: admin/class-itella-shipping-method.php:1444
+#: admin/class-itella-shipping-method.php:1384
+#: admin/class-itella-shipping-method.php:1464
 msgid "COD:"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:576
+#: admin/class-itella-shipping-method.php:596
 msgid "Company code"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:572
+#: admin/class-itella-shipping-method.php:592
 msgid "Company name"
 msgstr ""
 
@@ -204,19 +204,19 @@ msgstr "Viimeistellyt tilaukset"
 msgid "Contacts"
 msgstr "Yhteystiedot"
 
-#: admin/class-itella-shipping-method.php:2044
+#: admin/class-itella-shipping-method.php:2064
 msgid "Could not register any shipment"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1735
+#: admin/class-itella-shipping-method.php:1755
 msgid "Couldn't get a label for any order"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:2238
+#: admin/class-itella-shipping-method.php:2258
 msgid "Couldn't get list of selected orders"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:2181
+#: admin/class-itella-shipping-method.php:2201
 msgid "Couldn't get order"
 msgstr ""
 
@@ -224,23 +224,23 @@ msgstr ""
 msgid "Country"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1377
-#: admin/class-itella-shipping-method.php:1466
-#: admin/class-itella-shipping-method.php:1499
-#: admin/class-itella-shipping-method.php:2779
+#: admin/class-itella-shipping-method.php:1397
+#: admin/class-itella-shipping-method.php:1486
+#: admin/class-itella-shipping-method.php:1519
+#: admin/class-itella-shipping-method.php:2807
 #: includes/class-itella-shipping.php:206
 msgid "Courier"
 msgstr "Kuriiri"
 
-#: admin/class-itella-shipping-method.php:700
+#: admin/class-itella-shipping-method.php:720
 msgid "Courier label comment"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:674
+#: admin/class-itella-shipping-method.php:694
 msgid "Courier max size"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:853
+#: admin/class-itella-shipping-method.php:873
 msgid "Custom name"
 msgstr ""
 
@@ -249,58 +249,58 @@ msgstr ""
 msgid "Customer"
 msgstr "Asiakas"
 
-#: admin/class-itella-shipping-method.php:2775
+#: admin/class-itella-shipping-method.php:2803
 msgid "Date:"
 msgstr ""
 
 #: public/class-itella-shipping-public.php:176
-#: admin/class-itella-shipping-method.php:1858
+#: admin/class-itella-shipping-method.php:1878
 msgid "Deliver to"
 msgstr "Toimitetaan"
 
-#: admin/class-itella-shipping-method.php:2778
+#: admin/class-itella-shipping-method.php:2806
 msgid "Delivery address:"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:861
+#: admin/class-itella-shipping-method.php:881
 msgid "Description"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:850
+#: admin/class-itella-shipping-method.php:870
 msgid ""
 "Disable shipping method fee if cart amount is greater or equal than this "
 "limit"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1003
+#: admin/class-itella-shipping-method.php:1023
 msgid "Disabled"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:2230
+#: admin/class-itella-shipping-method.php:2250
 msgid "Do you want to open this page now?"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:791
+#: admin/class-itella-shipping-method.php:811
 msgid "Dont use this method"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:653
+#: admin/class-itella-shipping-method.php:673
 msgid "Dropdown"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:536
+#: admin/class-itella-shipping-method.php:556
 msgid "Enable"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:629
+#: admin/class-itella-shipping-method.php:649
 msgid "Enable Courier"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:622
+#: admin/class-itella-shipping-method.php:642
 msgid "Enable Parcel locker"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:538
+#: admin/class-itella-shipping-method.php:558
 msgid "Enable this shipping."
 msgstr ""
 
@@ -309,20 +309,21 @@ msgstr ""
 msgid "Enter postcode/address"
 msgstr "Syötä postinumero/osoite"
 
+#: admin/class-itella-shipping-method.php:204
 #: admin/class-itella-shipping-manifest-page.php:602
 #| msgid "Error:"
 msgid "Error"
 msgstr "Virhe"
 
-#: admin/class-itella-shipping-method.php:2032
+#: admin/class-itella-shipping-method.php:2052
 msgid "Error: "
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:660
+#: admin/class-itella-shipping-method.php:680
 msgid "Exclude outdoors parcel lockers"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1485
+#: admin/class-itella-shipping-method.php:1505
 msgid "Extra Services"
 msgstr ""
 
@@ -331,24 +332,24 @@ msgstr ""
 msgid "Extra services"
 msgstr "Lisäpalvelut"
 
-#: admin/class-itella-shipping-method.php:1395
+#: admin/class-itella-shipping-method.php:1415
 msgid "Extra Services:"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:2757
+#: admin/class-itella-shipping-method.php:2785
 msgid "Failed to call Smartposti courier"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:2169
+#: admin/class-itella-shipping-method.php:2189
 msgid "Failed to register shipment"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1728
+#: admin/class-itella-shipping-method.php:1748
 msgid "Failed to save label pdf to: "
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:2156
-#: admin/class-itella-shipping-method.php:2195
+#: admin/class-itella-shipping-method.php:2176
+#: admin/class-itella-shipping-method.php:2215
 msgid "Failed to validate nonce"
 msgstr ""
 
@@ -356,7 +357,7 @@ msgstr ""
 msgid "Filter"
 msgstr "Suodatin"
 
-#: admin/class-itella-shipping-method.php:792
+#: admin/class-itella-shipping-method.php:812
 msgid "Fixed price"
 msgstr ""
 
@@ -370,11 +371,11 @@ msgctxt "for"
 msgid "Checked"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:288
+#: admin/class-itella-shipping-method.php:308
 msgid "Fragile"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:843
+#: admin/class-itella-shipping-method.php:863
 msgid "Free from"
 msgstr ""
 
@@ -409,12 +410,17 @@ msgstr ""
 msgid "Height"
 msgstr "Paino"
 
-#: includes/class-itella-shipping.php:555
+#: includes/class-itella-shipping.php:556
 msgid "here"
 msgstr ""
 
 #. Author URI of the plugin
-msgid "https://itella.lt/en/"
+msgid "https://www.smartposti.lt/en"
+msgstr ""
+
+#. URI of the plugin
+msgid ""
+"https://www.smartposti.lt/en/for-businesses/client-service/download-modules"
 msgstr ""
 
 #: admin/class-itella-shipping-manifest-page.php:393
@@ -422,7 +428,7 @@ msgstr ""
 msgid "ID"
 msgstr "ID"
 
-#: admin/class-itella-shipping-method.php:1429
+#: admin/class-itella-shipping-method.php:1449
 msgid ""
 "If more than one packet is selected, then a multi parcel service is mandatory"
 msgstr ""
@@ -431,18 +437,14 @@ msgstr ""
 msgid "Important!"
 msgstr "Tärkeä!"
 
-#: admin/class-itella-shipping-method.php:663
+#: admin/class-itella-shipping-method.php:683
 msgid ""
 "In the Checkout page dont show parcel lockers that have \"Outdoors\" "
 "parameter"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:2683
+#: admin/class-itella-shipping-method.php:2711
 msgid "Incorrect request nonce"
-msgstr ""
-
-#. Author of the plugin
-msgid "Itella Team"
 msgstr ""
 
 #: public/class-itella-shipping-public.php:142
@@ -450,8 +452,8 @@ msgstr ""
 msgid "Leaflet is required for Itella-Mapping"
 msgstr "Valinta vaaditaan Itellan kartoitusta varten"
 
-#: admin/class-itella-shipping-method.php:678
-#: admin/class-itella-shipping-method.php:687
+#: admin/class-itella-shipping-method.php:698
+#: admin/class-itella-shipping-method.php:707
 msgid ""
 "Leave all dimension fields or weight field empty to disable checking by that "
 "parameter."
@@ -465,20 +467,20 @@ msgstr ""
 msgid "Manifest date"
 msgstr "Lastiluettelon päivämäärä"
 
-#: admin/class-itella-shipping-method.php:652
+#: admin/class-itella-shipping-method.php:672
 msgid "Map"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:638
+#: admin/class-itella-shipping-method.php:658
 msgid "Methods"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1427
+#: admin/class-itella-shipping-method.php:1447
 #: admin/class-itella-shipping-manifest-page.php:871
 msgid "Multi Parcel"
 msgstr "Monipaketti"
 
-#: admin/class-itella-shipping-method.php:2781
+#: admin/class-itella-shipping-method.php:2809
 msgid "name, lastname, signature"
 msgstr ""
 
@@ -486,7 +488,7 @@ msgstr ""
 msgid "New orders"
 msgstr "Uudet tilaukset"
 
-#: admin/class-itella-shipping-method.php:1398
+#: admin/class-itella-shipping-method.php:1418
 msgid "No extra services selected"
 msgstr ""
 
@@ -505,20 +507,20 @@ msgstr ""
 msgid "No mount supplied to itellaShipping"
 msgstr "Ei toimitusta Itellalle"
 
-#: admin/class-itella-shipping-method.php:2063
+#: admin/class-itella-shipping-method.php:2083
 msgid "No order ids received"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:2220
-#: admin/class-itella-shipping-method.php:2576
+#: admin/class-itella-shipping-method.php:2240
+#: admin/class-itella-shipping-method.php:2604
 msgid "No shipment can be registered for any order"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1378
+#: admin/class-itella-shipping-method.php:1398
 msgid "No Smartposti Shipping method selected"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:2773
+#: admin/class-itella-shipping-method.php:2801
 msgid "No.:"
 msgstr ""
 
@@ -526,11 +528,11 @@ msgstr ""
 msgid "Not shipped"
 msgstr "Ei lähetetty"
 
-#: admin/class-itella-shipping-method.php:1497
+#: admin/class-itella-shipping-method.php:1517
 msgid "Not Smartposti"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:2087
+#: admin/class-itella-shipping-method.php:2107
 msgid "Not Smartposti Shipping Method"
 msgstr ""
 
@@ -539,12 +541,12 @@ msgstr ""
 msgid "Nothing found"
 msgstr "Mitään ei löytynyt"
 
-#: admin/class-itella-shipping-method.php:670
+#: admin/class-itella-shipping-method.php:690
 msgid "On the checkout page, display the logo next to the shipping method"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:522
-#: admin/class-itella-shipping-method.php:525
+#: admin/class-itella-shipping-method.php:542
+#: admin/class-itella-shipping-method.php:545
 msgid "Order ID"
 msgstr ""
 
@@ -556,7 +558,7 @@ msgstr ""
 msgid "Order Status"
 msgstr "Tilauksen tila"
 
-#: admin/class-itella-shipping-method.php:287
+#: admin/class-itella-shipping-method.php:307
 msgid "Oversized"
 msgstr ""
 
@@ -564,30 +566,30 @@ msgstr ""
 msgid "Packages"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1359
-#: admin/class-itella-shipping-method.php:1419
+#: admin/class-itella-shipping-method.php:1379
+#: admin/class-itella-shipping-method.php:1439
 msgid "Packets (total):"
 msgstr ""
 
 #: public/class-itella-shipping-public.php:132
 #: public/class-itella-wc-blocks-integration.php:141
 #: public/class-itella-wc-blocks-integration.php:149
-#: admin/class-itella-shipping-method.php:1376
-#: admin/class-itella-shipping-method.php:1465
-#: admin/class-itella-shipping-method.php:1960
+#: admin/class-itella-shipping-method.php:1396
+#: admin/class-itella-shipping-method.php:1485
+#: admin/class-itella-shipping-method.php:1980
 #: includes/class-itella-shipping.php:207
 msgid "Parcel locker"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:711
+#: admin/class-itella-shipping-method.php:731
 msgid "Parcel locker label comment"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:683
+#: admin/class-itella-shipping-method.php:703
 msgid "Parcel locker max size"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:648
+#: admin/class-itella-shipping-method.php:668
 msgid "Parcel locker selection style"
 msgstr ""
 
@@ -596,11 +598,11 @@ msgstr ""
 msgid "Parcel lockers"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:722
+#: admin/class-itella-shipping-method.php:742
 msgid "Pickup note"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1498
+#: admin/class-itella-shipping-method.php:1518
 msgid "Pickup point"
 msgstr ""
 
@@ -617,44 +619,44 @@ msgstr ""
 msgid "Postal Code"
 msgstr "Postinumero"
 
-#: admin/class-itella-shipping-method.php:679
-#: admin/class-itella-shipping-method.php:688
+#: admin/class-itella-shipping-method.php:699
+#: admin/class-itella-shipping-method.php:708
 msgid ""
 "Preliminary cart size is calculated by trying to fit all products by taking "
 "their dimensions (boxes) indicated in their settings."
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:799
-#: admin/class-itella-shipping-method.php:817
-#: admin/class-itella-shipping-method.php:829
-#: admin/class-itella-shipping-method.php:1097
-#: admin/class-itella-shipping-method.php:1220
+#: admin/class-itella-shipping-method.php:819
+#: admin/class-itella-shipping-method.php:837
+#: admin/class-itella-shipping-method.php:849
+#: admin/class-itella-shipping-method.php:1117
+#: admin/class-itella-shipping-method.php:1240
 msgid "Price"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:794
+#: admin/class-itella-shipping-method.php:814
 msgid "Price by cart amount"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:793
+#: admin/class-itella-shipping-method.php:813
 msgid "Price by cart weight"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:786
+#: admin/class-itella-shipping-method.php:806
 msgid "Price type"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1004
+#: admin/class-itella-shipping-method.php:1024
 msgctxt "Price type"
 msgid "Simple"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:810
-#: admin/class-itella-shipping-method.php:822
+#: admin/class-itella-shipping-method.php:830
+#: admin/class-itella-shipping-method.php:842
 msgid "Prices"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:835
+#: admin/class-itella-shipping-method.php:855
 msgid "Prices by class"
 msgstr ""
 
@@ -668,7 +670,7 @@ msgstr "Tulosta etiketti"
 msgid "Print labels"
 msgstr "Tulosta etiketit"
 
-#: admin/class-itella-shipping-method.php:2532
+#: admin/class-itella-shipping-method.php:2552
 msgid "Print shipping labels"
 msgstr ""
 
@@ -683,18 +685,22 @@ msgstr "Nimi"
 msgid "Register shipment"
 msgstr "Rekisteröi lähetys"
 
-#: admin/class-itella-shipping-method.php:2531
+#: admin/class-itella-shipping-method.php:2551
 #: admin/class-itella-shipping-manifest-page.php:342
 #: admin/class-itella-shipping-manifest-page.php:345
 msgid "Register shipments"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:2230
-#: admin/class-itella-shipping-method.php:2583
+#: admin/class-itella-shipping-method.php:2250
+#: admin/class-itella-shipping-method.php:2611
 #, php-format
 msgid ""
 "Registration of shipments has begun. You can see the queue for shipments "
 "registration on the %s page."
+msgstr ""
+
+#: admin/class-itella-shipping-method.php:202
+msgid "Reloading page..."
 msgstr ""
 
 #: admin/class-itella-shipping-manifest-page.php:437
@@ -726,7 +732,7 @@ msgstr "Valitse vähintään yksi tilaus tämän toiminnon suorittamiseksi."
 msgid "Select parcel locker"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1473
+#: admin/class-itella-shipping-method.php:1493
 msgid "Select Parcel locker:"
 msgstr ""
 
@@ -739,11 +745,11 @@ msgstr ""
 msgid "Selected pickup point"
 msgstr "Valitse noutopiste"
 
-#: admin/class-itella-shipping-method.php:2780
+#: admin/class-itella-shipping-method.php:2808
 msgid "Sender"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:2772
+#: admin/class-itella-shipping-method.php:2800
 msgid "Sender address:"
 msgstr ""
 
@@ -751,7 +757,7 @@ msgstr ""
 msgid "Service"
 msgstr "Palvelu"
 
-#: admin/class-itella-shipping-method.php:840
+#: admin/class-itella-shipping-method.php:860
 msgid ""
 "Set custom price for specific shipping class. Only works when all items in "
 "the cart belong to this class"
@@ -762,29 +768,37 @@ msgid "Settings"
 msgstr ""
 
 #. %1$s - plugin name, %2$s - word "here" with link to settings page
-#: includes/class-itella-shipping.php:553
+#: includes/class-itella-shipping.php:554
 #, php-format
 msgid "Setup %1$s %2$s"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:2030
+#: admin/class-itella-shipping-method.php:2050
 msgid "Shipment is not registered."
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:2016
+#: admin/class-itella-shipping-method.php:2036
 msgid "Shipment registered successfully."
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:2174
+#: admin/class-itella-shipping-method.php:2194
 msgid "Shipment successfully registered"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:2042
+#: admin/class-itella-shipping-method.php:2062
 msgid "Shipments registered successfully"
+msgstr ""
+
+#: admin/class-itella-shipping-method.php:201
+msgid "Shipments registration is complete"
 msgstr ""
 
 #: admin/class-itella-shipping-manifest-page.php:80
 msgid "Shipments registration is complete. Reloading page..."
+msgstr ""
+
+#: admin/class-itella-shipping-method.php:199
+msgid "Shipments registration is in progress. Please wait..."
 msgstr ""
 
 #: admin/class-itella-shipping-manifest-page.php:78
@@ -792,44 +806,44 @@ msgid "Shipments registration is in progress. Please wait…"
 msgstr ""
 
 #: public/class-itella-shipping-public.php:171
-#: admin/class-itella-shipping-method.php:1845
+#: admin/class-itella-shipping-method.php:1865
 msgid "Shipping information"
 msgstr "Toimitustiedot"
 
 #: public/class-itella-shipping-public.php:173
-#: admin/class-itella-shipping-method.php:1847
+#: admin/class-itella-shipping-method.php:1867
 msgid "Shipping method"
 msgstr "Toimitustapa"
 
-#: admin/class-itella-shipping-method.php:1374
+#: admin/class-itella-shipping-method.php:1394
 msgid "Shipping method:"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:596
+#: admin/class-itella-shipping-method.php:616
 msgid "Shop address"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:592
+#: admin/class-itella-shipping-method.php:612
 msgid "Shop city"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:604
+#: admin/class-itella-shipping-method.php:624
 msgid "Shop country code"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:615
+#: admin/class-itella-shipping-method.php:635
 msgid "Shop email"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:588
+#: admin/class-itella-shipping-method.php:608
 msgid "Shop name"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:611
+#: admin/class-itella-shipping-method.php:631
 msgid "Shop phone number"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:600
+#: admin/class-itella-shipping-method.php:620
 msgid "Shop postcode"
 msgstr ""
 
@@ -837,19 +851,19 @@ msgstr ""
 msgid "Show"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:632
+#: admin/class-itella-shipping-method.php:652
 msgid "Show courier shipping method in checkout."
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:667
+#: admin/class-itella-shipping-method.php:687
 msgid "Show logo in Checkout"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:625
+#: admin/class-itella-shipping-method.php:645
 msgid "Show parcel locker shipping method in checkout."
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:728
+#: admin/class-itella-shipping-method.php:748
 #, php-format
 msgid "Smartposti %s email"
 msgstr ""
@@ -859,7 +873,7 @@ msgstr ""
 msgid "Smartposti Courier"
 msgstr "Smartposti kuriiir"
 
-#: admin/class-itella-shipping-method.php:734
+#: admin/class-itella-shipping-method.php:754
 msgid "Smartposti email subject"
 msgstr ""
 
@@ -867,7 +881,7 @@ msgstr ""
 msgid "Smartposti Parcel locker"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:2125
+#: admin/class-itella-shipping-method.php:2145
 #, php-format
 msgid "Smartposti shipment registered successfully. Tracking number: %s"
 msgstr ""
@@ -881,16 +895,16 @@ msgstr "Smartposti toimitustavat"
 
 #. Name of the plugin
 #: admin/class-itella-shipping-method.php:125
-#: includes/class-itella-shipping.php:554
+#: includes/class-itella-shipping.php:555
 #| msgid "Smartpost Shipping"
 msgid "Smartposti Shipping"
 msgstr "Smartposti toimitus"
 
-#: admin/class-itella-shipping-method.php:1495
+#: admin/class-itella-shipping-method.php:1515
 msgid "Smartposti Shipping method"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1355
+#: admin/class-itella-shipping-method.php:1375
 msgid "Smartposti Shipping Options"
 msgstr ""
 
@@ -899,51 +913,56 @@ msgstr ""
 msgid "Smartposti shipping plugin for Woocommerce"
 msgstr "Smartposti toimitustavat Woocommercelle"
 
+#. Author of the plugin
+msgid "Smartposti Team"
+msgstr ""
+
 #: public/class-itella-shipping-public.php:188
 msgid "Status"
 msgstr "Tila"
 
+#: admin/class-itella-shipping-method.php:200
 #: admin/class-itella-shipping-manifest-page.php:79
 msgid "Still %d requests in queue..."
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:2131
+#: admin/class-itella-shipping-method.php:2151
 msgid "Successfully registered"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:2752
+#: admin/class-itella-shipping-method.php:2780
 #, php-format
 msgid "The courier should arrive %s"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:677
-#: admin/class-itella-shipping-method.php:686
+#: admin/class-itella-shipping-method.php:697
+#: admin/class-itella-shipping-method.php:706
 msgid ""
 "The maximum size of the cart above which the delivery method will not be "
 "shown."
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1856
+#: admin/class-itella-shipping-method.php:1876
 #, php-format
 msgid "The order will be delivered to %s."
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:2093
+#: admin/class-itella-shipping-method.php:2113
 #, php-format
 msgid "The total weight of shipment exceeds %s kg"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1866
+#: admin/class-itella-shipping-method.php:1886
 #, php-format
 msgid "The tracking number is %s and you can track it at %s."
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1871
+#: admin/class-itella-shipping-method.php:1891
 #, php-format
 msgid "The tracking number is %s."
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:2098
+#: admin/class-itella-shipping-method.php:2118
 #, php-format
 msgid "The weight of package exceeds %s kg"
 msgstr ""
@@ -952,12 +971,12 @@ msgstr ""
 msgid "To"
 msgstr "Kenelle"
 
-#: admin/class-itella-shipping-method.php:1437
+#: admin/class-itella-shipping-method.php:1457
 #, php-format
 msgid "Total weight (%s)"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1362
+#: admin/class-itella-shipping-method.php:1382
 #, php-format
 msgid "Total weight (%s):"
 msgstr ""
@@ -968,24 +987,29 @@ msgstr ""
 msgid "Tracking code"
 msgstr "Seurantakoodi"
 
-#: admin/class-itella-shipping-method.php:1876
-#: admin/class-itella-shipping-method.php:1950
+#: admin/class-itella-shipping-method.php:1896
+#: admin/class-itella-shipping-method.php:1970
 msgid "Tracking number"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:2774
+#: admin/class-itella-shipping-method.php:2802
 msgid "Tracking number:"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:2020
+#: admin/class-itella-shipping-method.php:2040
 msgid "Tracking number: "
 msgstr ""
 
+#: admin/class-itella-shipping-method.php:203
 #: admin/class-itella-shipping-manifest-page.php:81
 #, php-format
 msgid ""
 "Unable to check if shipments registration is still in progress. You can see "
 "the queue on the \"%s\" page."
+msgstr ""
+
+#: admin/class-itella-shipping-method.php:205
+msgid "Unknown error"
 msgstr ""
 
 #: admin/class-itella-shipping-manifest-page.php:555
@@ -995,13 +1019,13 @@ msgstr ""
 msgid "Weight"
 msgstr "Paino"
 
-#: admin/class-itella-shipping-method.php:816
-#: admin/class-itella-shipping-method.php:1063
+#: admin/class-itella-shipping-method.php:836
+#: admin/class-itella-shipping-method.php:1083
 #, php-format
 msgid "Weight (%s)"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:2777
+#: admin/class-itella-shipping-method.php:2805
 msgid "Weight:"
 msgstr ""
 
@@ -1018,11 +1042,11 @@ msgstr "Työajat"
 msgid "You can choose the parcel locker on the Checkout page"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1664
+#: admin/class-itella-shipping-method.php:1684
 msgid "You must choose Smartposti Parcel locker"
 msgstr ""
 
-#: admin/class-itella-shipping-method.php:1849
+#: admin/class-itella-shipping-method.php:1869
 #, php-format
 msgid "Your order has been shipped with %s."
 msgstr ""

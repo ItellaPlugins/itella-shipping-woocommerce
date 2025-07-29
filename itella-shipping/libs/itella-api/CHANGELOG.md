@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.4.7]
+### Fixed
+- fixed that in the courier invitation via Postra, the shipments numbers would be written under the Instructions parameter
+
 ## [2.4.6]
 ### Fixed
 - fixed to display an error message when a timeout occurs while trying to get a Access Token
