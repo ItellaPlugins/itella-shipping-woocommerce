@@ -354,19 +354,29 @@ class CallCourier
 
     $shipments = $xml->addChild('Shipments');
     foreach ($this->items as $shipment_data) {
+      $track_numbers = (is_array($shipment_data['track_num'])) ? $shipment_data['track_num'] : array($shipment_data['track_num']);
       $shipment = $shipments->addChild('Shipment');
       $shipment->addChild('MessageFunctionCode', 'ORIGINAL');
       $shipment->addChild('PickupOrderType', 'PICKUP');
-      $shipment->addChild('ShipmentNumber', $shipment_data['track_num']);
+      $shipment->addChild('ShipmentNumber', $track_numbers[0] . 'X');
       $shipment->addChild('ShipmentDateTime', gmdate('c'));
 
       $pickup = $shipment->addChild('PickupDate', $date);
       $pickup->addAttribute('timeEarliest', gmdate('H:i:sP', strtotime($date . ' ' . $this->getPickupParamsValue('time_from'))));
       $pickup->addAttribute('timeLatest', gmdate('H:i:sP', strtotime($date . ' ' . $this->getPickupParamsValue('time_to'))));
 
-      $instructions = $shipment->addChild('Instructions');
-      $instruction = $instructions->addChild('Instruction', $this->getPickupParamsValue('info_general'));
-      $instruction->addAttribute('type', 'GENERAL');
+      $general_instruction_values = array();
+      if (!empty($this->getPickupParamsValue('info_general'))) {
+        $general_instruction_values[] = $this->getPickupParamsValue('info_general');
+      }
+      foreach ($track_numbers as $track_num) {
+        $general_instruction_values[] = $track_num;
+      }
+      if (!empty($general_instruction_values)) {
+        $instructions = $shipment->addChild('Instructions');
+        $instruction = $instructions->addChild('Instruction', implode(',', $general_instruction_values));
+        $instruction->addAttribute('type', 'GENERAL');
+      }
 
       $parties = $shipment->addChild('Parties');
       $consignor = $parties->addChild('Party');
