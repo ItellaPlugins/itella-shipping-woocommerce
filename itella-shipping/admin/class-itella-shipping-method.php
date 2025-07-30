@@ -2565,7 +2565,6 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
   public function woo_orders_custom_bulk_control()
   {
-    \culog(get_current_screen(), 'itella');
     if ( get_current_screen()->id !== 'edit-shop_order' ) {
       return;
     }
