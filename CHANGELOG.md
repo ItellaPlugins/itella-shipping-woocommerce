@@ -1,6 +1,6 @@
 # Changelog
 
-### [Unreleased]
+### [1.6.6] - 2025-07-30
 ### Fixed
 - removed developer trash
 
