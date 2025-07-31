@@ -10,7 +10,7 @@ window.itellaBulkActions = {
     },
 
     get_selected_orders: function() {
-        return Array.from(document.querySelectorAll('input[name="id[]"]:checked')).map(input => input.value);
+        return Array.from(document.querySelectorAll('input[name="id[]"]:checked, input[name="post[]"]:checked')).map(input => input.value);
     },
 
     ajax: function({ url, method = 'POST', data = null, headers = {}, success, error }) {
@@ -54,7 +54,7 @@ window.itellaBulkActions = {
     },
 
     action_register_shipments: function() {
-        document.querySelector('form#wc-orders-filter')?.addEventListener('submit', function(e) {
+        document.querySelector('form#wc-orders-filter, form#posts-filter')?.addEventListener('submit', function(e) {
             const clickedElement = document.activeElement;
             if (clickedElement?.name !== 'bulk_action') {
                 return;
