@@ -164,12 +164,12 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   public function enqueue_styles($hook)
   {
-    wp_enqueue_style($this->name, plugin_dir_url(__FILE__) . 'js/itella-shipping-popup/itella-shipping-popup.css', array(), $this->version, 'all');
+    wp_enqueue_style($this->name . '-popup', plugin_dir_url(__FILE__) . 'js/itella-shipping-popup/itella-shipping-popup.css', array(), $this->version, 'all');
 
     if ( ($hook == 'woocommerce_page_wc-settings' && isset($_GET['section']) && $_GET['section'] == $this->id)
       || ($hook == 'edit.php' && isset($_GET['post_type']) && $_GET['post_type'] == 'shop_order')
       || ($hook == 'woocommerce_page_wc-orders' && isset($_GET['action']) && $_GET['action'] == 'edit') ) {
-      wp_enqueue_style($this->name, plugin_dir_url(__FILE__) . 'css/itella-shipping-admin.css', array(), $this->version, 'all');
+      wp_enqueue_style($this->name . '-admin', plugin_dir_url(__FILE__) . 'css/itella-shipping-admin.css', array(), $this->version, 'all');
     }
   }
 
@@ -188,7 +188,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     if ( $hook == 'post.php'
       || ($hook == 'woocommerce_page_wc-orders' && isset($_GET['action']) && $_GET['action'] == 'edit') ) {
       wp_enqueue_script($this->name . 'itella-shipping-edit-orders.js', plugin_dir_url(__FILE__) . 'assets/js/itella-shipping-edit-orders.js', array('jquery'), $this->version, TRUE);
-    } else if ( $hook == 'woocommerce_page_wc-orders' && isset($_GET['page']) && $_GET['page'] == 'wc-orders' ) {
+    } else if ( ($hook == 'woocommerce_page_wc-orders' && isset($_GET['page']) && $_GET['page'] == 'wc-orders')
+      || ($hook == 'edit.php' && isset($_GET['post_type']) && $_GET['post_type'] == 'shop_order') ) {
       wp_enqueue_script($this->name . 'itella-shipping-orders-list.js', plugin_dir_url(__FILE__) . 'assets/js/itella-shipping-orders-list.js', array('jquery'), $this->version, TRUE);
       wp_localize_script($this->name . 'itella-shipping-orders-list.js', 'itellaParams', array(
         'ajax_url' => admin_url('admin-ajax.php'),
