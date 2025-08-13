@@ -1,6 +1,6 @@
 # Changelog
 
-### [Unreleased]
+### [1.6.7] - 2025-08-13
 ### Fixed
 - fixed loading of the settings page design
 
