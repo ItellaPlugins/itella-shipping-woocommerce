@@ -1,6 +1,9 @@
 # Changelog
 
 ### [Unreleased]
+### Fixed
+- fixed loading of the settings page design
+
 ### Improved
 - the shipment registration popup, originally developed for newer WooCommerce versions, has now been made compatible with older versions of the orders page
 

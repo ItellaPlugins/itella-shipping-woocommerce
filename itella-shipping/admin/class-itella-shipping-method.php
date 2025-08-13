@@ -164,12 +164,12 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   public function enqueue_styles($hook)
   {
-    wp_enqueue_style($this->name, plugin_dir_url(__FILE__) . 'js/itella-shipping-popup/itella-shipping-popup.css', array(), $this->version, 'all');
+    wp_enqueue_style($this->name . '-popup', plugin_dir_url(__FILE__) . 'js/itella-shipping-popup/itella-shipping-popup.css', array(), $this->version, 'all');
 
     if ( ($hook == 'woocommerce_page_wc-settings' && isset($_GET['section']) && $_GET['section'] == $this->id)
       || ($hook == 'edit.php' && isset($_GET['post_type']) && $_GET['post_type'] == 'shop_order')
       || ($hook == 'woocommerce_page_wc-orders' && isset($_GET['action']) && $_GET['action'] == 'edit') ) {
-      wp_enqueue_style($this->name, plugin_dir_url(__FILE__) . 'css/itella-shipping-admin.css', array(), $this->version, 'all');
+      wp_enqueue_style($this->name . '-admin', plugin_dir_url(__FILE__) . 'css/itella-shipping-admin.css', array(), $this->version, 'all');
     }
   }
 
