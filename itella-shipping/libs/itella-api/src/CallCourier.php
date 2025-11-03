@@ -201,14 +201,16 @@ class CallCourier
     $subject_text = ($this->isTest ? 'TEST CALL - ' : '') . $this->subject;
     $subject = '=?UTF-8?B?' . base64_encode($subject_text) . '?=';
 
-    $eol = PHP_EOL;
+    $eol = "\r\n";
 
     $headers = '';
     $message = '';
     // Add custom headers
-    $headers .= "From: " . $this->sender_email . "$eol";
+    $from = str_replace(array("\r", "\n"), '', $this->sender_email);
+    $headers .= "From: $from$eol";
     $headers .= "MIME-Version: 1.0$eol";
     $headers .= "Content-Type: multipart/mixed; boundary=\"$uid\"$eol";
+    $headers .= $eol;
     $message .= "--" . $uid . "$eol";
     $message .= "Content-Type: text/html; charset=utf-8$eol";
     $message .= "Content-Transfer-Encoding: base64" . $eol . $eol;
