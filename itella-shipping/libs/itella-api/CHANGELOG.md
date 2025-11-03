@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.8]
+### Fixed
+- fixed newline characters in email headers to comply with RFC 5322 requirements
+
+### Added
+- added sender email sanitization to protect against header injection threats
+
 ## [2.4.7]
 ### Fixed
 - fixed that in the courier invitation via Postra, the shipments numbers would be written under the Instructions parameter

@@ -1,5 +1,9 @@
 # Changelog
 
+### [Unreleased]
+### Updated
+- itella-api library to v2.4.8
+
 ### [1.6.7] - 2025-08-13
 ### Fixed
 - fixed loading of the settings page design
