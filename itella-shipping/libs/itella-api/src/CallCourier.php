@@ -380,13 +380,15 @@ class CallCourier
         $instruction->addAttribute('type', 'GENERAL');
       }
 
+      $postcode = $this->sanitizePostcode($this->getPickupAddressValue('postcode'));
+
       $parties = $shipment->addChild('Parties');
       $consignor = $parties->addChild('Party');
       $consignor->addAttribute('role', 'CONSIGNOR');
       $consignor->addChild('Name1', $this->getPickupAddressValue('sender'));
       $consignor_location = $consignor->addChild('Location');
       $consignor_location->addChild('Street1', $this->getPickupAddressValue('address_1'));
-      $consignor_location->addChild('Postcode', $this->getPickupAddressValue('postcode'));
+      $consignor_location->addChild('Postcode', $postcode);
       $consignor_location->addChild('City', $this->getPickupAddressValue('city'));
       $consignor_location->addChild('Country', $this->getPickupAddressValue('country'));
       $consignor_contact = $consignor->addChild('ContactChannel', $this->getPickupAddressValue('contact_phone'));
@@ -466,6 +468,19 @@ class CallCourier
     }
 
     return $empty_value;
+  }
+
+  private function sanitizePostcode( $postcode )
+  {
+    $postcode = trim($postcode);
+    $postcode = preg_replace('/[^0-9\-]/', '', $postcode); // Allow only numbers and dash
+    $postcode = preg_replace('/(?<!\d)\-|\-(?!\d)/', '', $postcode); // Remove all dashes that are not between numbers
+
+    if ( ! preg_match('/^[0-9]+(\-[0-9]+)?$/', $postcode) ) {
+      $postcode = preg_replace('/[^0-9]/', '', $postcode); // Remove dash if it is not in the middle of number
+    }
+
+    return $postcode;
   }
 
   /***************************************
