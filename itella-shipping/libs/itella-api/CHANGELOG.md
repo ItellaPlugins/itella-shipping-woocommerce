@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.4.9]
+### Added
+- added postcode sanitization to meet API requirements in courier call via Postra
+
 ## [2.4.8]
 ### Fixed
 - fixed newline characters in email headers to comply with RFC 5322 requirements
