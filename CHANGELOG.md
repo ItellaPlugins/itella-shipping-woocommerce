@@ -2,7 +2,7 @@
 
 ### [Unreleased]
 ### Updated
-- itella-api library to v2.4.9
+- itella-api library to v2.4.10
 
 ### [1.6.7] - 2025-08-13
 ### Fixed
