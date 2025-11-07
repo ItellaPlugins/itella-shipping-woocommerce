@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.4.10]
+### Added
+- added conversion of special letters to Latin letters in Postra courier call request
+
 ## [2.4.9]
 ### Added
 - added postcode sanitization to meet API requirements in courier call via Postra
