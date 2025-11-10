@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.4.10]
+### Added
+- added conversion of special letters to Latin letters in Postra courier call request
+
+## [2.4.9]
+### Added
+- added postcode sanitization to meet API requirements in courier call via Postra
+
+## [2.4.8]
+### Fixed
+- fixed newline characters in email headers to comply with RFC 5322 requirements
+
+### Added
+- added sender email sanitization to protect against header injection threats
+
 ## [2.4.7]
 ### Fixed
 - fixed that in the courier invitation via Postra, the shipments numbers would be written under the Instructions parameter

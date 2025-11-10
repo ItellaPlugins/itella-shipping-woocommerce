@@ -201,14 +201,16 @@ class CallCourier
     $subject_text = ($this->isTest ? 'TEST CALL - ' : '') . $this->subject;
     $subject = '=?UTF-8?B?' . base64_encode($subject_text) . '?=';
 
-    $eol = PHP_EOL;
+    $eol = "\r\n";
 
     $headers = '';
     $message = '';
     // Add custom headers
-    $headers .= "From: " . $this->sender_email . "$eol";
+    $from = str_replace(array("\r", "\n"), '', $this->sender_email);
+    $headers .= "From: $from$eol";
     $headers .= "MIME-Version: 1.0$eol";
     $headers .= "Content-Type: multipart/mixed; boundary=\"$uid\"$eol";
+    $headers .= $eol;
     $message .= "--" . $uid . "$eol";
     $message .= "Content-Type: text/html; charset=utf-8$eol";
     $message .= "Content-Transfer-Encoding: base64" . $eol . $eol;
@@ -378,13 +380,15 @@ class CallCourier
         $instruction->addAttribute('type', 'GENERAL');
       }
 
+      $postcode = $this->sanitizePostcode($this->getPickupAddressValue('postcode'));
+
       $parties = $shipment->addChild('Parties');
       $consignor = $parties->addChild('Party');
       $consignor->addAttribute('role', 'CONSIGNOR');
       $consignor->addChild('Name1', $this->getPickupAddressValue('sender'));
       $consignor_location = $consignor->addChild('Location');
       $consignor_location->addChild('Street1', $this->getPickupAddressValue('address_1'));
-      $consignor_location->addChild('Postcode', $this->getPickupAddressValue('postcode'));
+      $consignor_location->addChild('Postcode', $postcode);
       $consignor_location->addChild('City', $this->getPickupAddressValue('city'));
       $consignor_location->addChild('Country', $this->getPickupAddressValue('country'));
       $consignor_contact = $consignor->addChild('ContactChannel', $this->getPickupAddressValue('contact_phone'));
@@ -446,6 +450,9 @@ class CallCourier
   {
     if (isset($this->pickupAddress[$value_key])) {
       $value = $this->pickupAddress[$value_key];
+      if ( is_string($value) ) {
+        $value = $this->convertToASCII($value);
+      }
       if ($value !== '' && $value !== null && $value !== false) {
         return $value;
       }
@@ -458,12 +465,66 @@ class CallCourier
   {
     if (isset($this->pickupParams[$value_key])) {
       $value = $this->pickupParams[$value_key];
+      if ( is_string($value) ) {
+        $value = $this->convertToASCII($value);
+      }
       if ($value !== '' && $value !== null && $value !== false) {
         return $value;
       }
     }
 
     return $empty_value;
+  }
+
+  private function sanitizePostcode( $postcode )
+  {
+    $postcode = trim($postcode);
+    $postcode = preg_replace('/[^0-9\-]/', '', $postcode); // Allow only numbers and dash
+    $postcode = preg_replace('/(?<!\d)\-|\-(?!\d)/', '', $postcode); // Remove all dashes that are not between numbers
+
+    if ( ! preg_match('/^[0-9]+(\-[0-9]+)?$/', $postcode) ) {
+      $postcode = preg_replace('/[^0-9]/', '', $postcode); // Remove dash if it is not in the middle of number
+    }
+
+    return $postcode;
+  }
+
+  private function convertToASCII( $string )
+  {
+    $map = [
+      'a' => ['ą','ā','ä','å','à','á','â','ã','ă','ǎ','ȧ','ȁ','ạ','ả','ą','ȃ','ǻ','ă','å','ǡ','ǻ','ǟ','ǡ','ǡ'],
+      'A' => ['Ą','Ā','Ä','Å','À','Á','Â','Ã'],
+      'c' => ['č','ç'],
+      'C' => ['Č','Ç'],
+      'e' => ['ę','ė','ē','è','é','ê','ë'],
+      'E' => ['Ę','Ė','Ē','È','É','Ê','Ë'],
+      'g' => ['ģ'],
+      'G' => ['Ģ'],
+      'i' => ['į','ī','ì','í','î','ï'],
+      'I' => ['Į','Ī','Ì','Í','Î','Ï'],
+      'k' => ['ķ'],
+      'K' => ['Ķ'],
+      'l' => ['ļ','ł'],
+      'L' => ['Ļ','Ł'],
+      'n' => ['ņ','ñ'],
+      'N' => ['Ņ','Ñ'],
+      'o' => ['õ','ö','ø','ò','ó','ô','õ','ő','ō'],
+      'O' => ['Õ','Ö','Ø','Ò','Ó','Ô','Õ','Ő','Ō'],
+      's' => ['š'],
+      'S' => ['Š'],
+      'u' => ['ų','ū','ü','ù','ú','û'],
+      'U' => ['Ų','Ū','Ü','Ù','Ú','Û'],
+      'z' => ['ž','ź','ż'],
+      'Z' => ['Ž','Ź','Ż'],
+    ];
+
+    $string = str_replace('ß', 'ss', $string);
+
+    foreach ( $map as $latin => $chars ) {
+      $string = str_replace($chars, $latin, $string);
+    }
+
+    return $string;
   }
 
   /***************************************

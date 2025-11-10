@@ -1,8 +1,8 @@
 <?php return array(
     'root' => array(
         'name' => 'mijora/itella-api',
-        'pretty_version' => '2.4.7',
-        'version' => '2.4.7.0',
+        'pretty_version' => '2.4.10',
+        'version' => '2.4.10.0',
         'reference' => null,
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
@@ -20,8 +20,8 @@
             'dev_requirement' => false,
         ),
         'mijora/itella-api' => array(
-            'pretty_version' => '2.4.7',
-            'version' => '2.4.7.0',
+            'pretty_version' => '2.4.10',
+            'version' => '2.4.10.0',
             'reference' => null,
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
@@ -38,9 +38,9 @@
             'dev_requirement' => false,
         ),
         'setasign/fpdi' => array(
-            'pretty_version' => 'v2.6.3',
-            'version' => '2.6.3.0',
-            'reference' => '67c31f5e50c93c20579ca9e23035d8c540b51941',
+            'pretty_version' => 'v2.6.4',
+            'version' => '2.6.4.0',
+            'reference' => '4b53852fde2734ec6a07e458a085db627c60eada',
             'type' => 'library',
             'install_path' => __DIR__ . '/../setasign/fpdi',
             'aliases' => array(),
