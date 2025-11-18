@@ -4,6 +4,9 @@
 ### Fixed
 - fixed COD disable for the Order
 
+### Changed
+- changed so that API credentials would only have one username, password and contract field each
+
 ### Updated
 - itella-api library to v2.5.0
 
