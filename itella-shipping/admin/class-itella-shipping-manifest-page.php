@@ -850,8 +850,11 @@ class Itella_Manifest
     $packet_weight = (float) $weight / (int) $packet_count;
     $packet_weight = round($packet_weight, 3);
     
-    $is_cod = $itella_data->cod->enabled === 'yes';
-    if (!$is_cod) {
+    $is_cod = null;
+    if (!empty($itella_data->cod->enabled)) {
+      $is_cod = $itella_data->cod->enabled === 'yes';
+    }
+    if ($is_cod === null) {
       $is_cod = $default_is_cod;
     }
     $cod_amount = $itella_data->cod->amount;
