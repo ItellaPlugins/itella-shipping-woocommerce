@@ -407,7 +407,7 @@ class Itella_Shipping
     $this->loader->add_filter('bulk_actions-woocommerce_page_wc-orders', $plugin_admin, 'itella_register_orders_bulk_actions', 20); //HPOS
     $this->loader->add_filter('handle_bulk_actions-woocommerce_page_wc-orders', $plugin_admin, 'itella_handle_orders_bulk_actions', 20, 3); //HPOS
     $this->loader->add_filter('woocommerce_admin_order_preview_get_order_details', $plugin_admin, 'add_custom_admin_order_preview_meta', 10, 2);
-
+    $this->loader->add_filter('is_protected_meta', $plugin_admin, 'hide_metadata_from_order_page', 10, 2);
   }
 
   /**

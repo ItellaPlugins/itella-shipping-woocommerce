@@ -1,5 +1,15 @@
 # Changelog
 
+### [Unreleased]
+### Fixed
+- fixed COD disable for the Order
+
+### Updated
+- itella-api library to v2.5.0
+
+### Improved
+- added the option to choose which service to use for parcel locker and courier methods in the plugin settings
+
 ### [1.6.8] - 2025-11-10
 ### Updated
 - itella-api library to v2.4.10

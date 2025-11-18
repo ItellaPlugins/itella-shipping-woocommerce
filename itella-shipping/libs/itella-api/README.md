@@ -134,7 +134,7 @@ try {
 
 ## Creating Additional Services
 
-**Shipment::PRODUCT_COURIER** available additional services:
+**Shipment::PRODUCT_EXPRESS_BUSINESS_DAY** available additional services:
 - Must be set manualy
   - 3101 - Cash On Delivery (only by credit card). 
     **Requires** array with this information:
@@ -150,8 +150,33 @@ try {
     **Requires** array with this information:
       - `count` => Total of registered GoodsItem.
 
+**Shipment::PRODUCT_HOME_PARCEL** available additional services:
+- Must be set manualy
+  - 3101 - Cash On Delivery (only by credit card). 
+    **Requires** array with this information:
+      - `amount`    => amount to be payed in EUR,
+      - `account`   => bank account (IBAN),
+      - `codbic`    => bank BIC, 
+      - `reference` => COD Reference, can be used `Helper::generateCODReference($id)` where `$id` can be Order ID.
+- Will be set automatically
+  - 3102 - Multi Parcel, will be set automatically if Shipment has more than 1 and up to 10 GoodsItem.
+    **Requires** array with this information:
+      - `count` => Total of registered GoodsItem.
 
-**Shipment::PRODUCT_PICKUP** available additional services:
+**Shipment::PRODUCT_PARCEL_CONNECT** available additional services:
+- Must be set manualy
+  - 3101 - Cash On Delivery (only by credit card). 
+    **Requires** array with this information:
+      - `amount`    => amount to be payed in EUR,
+      - `account`   => bank account (IBAN),
+      - `codbic`    => bank BIC, 
+      - `reference` => COD Reference, can be used `Helper::generateCODReference($id)` where `$id` can be Order ID.
+- Will be set automatically
+  - 3201 - Pickup Point, is set automatically when pick up point ID (pupCode from Locations API) is registered into Shipment.
+    **Requires** array with this information:
+      - `pickup_point_id` => Pickup point pupCode.
+
+**Shipment::PRODUCT_POSTAL_PARCEL** available additional services:
 - Must be set manualy
   - 3101 - Cash On Delivery (only by credit card). 
     **Requires** array with this information:
@@ -203,8 +228,10 @@ try {
 ## Create Shipment
 
 Available product codes:
-* Shipment::PRODUCT_COURIER = 2317
-* Shipment::PRODUCT_PICKUP  = 2711
+* Shipment::PRODUCT_EXPRESS_BUSINESS_DAY = 2317
+* Shipment::PRODUCT_HOME_PARCEL = 2104
+* Shipment::PRODUCT_PARCEL_CONNECT = 2711
+* Shipment::PRODUCT_POSTAL_PARCEL = 2103
 
 Shipment can be either one, but never both. See Additional Services for what services is available to each product code.
 
@@ -229,7 +256,7 @@ use Mijora\Itella\ItellaException;
 try {
   $shipment = new Shipment($p_user, $p_secret);
   $shipment
-    ->setProductCode(Shipment::PRODUCT_COURIER) // product code, should always be set first
+    ->setProductCode(Shipment::PRODUCT_EXPRESS_BUSINESS_DAY) // product code, should always be set first
     ->setShipmentNumber('Test_ORDER')           // shipment number, Order ID is good here
     ->setSenderParty($sender)                   // Register Sender
     ->setReceiverParty($receiver)               // Register Receiver
@@ -240,6 +267,7 @@ try {
       array($item)
     )
     ->setComment('Comment about shipment')      // Comment string
+    ->setRoutingClient('TEST-001')              // Can specify an identifier that can be used to identify which integration is sending the request
   ;
 } catch (ItellaException $e) {
   // Handle validation exceptions here
@@ -257,7 +285,7 @@ $secret = 'API_SECRET'; // API secret / password
 try {
   $shipment = new Shipment($user, $secret);
   $shipment
-    ->setProductCode(Shipment::PRODUCT_PICKUP)  // product code, should always be set first
+    ->setProductCode(Shipment::PRODUCT_PARCEL_CONNECT)  // product code, should always be set first
     ->setShipmentNumber('Test_ORDER')           // shipment number, Order ID is good here
     ->setSenderParty($sender)                   // Register Sender
     ->setReceiverParty($receiver)               // Register Receiver
@@ -265,6 +293,7 @@ try {
     ->addAdditionalService($service_cod)        // Register additional services
     ->addGoodsItem($item)                       // Register GoodsItem (this adds just one)
     ->setComment('Comment about shipment')      // Comment string
+    ->setRoutingClient('TEST-002')              // Can specify an identifier that can be used to identify which integration is sending the request
   ;
 } catch (ItellaException $e) {
   // Handle validation exceptions here

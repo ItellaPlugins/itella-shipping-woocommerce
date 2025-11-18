@@ -26,18 +26,26 @@ class AdditionalService
   //const PICKUP_POINT = 3201;
   const PICKUP_POINT = 2106; // pakettikauppa pickup point service
 
-  private $valid_code = array(
+  private static $valid_code = array(
     self::COD, self::MULTI_PARCEL, self::FRAGILE,
     self::CALL_BEFORE_DELIVERY, self::OVERSIZED,
     self::PICKUP_POINT
   );
 
-  private $valid_by_product_code = array(
+  private static $valid_by_product_code = array(
     '2317' => array(
       self::COD, self::MULTI_PARCEL, self::FRAGILE,
       self::CALL_BEFORE_DELIVERY, self::OVERSIZED
     ),
-    '2711' => array(self::PICKUP_POINT, self::COD)
+    '2104' => array(
+      self::COD, self::MULTI_PARCEL
+    ),
+    '2711' => array(
+      self::PICKUP_POINT, self::COD
+    ),
+    '2103' => array(
+      self::PICKUP_POINT, self::COD
+    )
   );
 
   private $code; // Additional service code
@@ -45,7 +53,7 @@ class AdditionalService
 
   public function __construct($code, $args = array())
   {
-    if (!in_array($code, $this->valid_code)) {
+    if (!in_array($code, self::$valid_code)) {
       throw new ItellaException('Invalid additional service code.');
     }
 
@@ -64,10 +72,10 @@ class AdditionalService
    */
   public function validateCodeByProduct($product_code)
   {
-    if (!isset($this->valid_by_product_code[$product_code])) {
+    if (!self::getCodesByProduct($product_code)) {
       throw new ItellaException('Unsupported product code: ' . $product_code);
     }
-    return in_array($this->code, $this->valid_by_product_code[$product_code]);
+    return in_array($this->code, self::getCodesByProduct($product_code));
   }
 
   private function validateArgs($code, $args)
@@ -114,6 +122,14 @@ class AdditionalService
         throw new ItellaException('Unknown additional code');
         break;
     }
+  }
+
+  public static function getCodesByProduct($product_code)
+  {
+    if (!isset(self::$valid_by_product_code[$product_code])) {
+      return false;
+    }
+    return self::$valid_by_product_code[$product_code];
   }
 
   public function getCode()

@@ -18,7 +18,7 @@ try {
   // Create and configure sender
   $sender = new Party(Party::ROLE_SENDER);
   $sender
-    ->setContract(${'contract_' . Shipment::PRODUCT_PICKUP}) // important, given by itella
+    ->setContract(${'contract_' . Shipment::PRODUCT_PARCEL_CONNECT}) // important, given by itella
     ->setName1('TEST Web Shop')
     ->setStreet1('Shop str. 150')
     ->setPostCode('47174')
@@ -57,7 +57,7 @@ try {
   // Create shipment object
   $shipment = new Shipment($p_user, $p_secret);
   $shipment
-    ->setProductCode(Shipment::PRODUCT_PICKUP) // should always be set first
+    ->setProductCode(Shipment::PRODUCT_PARCEL_CONNECT) // should always be set first
     ->setShipmentNumber('Test_ORDER_pickup') // shipment number 
     //->setShipmentDateTime(date('c')) // when package will be ready (just use current time)
     ->setSenderParty($sender) // Sender class object

@@ -219,8 +219,30 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $this->init_form_fields();
     $this->init_settings();
 
+    // Compatible with old settings
+    $this->sync_legacy_settings();
+
     // Update settings page values after save
     add_action('woocommerce_update_options_shipping_' . $this->id, array($this, 'process_admin_options'));
+  }
+
+  private function sync_legacy_settings()
+  {
+    if ( empty($this->settings['api_user']) && ! empty($this->settings['api_user_2317']) ) {
+        $this->settings['api_user'] = $this->settings['api_user_2317'];
+    }
+    if ( empty($this->settings['api_pass']) && ! empty($this->settings['api_pass_2317']) ) {
+        $this->settings['api_pass'] = $this->settings['api_pass_2317'];
+    }
+    if ( empty($this->settings['api_contract']) && ! empty($this->settings['api_contract_2317']) ) {
+        $this->settings['api_contract'] = $this->settings['api_contract_2317'];
+    }
+    if ( empty($this->settings['pickup_point_service']) ) {
+        $this->settings['pickup_point_service'] = Shipment::PRODUCT_PARCEL_CONNECT;
+    }
+    if ( empty($this->settings['courier_service']) ) {
+        $this->settings['courier_service'] = Shipment::PRODUCT_EXPRESS_BUSINESS_DAY;
+    }
   }
 
   /**
@@ -316,6 +338,34 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $all_names = $this->all_additional_services_names();
 
     return $all_names[$service_key] ?? $service_key;
+  }
+
+  public function get_available_additional_services( $main_service_code )
+  {
+    $additional_services_names = $this->all_additional_services_names();
+
+    $additional_services_codes = AdditionalService::getCodesByProduct($main_service_code);
+    if ( ! $additional_services_codes ) {
+      return array();
+    }
+
+    $map = array(
+      AdditionalService::COD => 'cod',
+      AdditionalService::MULTI_PARCEL => 'multiparcel',
+      AdditionalService::FRAGILE => 'fragile',
+      AdditionalService::CALL_BEFORE_DELIVERY => 'call_before_delivery',
+      AdditionalService::OVERSIZED => 'oversized'
+    );
+
+    $additional_services = array();
+
+    foreach ( $additional_services_codes as $code ) {
+      if ( isset($map[$code]) ) {
+        $additional_services[$map[$code]] = $additional_services_names[$map[$code]] ?? '';
+      }
+    }
+
+    return $additional_services;
   }
 
   /**
@@ -562,28 +612,16 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         'hr_api' => array(
             'type' => 'hr'
         ),
-        'api_user_2711' => array(
-            'title' => __('API user (Product 2711)', 'itella-shipping'),
+        'api_user' => array(
+            'title' => __('API username', 'itella-shipping'),
             'type' => 'text',
         ),
-        'api_pass_2711' => array(
-            'title' => __('Api password (Product 2711)', 'itella-shipping'),
+        'api_pass' => array(
+            'title' => __('API password', 'itella-shipping'),
             'type' => 'text',
         ),
-        'api_contract_2711' => array(
-            'title' => __('Api contract number (Product 2711)', 'itella-shipping'),
-            'type' => 'text',
-        ),
-        'api_user_2317' => array(
-            'title' => __('API user (Product 2317)', 'itella-shipping'),
-            'type' => 'text',
-        ),
-        'api_pass_2317' => array(
-            'title' => __('Api password (Product 2317)', 'itella-shipping'),
-            'type' => 'text',
-        ),
-        'api_contract_2317' => array(
-            'title' => __('Api contract number (Product 2317)', 'itella-shipping'),
+        'api_contract' => array(
+            'title' => __('API contract', 'itella-shipping'),
             'type' => 'text',
         ),
         'hr_sender' => array(
@@ -646,12 +684,34 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             'description' => __('Show parcel locker shipping method in checkout.', 'itella-shipping'),
             'default' => 'no'
         ),
+        'pickup_point_service' => array(
+            'title' => '',
+            'type'    => 'select',
+            'class' => 'checkout-style field-toggle-pickup_point',
+            'options' => array(
+                Shipment::PRODUCT_PARCEL_CONNECT => _x('Parcel Connect', 'Main service', 'itella-shipping'),
+                Shipment::PRODUCT_POSTAL_PARCEL => _x('Postal Parcel', 'Main service', 'itella-shipping'),
+            ),
+            'default' => Shipment::PRODUCT_PARCEL_CONNECT,
+            'description' => __('Select parcel locker service.', 'itella-shipping'),
+        ),
         'courier_method' => array(
             'title' => __('Enable Courier', 'itella-shipping'),
             'type' => 'checkbox',
             'class' => 'method-cb-courier',
             'description' => __('Show courier shipping method in checkout.', 'itella-shipping'),
             'default' => 'no'
+        ),
+        'courier_service' => array(
+            'title' => '',
+            'type'    => 'select',
+            'class' => 'checkout-style field-toggle-courier',
+            'options' => array(
+                Shipment::PRODUCT_EXPRESS_BUSINESS_DAY => _x('Express Business Day Parcel', 'Main service', 'itella-shipping'),
+                Shipment::PRODUCT_HOME_PARCEL => _x('Home Parcel', 'Main service', 'itella-shipping'),
+            ),
+            'default' => Shipment::PRODUCT_EXPRESS_BUSINESS_DAY,
+            'description' => __('Select courier service.', 'itella-shipping'),
         ),
     );
 
@@ -1292,6 +1352,20 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     return $values;
   }
 
+  public function get_main_service_code($is_pickup_method, $receiver_country)
+  {
+    if ( $this->is_international_method($receiver_country) ) {
+      return Shipment::PRODUCT_EXPRESS_BUSINESS_DAY;
+    }
+    return ((bool) $is_pickup_method) ? $this->settings['pickup_point_service'] : $this->settings['courier_service'];
+  }
+
+  public function is_international_method($receiver_country)
+  {
+    $local_countries = array('LT', 'LV', 'EE', 'FI');
+    return (! in_array($receiver_country, $local_countries));
+  }
+
   public function add_shipping_details_to_order($order)
   {
     if ( ! $this->wc->get_order($order) ) {
@@ -1317,28 +1391,31 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $itella_method = $is_shipping_updated ? $itella_data->shipping_method : $itella_data->itella_method;
 
     if ($itella_method) {
+      $order_country = Itella_Manifest::order_getCountry($order);
+      $is_itella_pp = $itella_method === 'itella_pp';
+      $is_itella_c = $itella_method === 'itella_c';
+      $is_international = $this->is_international_method($order_country);
+
+      $main_service_code = $this->get_main_service_code($is_itella_pp, $order_country);
+      $available_additional_services = $this->get_available_additional_services($main_service_code);
 
       // defaults
-      $oversized = 'oversized';
-      $call_before_delivery = 'call_before_delivery';
-      $fragile = 'fragile';
       $default_packet_count = '1';
       $default_weight = 0;
       $extra_services = array();
       $default_is_cod = Itella_Manifest::is_cod_payment($order_data->payment_method);
       $default_cod_amount = $order_data->total;
 
-      $extra_services_options = array(
-          $oversized => $services_names['oversized'],
-          $call_before_delivery => $services_names['call_before_delivery'],
-          $fragile => $services_names['fragile'],
-      );
+      $extra_services_options = $available_additional_services;
+      unset($extra_services_options['cod']);
+      unset($extra_services_options['multiparcel']);
 
       foreach ( $order_items as $item ) {
         $default_weight += floatval($item->weight * $item->quantity);
       }
 
       // vars
+      $is_cod = null;
       if ($is_shipping_updated) {
         $packet_count = $itella_data->packet_count;
         $weight = $this->wc->get_order_meta($order, 'weight_total');
@@ -1352,15 +1429,12 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
       $packet_count = !empty($packet_count) ? $packet_count : $default_packet_count;
       $weight = !empty($weight) ? $weight : $default_weight;
-      $is_cod = !empty($is_cod) && $is_cod ? $is_cod : $default_is_cod;
+      $is_cod = $is_cod !== null ? $is_cod : $default_is_cod;
       $cod_amount = !empty($cod_amount) ? $cod_amount : $default_cod_amount;
-
-      $is_itella_pp = $itella_method === 'itella_pp';
-      $is_itella_c = $itella_method === 'itella_c';
 
       $chosen_pickup_point_id = $itella_data->pickup->id;
       $chosen_pickup_point_pupcode = $itella_data->pickup->pupcode;
-      $chosen_pickup_point = $this->get_chosen_pickup_point(Itella_Manifest::order_getCountry($order), $chosen_pickup_point_id, $chosen_pickup_point_pupcode);
+      $chosen_pickup_point = $this->get_chosen_pickup_point($order_country, $chosen_pickup_point_id, $chosen_pickup_point_pupcode);
       $chosen_pickup_point_pupcode = $this->fix_pupcode($chosen_pickup_point_pupcode, $chosen_pickup_point);
 
       $weight_unit = $this->wc->get_units()->weight;
@@ -1369,6 +1443,14 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       $packets = array();
       for ($i = 1; $i < 11; $i++) {
         $packets[$i] = strval($i);
+      }
+
+      if ( ! isset($available_additional_services['cod']) ) {
+        $is_cod = false;
+      }
+      if ( ! isset($available_additional_services['multiparcel']) ) {
+        $packet_count = '1';
+        $packets = array(1 => strval(1));
       }
 
       ?>
@@ -1448,8 +1530,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
               'label' => __('Multi Parcel', 'itella-shipping'),
               'style' => 'width: 1rem',
               'description' => __('If more than one packet is selected, then a multi parcel service is mandatory', 'itella-shipping'),
-              'value' => 'no',
-              'cbvalue' => 'no',
+              'value' => isset($available_additional_services['multiparcel']) ? 'yes' : 'no',
+              'cbvalue' => 'yes',
               'wrapper_class' => 'form-field-wide'
           ));
 
@@ -1468,7 +1550,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
                   'no' => __('No', 'woocommerce'),
                   'yes' => __('Yes', 'woocommerce')
               ),
-              'wrapper_class' => 'form-field-wide'
+              'wrapper_class' => 'form-field-wide',
+              'custom_attributes' => isset($available_additional_services['cod']) ? array() : array('disabled' => 'disabled'),
           ));
 
           woocommerce_wp_text_input(array(
@@ -1497,16 +1580,18 @@ class Itella_Shipping_Method extends WC_Shipping_Method
               'wrapper_class' => 'form-field-wide'
           ));
 
-          $this->woocommerce_wp_multi_checkbox($order_data->id, array(
-              'id' => 'itella_extra_services',
-              'name' => 'itella_extra_services[]',
-              'style' => 'width: 1rem',
-              'value' => $extra_services,
-              'class' => 'itella_extra_services_cb',
-              'label' => __('Extra Services', 'itella-shipping'),
-              'options' => $extra_services_options,
-              'wrapper_class' => 'form-field-wide'
-          ));
+          if ( ! empty($extra_services_options) ) {
+            $this->woocommerce_wp_multi_checkbox($order_data->id, array(
+                'id' => 'itella_extra_services',
+                'name' => 'itella_extra_services[]',
+                'style' => 'width: 1rem',
+                'value' => $extra_services,
+                'class' => 'itella_extra_services_cb',
+                'label' => __('Extra Services', 'itella-shipping'),
+                'options' => $extra_services_options,
+                'wrapper_class' => 'form-field-wide'
+            ));
+          }
           ?></div>
     <?php } else {
       $field_id = 'itella_add_manually';
@@ -1698,8 +1783,9 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     foreach ( $post_fields as $field)  {
       if ( ! isset($_POST[$field]) ) continue;
 
-      if ( $field == 'packet_count' && intval(wc_clean($_POST[$field]) > 1) ) {
-        $this->wc->save_itella_multi_parcel($order_id, 'true');
+      if ( $field == 'packet_count' ) {
+        $value = intval(wc_clean($_POST[$field]) > 1) ? 'true' : '';
+        $this->wc->save_itella_multi_parcel($order_id, $value);
       }
 
       if ( $field == 'itella_add_manually' && isset($_POST[$field]) ) {
@@ -1960,6 +2046,14 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     return $data;
   }
 
+  public function hide_metadata_from_order_page( $protected, $meta_key )
+  {
+    if ( strpos($meta_key, 'itella_') === 0 ) {
+      return true;
+    }
+    return $protected;
+  }
+
   /**
    * Shipping information in order quickview (Display fields)
    */
@@ -2093,6 +2187,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       $order = $this->wc->get_order($order_id);
       $shipping_parameters = Itella_Manifest::get_shipping_parameters($order_id);
       $order_country = Itella_Manifest::order_getCountry($order);
+      $shipping_parameters['country'] = $order_country;
       $shipping_method = $shipping_parameters['itella_shipping_method'];
       $shipment = null;
 
@@ -2121,18 +2216,15 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         continue;
       }
 
-      $contract_number = ($shipping_method === 'itella_pp')
-        ? $this->settings['api_contract_2711']
-        : $this->settings['api_contract_2317'];
-
       // register shipment
       try {
-        $sender = $this->create_sender($contract_number);
+        $sender = $this->create_sender($this->settings['api_contract']);
         $receiver = $this->create_receiver($order);
 
         $shipment = ($shipping_method === 'itella_pp')
           ? $this->register_pickup_point_shipment($sender, $receiver, $shipping_parameters, $order_id)
           : $this->register_courier_shipment($sender, $receiver, $shipping_parameters, $order_id);
+        $shipment->setRoutingClient('BAL-WOOCOM');
 
         $result = $shipment->registerShipment();
 
@@ -2152,6 +2244,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         $result_data['msg'] = __('Successfully registered', 'itella-shipping');
         $orders_result[$order_id] = $result_data;
       } catch (ItellaException $e) {
+
         file_put_contents(plugin_dir_path(dirname(__FILE__)) . 'var/log/errors.log',
           '[' . date('Y-m-d H:i:s') . "] Exception:\n" . $e->getMessage() . PHP_EOL
           . $e->getTraceAsString() . PHP_EOL, FILE_APPEND
@@ -2292,8 +2385,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   private function register_courier_shipment($sender, $receiver, $shipping_parameters, $order_id)
   {
-    $p_user = htmlspecialchars_decode($this->settings['api_user_2317']);
-    $p_secret = htmlspecialchars_decode($this->settings['api_pass_2317']);
+    $p_user = htmlspecialchars_decode($this->settings['api_user']);
+    $p_secret = htmlspecialchars_decode($this->settings['api_pass']);
     $is_test = false;
 
     // Create GoodsItem (parcel)
@@ -2319,15 +2412,15 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     }
 
     // Other services
-    $oversized = in_array('oversized', $extra_services) ? new AdditionalService(3174) : false;
+    $oversized = in_array('oversized', $extra_services) ? new AdditionalService(AdditionalService::OVERSIZED) : false;
     if ($oversized) {
       $additional_services[] = $oversized;
     }
-    $fragile = in_array('fragile', $extra_services) ? new AdditionalService(3104) : false;
+    $fragile = in_array('fragile', $extra_services) ? new AdditionalService(AdditionalService::FRAGILE) : false;
     if ($fragile) {
       $additional_services[] = $fragile;
     }
-    $call_before_delivery = in_array('call_before_delivery', $extra_services) ? new AdditionalService(3166) : false;
+    $call_before_delivery = in_array('call_before_delivery', $extra_services) ? new AdditionalService(AdditionalService::CALL_BEFORE_DELIVERY) : false;
     if ($call_before_delivery) {
       $additional_services[] = $call_before_delivery;
     }
@@ -2341,7 +2434,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     // Create shipment object
     $shipment = new Shipment($p_user, $p_secret, $is_test);
     $shipment
-        ->setProductCode(Shipment::PRODUCT_COURIER)
+        ->setProductCode($this->get_main_service_code(false, $shipping_parameters['country']))
         ->setShipmentNumber($order_id)
         ->setShipmentDateTime(date('c'))
         ->setSenderParty($sender)
@@ -2365,8 +2458,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   private function register_pickup_point_shipment($sender, $receiver, $shipping_parameters, $order_id)
   {
-    $p_user = htmlspecialchars_decode($this->settings['api_user_2317']);
-    $p_secret = htmlspecialchars_decode($this->settings['api_pass_2317']);
+    $p_user = htmlspecialchars_decode($this->settings['api_user']);
+    $p_secret = htmlspecialchars_decode($this->settings['api_pass']);
     $is_test = false;
     $shipping_country = Itella_Manifest::order_getCountry($this->wc->get_order($order_id));
     $chosen_pickup_point = $this->get_chosen_pickup_point($shipping_country, $shipping_parameters['pickup_point_id'], $shipping_parameters['pickup_point_pupcode']);
@@ -2393,7 +2486,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     // Create shipment object
     $shipment = new Shipment($p_user, $p_secret, $is_test);
     $shipment
-        ->setProductCode(Shipment::PRODUCT_PICKUP)
+        ->setProductCode($this->settings['pickup_point_service'])
         ->setShipmentNumber($order_id)
         ->setShipmentDateTime(date('c'))
         ->setSenderParty($sender)
@@ -2404,7 +2497,6 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         ->setComment($comment);
 
     return $shipment;
-
   }
 
   private function prepare_comment($comment, $variables)
@@ -2419,7 +2511,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   private function get_service_cod_info($order_id, $shipping_parameters)
   {
     if ($shipping_parameters['is_cod'] === 'yes' || $shipping_parameters['is_cod'] === true) {
-      $service_cod = new AdditionalService(3101, array(
+      $service_cod = new AdditionalService(AdditionalService::COD, array(
         'amount' => $shipping_parameters['cod_amount'],
         'account' => $this->settings['bank_account'],
         'reference' => ItellaHelper::generateCODReference($order_id),
@@ -2719,8 +2811,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $call_time_to = (isset($_REQUEST['itella_call_courier_time_to'])) ? $_REQUEST['itella_call_courier_time_to'] : '17:00';
     $call_info = (isset($_REQUEST['itella_call_courier_info'])) ? $_REQUEST['itella_call_courier_info'] : '';
 
-    $username = (!empty($this->settings['api_user_2317'])) ? $this->settings['api_user_2317'] : $this->settings['api_user_2711'];
-    $password = (!empty($this->settings['api_pass_2317'])) ? $this->settings['api_pass_2317'] : $this->settings['api_pass_2711'];
+    $username = $this->settings['api_user'];
+    $password = $this->settings['api_pass'];
 
     $translation = $this->get_manifest_translation();
     $items = $this->prepare_items_for_manifest($order_ids);
