@@ -1,6 +1,6 @@
 # Changelog
 
-### [Unreleased]
+## [Unreleased]
 ### Fixed
 - fixed COD disable for the Order
 
@@ -13,40 +13,40 @@
 ### Improved
 - added the option to choose which service to use for parcel locker and courier methods in the plugin settings
 
-### [1.6.8] - 2025-11-10
+## [1.6.8] - 2025-11-10
 ### Updated
 - itella-api library to v2.4.10
 
-### [1.6.7] - 2025-08-13
+## [1.6.7] - 2025-08-13
 ### Fixed
 - fixed loading of the settings page design
 
 ### Improved
 - the shipment registration popup, originally developed for newer WooCommerce versions, has now been made compatible with older versions of the orders page
 
-### [1.6.6] - 2025-07-30
+## [1.6.6] - 2025-07-30
 ### Fixed
 - removed developer trash
 
-### [1.6.5] - 2025-07-29
+## [1.6.5] - 2025-07-29
 ### Improved
 - added display of popup messages during shipments registration via bulk action in the WC orders page
 
 ### Updated
 - itella-api library to v2.4.7
 
-### [1.6.4] - 2025-07-11
+## [1.6.4] - 2025-07-11
 ### Fixed
 - fixed the Sender ID of the courier invitation to use the plugin developer ID instead of the sender's company code
 
 ### Improved
 - added display of popup messages during mass shipment registration from the Smartposti shipments page
 
-### [1.6.3] - 2025-06-30
+## [1.6.3] - 2025-06-30
 ### Improved
 - added error messages if the weight of a parcel exceeds 35 kg or the weight of all parcels of the shipment exceeds 150 kg
 
-### [1.6.2] - 2025-06-26
+## [1.6.2] - 2025-06-26
 ### Fixed
 - fixed to remove error message after successful shipment registration
 - fixed so that when registering multi-parcel shipments, the order weight would be divided by the number of packages
