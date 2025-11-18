@@ -18,14 +18,25 @@ class Shipment
   const MULTIPARCEL_LIMIT = 10;
 
   // Service code (product)
+  const PRODUCT_PARCEL_CONNECT = 2711;
+  const PRODUCT_POSTAL_PARCEL = 2103;
+  const PRODUCT_EXPRESS_BUSINESS_DAY = 2317;
+  const PRODUCT_HOME_PARCEL = 2104;
+  /**
+   * @deprecated Use PRODUCT_EXPRESS_BUSINESS_DAY instead.
+   */
   const PRODUCT_COURIER = 2317;
+  /**
+   * @deprecated Use PRODUCT_PARCEL_CONNECT instead.
+   */
   const PRODUCT_PICKUP = 2711;
 
   // Label sizes
   const LABEL_SIZE_A5 = 'A5';
   const LABEL_SIZE_107X225 = '107x225';
 
-  public $valid_product_codes;
+  public $pickup_product_codes;
+  public $courier_product_codes;
 
   public $isTest;
 
@@ -84,12 +95,32 @@ class Shipment
     $this->totalItems = 0;
     $this->comment = null;
 
-    $this->valid_product_codes = array(
-      self::PRODUCT_COURIER,
-      self::PRODUCT_PICKUP
+    $this->pickup_product_codes = array(
+      self::PRODUCT_PARCEL_CONNECT,
+      self::PRODUCT_POSTAL_PARCEL
+    );
+
+    $this->courier_product_codes = array(
+      self::PRODUCT_EXPRESS_BUSINESS_DAY,
+      self::PRODUCT_HOME_PARCEL
     );
 
     $this->_client = (new Client($this->user, $this->pass, $this->isTest))->getAuthenticatedClient();
+  }
+
+  public function getValidProductCodes()
+  {
+    if ( ! is_array($this->pickup_product_codes) || ! is_array($this->courier_product_codes) ) {
+      return array();
+    }
+
+    return array_merge($this->pickup_product_codes, $this->courier_product_codes);
+  }
+
+  public function setRoutingClient( $client_name )
+  {
+    $this->_client->setSenderSystemName($client_name);
+    return $this;
   }
 
   public function asXML()
@@ -179,7 +210,7 @@ class Shipment
   private function modifyReceiverForPickupPoint()
   {
     // Only need alteration for set pickup point
-    if ($this->product_code !== self::PRODUCT_PICKUP) {
+    if (!in_array($this->product_code, $this->pickup_product_codes)) {
       return;
     }
 
@@ -319,7 +350,7 @@ class Shipment
 
   public function setProductCode($code)
   {
-    if (!in_array($code, $this->valid_product_codes)) {
+    if (!in_array($code, $this->getValidProductCodes())) {
       throw new ItellaException('Unknown product code: ' . $code);
     }
     $this->product_code = $code;

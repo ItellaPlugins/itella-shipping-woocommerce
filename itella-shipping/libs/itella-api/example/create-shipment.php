@@ -19,7 +19,7 @@ try {
   // Create and configure sender
   $sender = new Party(Party::ROLE_SENDER);
   $sender
-    ->setContract(${'contract_' . Shipment::PRODUCT_COURIER}) // important comes from supplied tracking code interval
+    ->setContract(${'contract_' . Shipment::PRODUCT_EXPRESS_BUSINESS_DAY}) // important comes from supplied tracking code interval
     ->setName1('TEST Web Shop')
     ->setStreet1('Shop str. 150')
     ->setPostCode('47174')
@@ -65,7 +65,7 @@ try {
   // Create shipment object
   $shipment = new Shipment($p_user, $p_secret);
   $shipment
-    ->setProductCode(Shipment::PRODUCT_COURIER) // should always be set first
+    ->setProductCode(Shipment::PRODUCT_EXPRESS_BUSINESS_DAY) // should always be set first
     ->setShipmentNumber('Test_ORDER_fragile') // shipment number 
     //->setShipmentDateTime(date('c')) // when package will be ready (just use current time)
     ->setSenderParty($sender) // Sender class object
