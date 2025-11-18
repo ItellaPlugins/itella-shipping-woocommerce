@@ -2046,6 +2046,14 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     return $data;
   }
 
+  public function hide_metadata_from_order_page( $protected, $meta_key )
+  {
+    if ( strpos($meta_key, 'itella_') === 0 ) {
+      return true;
+    }
+    return $protected;
+  }
+
   /**
    * Shipping information in order quickview (Display fields)
    */
