@@ -1825,6 +1825,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
             htmlspecialchars_decode($this->settings['api_user_' . $product_key]),
             htmlspecialchars_decode($this->settings['api_pass_' . $product_key])
         );
+        $shipment->setRoutingClient('BAL-WOOCOM');
 
         $result = base64_decode($shipment->downloadLabels($tr_codes));
 
