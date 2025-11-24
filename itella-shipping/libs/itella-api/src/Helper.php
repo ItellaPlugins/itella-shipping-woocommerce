@@ -21,10 +21,10 @@ class Helper
   public static function getProductIdFromTrackNum($tracking_number)
   {
     if (strpos($tracking_number, 'JJFI') === 0) {
-      return _Shipment::PRODUCT_COURIER;
+      return _Shipment::PRODUCT_EXPRESS_BUSINESS_DAY;
     }
 
-    return _Shipment::PRODUCT_PICKUP;
+    return _Shipment::PRODUCT_PARCEL_CONNECT;
   }
 
   /**

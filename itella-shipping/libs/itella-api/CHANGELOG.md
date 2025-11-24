@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.5.0]
+### Added
+- added new services: 2103, 2104
+- added ability to specify `Routing.Client` value
+- added new static function `AdditionalService::getCodesByProduct($product_code)` to get available additional services to that product
+
+### Changed
+- `Shipment::PRODUCT_COURIER` is now deprecated. Use `Shipment::PRODUCT_EXPRESS_BUSINESS_DAY` instead.
+- `Shipment::PRODUCT_PICKUP` is now deprecated. Use `Shipment::PRODUCT_PARCEL_CONNECT` instead.
+
 ## [2.4.10]
 ### Added
 - added conversion of special letters to Latin letters in Postra courier call request

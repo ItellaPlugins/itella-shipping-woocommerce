@@ -1,5 +1,11 @@
 *** Smartposti shipping Changelog ***
 
+2025-11-24 - version 1.7.0
+* Fixed - COD disable for the Order
+* Changed - So that API credentials would only have one username, password and contract field each
+* Updated - itella-api library to v2.5.0
+* Added - The option to choose which service to use for parcel locker and courier methods in the plugin settings
+
 2025-11-10 - version 1.6.8
 * Updated - itella-api library to v2.4.10
 
