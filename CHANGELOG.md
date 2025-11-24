@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.7.0] - 2025-11-24
 ### Fixed
 - fixed COD disable for the Order
 
