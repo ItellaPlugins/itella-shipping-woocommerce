@@ -1822,8 +1822,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       $temp_files = array();
       foreach ($tracking_codes as $product_key => $tr_codes) {
         $shipment = new Shipment(
-            htmlspecialchars_decode($this->settings['api_user_' . $product_key]),
-            htmlspecialchars_decode($this->settings['api_pass_' . $product_key])
+            htmlspecialchars_decode($this->settings['api_user']),
+            htmlspecialchars_decode($this->settings['api_pass'])
         );
         $shipment->setRoutingClient('BAL-WOOCOM');
 
