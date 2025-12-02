@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.7.1] - 2025-12-02
 ### Fixed
 - fixed label download issue that occurred after update 1.7.0
 
