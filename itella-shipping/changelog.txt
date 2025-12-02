@@ -1,5 +1,8 @@
 *** Smartposti shipping Changelog ***
 
+2025-12-02 - version 1.7.1
+* Fixed - Label download issue that occurred after update 1.7.0
+
 2025-11-24 - version 1.7.0
 * Fixed - COD disable for the Order
 * Changed - So that API credentials would only have one username, password and contract field each
