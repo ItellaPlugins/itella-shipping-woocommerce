@@ -1,5 +1,9 @@
 # Changelog
 
+## [Unreleased]
+### Fixed
+- fixed label download issue that occurred after update 1.7.0
+
 ## [1.7.0] - 2025-11-24
 ### Fixed
 - fixed COD disable for the Order
