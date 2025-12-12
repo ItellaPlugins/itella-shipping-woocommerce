@@ -1,5 +1,9 @@
 *** Smartposti shipping Changelog ***
 
+2025-12-12 - version 1.7.2
+* Fixed - So that the list of parcel lockers would not be overwritten to an empty one if a new list could not be obtained
+* Added - Courier shipping method for Cyprus and Malta
+
 2025-12-02 - version 1.7.1
 * Fixed - Label download issue that occurred after update 1.7.0
 
