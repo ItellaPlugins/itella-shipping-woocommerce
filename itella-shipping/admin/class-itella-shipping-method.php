@@ -298,7 +298,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   {
     $itella_pickup_points_obj = new PickupPoints('https://delivery.plugins.itella.com/api/locations');
 
-    foreach ( $this->available_countries as $country_code ) {
+    foreach ( Itella_Shipping::PICKUP_COUNTRIES as $country_code ) {
       $filename = plugin_dir_path(dirname(__FILE__))
           . 'locations/locations' . $this->wc->string_to_upper($country_code) . '.json';
       $update_file = false;
@@ -318,7 +318,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         if ( ! empty($locations) ) {
           $itella_pickup_points_obj->saveLocationsToJSONFile($filename, json_encode($locations));
         } else {
-          file_put_contents($filename, '');
+          touch($filename);
         }
       }
     }
