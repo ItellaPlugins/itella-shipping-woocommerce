@@ -29,6 +29,41 @@
  */
 class Itella_Shipping
 {
+  const COURIER_COUNTRIES = [
+    'LT', // Lithuania
+    'LV', // Latvia
+    'EE', // Estonia
+    'FI', // Finland
+    'AT', // Austria
+    'BE', // Belgium
+    'BG', // Bulgaria
+    'HR', // Croatia
+    'CY', // Cyprus
+    'CZ', // Czech Republic
+    'DK', // Denmark
+    'FR', // France
+    'DE', // Germany
+    'GR', // Greece
+    'HU', // Hungary
+    'IE', // Ireland
+    'IT', // Italy
+    'LU', // Luxembourg
+    'MT', // Malta
+    'NL', // Netherlands
+    'PL', // Poland
+    'PT', // Portugal
+    'RO', // Romania
+    'ES', // Spain
+    'SE', // Sweden
+    'SI', // Slovenia
+    'SK'  // Slovakia
+  ];
+  const PICKUP_COUNTRIES = [
+    'LT', // Lithuania
+    'LV', // Latvia
+    'EE', // Estonia
+    'FI', // Finland
+  ];
 
   /**
    * The class is a singleton
@@ -198,8 +233,8 @@ class Itella_Shipping
   private function get_available_methods( $get_countries = false )
   {
     $countries = array(
-      'courier' => array('LT', 'LV', 'EE', 'FI', 'AT', 'BE', 'BG', 'HR', 'CZ', 'DK', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT', 'LU', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE'),
-      'pickup_point' => array('LT', 'LV', 'EE', 'FI')
+      'courier' => self::COURIER_COUNTRIES,
+      'pickup_point' => self::PICKUP_COUNTRIES
     );
 
     $methods_names = array(
