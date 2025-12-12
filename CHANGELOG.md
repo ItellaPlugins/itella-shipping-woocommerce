@@ -4,6 +4,9 @@
 ### Improved
 - added courier shipping method for Cyprus and Malta
 
+### Fixed
+- fixed so that the list of parcel lockers would not be overwritten to an empty one if a new list could not be obtained
+
 ## [1.7.1] - 2025-12-02
 ### Fixed
 - fixed label download issue that occurred after update 1.7.0
