@@ -1,5 +1,9 @@
 # Changelog
 
+## [Unreleased]
+### Fixed
+- fixed an issue where API credentials were not HTML-decoded before use
+
 ## [1.7.2] - 2025-12-12
 ### Improved
 - added courier shipping method for Cyprus and Malta
