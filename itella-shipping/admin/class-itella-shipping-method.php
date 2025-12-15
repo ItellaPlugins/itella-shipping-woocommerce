@@ -2812,8 +2812,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $call_time_to = (isset($_REQUEST['itella_call_courier_time_to'])) ? $_REQUEST['itella_call_courier_time_to'] : '17:00';
     $call_info = (isset($_REQUEST['itella_call_courier_info'])) ? $_REQUEST['itella_call_courier_info'] : '';
 
-    $username = $this->settings['api_user'];
-    $password = $this->settings['api_pass'];
+    $username = htmlspecialchars_decode($this->settings['api_user']);
+    $password = htmlspecialchars_decode($this->settings['api_pass']);
 
     $translation = $this->get_manifest_translation();
     $items = $this->prepare_items_for_manifest($order_ids);
