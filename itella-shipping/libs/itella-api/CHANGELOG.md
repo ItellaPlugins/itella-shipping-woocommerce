@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.5.1]
+### Changed
+- courier call via POSTA has been disabled for Latvia
+
 ## [2.5.0]
 ### Added
 - added new services: 2103, 2104

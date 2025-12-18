@@ -124,7 +124,7 @@ class CallCourier
 
   private function isApiMethodAvailable()
   {
-    $not_allowed_countries = array('LT', 'LV');
+    $not_allowed_countries = array('LT');
 
     if (in_array($this->pickupAddress['country'], $not_allowed_countries)) {
       return false;
@@ -135,7 +135,7 @@ class CallCourier
 
   private function isPostraMethodAvailable()
   {
-    $allowed_countries = array('LT', 'LV');
+    $allowed_countries = array('LT');
 
     if (!in_array($this->pickupAddress['country'], $allowed_countries)) {
       return false;
@@ -432,7 +432,7 @@ class CallCourier
     );
 
     $country = strtoupper($this->getPickupAddressValue('country'));
-    return (isset($payers[$country])) ? $payers[$country] : $payers['LV'];
+    return (isset($payers[$country])) ? $payers[$country] : $payers['LT'];
   }
 
   /***************************************

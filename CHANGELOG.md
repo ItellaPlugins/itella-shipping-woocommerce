@@ -4,6 +4,9 @@
 ### Fixed
 - fixed an issue where API credentials were not HTML-decoded before use
 
+### Updated
+- itella-api library to v2.5.1
+
 ## [1.7.2] - 2025-12-12
 ### Improved
 - added courier shipping method for Cyprus and Malta
