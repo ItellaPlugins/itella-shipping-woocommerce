@@ -1,5 +1,9 @@
 # Changelog
 
+## [Unreleased]
+### Removed
+- removed unused Company name and Company code fields in settings
+
 ## [1.7.3] - 2025-12-18
 ### Fixed
 - fixed an issue where API credentials were not HTML-decoded before use
