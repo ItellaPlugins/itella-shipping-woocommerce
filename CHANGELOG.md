@@ -1,6 +1,9 @@
 # Changelog
 
 ## [Unreleased]
+### Improved
+- improved function that checks if a block-based Checkout page is used, so that an error or notice is not generated in all cases
+
 ### Removed
 - removed unused Company name and Company code fields in settings
 
