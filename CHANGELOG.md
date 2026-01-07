@@ -1,6 +1,9 @@
 # Changelog
 
 ## [Unreleased]
+### Fixed
+- fixed that saving plugin settings in order edit page would work on different system versions
+
 ### Improved
 - improved function that checks if a block-based Checkout page is used, so that an error or notice is not generated in all cases
 
