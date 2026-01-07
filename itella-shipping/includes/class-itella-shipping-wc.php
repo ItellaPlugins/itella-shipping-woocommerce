@@ -45,6 +45,21 @@ class Itella_Shipping_Wc {
         return $order;
     }
 
+    public function save_order( $order )
+    {
+        if ( ! is_object($order) ) {
+            return false;
+        }
+
+        if ( ! $order->get_id() ) {
+            return false;
+        }
+
+        $order->save();
+
+        return true;
+    }
+
     public function get_order_data( $order, $get_data = '' )
     {
         $order = $this->check_and_get_order($order);
@@ -75,7 +90,7 @@ class Itella_Shipping_Wc {
         return $order->get_meta($meta_key, true);
     }
 
-    public function update_order_meta( $order, $meta_key, $value )
+    public function update_order_meta( $order, $meta_key, $value, $save = true )
     {
         $order = $this->check_and_get_order($order);
         if ( ! $order || empty($meta_key) ) {
@@ -83,7 +98,10 @@ class Itella_Shipping_Wc {
         }
 
         $order->update_meta_data($meta_key, $value);
-        $order->save();
+
+        if ( $save && ! doing_action('woocommerce_before_order_object_save') ) {
+            $this->save_order($order);
+        }
 
         return true;
     }
