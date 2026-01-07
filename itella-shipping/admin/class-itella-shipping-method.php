@@ -627,22 +627,6 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         'hr_sender' => array(
             'type' => 'hr'
         ),
-        'company' => array(
-            'title' => __('Company name', 'itella-shipping'),
-            'type' => 'text',
-        ),
-        'company_code' => array(
-            'title' => __('Company code', 'itella-shipping'),
-            'type' => 'text',
-        ),
-        'bank_account' => array(
-            'title' => __('Bank account', 'itella-shipping'),
-            'type' => 'text',
-        ),
-        'cod_bic' => array(
-            'title' => __('BIC', 'itella-shipping'),
-            'type' => 'text',
-        ),
         'shop_name' => array(
             'title' => __('Shop name', 'itella-shipping'),
             'type' => 'text',
@@ -673,6 +657,16 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         'shop_email' => array(
             'title' => __('Shop email', 'itella-shipping'),
             'type' => 'email',
+        ),
+        'bank_account' => array(
+            'title' => __('Bank account', 'itella-shipping'),
+            'type' => 'text',
+            'description' => __('Required for C.O.D. payments', 'itella-shipping'),
+        ),
+        'cod_bic' => array(
+            'title' => __('Bank BIC code', 'itella-shipping'),
+            'type' => 'text',
+            'description' => __('Also known as SWIFT code', 'itella-shipping'),
         ),
         'hr_methods' => array(
             'type' => 'hr'
