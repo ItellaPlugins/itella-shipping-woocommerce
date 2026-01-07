@@ -293,6 +293,17 @@ class Itella_Shipping_Wc {
 
     public function is_wc_block_checkout() {
         global $post;
-        return has_blocks($post->post_content) && has_block('woocommerce/checkout');
+
+        if ( ! function_exists('has_blocks') || ! function_exists('has_block') ) {
+            return false;
+        }
+        if ( empty($post) || ! ($post instanceof WP_Post) ) {
+            return false;
+        }
+        if ( ! isset($post->post_content) || $post->post_content === '' ) {
+            return false;
+        }
+
+        return has_blocks($post->post_content) && has_block('woocommerce/checkout', $post);
     }
 }
