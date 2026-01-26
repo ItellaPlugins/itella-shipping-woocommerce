@@ -2613,12 +2613,20 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   private function add_msg($msg, $type)
   {
-    if (!session_id()) {
-      session_start();
+    $user_id = get_current_user_id();
+    $key = 'itella_shipping_notice_' . $user_id;
+
+    $notices = get_transient($key);
+    if (!is_array($notices)) {
+      $notices = array();
     }
-    if (!isset($_SESSION['itella_shipping_notices']))
-      $_SESSION['itella_shipping_notices'] = array();
-    $_SESSION['itella_shipping_notices'][] = array('msg' => $msg, 'type' => 'notice notice-' . $type);
+
+    $notices[] = array(
+      'msg'  => $msg,
+      'type' => 'notice notice-' . $type,
+    );
+
+    set_transient($key, $notices, 60);
   }
 
   /**
@@ -2626,18 +2634,17 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   public function itella_shipping_notices()
   {
-    if (!session_id()) {
-      session_start();
-    }
-    if (array_key_exists('itella_shipping_notices', $_SESSION)) {
-      foreach ($_SESSION['itella_shipping_notices'] as $notice):
-        ?>
-      <div class="<?php echo $notice['type']; ?>">
-          <p><?php echo $notice['msg']; ?></p>
-          </div><?php
-      endforeach;
-      unset($_SESSION['itella_shipping_notices']);
-    }
+    $key = 'itella_shipping_notice_' . get_current_user_id();
+    $notices = get_transient($key);
+
+    if (is_array($notices)) {
+      foreach ($notices as $notice) {
+        echo '<div class="' . esc_attr($notice['type']) . '">';
+        echo '<p>' . wp_kses_post($notice['msg']) . '</p>';
+        echo '</div>';
+      }
+
+      delete_transient($key);
   }
 
   public function itella_register_orders_bulk_actions($bulk_actions)
