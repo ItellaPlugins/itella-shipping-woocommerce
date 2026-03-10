@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.7.4] - 2026-03-10
 ### Fixed
 - fixed that saving plugin settings in order edit page would work on different system versions
 - fixed the text of the courier call button in the "Completed orders" tab of the "Smartposti shipments" page
