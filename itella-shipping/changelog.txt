@@ -1,5 +1,12 @@
 *** Smartposti shipping Changelog ***
 
+2026-03-10 - version 1.7.4
+* Fixed - That saving plugin settings in order edit page would work on different system versions
+* Fixed - The text of the courier call button in the "Completed orders" tab of the "Smartposti shipments" page
+* Changed - Function that checks if a block-based Checkout page is used, so that an error or notice is not generated in all cases
+* Changed - That admin notice would use transient instead of session
+* Removed - Unused Company name and Company code fields in settings
+
 2025-12-18 - version 1.7.3
 * Fixed - An issue where API credentials were not HTML-decoded before use
 * Updated - itella-api library to v2.5.1

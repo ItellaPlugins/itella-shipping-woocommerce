@@ -627,22 +627,6 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         'hr_sender' => array(
             'type' => 'hr'
         ),
-        'company' => array(
-            'title' => __('Company name', 'itella-shipping'),
-            'type' => 'text',
-        ),
-        'company_code' => array(
-            'title' => __('Company code', 'itella-shipping'),
-            'type' => 'text',
-        ),
-        'bank_account' => array(
-            'title' => __('Bank account', 'itella-shipping'),
-            'type' => 'text',
-        ),
-        'cod_bic' => array(
-            'title' => __('BIC', 'itella-shipping'),
-            'type' => 'text',
-        ),
         'shop_name' => array(
             'title' => __('Shop name', 'itella-shipping'),
             'type' => 'text',
@@ -673,6 +657,16 @@ class Itella_Shipping_Method extends WC_Shipping_Method
         'shop_email' => array(
             'title' => __('Shop email', 'itella-shipping'),
             'type' => 'email',
+        ),
+        'bank_account' => array(
+            'title' => __('Bank account', 'itella-shipping'),
+            'type' => 'text',
+            'description' => __('Required for C.O.D. payments', 'itella-shipping'),
+        ),
+        'cod_bic' => array(
+            'title' => __('Bank BIC code', 'itella-shipping'),
+            'type' => 'text',
+            'description' => __('Also known as SWIFT code', 'itella-shipping'),
         ),
         'hr_methods' => array(
             'type' => 'hr'
@@ -1776,31 +1770,42 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    *
    * @param $order_id
    */
-  public function save_shipping_settings($order_id)
+  public function save_shipping_settings( $order )
   {
+    if ( ! is_admin() ) {
+      return;
+    }
+
+    if ( empty($_POST) || ! isset($_POST['post_ID']) ) {
+      return;
+    }
+
+    if ( defined('DOING_AUTOSAVE') && DOING_AUTOSAVE ) {
+      return;
+    }
+
     $post_fields = array('itella_add_manually', 'packet_count', 'weight_total', 'itella_cod_enabled', 'itella_cod_amount', 'itella_shipping_method', 'itella_pupCode', 'itella_extra_services');
-    
+
     foreach ( $post_fields as $field)  {
       if ( ! isset($_POST[$field]) ) continue;
 
       if ( $field == 'packet_count' ) {
         $value = intval(wc_clean($_POST[$field]) > 1) ? 'true' : '';
-        $this->wc->save_itella_multi_parcel($order_id, $value);
+        $this->wc->save_itella_multi_parcel($order, $value);
       }
 
       if ( $field == 'itella_add_manually' && isset($_POST[$field]) ) {
         $method = 'itella_' . wc_clean($_POST[$field]);
-        $this->wc->save_itella_method($order_id, $method);
+        $this->wc->save_itella_method($order, $method);
         continue;
       }
 
       if ( $field == 'itella_pupCode' ) {
-        $order = $this->wc->get_order($order_id);
         $choosen_pickup_point = $this->get_chosen_pickup_point(Itella_Manifest::order_getCountry($order), wc_clean($_POST[$field]));
-        $this->wc->update_order_meta($order_id, 'itella_pp_id', wc_clean($choosen_pickup_point->pupCode));
+        $this->wc->update_order_meta($order, 'itella_pp_id', wc_clean($choosen_pickup_point->pupCode));
       }
 
-      $this->wc->update_order_meta($order_id, $field, wc_clean($_POST[$field]));
+      $this->wc->update_order_meta($order, $field, wc_clean($_POST[$field]));
     }
   }
 
@@ -2608,12 +2613,20 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   private function add_msg($msg, $type)
   {
-    if (!session_id()) {
-      session_start();
+    $user_id = get_current_user_id();
+    $key = 'itella_shipping_notice_' . $user_id;
+
+    $notices = get_transient($key);
+    if (!is_array($notices)) {
+      $notices = array();
     }
-    if (!isset($_SESSION['itella_shipping_notices']))
-      $_SESSION['itella_shipping_notices'] = array();
-    $_SESSION['itella_shipping_notices'][] = array('msg' => $msg, 'type' => 'notice notice-' . $type);
+
+    $notices[] = array(
+      'msg'  => $msg,
+      'type' => 'notice notice-' . $type,
+    );
+
+    set_transient($key, $notices, 60);
   }
 
   /**
@@ -2621,18 +2634,17 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   public function itella_shipping_notices()
   {
-    if (!session_id()) {
-      session_start();
-    }
-    if (array_key_exists('itella_shipping_notices', $_SESSION)) {
-      foreach ($_SESSION['itella_shipping_notices'] as $notice):
-        ?>
-      <div class="<?php echo $notice['type']; ?>">
-          <p><?php echo $notice['msg']; ?></p>
-          </div><?php
-      endforeach;
-      unset($_SESSION['itella_shipping_notices']);
-    }
+    $key = 'itella_shipping_notice_' . get_current_user_id();
+    $notices = get_transient($key);
+
+    if (is_array($notices)) {
+      foreach ($notices as $notice) {
+        echo '<div class="' . esc_attr($notice['type']) . '">';
+        echo '<p>' . wp_kses_post($notice['msg']) . '</p>';
+        echo '</div>';
+      }
+
+      delete_transient($key);
   }
 
   public function itella_register_orders_bulk_actions($bulk_actions)

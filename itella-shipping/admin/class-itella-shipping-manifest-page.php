@@ -482,7 +482,7 @@ class Itella_Manifest
                                               <input type="hidden" name="action" value="itella-call-courier"/>
                                           </form>
                                           <button id="itella-call-btn" class="button action button-itella">
-                                            <?php _e('Call Itella courier', 'itella-shipping') ?>
+                                            <?php _e('Call courier', 'itella-shipping') ?>
                                           </button>
                                       </div>
                                   </div>
