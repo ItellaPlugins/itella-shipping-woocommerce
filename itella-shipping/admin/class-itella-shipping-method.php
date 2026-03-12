@@ -190,7 +190,8 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       wp_enqueue_script($this->name . 'itella-shipping-edit-orders.js', plugin_dir_url(__FILE__) . 'assets/js/itella-shipping-edit-orders.js', array('jquery'), $this->version, TRUE);
     } else if ( ($hook == 'woocommerce_page_wc-orders' && isset($_GET['page']) && $_GET['page'] == 'wc-orders')
       || ($hook == 'edit.php' && isset($_GET['post_type']) && $_GET['post_type'] == 'shop_order') ) {
-      wp_enqueue_script($this->name . 'itella-shipping-orders-list.js', plugin_dir_url(__FILE__) . 'assets/js/itella-shipping-orders-list.js', array('jquery'), $this->version, TRUE);
+      wp_enqueue_script($this->name . 'itella-shipping-bulk-register.js', plugin_dir_url(__FILE__) . 'js/itella-shipping-bulk-register.js', array($this->name . 'itella-shipping-popup.js'), $this->version, TRUE);
+      wp_enqueue_script($this->name . 'itella-shipping-orders-list.js', plugin_dir_url(__FILE__) . 'assets/js/itella-shipping-orders-list.js', array($this->name . 'itella-shipping-bulk-register.js'), $this->version, TRUE);
       wp_localize_script($this->name . 'itella-shipping-orders-list.js', 'itellaParams', array(
         'ajax_url' => admin_url('admin-ajax.php'),
         'nonce_register' => wp_create_nonce('itella_shipments'),
@@ -2639,12 +2640,17 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
     if (is_array($notices)) {
       foreach ($notices as $notice) {
+        $type = isset($notice['type']) ? $notice['type'] : 'notice';
+        $msg  = isset($notice['msg']) ? $notice['msg'] : 'Notice text not received';
         echo '<div class="' . esc_attr($notice['type']) . '">';
         echo '<p>' . wp_kses_post($notice['msg']) . '</p>';
         echo '</div>';
       }
+    }
 
+    if ($notices !== false) {
       delete_transient($key);
+    }
   }
 
   public function itella_register_orders_bulk_actions($bulk_actions)

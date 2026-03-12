@@ -1,5 +1,10 @@
 *** Smartposti shipping Changelog ***
 
+2026-03-12 - version 1.7.5
+* Fixed - A code error after the last update
+* Fixed - Error message display, when failed to register shipments via bulk on the "Smartposti shipments" page
+* Changed - That duplicated Javascript functions for bulk shipment registration combined into one
+
 2026-03-10 - version 1.7.4
 * Fixed - That saving plugin settings in order edit page would work on different system versions
 * Fixed - The text of the courier call button in the "Completed orders" tab of the "Smartposti shipments" page

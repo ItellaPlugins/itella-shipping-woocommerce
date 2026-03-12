@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.7.5] - 2026-03-12
+### Fixed
+- fixed a code error after the last update
+- fixed error message display, when failed to register shipments via bulk on the "Smartposti shipments" page
+
+### Improved
+- duplicated Javascript functions for bulk shipment registration combined into one
+
 ## [1.7.4] - 2026-03-10
 ### Fixed
 - fixed that saving plugin settings in order edit page would work on different system versions
