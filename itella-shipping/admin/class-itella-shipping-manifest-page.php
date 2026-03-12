@@ -71,7 +71,8 @@ class Itella_Manifest
   {
 
     if ( $hook == 'woocommerce_page_itella-manifest') {
-      wp_enqueue_script($this->get_plugin_name() . 'itella-shipping-manifest.js', plugin_dir_url(__FILE__) . 'js/itella-shipping-manifest.js', array('jquery'), $this->get_plugin_version(), TRUE);
+      wp_enqueue_script($this->get_plugin_name() . 'itella-shipping-bulk-register.js', plugin_dir_url(__FILE__) . 'js/itella-shipping-bulk-register.js', array($this->get_plugin_name() . 'itella-shipping-popup.js'), $this->get_plugin_version(), TRUE);
+      wp_enqueue_script($this->get_plugin_name() . 'itella-shipping-manifest.js', plugin_dir_url(__FILE__) . 'js/itella-shipping-manifest.js', array('jquery', $this->get_plugin_name() . 'itella-shipping-bulk-register.js'), $this->get_plugin_version(), TRUE);
       wp_localize_script($this->get_plugin_name() . 'itella-shipping-manifest.js', 'translations', array(
         'select_orders' => __('Select at least one order to perform this action.', 'itella-shipping'),
         'switch_confirm' => __("Generating a manifest for a large number of orders can take a long time.\nAre you sure you want to continue?", 'itella-shipping'),
