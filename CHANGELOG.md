@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.7.5] - 2026-03-12
 ### Fixed
 - fixed a code error after the last update
 - fixed error message display, when failed to register shipments via bulk on the "Smartposti shipments" page
