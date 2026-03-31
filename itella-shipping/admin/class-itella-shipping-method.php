@@ -1824,7 +1824,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
     try {
       // download labels
-      $temp_name = 'itella_label_' . time();
+      $temp_name = 'smartposti_label_' . time();
       $temp_files = array();
       foreach ($tracking_codes as $product_key => $tr_codes) {
         $shipment = new Shipment(
@@ -1850,7 +1850,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       }
 
       // merge downloaded labels
-      $this->merge_labels($temp_files);
+      $this->merge_labels($temp_files, 'FD');
       return;
     } catch (ItellaException $e) {
       // add error message
@@ -2776,12 +2776,13 @@ class Itella_Shipping_Method extends WC_Shipping_Method
   }
 
   /**
-   * Merge labels
+   * Merge labels into single PDF file
    *
-   * @param $files
-   * @return string
+   * @param array $files Array of paths to PDF files to merge
+   * @param string $output_mode PDF output mode (I, D, F, S, FI, FD, E)
+   * @return string|void Base64 encoded result for non-browser modes, exits for browser modes
    */
-  private function merge_labels($files)
+  private function merge_labels($files, $output_mode)
   {
     $merger = new PDFMerge();
     $merger->setFiles($files); // pass array of paths to pdf files
@@ -2795,7 +2796,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     }
 
     /**
-     * Second param:
+     * Output modes:
      * I: send the file inline to the browser (default).
      * D: send to the browser and force a file download with the name given by name.
      * F: save to a local server file with the name given by name.
@@ -2804,11 +2805,24 @@ class Itella_Shipping_Method extends WC_Shipping_Method
      * FD: equivalent to F + D option
      * E: return the document as base64 mime multi-part email attachment (RFC 2045)
      */
-    return base64_encode($merger->Output(plugin_dir_path(dirname(__FILE__))
-        . 'var/downloaded-labels/itella_labels_'
-        . date('Y-m-d H:i:s')
-        . '.pdf',
-        'FD'));
+    $browser_modes = array('FD', 'FI', 'I', 'D');
+    if (in_array($output_mode, $browser_modes)) {
+      while (ob_get_level()) {
+        ob_end_clean();
+      }
+    }
+
+    $result = $merger->Output(plugin_dir_path(dirname(__FILE__))
+      . 'var/downloaded-labels/smartposti_labels_'
+      . wp_date('Y-m-d_His')
+      . '.pdf',
+      $output_mode);
+
+    if (in_array($output_mode, $browser_modes)) {
+      exit;
+    }
+
+    return base64_encode($result);
   }
 
   /**
