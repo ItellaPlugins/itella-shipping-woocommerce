@@ -7,6 +7,9 @@
 ### Changed
 - changed the name of the PDF file for labels to avoid issues with Headers and to match the plugin name
 
+### Updated
+- itella-mapping.js to v1.3.3
+
 ## [1.7.5] - 2026-03-12
 ### Fixed
 - fixed a code error after the last update

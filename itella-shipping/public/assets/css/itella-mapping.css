@@ -337,9 +337,25 @@
   justify-content: space-between;
 }
 
+.itella-select ul li span {
+  color: #888;
+  font-size: 0.9em;
+  white-space: nowrap;
+  margin-left: 8px;
+}
+
+.itella-select ul li.active span {
+  color: rgba(255, 255, 255, 0.8);
+}
+
 .itella-select ul li.active {
   background-color: var(--imjs-primary-color-1);
   color: #fff;
+}
+
+.itella-select ul li.highlighted {
+  background-color: var(--imjs-hower-line-color);
+  box-shadow: inset 3px 0 0 var(--imjs-primary-color-1);
 }
 
 .itella-select ul li:not(.city):not(.active):hover {
@@ -353,14 +369,6 @@
 }
 
 /* Map Markers */
-@-webkit-keyframes bounce {
-  from {
-    top: 0px;
-  }
-  to {
-    top: -10px;
-  }
-}
 @keyframes bounce {
   from {
     top: 0px;
@@ -372,8 +380,7 @@
 
 .itella-map img.active {
   filter: hue-rotate(190deg) saturate(240%) brightness(170%);
-  -webkit-animation: bounce 0.4s infinite alternate;
-          animation: bounce 0.4s infinite alternate;
+  animation: bounce 0.4s infinite alternate;
 }
 
 /**
