@@ -152,6 +152,7 @@ function itellaFilterLocations(locations_json) {
         for (let j = 0; j < locations[i].capabilities.length; j++) {
             if (variables.locationsFilter.exclude_outdoors == 'yes' && locations[i].capabilities[j].name == 'outdoors' && locations[i].capabilities[j].value == 'OUTDOORS') {
                 locations.splice(i, 1);
+                break;
             }
         }
     }
