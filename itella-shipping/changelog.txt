@@ -1,5 +1,11 @@
 *** Smartposti shipping Changelog ***
 
+2026-04-30 - version 1.7.6
+* Fixed - Error in pickup points filtering when removing outdoor locations from the list
+* Changed - PDF output of labels to avoid issues when the system sends additional data
+* Changed - The name of the PDF file for labels to avoid issues with Headers and to match the plugin name
+* Updated - itella-mapping.js to v1.3.3
+
 2026-03-12 - version 1.7.5
 * Fixed - A code error after the last update
 * Fixed - Error message display, when failed to register shipments via bulk on the "Smartposti shipments" page

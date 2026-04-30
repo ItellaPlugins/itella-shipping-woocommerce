@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.7.6] - 2026-04-30
+### Fixed
+- fixed error in pickup points filtering when removing outdoor locations from the list
+
+### Improved
+- improved PDF output of labels to avoid issues when the system sends additional data
+
+### Changed
+- changed the name of the PDF file for labels to avoid issues with Headers and to match the plugin name
+
+### Updated
+- itella-mapping.js to v1.3.3
+
 ## [1.7.5] - 2026-03-12
 ### Fixed
 - fixed a code error after the last update
