@@ -1,6 +1,9 @@
 # Changelog
 
 ## [Unreleased]
+### Fixed
+- fixed error in pickup points filtering when removing outdoor locations from the list
+
 ### Improved
 - improved PDF output of labels to avoid issues when the system sends additional data
 
