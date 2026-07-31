@@ -1,5 +1,9 @@
 # Changelog
 
+## [Unreleased]
+### Fixed
+- fixed so that translatable texts are not used too early
+
 ## [1.7.6] - 2026-04-30
 ### Fixed
 - fixed error in pickup points filtering when removing outdoor locations from the list

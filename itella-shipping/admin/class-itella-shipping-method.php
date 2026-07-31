@@ -122,8 +122,6 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $this->name = $plugin->name ?? 'itella-shipping';
     $this->version = $plugin->version ?? '1.0.0';
     $this->id = "itella-shipping";
-    $this->method_title = __('Smartposti Shipping', 'itella-shipping');
-    $this->method_description = __('Plugin to use with Smartposti Shipping methods', 'itella-shipping');
     $this->title = "Smartposti Shipping Method";
     $this->itella_methods = $plugin->methods ?? array();
     $this->plugin_url = $plugin->url ?? home_url() . '/';
@@ -135,7 +133,21 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $this->helper = new Itella_Shipping_Method_Helper();
     $this->html = new Itella_Shipping_Admin_Display($this->id);
 
-    $this->init();
+    if ( did_action('init') ) {
+      $this->init_translated_properties();
+      $this->init();
+    } else {
+      $this->method_title = 'Smartposti Shipping';
+      $this->method_description = 'Plugin to use with Smartposti Shipping methods';
+      add_action('init', array($this, 'init_translated_properties'), 5);
+      add_action('init', array($this, 'init'), 5);
+    }
+  }
+
+  public function init_translated_properties()
+  {
+    $this->method_title = __('Smartposti Shipping', 'itella-shipping');
+    $this->method_description = __('Plugin to use with Smartposti Shipping methods', 'itella-shipping');
   }
 
   public static function getInstance() {
@@ -383,8 +395,6 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $cart_weight = floatval($this->wc->get_cart()->cart_contents_weight);
     $items = $package['contents'] ?? $this->wc->get_cart_items();
 
-    $all_methods = $this->get_itella_shipping_methods();
-    $country_methods = $all_methods[strtoupper($current_country)] ?? array();
     $all_prices_settings = (!empty($this->settings['methods'])) ? json_decode($this->settings['methods'],true) : $this->methods_backward_compatibility();
     $country_prices = $all_prices_settings[strtolower($current_country)] ?? array();
 
@@ -411,7 +421,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
         $rate = array(
           'id' => 'itella_' . Itella_Shipping::get_instance()->get_method_short_key($method),
-          'label' => (! empty($prices['name'])) ? $prices['name'] : 'Smartposti ' . $country_methods[$method],
+          'label' => (! empty($prices['name'])) ? $prices['name'] : 'Smartposti ' . Itella_Shipping::translate_method_name($method),
           'cost' => $shipping_price
         );
 
@@ -855,7 +865,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
                                 <?php $field_id_method = $field_id_country . '_' . $method_key; ?>
                                 <?php $method_values = $fields_values[$country][$method_key] ?? array(); ?>
                                 <div class="itella-method itella-method-<?php echo $method_key; ?>">
-                                    <p class="method_title"><?php echo $method_title; ?></p>
+                                    <p class="method_title"><?php echo Itella_Shipping::translate_method_name($method_key); ?></p>
                                     <div class="method_params">
                                         <?php
                                         echo $this->helper->methods_select_field_html(array(
