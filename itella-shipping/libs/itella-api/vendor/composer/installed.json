@@ -270,6 +270,6 @@
             "install-path": "../tecnickcom/tcpdf"
         }
     ],
-    "dev": true,
+    "dev": false,
     "dev-package-names": []
 }

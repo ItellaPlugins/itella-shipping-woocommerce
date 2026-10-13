@@ -1,8 +1,14 @@
 # Changelog
 
-## [Unreleased]
+## [1.7.7] - 2026-10-13
 ### Fixed
 - fixed so that translatable texts are not used too early
+
+### Improved
+- added additional service 3376 to parcel locker shipments when outdoor parcel lockers are excluded in the settings
+
+### Updated
+- itella-api library to v2.5.2
 
 ## [1.7.6] - 2026-04-30
 ### Fixed

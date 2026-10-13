@@ -7,46 +7,46 @@ namespace Composer\Autoload;
 class ComposerStaticIniteb694a5ce30c38b2e7cf8e65f539539e
 {
     public static $prefixLengthsPsr4 = array (
-        's' => 
+        's' =>
         array (
             'setasign\\Fpdi\\' => 14,
         ),
-        'c' => 
+        'c' =>
         array (
             'cweagans\\Composer\\' => 18,
         ),
-        'T' => 
+        'T' =>
         array (
             'Tests\\Pakettikauppa\\' => 20,
         ),
-        'P' => 
+        'P' =>
         array (
             'Pakettikauppa\\' => 14,
         ),
-        'M' => 
+        'M' =>
         array (
             'Mijora\\Itella\\' => 14,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'setasign\\Fpdi\\' => 
+        'setasign\\Fpdi\\' =>
         array (
             0 => __DIR__ . '/..' . '/setasign/fpdi/src',
         ),
-        'cweagans\\Composer\\' => 
+        'cweagans\\Composer\\' =>
         array (
             0 => __DIR__ . '/..' . '/cweagans/composer-patches/src',
         ),
-        'Tests\\Pakettikauppa\\' => 
+        'Tests\\Pakettikauppa\\' =>
         array (
             0 => __DIR__ . '/..' . '/pakettikauppa/api-library/src/Tests/Pakettikauppa',
         ),
-        'Pakettikauppa\\' => 
+        'Pakettikauppa\\' =>
         array (
             0 => __DIR__ . '/..' . '/pakettikauppa/api-library/src/Pakettikauppa',
         ),
-        'Mijora\\Itella\\' => 
+        'Mijora\\Itella\\' =>
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),

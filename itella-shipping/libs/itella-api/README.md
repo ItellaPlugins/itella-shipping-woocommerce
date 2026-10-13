@@ -171,8 +171,9 @@ try {
       - `account`   => bank account (IBAN),
       - `codbic`    => bank BIC, 
       - `reference` => COD Reference, can be used `Helper::generateCODReference($id)` where `$id` can be Order ID.
+  - 3376 - Block delivery or redirection to outdoor locker
 - Will be set automatically
-  - 3201 - Pickup Point, is set automatically when pick up point ID (pupCode from Locations API) is registered into Shipment.
+  - 2106 - Pickup Point, is set automatically when pick up point ID (pupCode from Locations API) is registered into Shipment.
     **Requires** array with this information:
       - `pickup_point_id` => Pickup point pupCode.
 
@@ -184,8 +185,9 @@ try {
       - `account`   => bank account (IBAN),
       - `codbic`    => bank BIC, 
       - `reference` => COD Reference, can be used `Helper::generateCODReference($id)` where `$id` can be Order ID.
+  - 3376 - Block delivery or redirection to outdoor locker
 - Will be set automatically
-  - 3201 - Pickup Point, is set automatically when pick up point ID (pupCode from Locations API) is registered into Shipment.
+  - 2106 - Pickup Point, is set automatically when pick up point ID (pupCode from Locations API) is registered into Shipment.
     **Requires** array with this information:
       - `pickup_point_id` => Pickup point pupCode.
 

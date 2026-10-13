@@ -12,6 +12,7 @@ use Mijora\Itella\ItellaException;
  * 3102 = Multi-parcel shipment, specifiers [count]
  * 3104 = Fragile
  * 3174 = Large (Oversized)
+ * 3376 = Block delivery or redirection to outdoor locker
  */
 class AdditionalService
 {
@@ -25,11 +26,12 @@ class AdditionalService
   const OVERSIZED = 3174;
   //const PICKUP_POINT = 3201;
   const PICKUP_POINT = 2106; // pakettikauppa pickup point service
+  const BLOCK_OUTDOOR_LOCKER = 3376;
 
   private static $valid_code = array(
     self::COD, self::MULTI_PARCEL, self::FRAGILE,
     self::CALL_BEFORE_DELIVERY, self::OVERSIZED,
-    self::PICKUP_POINT
+    self::PICKUP_POINT, self::BLOCK_OUTDOOR_LOCKER
   );
 
   private static $valid_by_product_code = array(
@@ -41,10 +43,10 @@ class AdditionalService
       self::COD, self::MULTI_PARCEL
     ),
     '2711' => array(
-      self::PICKUP_POINT, self::COD
+      self::PICKUP_POINT, self::COD, self::BLOCK_OUTDOOR_LOCKER
     ),
     '2103' => array(
-      self::PICKUP_POINT, self::COD
+      self::PICKUP_POINT, self::COD, self::BLOCK_OUTDOOR_LOCKER
     )
   );
 
@@ -100,13 +102,13 @@ class AdditionalService
         }
         break;
       case self::FRAGILE:
-        // nothing to vilidate at this time
+        // nothing to validate at this time
         break;
       case self::CALL_BEFORE_DELIVERY:
-        // nothing to vilidate at this time
+        // nothing to validate at this time
         break;
       case self::OVERSIZED:
-        // nothing to vilidate at this time
+        // nothing to validate at this time
         break;
       case self::PICKUP_POINT:
         // Pickup point, specifiers: [pickup_point_id]
@@ -116,6 +118,9 @@ class AdditionalService
             throw new ItellaException(self::PICKUP_POINT . ' code must have: ' . implode(', ', $must_have));
           }
         }
+        break;
+      case self::BLOCK_OUTDOOR_LOCKER:
+        // nothing to validate at this time
         break;
 
       default:
