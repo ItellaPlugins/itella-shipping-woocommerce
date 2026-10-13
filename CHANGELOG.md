@@ -1,6 +1,9 @@
 # Changelog
 
 ## [Unreleased]
+### Added
+- added additional service 3376 to parcel locker shipments when outdoor parcel lockers are excluded in the settings
+
 ### Fixed
 - fixed so that translatable texts are not used too early
 

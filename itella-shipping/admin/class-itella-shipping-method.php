@@ -2494,6 +2494,11 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       $additional_services[] = $service_cod;
     }
 
+    // Block delivery or redirection to outdoor locker
+    if (isset($this->settings['disable_outdoors_pickup_points']) && $this->settings['disable_outdoors_pickup_points'] === 'yes') {
+      $additional_services[] = new AdditionalService(AdditionalService::BLOCK_OUTDOOR_LOCKER);
+    }
+
     // Prepare label comment
     $comment_replaces = array(
       'order_id' => $order_id,
