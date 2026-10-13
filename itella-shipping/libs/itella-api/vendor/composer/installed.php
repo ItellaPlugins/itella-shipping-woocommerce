@@ -1,13 +1,13 @@
 <?php return array(
     'root' => array(
         'name' => 'mijora/itella-api',
-        'pretty_version' => '2.5.1',
-        'version' => '2.5.1.0',
+        'pretty_version' => '2.5.2',
+        'version' => '2.5.2.0',
         'reference' => null,
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'dev' => true,
+        'dev' => false,
     ),
     'versions' => array(
         'cweagans/composer-patches' => array(
@@ -20,8 +20,8 @@
             'dev_requirement' => false,
         ),
         'mijora/itella-api' => array(
-            'pretty_version' => '2.5.1',
-            'version' => '2.5.1.0',
+            'pretty_version' => '2.5.2',
+            'version' => '2.5.2.0',
             'reference' => null,
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',

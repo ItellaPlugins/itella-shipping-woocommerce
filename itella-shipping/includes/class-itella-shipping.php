@@ -179,6 +179,18 @@ class Itella_Shipping
     );
   }
 
+  public static function translate_method_name( $method_key )
+  {
+    switch ( $method_key ) {
+      case 'courier':
+        return __('Courier', 'itella-shipping');
+      case 'pickup_point':
+        return __('Parcel locker', 'itella-shipping');
+      default:
+        return $method_key;
+    }
+  }
+
   public function get_method_short_key( $method_key )
   {
     switch ($method_key) {
@@ -237,9 +249,10 @@ class Itella_Shipping
       'pickup_point' => self::PICKUP_COUNTRIES
     );
 
+    // Untranslated here (runs before 'init'); translate via translate_method_name() at display time.
     $methods_names = array(
-      'courier' => __('Courier', 'itella-shipping'),
-      'pickup_point' => __('Parcel locker', 'itella-shipping'),
+      'courier' => 'Courier',
+      'pickup_point' => 'Parcel locker',
     );
 
     // Return countries list
