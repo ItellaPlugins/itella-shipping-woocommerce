@@ -48,42 +48,35 @@ jQuery('document').ready(function($) {
         }
     });
 
-    $('#itella-call-btn').on('click', function(e) {
+    $('.itella-call-courier-btn').on('click', function(e) {
         e.preventDefault();
+        // Remember manifest group, if button belongs to one
+        $('#itella-call-courier-form').data('manifest-date', $(this).attr('data-manifest-date') || '');
         $('#itella-courier-modal').addClass('open');
     });
 
-    // Prevent direct modal form submit (e.g. Enter key) bypassing the handler below
-    $('#itella-call').on('submit', function(e) {
-        e.preventDefault();
-        $('.modal-footer>#itella-call-btn').trigger('click');
-    });
-
-    $('.modal-footer>#itella-call-btn').on('click', function(e) {
-        e.preventDefault();
-        if ($(this).prop('disabled')) {
+    // Handles both submit button click and Enter key
+    $('#itella-call-courier-form').on('submit', function(e) {
+        var form = $(this);
+        var submit_btn = $('#itella-call-courier-submit');
+        if (submit_btn.prop('disabled')) {
+            e.preventDefault();
             return;
         }
-        let ids = "";
-        $('#call-courier-form .post_id').remove();
-        $('#call-courier-form').find('input[type="hidden"].copied-hidden').remove();
-        $('.manifest-item:checked').each(function () {
-            ids += $(this).val() + ";";
-            let id = $(this).val();
-            $('#call-courier-form').append('<input type="hidden" class = "post_id" name="post[]" value = "' + id + '" />');
+        form.find('.post_id').remove();
+        itellaGetSelectedOrderIds(form.data('manifest-date')).forEach(function(id) {
+            form.append('<input type="hidden" class="post_id" name="post[]" value="' + id + '" />');
         });
-        itellaCopyInputsToForm('#itella-courier-modal', '#call-courier-form');
-        $('#item_ids').val(ids);
-        if (ids == "") {
+        if (form.find('.post_id').length === 0) {
+            e.preventDefault();
             alert(translations.select_orders);
-        } else {
-            $(this).prop('disabled', true);
-            $('#itella-call-cancel-btn').prop('disabled', true);
-            $('#call-courier-form').submit();
+            return;
         }
+        submit_btn.prop('disabled', true);
+        $('#itella-call-courier-cancel').prop('disabled', true);
     });
 
-    $('#itella-call-cancel-btn').on('click', function(e) {
+    $('#itella-call-courier-cancel').on('click', function(e) {
         e.preventDefault();
         $('#itella-courier-modal').removeClass('open');
     });
@@ -91,7 +84,7 @@ jQuery('document').ready(function($) {
     // Re-enable buttons when page is restored from browser back/forward cache
     $(window).on('pageshow', function(e) {
         if (e.originalEvent.persisted) {
-            $('.modal-footer>#itella-call-btn, #itella-call-cancel-btn').prop('disabled', false);
+            $('#itella-call-courier-submit, #itella-call-courier-cancel').prop('disabled', false);
         }
     });
 
@@ -216,18 +209,16 @@ jQuery('document').ready(function($) {
     });
 
     $('.submit_manifest_items').on('click', function() {
-        var ids = "";
-        $('.manifest-print-form .post_id').remove();
-        $('.manifest-item:checked').each(function() {
-            ids += $(this).val() + ";";
-            var id = $(this).val();
-            $('.manifest-print-form').append('<input type="hidden" class = "post_id" name="post[]" value = "' + id + '" />');
+        var form = $('.manifest-print-form');
+        var ids = itellaGetSelectedOrderIds($(this).attr('data-manifest-date'));
+        form.find('.post_id').remove();
+        ids.forEach(function(id) {
+            form.append('<input type="hidden" class="post_id" name="post[]" value="' + id + '" />');
         });
-        $('#item_ids').val(ids);
-        if (ids == "" && !$('#itella-manifest-cb').is(':checked')) {
+        if (ids.length === 0) {
             alert(translations.select_orders);
         } else {
-            $('.manifest-print-form').submit();
+            form.submit();
         }
     });
 
@@ -258,6 +249,22 @@ jQuery('document').ready(function($) {
     });
 });
 
+/**
+ * Returns checked order IDs. When nothing is checked and manifest date is given,
+ * returns all orders of that manifest group.
+ */
+function itellaGetSelectedOrderIds( manifestDate ) {
+    var items = jQuery('.manifest-item:checked');
+    if (items.length === 0 && manifestDate) {
+        items = jQuery('.manifest-item').filter(function() {
+            return jQuery(this).attr('data-manifest-date') === manifestDate;
+        });
+    }
+    return items.map(function() {
+        return jQuery(this).val();
+    }).get();
+}
+
 function add_param_to_url( paramName, paramValue, removeParams = [] ) {
     var url = window.location.href;
     if (removeParams.length > 0) {
@@ -272,39 +279,5 @@ function add_param_to_url( paramName, paramValue, removeParams = [] ) {
         url += "&" + paramName + "=" + paramValue;
     }
     return url;
-}
-
-function itellaCopyInputsToForm( sourceSelector, targetFormSelector ) {
-  const source = document.querySelector(sourceSelector);
-  const targetForm = document.querySelector(targetFormSelector);
-
-  targetForm.querySelectorAll('input.copied-hidden').forEach(el => el.remove());
-
-  const fields = source.querySelectorAll('input, select, textarea');
-
-  fields.forEach(field => {
-    const name = field.name;
-    if (!name) return;
-
-    let value;
-
-    if ((field.type === 'checkbox' || field.type === 'radio')) {
-      if (field.checked) {
-        value = field.value;
-      } else {
-        return;
-      }
-    } else {
-      value = field.value;
-    }
-
-    const hiddenInput = document.createElement('input');
-    hiddenInput.type = 'hidden';
-    hiddenInput.name = name;
-    hiddenInput.value = value;
-    hiddenInput.classList.add('copied-hidden');
-
-    targetForm.appendChild(hiddenInput);
-  });
 }
 
