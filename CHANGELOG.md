@@ -1,5 +1,9 @@
 # Changelog
 
+## [Unreleased]
+### Fixed
+- fixed an issue where two courier pickup requests were sent when the button was double-clicked
+
 ## [1.7.7] - 2026-10-13
 ### Fixed
 - fixed so that translatable texts are not used too early

@@ -53,8 +53,17 @@ jQuery('document').ready(function($) {
         $('#itella-courier-modal').addClass('open');
     });
 
+    // Prevent direct modal form submit (e.g. Enter key) bypassing the handler below
+    $('#itella-call').on('submit', function(e) {
+        e.preventDefault();
+        $('.modal-footer>#itella-call-btn').trigger('click');
+    });
+
     $('.modal-footer>#itella-call-btn').on('click', function(e) {
         e.preventDefault();
+        if ($(this).prop('disabled')) {
+            return;
+        }
         let ids = "";
         $('#call-courier-form .post_id').remove();
         $('#call-courier-form').find('input[type="hidden"].copied-hidden').remove();
@@ -68,6 +77,8 @@ jQuery('document').ready(function($) {
         if (ids == "") {
             alert(translations.select_orders);
         } else {
+            $(this).prop('disabled', true);
+            $('#itella-call-cancel-btn').prop('disabled', true);
             $('#call-courier-form').submit();
         }
     });
@@ -75,6 +86,13 @@ jQuery('document').ready(function($) {
     $('#itella-call-cancel-btn').on('click', function(e) {
         e.preventDefault();
         $('#itella-courier-modal').removeClass('open');
+    });
+
+    // Re-enable buttons when page is restored from browser back/forward cache
+    $(window).on('pageshow', function(e) {
+        if (e.originalEvent.persisted) {
+            $('.modal-footer>#itella-call-btn, #itella-call-cancel-btn').prop('disabled', false);
+        }
     });
 
 

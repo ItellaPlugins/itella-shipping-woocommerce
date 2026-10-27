@@ -2853,6 +2853,17 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       return;
     }
 
+    // protection against double submit
+    $lock_key = 'itella_call_courier_lock';
+    $lock_time = get_transient($lock_key);
+    if ( $lock_time !== false ) {
+      $wait = max(1, MINUTE_IN_SECONDS - (time() - (int) $lock_time));
+      $this->add_msg(sprintf(__('The courier call has already been sent. You can call the courier again after %d s.', 'itella-shipping'), $wait), 'warning');
+      wp_safe_redirect(wp_get_referer());
+      return;
+    }
+    set_transient($lock_key, time(), MINUTE_IN_SECONDS);
+
     $order_ids = $_REQUEST['post']; // no post
     $call_date = (isset($_REQUEST['itella_call_courier_date'])) ? $_REQUEST['itella_call_courier_date'] : date('Y-m-d', strtotime('+1 day'));
     $call_time_from = (isset($_REQUEST['itella_call_courier_time_from'])) ? $_REQUEST['itella_call_courier_time_from'] : '08:00';
@@ -2921,7 +2932,12 @@ class Itella_Shipping_Method extends WC_Shipping_Method
           $this->add_msg(implode('<br>', $result['success']), 'success');
         }
       }
+      // allow to retry immediately if nothing was sent
+      if (empty($result['success'])) {
+        delete_transient($lock_key);
+      }
     } catch (ItellaException $e) {
+      delete_transient($lock_key);
       $this->add_msg(__('Failed to call Smartposti courier', 'itella-shipping'), 'error');
     }
 
