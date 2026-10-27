@@ -1,5 +1,17 @@
 # Changelog
 
+## [Unreleased]
+### Fixed
+- fixed an issue where two courier pickup requests were sent when the button was double-clicked
+- fixed "Generate manifest" and "Call courier" buttons not working in the "Completed orders" tab of the "Smartposti shipments" page
+- fixed duplicated HTML element IDs in the courier call form
+
+### Improved
+- "Generate manifest" and "Call courier" buttons in the "Completed orders" tab now use all orders of that manifest when no orders are selected
+
+### Changed
+- courier call request is now sent using the POST method instead of GET
+
 ## [1.7.7] - 2026-10-13
 ### Fixed
 - fixed so that translatable texts are not used too early
