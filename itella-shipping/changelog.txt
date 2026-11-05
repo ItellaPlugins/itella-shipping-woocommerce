@@ -1,5 +1,19 @@
 *** Smartposti shipping Changelog ***
 
+2026-11-05 - version 1.7.8
+* Fixed - An issue where two courier pickup requests were sent when the button was double-clicked
+* Fixed - "Generate manifest" and "Call courier" buttons not working in the "Completed orders" tab of the "Smartposti shipments" page
+* Fixed - Duplicated HTML element IDs in the courier call form
+* Fixed - PHP warnings in WooCommerce emails and order preview when the pickup point of the order could not be found
+* Fixed - An empty "Deliver to" row being displayed in emails for orders with a courier shipping method
+* Fixed - Previously selected parcel locker being lost or a PHP warning being generated when the order shipping method is changed to courier in the order edit page
+* Fixed - Parcel locker changed in the order edit page not being applied for orders which were updated by the plugin database update in version 1.4.4
+* Fixed - An error in the block-based Checkout page which prevented parcel lockers from being displayed when outdoor parcel lockers are excluded in the settings
+* Changed - "Generate manifest" and "Call courier" buttons in the "Completed orders" tab now use all orders of that manifest when no orders are selected
+* Changed - Pickup point address in emails and order preview is now displayed only when the order shipping method is parcel locker
+* Changed - "Shipping information" block in emails now displays the actual Smartposti shipping method when the carrier was changed in the order edit page
+* Changed - Courier call request is now sent using the POST method instead of GET
+
 2026-10-13 - version 1.7.7
 * Fixed - That translatable texts are not used too early
 * Added - Additional service 3376 to parcel locker shipments when outdoor parcel lockers are excluded in the settings

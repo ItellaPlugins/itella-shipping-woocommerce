@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.7.8] - 2026-11-05
 ### Fixed
 - fixed an issue where two courier pickup requests were sent when the button was double-clicked
 - fixed "Generate manifest" and "Call courier" buttons not working in the "Completed orders" tab of the "Smartposti shipments" page
