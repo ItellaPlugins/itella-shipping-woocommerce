@@ -299,10 +299,7 @@ class Itella_Manifest
     </div>
     <?php if ($action !== 'completed_orders') : ?>
         <div class="call-courier-container">
-            <form id="call-courier-form" action="admin-post.php" method="GET">
-                <input type="hidden" name="action" value="itella-call-courier"/>
-            </form>
-            <button id="itella-call-btn" class="button action">
+            <button type="button" class="button action itella-call-courier-btn">
               <?php _e('Call Smartposti courier', 'itella-shipping') ?>
             </button>
         </div>
@@ -468,21 +465,15 @@ class Itella_Manifest
                                         <?php echo $date_tracker = $date; ?>
                                       </div>
                                       <div class="itella-grid-row-element-7">
-                                          <form class="manifest-print-form" action="admin-post.php" method="GET"
-                                                target="_blank">
-                                              <input type="hidden" name="action" value="itella_manifests"/>
-                                            <?php wp_nonce_field('itella_manifest', 'itella_manifest_nonce'); ?>
-                                          </form>
                                           <button
                                                   title="<?php echo __('Generate manifest', 'itella-shipping'); ?>"
                                                   type="button"
+                                                  data-manifest-date="<?php echo esc_attr($date); ?>"
                                                   class="submit_manifest_items button action button-itella">
                                             <?php echo __('Generate manifest', 'itella-shipping'); ?>
                                           </button>
-                                          <form id="call-courier-form" action="admin-post.php" method="GET">
-                                              <input type="hidden" name="action" value="itella-call-courier"/>
-                                          </form>
-                                          <button id="itella-call-btn" class="button action button-itella">
+                                          <button type="button" data-manifest-date="<?php echo esc_attr($date); ?>"
+                                                  class="button action button-itella itella-call-courier-btn">
                                             <?php _e('Call courier', 'itella-shipping') ?>
                                           </button>
                                       </div>
@@ -511,6 +502,7 @@ class Itella_Manifest
                       <tr class="data-row">
                           <th scope="row" class="check-column"><input type="checkbox" name="items[]"
                                                                       class="manifest-item"
+                                                                      data-manifest-date="<?php echo esc_attr($date); ?>"
                                                                       value="<?php echo $order->get_id(); ?>"/></th>
                           <td class="manage-column">
                               <a href="<?php echo $order->get_edit_order_url(); ?>">#<?php echo $order->get_order_number(); ?></a>
@@ -654,6 +646,12 @@ class Itella_Manifest
                   </tbody>
               </table>
           </form>
+        <?php if ($action == 'completed_orders') : ?>
+            <form class="manifest-print-form" action="admin-post.php" method="GET" target="_blank">
+                <input type="hidden" name="action" value="itella_manifests"/>
+              <?php wp_nonce_field('itella_manifest', 'itella_manifest_nonce'); ?>
+            </form>
+        <?php endif; ?>
       </div>
 
       <!-- Modal Carier call-->
@@ -666,7 +664,8 @@ class Itella_Manifest
                   </p>
                   <p><?php _e('Address and contact information can be changed in Smartposti settings.', 'itella-shipping') ?></p>
               </div>
-              <form id="itella-call" action="admin-post.php" method="GET">
+              <form id="itella-call-courier-form" action="admin-post.php" method="POST">
+                <input type="hidden" name="action" value="itella-call-courier"/>
                 <?php wp_nonce_field('itella-call-courier', 'itella-call-courier_nonce'); ?>
                   <div>
                       <span><?php echo __("Shop name", 'itella_shipping'); ?>:</span> <?php echo $itella_shipping->settings['shop_name']; ?>
@@ -712,9 +711,9 @@ class Itella_Manifest
                     <input type="text" name="itella_call_courier_info" value="<?php echo $pickup_note; ?>" class="w-full"/>
                   </div>
                   <div class="modal-footer">
-                      <button type="submit" id="itella-call-btn"
+                      <button type="submit" id="itella-call-courier-submit"
                               class="button action"><?php _e('Call Smartposti courier', 'itella-shipping') ?></button>
-                      <button type="button" id="itella-call-cancel-btn"
+                      <button type="button" id="itella-call-courier-cancel"
                               class="button action"><?php _e('Cancel') ?></button>
                   </div>
               </form>

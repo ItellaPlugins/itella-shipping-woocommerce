@@ -1813,7 +1813,13 @@ class Itella_Shipping_Method extends WC_Shipping_Method
 
       if ( $field == 'itella_pupCode' ) {
         $choosen_pickup_point = $this->get_chosen_pickup_point(Itella_Manifest::order_getCountry($order), wc_clean($_POST[$field]));
+        if ( empty($choosen_pickup_point) ) {
+          // Keep previously selected pickup point (e.g. when carrier is changed to courier)
+          continue;
+        }
         $this->wc->update_order_meta($order, 'itella_pp_id', wc_clean($choosen_pickup_point->pupCode));
+        // Also update the meta field that has priority when reading the pickup point code
+        $this->wc->save_itella_pp_code($order, wc_clean($choosen_pickup_point->pupCode));
       }
 
       $this->wc->update_order_meta($order, $field, wc_clean($_POST[$field]));
@@ -1959,11 +1965,27 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $chosen_pickup_point_pupcode = $itella_data->pickup->pupcode;
     $tracking_url = $itella_data->tracking->url;
     
-    if ( empty( $tracking_number ) && empty($chosen_pickup_point_id) && empty($chosen_pickup_point_pupcode) ) {
+    $pp_address = '';
+    if ( $this->get_order_itella_method($itella_data) === 'itella_pp' ) {
+      $pp_address = $this->build_pickup_address_for_display($order, $chosen_pickup_point_id, $chosen_pickup_point_pupcode);
+    }
+
+    if ( empty( $tracking_number ) && empty($pp_address) ) {
       return;
     }
 
     $tracking_provider = $order->get_shipping_method();
+    $current_method = $this->get_order_itella_method($itella_data);
+    if ( ! empty($current_method) && $current_method !== $itella_data->itella_method ) {
+      // Carrier was changed in order edit page, so show actual method instead of order shipping method
+      $methods_keys = array(
+        'itella_pp' => 'pickup_point',
+        'itella_c' => 'courier',
+      );
+      if ( isset($methods_keys[$current_method]) ) {
+        $tracking_provider = 'Smartposti ' . Itella_Shipping::translate_method_name($methods_keys[$current_method]);
+      }
+    }
 
     if ( ! $plain_text ) {
       echo '<h2 class="itella-ship-info-title">' . __('Shipping information', 'itella-shipping') . '</h2>';
@@ -1973,9 +1995,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       printf( __('Your order has been shipped with %s.', 'itella-shipping') . "\n", $tracking_provider );
     }
 
-    if ( (! empty($chosen_pickup_point_id) || ! empty($chosen_pickup_point_pupcode)) && $chosen_pickup_point_id != '-' ) {
-      $pp_address = $this->build_pickup_address_for_display($order, $chosen_pickup_point_id, $chosen_pickup_point_pupcode);
-
+    if ( ! empty($pp_address) ) {
       if ( $plain_text ) {
         printf( __('The order will be delivered to %s.', 'itella-shipping') . "\n", $pp_address );
       } else {
@@ -2048,6 +2068,7 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     $tracking_number = $itella_data->tracking->code;
     $tracking_url = $itella_data->tracking->url;
     $chosen_pickup_point_id = $itella_data->pickup->id;
+    $chosen_pickup_point_pupcode = $itella_data->pickup->pupcode;
 
     if( ! empty($tracking_number) ) {
       $data['tracking_code'] = $tracking_number;
@@ -2055,9 +2076,11 @@ class Itella_Shipping_Method extends WC_Shipping_Method
     if( ! empty($tracking_url) ) {
       $data['tracking_url'] = $tracking_url;
     }
-    if ( ! empty($chosen_pickup_point_id) && $chosen_pickup_point_id != '-' ) {
-      $pp_address = $this->build_pickup_address_for_display( $order, $chosen_pickup_point_id );
-      $data['pp_address'] = $pp_address;
+    if ( $this->get_order_itella_method($itella_data) === 'itella_pp' ) {
+      $pp_address = $this->build_pickup_address_for_display( $order, $chosen_pickup_point_id, $chosen_pickup_point_pupcode );
+      if ( ! empty($pp_address) ) {
+        $data['pp_address'] = $pp_address;
+      }
     }
 
     return $data;
@@ -2101,11 +2124,31 @@ class Itella_Shipping_Method extends WC_Shipping_Method
    */
   private function build_pickup_address_for_display( $order, $chosen_pickup_point_id, $chosen_pickup_point_pupcode = '' )
   {
+    if ( (empty($chosen_pickup_point_id) && empty($chosen_pickup_point_pupcode)) || $chosen_pickup_point_id == '-' ) {
+      return '';
+    }
+
     $chosen_pickup_point = $this->get_chosen_pickup_point(Itella_Manifest::order_getCountry($order), $chosen_pickup_point_id, $chosen_pickup_point_pupcode);
+    if ( empty($chosen_pickup_point) || empty($chosen_pickup_point->address) ) {
+      return '';
+    }
+
     return $chosen_pickup_point->address->municipality . ' - ' .
            $chosen_pickup_point->address->address . ', ' .
            $chosen_pickup_point->address->postalCode . ' (' .
            $chosen_pickup_point->publicName . ')';
+  }
+
+  /**
+   * Get current Itella method of order (admin changed method has priority)
+   */
+  private function get_order_itella_method( $itella_data )
+  {
+    if ( empty($itella_data) ) {
+      return '';
+    }
+
+    return ( ! empty($itella_data->shipping_method) ) ? $itella_data->shipping_method : $itella_data->itella_method;
   }
   /**
    * Update manifest generation date for orders
@@ -2853,6 +2896,17 @@ class Itella_Shipping_Method extends WC_Shipping_Method
       return;
     }
 
+    // protection against double submit
+    $lock_key = 'itella_call_courier_lock';
+    $lock_time = get_transient($lock_key);
+    if ( $lock_time !== false ) {
+      $wait = max(1, MINUTE_IN_SECONDS - (time() - (int) $lock_time));
+      $this->add_msg(sprintf(__('The courier call has already been sent. You can call the courier again after %d s.', 'itella-shipping'), $wait), 'warning');
+      wp_safe_redirect(wp_get_referer());
+      return;
+    }
+    set_transient($lock_key, time(), MINUTE_IN_SECONDS);
+
     $order_ids = $_REQUEST['post']; // no post
     $call_date = (isset($_REQUEST['itella_call_courier_date'])) ? $_REQUEST['itella_call_courier_date'] : date('Y-m-d', strtotime('+1 day'));
     $call_time_from = (isset($_REQUEST['itella_call_courier_time_from'])) ? $_REQUEST['itella_call_courier_time_from'] : '08:00';
@@ -2921,7 +2975,12 @@ class Itella_Shipping_Method extends WC_Shipping_Method
           $this->add_msg(implode('<br>', $result['success']), 'success');
         }
       }
+      // allow to retry immediately if nothing was sent
+      if (empty($result['success'])) {
+        delete_transient($lock_key);
+      }
     } catch (ItellaException $e) {
+      delete_transient($lock_key);
       $this->add_msg(__('Failed to call Smartposti courier', 'itella-shipping'), 'error');
     }
 
