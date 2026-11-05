@@ -42,6 +42,7 @@ export const filterLocations = ( locationsJson ) => {
                 && locations[i].capabilities[j].value == 'OUTDOORS'
             ) {
                 locations.splice(i, 1);
+                break;
             }
         }
     }
