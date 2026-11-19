@@ -434,7 +434,7 @@ class Itella_Shipping
     $this->loader->add_action('admin_notices', $plugin_admin, 'itella_shipping_notices');
     $this->loader->add_action('woocommerce_after_checkout_validation', $plugin_admin, 'validate_pickup_point');
     $this->loader->add_action('wp_after_admin_bar_render', $plugin_admin, 'update_locations');
-    $this->loader->add_action('woocommerce_email_order_meta', $plugin_admin, 'add_itella_shipping_info_to_email');
+    $this->loader->add_action('woocommerce_email_order_meta', $plugin_admin, 'add_itella_shipping_info_to_email', 10, 4);
     $this->loader->add_action('woocommerce_email_styles', $plugin_admin, 'itella_shipping_info_css_in_email');
     $this->loader->add_action('woocommerce_admin_order_preview_end', $plugin_admin, 'display_custom_data_in_admin_order_preview');
     $this->loader->add_action('wp_ajax_single_register_shipment', $plugin_admin, 'itella_ajax_single_register_shipment');
