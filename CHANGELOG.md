@@ -1,5 +1,9 @@
 # Changelog
 
+## [Unreleased]
+### Fixed
+- fixed "Shipping information" block losing its formatting in plain text emails
+
 ## [1.7.8] - 2026-11-05
 ### Fixed
 - fixed an issue where two courier pickup requests were sent when the button was double-clicked
