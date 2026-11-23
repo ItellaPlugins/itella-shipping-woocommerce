@@ -524,3 +524,28 @@ try {
   echo 'Failed to send email, reason: ' . $e->getMessage();
 }
 ```
+
+## Tracking URL
+
+Shipment tracking link can be generated using `Helper::getTrackingUrl($tracking_number, $country_code)`. No API credentials are required.
+
+`$country_code` is a country code in ISO 3166-1 alpha-2 format (case insensitive). Supported countries:
+* `LT` - Lithuania
+* `LV` - Latvia
+* `EE` - Estonia
+* `FI` - Finland
+
+If country code is not supplied or is not supported, default (`Helper::TRACKING_URL_DEFAULT_COUNTRY`) English tracking link is returned.
+```php
+use Mijora\Itella\Helper;
+
+$tracking_number = 'JJFI12345600000000001';
+
+echo Helper::getTrackingUrl($tracking_number, 'LT');
+// https://www.smartposti.lt/siuntos-sekimas/JJFI12345600000000001
+
+echo Helper::getTrackingUrl($tracking_number);
+// https://www.smartposti.ee/en/tracking/JJFI12345600000000001
+```
+
+All tracking URL templates are available in `Helper::TRACKING_URLS` constant (array by country code). Tracking number placeholder in templates is defined in `Helper::VAR_TRACKING_CODE` constant.

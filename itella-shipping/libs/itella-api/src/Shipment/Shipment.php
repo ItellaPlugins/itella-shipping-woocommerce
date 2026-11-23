@@ -221,16 +221,25 @@ class Shipment
 
     // Retrieve location information from locations api
     $pickup_points = new PickupPoints();
-    $location = $pickup_points->getLocations([
+    $locations = $pickup_points->getLocations([
       'countryCode' => $this->receiverParty->countryCode,
       'pupCode' => $this->pickup_point_id
     ]);
 
+    // Safeguard in case Locations API returns more than one location - select the one with matching pupCode
+    $location = null;
+    if (is_array($locations)) {
+      foreach ($locations as $loc) {
+        if (isset($loc['pupCode']) && (string) $loc['pupCode'] === (string) $this->pickup_point_id) {
+          $location = $loc;
+          break;
+        }
+      }
+    }
+
     if (!$location) {
       throw new ItellaException("Could not find location with pupCode = " . $this->pickup_point_id);
     }
-
-    $location = $location[0];
 
     $address = $location['address']['address'];
     if (empty($address)) {

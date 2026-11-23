@@ -172,6 +172,21 @@ class Itella_Shipping_Wc_Itella extends Itella_Shipping_Wc {
 
     public function get_itella_tracking_url( $order )
     {
+        // Generate URL from tracking code, so that orders with saved outdated URLs get the actual one
+        $order = $this->check_and_get_order($order);
+        if ( ! $order ) {
+            return '';
+        }
+
+        $tracking_code = $this->get_itella_tracking_code($order);
+        if ( ! empty($tracking_code) && class_exists('\Mijora\Itella\Helper') ) {
+            $country = $order->get_shipping_country();
+            if ( empty($country) ) {
+                $country = $order->get_billing_country();
+            }
+            return \Mijora\Itella\Helper::getTrackingUrl($tracking_code, (! empty($country)) ? $country : 'LT');
+        }
+
         $value = $this->get_order_meta($order, 'itella_tracking_url');
         if ( empty($value) ) { // Compatible with old
             $value = $this->get_order_meta($order, '_itella_tracking_url');
