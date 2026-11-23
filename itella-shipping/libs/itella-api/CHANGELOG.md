@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.5.4]
+### Added
+- added a function in the Helper class to get the shipment tracking link
+
+## [2.5.3]
+### Fixed
+- fixed pickup point shipments receiving address of a wrong location when Locations API returns more than one location
+
 ## [2.5.2]
 ### Added
 - added new additional services: 3376

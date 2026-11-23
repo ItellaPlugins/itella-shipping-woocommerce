@@ -4,6 +4,9 @@
 ### Fixed
 - fixed "Shipping information" block losing its formatting in plain text emails
 
+### Updated
+- itella-api library to v2.5.4
+
 ## [1.7.8] - 2026-11-05
 ### Fixed
 - fixed an issue where two courier pickup requests were sent when the button was double-clicked

@@ -6,6 +6,17 @@ use Mijora\Itella\Shipment\Shipment as _Shipment;
 
 class Helper
 {
+  const VAR_TRACKING_CODE = '{trackingcode}';
+
+  const TRACKING_URLS = [
+    'LT' => 'https://www.smartposti.lt/siuntos-sekimas/' . self::VAR_TRACKING_CODE,
+    'LV' => 'https://www.smartposti.lv/pakas-meklesana/' . self::VAR_TRACKING_CODE,
+    'EE' => 'https://www.smartposti.ee/saadetise-jalgimine/' . self::VAR_TRACKING_CODE,
+    'FI' => 'https://www.posti.fi/seuranta/' . self::VAR_TRACKING_CODE,
+    'EN' => 'https://www.smartposti.ee/en/tracking/' . self::VAR_TRACKING_CODE
+  ];
+  const TRACKING_URL_DEFAULT_COUNTRY = 'EN';
+
   public static function keyExists($key, &$arr)
   {
     if (!$arr || !is_array($arr)) {
@@ -25,6 +36,22 @@ class Helper
     }
 
     return _Shipment::PRODUCT_PARCEL_CONNECT;
+  }
+
+  /**
+   * Returns a shipment tracking link for the tracking number
+   * @param string $tracking_number Tracking number
+   * @param string $country_code Country code (eg. 'EE')
+   * @return string Shipment tracking URL
+   */
+  public static function getTrackingUrl($tracking_number, $country_code = self::TRACKING_URL_DEFAULT_COUNTRY)
+  {
+    $country_code = strtoupper((string) $country_code);
+    if (!isset(self::TRACKING_URLS[$country_code])) {
+      $country_code = self::TRACKING_URL_DEFAULT_COUNTRY;
+    }
+
+    return str_replace(self::VAR_TRACKING_CODE, urlencode(trim($tracking_number)), self::TRACKING_URLS[$country_code]);
   }
 
   /**
